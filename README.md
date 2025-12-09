@@ -24,4 +24,6 @@ A markdown notes system based on ReactJS.
     npx vite
     ```
 
-4. Publish to prod
+4. Publish and Deploy  
+
+    As long as push in `main` branch or pull request to `main` branch is detected, the website will be automatically built, deployed to `gh-pages` branch and published to [https://gavin-op.github.io/notes-system/](https://gavin-op.github.io/notes-system/).

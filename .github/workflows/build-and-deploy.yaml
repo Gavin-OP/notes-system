@@ -1,4 +1,4 @@
-name: Build and Publish to GitHub Pages
+name: Build and Deploy to GitHub Pages
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
           export CI=false
           npm run build
 
-      - name: Publish to GitHub Pages
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
