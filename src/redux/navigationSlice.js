@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  currentPage: "",
+};
+
 const navigationSlice = createSlice({
   name: "navigation",
-  initialState: {
-    currentPage: "",
-  },
+  initialState,
   reducers: {
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
