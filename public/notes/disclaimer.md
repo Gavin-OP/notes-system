@@ -1,3 +1,14 @@
+---
+slug: disclaimer.md
+title: Disclaimer
+order: -1
+display: false
+tags: 
+  - disclaimer
+---
+
+
+
 # Disclaimer
 
 All of the knowledge and information provided on this site are intended solely for educational and learning purposes. While every effort has been made to ensure the accuracy and reliability of the content, it is provided "as is" without any warranties, express or implied. The authors and contributors are not responsible for any errors or omissions, or for any outcomes related to the use of this information.

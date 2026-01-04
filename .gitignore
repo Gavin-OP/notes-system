@@ -26,3 +26,4 @@ dist-ssr
 # other files
 .history
 .env
+public/notes-index.json
