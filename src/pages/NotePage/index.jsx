@@ -6,9 +6,7 @@ function NotePage() {
 
   return (
     <div className="card">
-      <button onClick={() => dispatch(setCurrentPage("test"))}>
-        current page is: {note_url}
-      </button>
+      <button>current page is: {note_url}</button>
     </div>
   );
 }
