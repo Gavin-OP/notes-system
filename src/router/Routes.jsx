@@ -6,7 +6,7 @@ export default function AppRoutes() {
   return (
     <BrowserRouter basename="/notes-system">
       <Routes>
-        <Route path="note/:note_url" element={<NotePage />} />
+        <Route path="note/*" element={<NotePage />} />
         <Route path="home" element={<HomePage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
