@@ -92,7 +92,7 @@ function processFileMeta(fullPath, notesDir, parentSlugs, urlSet) {
     : Array.isArray(fileMeta.tag)
     ? fileMeta.tag
     : [];
-  const url = "/notes/" + [...parentSlugs, slug].filter(Boolean).join("/");
+  const url = "/note/" + [...parentSlugs, slug].filter(Boolean).join("/");
 
   if (urlSet.has(url)) {
     logError(`Duplicate url detected: ${url}`);
