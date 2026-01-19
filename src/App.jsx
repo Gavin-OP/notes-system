@@ -4,7 +4,6 @@ import {
   App as AntdApp,
   ConfigProvider as DesktopConfigProvider,
   theme,
-  DatePicker,
 } from "antd";
 import { ConfigProvider as MobileConfigProvider } from "antd-mobile";
 
