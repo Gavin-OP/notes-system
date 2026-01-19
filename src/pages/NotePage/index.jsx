@@ -23,6 +23,7 @@ function NotePage() {
 
   useEffect(() => {
     if (notesIndex && note_url) {
+      setNoteContent("");
       const url = `/note/${note_url}`;
       const meta = findMeta(notesIndex, url);
       setSelectedMeta(meta);
