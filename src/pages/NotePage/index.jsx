@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { setCurrentNoteMeta } from "../../redux/currentNoteSlice";
 import { useParams, useNavigate } from "react-router-dom";
-import { setTheme, setLanguage } from "../../redux/preferenceSlice";
 
 import { findMeta } from "../../utils/notesIndexUtils";
-import NoteHeader from "./components/NoteHeader";
 
 function NotePage() {
   // navigation
@@ -14,8 +13,6 @@ function NotePage() {
   // redux
   const dispatch = useDispatch();
   const notesIndex = useSelector((state) => state.notesIndex.data);
-  const theme = useSelector((state) => state.preference.theme);
-  const language = useSelector((state) => state.preference.language);
 
   // state
   const [selectedMeta, setSelectedMeta] = useState(null);
@@ -27,6 +24,7 @@ function NotePage() {
       const url = `/note/${note_url}`;
       const meta = findMeta(notesIndex, url);
       setSelectedMeta(meta);
+      dispatch(setCurrentNoteMeta(meta));
 
       async function fetchNote() {
         if (meta && meta.directory !== undefined && meta.name) {
@@ -53,38 +51,20 @@ function NotePage() {
       }
       fetchNote();
     }
-  }, [notesIndex, note_url]);
+  }, [notesIndex, note_url, dispatch]);
 
   // url handler
   const handleGoto = (url) => navigate(url);
 
   return (
     <>
-      <NoteHeader
-        theme={theme}
-        language={language}
-        onThemeChange={(checked) =>
-          dispatch(setTheme(checked ? "dark" : "light"))
-        }
-        onLanguageChange={(value) => dispatch(setLanguage(value))}
-        onSearch={(value) => {}}
-      />
       <div className="card">
-        <button onClick={() => handleGoto("/note/disclaimer.md")}>
-          Go to /note/disclaimer.md
-        </button>
-        <br></br>
-        <br></br>
-        <button onClick={() => handleGoto("/note/test/code-block-test.md")}>
-          Go to /note/test/code-block-test.md
-        </button>
-        <br></br>
-        <br></br>
+        <h2>Note Meta Information</h2>
         <div>
           {notesIndex && <pre>{JSON.stringify(selectedMeta, null, 2)}</pre>}
         </div>
         <br></br>
-        <br></br>
+        <h2>Note Content</h2>
         <div>{noteContent && <pre>{noteContent}</pre>}</div>
       </div>
     </>

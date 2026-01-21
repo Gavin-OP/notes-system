@@ -12,19 +12,24 @@ function NoteHeader({
   const [showSearch, setShowSearch] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
+  const themeLabel = language === "cn" ? "主题" : "Theme";
+  const languageLabel = language === "cn" ? "语言" : "Language";
+  const darkLabel = language === "cn" ? "深色" : "Dark";
+  const lightLabel = language === "cn" ? "浅色" : "Light";
+
   return (
     <div>
-      {/* 主题切换 */}
-      <span>Theme: </span>
+      {/* theme switch */}
+      <span>{themeLabel}</span>
       <Switch
         checked={theme === "dark"}
-        checkedChildren="Dark"
-        unCheckedChildren="Light"
+        checkedChildren={darkLabel}
+        unCheckedChildren={lightLabel}
         onChange={onThemeChange}
       />
 
-      {/* 语言切换 */}
-      <span style={{ marginLeft: 16 }}>Language: </span>
+      {/* language switch */}
+      <span style={{ marginLeft: 16 }}>{languageLabel}</span>
       <Select
         value={language}
         style={{ width: 100 }}
@@ -35,26 +40,25 @@ function NoteHeader({
         ]}
       />
 
-      {/* 搜索 */}
+      {/* search */}
       <Tooltip
         title={
-          showSearch ? (
-            <Input.Search
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onSearch={onSearch}
-              autoFocus
-              style={{ width: 200 }}
-            />
-          ) : null
+          <Input.Search
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onSearch={onSearch}
+            autoFocus
+            style={{ width: 200 }}
+          />
         }
-        trigger={["hover"]}
+        trigger={["click"]}
         open={showSearch}
         onOpenChange={setShowSearch}
         placement="bottom"
       >
         <SearchOutlined
           style={{ fontSize: 20, marginLeft: 16, cursor: "pointer" }}
+          onClick={() => setShowSearch(true)}
         />
       </Tooltip>
     </div>
