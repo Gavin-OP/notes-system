@@ -58,7 +58,7 @@ function getGitInfo(filePath) {
       `git log -1 --pretty=format:"%ad" --date=format:"%Y-%m-%d %H:%M:%S %z" "${filePath}"`,
       {
         encoding: "utf8",
-      }
+      },
     ).trim();
     return { name, time };
   } catch (e) {
@@ -90,8 +90,8 @@ function processFileMeta(fullPath, notesDir, parentSlugs, urlSet) {
   const tags = Array.isArray(fileMeta.tags)
     ? fileMeta.tags
     : Array.isArray(fileMeta.tag)
-    ? fileMeta.tag
-    : [];
+      ? fileMeta.tag
+      : [];
   const url = "/note/" + [...parentSlugs, slug].filter(Boolean).join("/");
 
   if (urlSet.has(url)) {
@@ -120,7 +120,7 @@ function processFolderMeta(
   notesDir,
   children,
   parentSlugs,
-  urlSet
+  urlSet,
 ) {
   const relDir = path.relative(notesDir, currentDir).replace(/\\/g, "/");
   const metaPath = path.join(currentDir, ".meta.yaml");
@@ -162,7 +162,7 @@ function processFolderMeta(
   tags = Array.from(new Set(tags));
 
   // url
-  const url = "/notes/" + [...parentSlugs, slug].filter(Boolean).join("/");
+  const url = "/note/" + [...parentSlugs, slug].filter(Boolean).join("/");
   if (urlSet.has(url)) {
     logError(`Duplicate url detected: ${url}`);
     process.exit(1);
@@ -187,7 +187,7 @@ function processDirTree(
   currentDir,
   notesDir,
   parentSlugs = [],
-  urlSet = new Set()
+  urlSet = new Set(),
 ) {
   const items = fs.readdirSync(currentDir);
   const children = [];
@@ -215,10 +215,10 @@ function processDirTree(
         fullPath,
         notesDir,
         [...parentSlugs, slug],
-        urlSet
+        urlSet,
       );
       children.push(
-        processFolderMeta(fullPath, notesDir, subChildren, parentSlugs, urlSet)
+        processFolderMeta(fullPath, notesDir, subChildren, parentSlugs, urlSet),
       );
     } else {
       children.push(processFileMeta(fullPath, notesDir, parentSlugs, urlSet));
