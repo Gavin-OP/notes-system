@@ -12,13 +12,13 @@
       "disclaimer"
     ],
     "lastEditName": "Gavin-OP",
-    "lastEditTime": "2026-01-19 23:17:52 +0800"
+    "lastEditTime": "2026-01-21 22:41:53 +0800"
   },
   {
     "type": "folder",
     "name": "test",
     "directory": "test",
-    "url": "/notes/test",
+    "url": "/note/test",
     "slug": "test",
     "title": "test",
     "display": true,
@@ -36,7 +36,7 @@
         "order": -1,
         "tags": [],
         "lastEditName": "Gavin-OP",
-        "lastEditTime": "2026-01-19 23:17:52 +0800"
+        "lastEditTime": "2026-01-21 22:41:53 +0800"
       }
     ]
   }
