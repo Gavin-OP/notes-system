@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentNoteMeta } from "../../redux/currentNoteSlice";
 import { useParams, useNavigate } from "react-router-dom";
 
+import MarkdownRenderer from "./components/MarkdownRenderer";
 import { findMeta } from "../../utils/notesIndexUtils";
 
 function NotePage() {
@@ -13,6 +14,7 @@ function NotePage() {
   // redux
   const dispatch = useDispatch();
   const notesIndex = useSelector((state) => state.notesIndex.data);
+  const theme = useSelector((state) => state.preference.theme);
 
   // state
   const [selectedMeta, setSelectedMeta] = useState(null);
@@ -53,19 +55,20 @@ function NotePage() {
     }
   }, [notesIndex, note_url, dispatch]);
 
-  // url handler
-  const handleGoto = (url) => navigate(url);
-
   return (
     <>
-      <div className="card">
+      <div>
         <h2>Note Meta Information</h2>
         <div>
           {notesIndex && <pre>{JSON.stringify(selectedMeta, null, 2)}</pre>}
         </div>
         <br></br>
         <h2>Note Content</h2>
-        <div>{noteContent && <pre>{noteContent}</pre>}</div>
+        <div>
+          {noteContent && (
+            <MarkdownRenderer content={noteContent} theme={theme} />
+          )}
+        </div>
       </div>
     </>
   );
