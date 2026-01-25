@@ -56,9 +56,9 @@ echo "Hello World"
 ls -l
 ```
 
-![test image](../../image/NKY_BS_IV_Surface.png)
+![test image](./NKY_BS_IV_Surface.png)
 
-![test http image](/image/price.png)
+![test http image](./price.png)
 
 $$
 \textbf{Setting:}\\
