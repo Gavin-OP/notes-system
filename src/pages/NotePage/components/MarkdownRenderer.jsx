@@ -9,9 +9,9 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 
 const themeCssMap = {
-  default_light: `${import.meta.env.BASE_URL}src/pages/NotePage/components/theme/default_light.css`,
-  light: `${import.meta.env.BASE_URL}src/pages/NotePage/components/theme/default_light.css`,
-  dark: `${import.meta.env.BASE_URL}src/pages/NotePage/components/theme/d42ker-github.css`,
+  default_light: `${import.meta.env.BASE_URL}theme/default_light.css`,
+  light: `${import.meta.env.BASE_URL}theme/default_light.css`,
+  dark: `${import.meta.env.BASE_URL}theme/d42ker-github.css`,
 };
 
 const MarkdownRenderer = ({ content, theme }) => {
@@ -23,6 +23,7 @@ const MarkdownRenderer = ({ content, theme }) => {
     const href = themeCssMap[theme];
     if (!href) return;
     const link = document.createElement("link");
+    console.log("Loading theme CSS:", href);
     link.rel = "stylesheet";
     link.href = href;
     link.id = "markdown-theme-css";
