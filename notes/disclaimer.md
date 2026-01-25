@@ -2,7 +2,7 @@
 slug: disclaimer.md
 title: Disclaimer
 order: -1
-display: false
+display: true
 tags: 
   - disclaimer
 ---

@@ -6,13 +6,13 @@
     "url": "/note/disclaimer.md",
     "slug": "disclaimer.md",
     "title": "Disclaimer",
-    "display": false,
+    "display": true,
     "order": -1,
     "tags": [
       "disclaimer"
     ],
     "lastEditName": "Gavin-OP",
-    "lastEditTime": "2026-01-25 22:15:17 +0800"
+    "lastEditTime": "2026-01-25 22:54:57 +0800"
   },
   {
     "type": "folder",
@@ -36,33 +36,33 @@
         "order": -1,
         "tags": [],
         "lastEditName": "Gavin-OP",
-        "lastEditTime": "2026-01-25 22:15:17 +0800"
+        "lastEditTime": "2026-01-25 22:54:57 +0800"
       },
       {
-        "type": "file",
+        "type": "image",
         "name": "NKY_BS_IV_Surface.png",
         "directory": "test",
         "url": "/note/test/nky_bs_iv_surface.png",
         "slug": "nky_bs_iv_surface.png",
         "title": "NKY_BS_IV_Surface.png",
-        "display": true,
+        "display": false,
         "order": -1,
         "tags": [],
-        "lastEditName": "Gavin-OP",
-        "lastEditTime": "2026-01-25 22:15:17 +0800"
+        "lastEditName": "",
+        "lastEditTime": ""
       },
       {
-        "type": "file",
+        "type": "image",
         "name": "price.png",
         "directory": "test",
         "url": "/note/test/price.png",
         "slug": "price.png",
         "title": "price.png",
-        "display": true,
+        "display": false,
         "order": -1,
         "tags": [],
-        "lastEditName": "Gavin-OP",
-        "lastEditTime": "2026-01-25 22:15:17 +0800"
+        "lastEditName": "",
+        "lastEditTime": ""
       }
     ]
   }
