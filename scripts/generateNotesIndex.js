@@ -26,6 +26,17 @@ import matter from "gray-matter";
 import { fileURLToPath } from "url";
 import { url } from "inspector";
 
+const imageExts = [
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".gif",
+  ".svg",
+  ".webp",
+  ".bmp",
+  ".tiff",
+];
+
 // ====== utils ======
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -66,7 +77,7 @@ function getGitInfo(filePath) {
   }
 }
 
-function processFileMeta(fullPath, notesDir, parentSlugs, urlSet) {
+function processNoteMeta(fullPath, notesDir, parentSlugs, urlSet) {
   const relPath = path.relative(notesDir, fullPath);
   const relDir = path.dirname(relPath).replace(/\\/g, "/");
   const fileName = path.basename(fullPath);
@@ -183,11 +194,80 @@ function processFolderMeta(
   };
 }
 
+function collectUsedImages(notesDir) {
+  const usedImages = new Set();
+  function walk(dir) {
+    const items = fs.readdirSync(dir);
+    for (const file of items) {
+      const fullPath = path.join(dir, file);
+      const stat = fs.statSync(fullPath);
+      if (stat.isDirectory()) {
+        walk(fullPath);
+      } else if (file.endsWith(".md")) {
+        const content = fs.readFileSync(fullPath, "utf8");
+        // 匹配 ![alt](path) 和 <img src="path">
+        const mdLinks = [...content.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)];
+        const htmlLinks = [
+          ...content.matchAll(/<img[^>]*src=[\"']([^\"']+)[\"']/g),
+        ];
+        for (const m of mdLinks) {
+          // 统一为相对于 notesDir 的路径
+          const refPath = path.normalize(
+            path.join(path.dirname(fullPath), m[1]),
+          );
+          usedImages.add(path.relative(notesDir, refPath).replace(/\\/g, "/"));
+        }
+        for (const m of htmlLinks) {
+          const refPath = path.normalize(
+            path.join(path.dirname(fullPath), m[1]),
+          );
+          usedImages.add(path.relative(notesDir, refPath).replace(/\\/g, "/"));
+        }
+      }
+    }
+  }
+  walk(notesDir);
+  return usedImages;
+}
+
+function processImageMeta(fullPath, notesDir, parentSlugs, urlSet, usedImages) {
+  const relPath = path.relative(notesDir, fullPath).replace(/\\/g, "/");
+  const relDir = path.dirname(relPath).replace(/\\/g, "/");
+  const fileName = path.basename(fullPath);
+  const slug = fileName
+    .replace(/\s+/g, "-")
+    .replace(/\/+/, "")
+    .toLowerCase()
+    .replace(/^[\\.\\-]+/, "");
+  const url = "/note/" + [...parentSlugs, slug].filter(Boolean).join("/");
+  if (urlSet.has(url)) {
+    logError(`Duplicate url detected: ${url}`);
+    process.exit(1);
+  }
+  urlSet.add(url);
+  // 判断图片是否被引用（用相对 notesDir 的路径判断）
+  const display = usedImages.has(relPath) ? false : true;
+  return {
+    type: "image",
+    name: fileName,
+    directory: relDir,
+    url,
+    slug,
+    title: fileName,
+    display,
+    order: -1,
+    tags: [],
+    lastEditName: "",
+    lastEditTime: "",
+  };
+}
+
 function processDirTree(
   currentDir,
   notesDir,
   parentSlugs = [],
   urlSet = new Set(),
+  usedImages,
 ) {
   const items = fs.readdirSync(currentDir);
   const children = [];
@@ -216,12 +296,22 @@ function processDirTree(
         notesDir,
         [...parentSlugs, slug],
         urlSet,
+        usedImages,
       );
       children.push(
         processFolderMeta(fullPath, notesDir, subChildren, parentSlugs, urlSet),
       );
+    } else if (file.endsWith(".md")) {
+      // markdown note file
+      children.push(processNoteMeta(fullPath, notesDir, parentSlugs, urlSet));
     } else {
-      children.push(processFileMeta(fullPath, notesDir, parentSlugs, urlSet));
+      // process images
+      const ext = path.extname(file).toLowerCase();
+      if (imageExts.includes(ext)) {
+        children.push(
+          processImageMeta(fullPath, notesDir, parentSlugs, urlSet, usedImages),
+        );
+      }
     }
   }
 
@@ -259,7 +349,17 @@ function main() {
     process.exit(1);
   }
 
-  const treeNotes = processDirTree(notesDir, notesDir);
+  // 第一步：收集所有 md 文件引用的图片
+  const usedImages = collectUsedImages(notesDir);
+
+  // 第二步：生成 notes-index，图片 display 字段根据 usedImages 判断
+  const treeNotes = processDirTree(
+    notesDir,
+    notesDir,
+    [],
+    new Set(),
+    usedImages,
+  );
   sortTree(treeNotes);
 
   fs.writeFileSync(outputFile, JSON.stringify(treeNotes, null, 2), "utf8");
