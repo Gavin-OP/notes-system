@@ -11,6 +11,7 @@ import "katex/dist/katex.min.css";
 const themeCssMap = {
   default_light: `${import.meta.env.BASE_URL}src/pages/NotePage/components/theme/default_light.css`,
   light: `${import.meta.env.BASE_URL}src/pages/NotePage/components/theme/default_light.css`,
+  dark: `${import.meta.env.BASE_URL}src/pages/NotePage/components/theme/d42ker-github.css`,
 };
 
 const MarkdownRenderer = ({ content, theme }) => {
