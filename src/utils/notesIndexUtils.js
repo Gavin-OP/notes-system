@@ -19,27 +19,21 @@ function findMeta(data, key) {
 
 function buildMenuItems(data) {
   if (!data) return [];
-  return (
-    data
-      // .filter((item) => item.display !== false) // 可选：只显示 display 不为 false 的
-      .map((item) => {
-        if (
-          item.type === "folder" &&
-          item.children &&
-          item.children.length > 0
-        ) {
-          return {
-            key: item.url,
-            label: item.title || item.name,
-            children: buildMenuItems(item.children),
-          };
-        }
+  return data
+    .filter((item) => item.display !== false)
+    .map((item) => {
+      if (item.type === "folder" && item.children && item.children.length > 0) {
         return {
           key: item.url,
           label: item.title || item.name,
+          children: buildMenuItems(item.children),
         };
-      })
-  );
+      }
+      return {
+        key: item.url,
+        label: item.title || item.name,
+      };
+    });
 }
 
 export { normalizeUrl, findMeta, buildMenuItems };
