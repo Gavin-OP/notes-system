@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   meta: null,
+  outline: [],
 };
 
 const currentNoteSlice = createSlice({
@@ -14,9 +15,15 @@ const currentNoteSlice = createSlice({
     clearCurrentNoteMeta(state) {
       state.meta = null;
     },
+    setCurrentNoteOutline(state, action) {
+      state.outline = action.payload;
+    },
   },
 });
 
-export const { setCurrentNoteMeta, clearCurrentNoteMeta } =
-  currentNoteSlice.actions;
+export const {
+  setCurrentNoteMeta,
+  clearCurrentNoteMeta,
+  setCurrentNoteOutline,
+} = currentNoteSlice.actions;
 export default currentNoteSlice.reducer;

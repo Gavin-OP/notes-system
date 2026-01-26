@@ -23,7 +23,6 @@ const MarkdownRenderer = ({ content, theme }) => {
     const href = themeCssMap[theme];
     if (!href) return;
     const link = document.createElement("link");
-    console.log("Loading theme CSS:", href);
     link.rel = "stylesheet";
     link.href = href;
     link.id = "markdown-theme-css";

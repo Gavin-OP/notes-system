@@ -1,10 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setCurrentNoteMeta } from "../../redux/currentNoteSlice";
+import {
+  setCurrentNoteMeta,
+  setCurrentNoteOutline,
+} from "../../redux/currentNoteSlice";
 import { useParams, useNavigate } from "react-router-dom";
 
 import MarkdownRenderer from "./components/MarkdownRenderer";
 import { findMeta } from "../../utils/notesIndexUtils";
+import { getOutline } from "../../utils/markdownUtils";
 
 function NotePage() {
   // navigation
@@ -19,6 +23,8 @@ function NotePage() {
   // state
   const [selectedMeta, setSelectedMeta] = useState(null);
   const [noteContent, setNoteContent] = useState("");
+
+  const outline = useMemo(() => getOutline(noteContent), [noteContent]);
 
   useEffect(() => {
     if (notesIndex && note_url) {
@@ -54,6 +60,10 @@ function NotePage() {
       fetchNote();
     }
   }, [notesIndex, note_url, dispatch]);
+
+  useEffect(() => {
+    dispatch(setCurrentNoteOutline(outline));
+  }, [noteContent, outline, dispatch]);
 
   return (
     <>

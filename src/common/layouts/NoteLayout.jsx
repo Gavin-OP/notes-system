@@ -5,6 +5,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setTheme, setLanguage } from "../../redux/preferenceSlice";
 import NoteHeader from "../components/NoteHeader";
+import OutlineSider from "../components/OutlineSider";
 import { buildMenuItems } from "../../utils/notesIndexUtils";
 
 const { Header, Sider, Content } = Layout;
@@ -24,6 +25,7 @@ const NoteLayout = () => {
   const language = useSelector((state) => state.preference.language);
   const notesIndex = useSelector((state) => state.notesIndex.data) || [];
   const currentMeta = useSelector((state) => state.currentNote.meta);
+  const outline = useSelector((state) => state.currentNote.outline);
 
   // menu
   const menuItems = buildMenuItems(notesIndex);
@@ -115,24 +117,28 @@ const NoteLayout = () => {
           )}
         </Sider>
 
-        {/* breadcrumb and markdown renderer */}
         <Layout style={{ padding: "0 24px 24px" }}>
+          {/* breadcrumb and markdown renderer */}
           <Breadcrumb items={breadcrumbItems} style={{ margin: "16px 0" }} />
-          <Content
-            style={{
-              padding: 24,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            <Outlet />
-          </Content>
+          <Layout>
+            <Content
+              style={{
+                flex: 1,
+                padding: 24,
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG,
+              }}
+            >
+              <Outlet />
+            </Content>
+            <Sider
+              width={350}
+              style={{ background: "transparent", padding: "0 24px" }}
+            >
+              <OutlineSider outline={outline} />
+            </Sider>
+          </Layout>
         </Layout>
-
-        {/* note outline */}
-        <Sider width={350} style={{ background: "transparent" }}>
-          {/* <Outline noteContent={当前笔记内容} /> */}
-        </Sider>
       </Layout>
     </Layout>
   );
