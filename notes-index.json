@@ -12,7 +12,7 @@
       "disclaimer"
     ],
     "lastEditName": "Gavin-OP",
-    "lastEditTime": "2026-01-26 22:40:42 +0800"
+    "lastEditTime": "2026-01-26 22:50:23 +0800"
   },
   {
     "type": "folder",
@@ -36,7 +36,33 @@
         "order": -1,
         "tags": [],
         "lastEditName": "Gavin-OP",
-        "lastEditTime": "2026-01-26 22:40:42 +0800"
+        "lastEditTime": "2026-01-26 22:50:23 +0800"
+      },
+      {
+        "type": "folder",
+        "name": "csci",
+        "directory": "test/csci",
+        "url": "/note/test/csci",
+        "slug": "csci",
+        "title": "csci",
+        "display": true,
+        "order": -1,
+        "tags": [],
+        "children": [
+          {
+            "type": "file",
+            "name": "markdown-notes.md",
+            "directory": "test/csci",
+            "url": "/note/test/csci/markdown-notes.md",
+            "slug": "markdown-notes.md",
+            "title": "markdown-notes.md",
+            "display": true,
+            "order": -1,
+            "tags": [],
+            "lastEditName": "Gavin-OP",
+            "lastEditTime": "2026-01-26 22:50:23 +0800"
+          }
+        ]
       },
       {
         "type": "image",
