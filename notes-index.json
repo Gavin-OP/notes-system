@@ -12,7 +12,7 @@
       "disclaimer"
     ],
     "lastEditName": "Gavin-OP",
-    "lastEditTime": "2026-02-01 21:21:37 +0800"
+    "lastEditTime": "2026-02-01 21:57:26 +0800"
   },
   {
     "type": "folder",
@@ -36,7 +36,7 @@
         "order": -1,
         "tags": [],
         "lastEditName": "Gavin-OP",
-        "lastEditTime": "2026-02-01 21:21:37 +0800"
+        "lastEditTime": "2026-02-01 21:57:26 +0800"
       },
       {
         "type": "folder",
@@ -60,7 +60,20 @@
             "order": -1,
             "tags": [],
             "lastEditName": "Gavin-OP",
-            "lastEditTime": "2026-02-01 21:21:37 +0800"
+            "lastEditTime": "2026-02-01 21:57:26 +0800"
+          },
+          {
+            "type": "image",
+            "name": "punisher_avatar.png",
+            "directory": "test/csci",
+            "url": "/note/test/csci/punisher_avatar.png",
+            "slug": "punisher_avatar.png",
+            "title": "punisher_avatar.png",
+            "display": false,
+            "order": -1,
+            "tags": [],
+            "lastEditName": "",
+            "lastEditTime": ""
           }
         ]
       },

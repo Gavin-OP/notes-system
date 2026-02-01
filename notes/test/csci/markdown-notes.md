@@ -148,17 +148,17 @@ Markdown 也可以将链接设置为变量，在文末为变量赋值 [Baidu][1]
 
 ## 图片
 
-Markdown 支持插入图片。![惩罚者](../../../images/avatar.png "惩罚者壁纸")
+Markdown 支持插入图片。![惩罚者](./punisher_avatar.png "惩罚者壁纸")
 
 插入图片方法为 `![显示字段](图片地址 "鼠标悬浮时显示信息")`。
 
 Markdown 也可以将图片设置为变量，在文末为变量赋值 [惩罚者][3]
 
-[3]: ../../../images/avatar.png
+[3]: ./punisher_avatar.png
 
 Markdown 无法指定图片的高度与宽度，但是可以通过缩放调整图片的大小。
 
-<img src="../../../images/avatar.png" width="50%">
+<img src="./punisher_avatar.png" width="50%">
 
 语法为 `<img + space + src="url" + space + width="50%">`。
 
