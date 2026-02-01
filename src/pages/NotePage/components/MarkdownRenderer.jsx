@@ -6,9 +6,11 @@ import remarkMath from "remark-math";
 import rehypeRaw from "rehype-raw";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
+import remarkSlug from "remark-slug";
 
 import "katex/dist/katex.min.css";
 
+import CopyLinkIcon from "./CopyLinkIcon";
 import { resolveRelativePath } from "../../../utils/markdownUtils";
 import { remarkHighlightMark } from "../../../utils/markdownUtils";
 
@@ -16,6 +18,23 @@ const themeCssMap = {
   default_light: `${import.meta.env.BASE_URL}theme/github.css`,
   light: `${import.meta.env.BASE_URL}theme/github.css`,
   dark: `${import.meta.env.BASE_URL}theme/d42ker-github.css`,
+};
+
+const HeadingWithCopy = ({ level, children, ...props }) => {
+  const id = props.node?.data?.id || props.id;
+  const Tag = `h${level}`;
+  const theme = props.theme || "light";
+  return (
+    <Tag
+      id={id}
+      style={{ position: "relative" }}
+      onMouseEnter={() => {}}
+      onMouseLeave={() => {}}
+    >
+      {id && <CopyLinkIcon id={id} theme={theme} />}
+      {children}
+    </Tag>
+  );
 };
 
 const MarkdownRenderer = ({ content, theme }) => {
@@ -146,6 +165,8 @@ const MarkdownRenderer = ({ content, theme }) => {
         white-space: pre;
       }
       .markdown-body .katex-display {
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
         white-space: nowrap !important;
         padding-bottom: 2px;
       }
@@ -176,6 +197,13 @@ const MarkdownRenderer = ({ content, theme }) => {
   }, [theme]);
 
   const components = {
+    h1: (props) => <HeadingWithCopy level={1} {...props} />,
+    h2: (props) => <HeadingWithCopy level={2} {...props} />,
+    h3: (props) => <HeadingWithCopy level={3} {...props} />,
+    h4: (props) => <HeadingWithCopy level={4} {...props} />,
+    h5: (props) => <HeadingWithCopy level={5} {...props} />,
+    h6: (props) => <HeadingWithCopy level={6} {...props} />,
+
     // relative image path
     img({ src, style, ...props }) {
       let finalSrc = src;
@@ -227,7 +255,7 @@ const MarkdownRenderer = ({ content, theme }) => {
   return (
     <div className="markdown-body">
       <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkMath, remarkHighlightMark]}
+        remarkPlugins={[remarkGfm, remarkMath, remarkHighlightMark, remarkSlug]}
         rehypePlugins={[
           [rehypeRaw],
           [rehypeKatex, { strict: false }],

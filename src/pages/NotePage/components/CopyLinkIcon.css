@@ -1,0 +1,39 @@
+/* .copy-link-icon {
+  position: absolute;
+  left: -24px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+  cursor: pointer;
+  z-index: 1;
+  user-select: none;
+  display: flex;
+  align-items: center;
+} */
+
+.heading-hover .copy-link-icon {
+  opacity: 1;
+}
+
+.copy-link-icon .anticon {
+  color: var(--copy-link-icon-color, #666);
+}
+
+.copy-link-icon .copied-tip {
+  margin-left: 4px;
+  font-size: 0.8em;
+  color: var(--copy-link-icon-color, #666);
+  background: var(--copy-link-tip-bg, #f8f8f8);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+/* dark theme 适配，可根据父元素加 .dark-theme 或用 CSS 变量切换 */
+.dark-theme .copy-link-icon .anticon,
+.dark-theme .copy-link-icon .copied-tip {
+  color: #bbb;
+}
+.dark-theme .copy-link-icon .copied-tip {
+  background: #222;
+}

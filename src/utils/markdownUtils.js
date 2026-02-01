@@ -1,6 +1,7 @@
 import { unified } from "unified";
 import { visit } from "unist-util-visit";
 import remarkParse from "remark-parse";
+import remarkSlug from "remark-slug";
 
 function slugify(text) {
   return text
@@ -10,7 +11,10 @@ function slugify(text) {
 }
 
 function getOutline(markdown) {
-  const tree = unified().use(remarkParse).parse(markdown);
+  const tree = unified().use(remarkParse).use(remarkSlug).parse(markdown);
+  // 需要再 run 一下 pipeline 让 remark-slug 生效
+  unified().use(remarkParse).use(remarkSlug).runSync(tree);
+
   const outline = [];
   function visit(node) {
     if (node.type === "heading") {
@@ -21,7 +25,7 @@ function getOutline(markdown) {
       outline.push({
         level: node.depth,
         text,
-        id: slugify(text),
+        id: node.data?.id, // 用 remark-slug 生成的 id
       });
     }
     if (node.children) node.children.forEach(visit);
