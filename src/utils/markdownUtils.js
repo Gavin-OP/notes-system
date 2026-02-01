@@ -1,14 +1,15 @@
 import { unified } from "unified";
+import { visit } from "unist-util-visit";
 import remarkParse from "remark-parse";
 
-export function slugify(text) {
+function slugify(text) {
   return text
     .toLowerCase()
     .replace(/\s+/g, "-")
-    .replace(/[^\w-]/g, "");
+    .replace(/[^\w\u4e00-\u9fa5-]/g, "");
 }
 
-export function getOutline(markdown) {
+function getOutline(markdown) {
   const tree = unified().use(remarkParse).parse(markdown);
   const outline = [];
   function visit(node) {
@@ -28,3 +29,52 @@ export function getOutline(markdown) {
   visit(tree);
   return outline;
 }
+
+const resolveRelativePath = (base, relative) => {
+  const stack = base ? base.split("/") : [];
+  const parts = relative.split("/");
+  for (let i = 0; i < parts.length; i++) {
+    if (parts[i] === "." || parts[i] === "") continue;
+    if (parts[i] === "..") stack.pop();
+    else stack.push(parts[i]);
+  }
+  return stack.join("/");
+};
+
+function remarkHighlightMark() {
+  return (tree) => {
+    visit(tree, "text", (node, index, parent) => {
+      const regex = /==(.+?)==/g;
+      let match;
+      let lastIndex = 0;
+      const newNodes = [];
+      const value = node.value;
+
+      while ((match = regex.exec(value)) !== null) {
+        if (match.index > lastIndex) {
+          newNodes.push({
+            type: "text",
+            value: value.slice(lastIndex, match.index),
+          });
+        }
+        newNodes.push({
+          type: "html",
+          value: `<mark>${match[1]}</mark>`,
+        });
+        lastIndex = regex.lastIndex;
+      }
+      if (lastIndex < value.length) {
+        newNodes.push({
+          type: "text",
+          value: value.slice(lastIndex),
+        });
+      }
+      if (newNodes.length) {
+        parent.children.splice(index, 1, ...newNodes);
+        return index + newNodes.length;
+      }
+    });
+  };
+}
+
+export { slugify, getOutline, resolveRelativePath, remarkHighlightMark };
