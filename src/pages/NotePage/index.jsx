@@ -10,6 +10,11 @@ import MarkdownRenderer from "./components/MarkdownRenderer";
 import { findMeta } from "../../utils/notesIndexUtils";
 import { getOutline } from "../../utils/markdownUtils";
 
+function removeYamlFrontMatter(text) {
+  // 匹配以 --- 开头和结尾的 YAML front matter
+  return text.replace(/^---[\s\S]*?---\s*/, "");
+}
+
 function NotePage() {
   // navigation
   const { "*": note_url } = useParams();
@@ -46,12 +51,14 @@ function NotePage() {
               `${import.meta.env.BASE_URL}notes/${filePath}`,
             );
             if (res.ok) {
-              setNoteContent(await res.text());
+              const rawText = await res.text();
+              setNoteContent(removeYamlFrontMatter(rawText));
             } else {
               setNoteContent("Note file not found.");
             }
           } catch (e) {
             setNoteContent("Error loading note content.");
+            console.log(e);
           }
         } else {
           setNoteContent("");
@@ -65,20 +72,14 @@ function NotePage() {
     dispatch(setCurrentNoteOutline(outline));
   }, [noteContent, outline, dispatch]);
 
+  console.log("Note Meta Information:", selectedMeta);
+
   return (
     <>
       <div>
-        <h2>Note Meta Information</h2>
-        <div>
-          {notesIndex && <pre>{JSON.stringify(selectedMeta, null, 2)}</pre>}
-        </div>
-        <br></br>
-        <h2>Note Content</h2>
-        <div>
-          {noteContent && (
-            <MarkdownRenderer content={noteContent} theme={theme} />
-          )}
-        </div>
+        {noteContent && (
+          <MarkdownRenderer content={noteContent} theme={theme} />
+        )}
       </div>
     </>
   );
