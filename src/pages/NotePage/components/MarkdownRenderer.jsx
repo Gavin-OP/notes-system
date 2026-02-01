@@ -7,6 +7,8 @@ import rehypeRaw from "rehype-raw";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 import remarkSlug from "remark-slug";
+import { rehypeMermaid, MermaidBlock } from "react-markdown-mermaid";
+import Mermaid from "react-mermaid2";
 
 import "katex/dist/katex.min.css";
 
@@ -214,7 +216,13 @@ const MarkdownRenderer = ({ content, theme }) => {
       }
 
       // 合并用户自定义 style，优先级高于默认
-      const mergedStyle = { width: "100%", ...style };
+      const mergedStyle = {
+        display: "block",
+        maxWidth: "100%",
+        marginLeft: "auto",
+        marginRight: "auto",
+        ...style,
+      };
       return <img src={finalSrc} style={mergedStyle} {...props} />;
     },
 
@@ -250,6 +258,8 @@ const MarkdownRenderer = ({ content, theme }) => {
       // 3. 其他情况原样渲染
       return <li {...props}>{children}</li>;
     },
+
+    MermaidBlock: MermaidBlock,
   };
 
   return (
@@ -260,6 +270,15 @@ const MarkdownRenderer = ({ content, theme }) => {
           [rehypeRaw],
           [rehypeKatex, { strict: false }],
           [rehypeHighlight],
+          [
+            rehypeMermaid,
+            {
+              mermaidConfig: {
+                theme: theme === "dark" ? "dark" : "default",
+                flowchart: { useMaxWidth: true },
+              },
+            },
+          ],
         ]}
         components={components}
       >
