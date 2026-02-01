@@ -22,10 +22,14 @@
     "react-markdown": "^10.1.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.12.0",
+    "rehype-highlight": "^7.0.2",
     "rehype-katex": "^7.0.1",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
-    "remark-math": "^6.0.0"
+    "remark-mark": "^0.0.0",
+    "remark-mark-plus": "^1.0.21",
+    "remark-math": "^6.0.0",
+    "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
