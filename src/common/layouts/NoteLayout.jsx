@@ -132,7 +132,7 @@ const NoteLayout = () => {
 
         {/* menu */}
         <Sider
-          width={350}
+          width={isMobile ? "100%" : 350}
           collapsedWidth={0}
           style={{
             background: colorBgContainer,
@@ -143,6 +143,7 @@ const NoteLayout = () => {
               top: 64,
               bottom: 0,
               zIndex: 100,
+              width: "100%",
             }),
           }}
           collapsible
@@ -152,7 +153,12 @@ const NoteLayout = () => {
           {showMenu && (
             <Menu
               mode="inline"
-              style={{ height: "100%", borderInlineEnd: 0 }}
+              style={{
+                height: "100%",
+                borderInlineEnd: 0,
+                // Larger font size on mobile for better readability
+                fontSize: isMobile ? "16px" : "14px",
+              }}
               items={menuItems}
               onClick={({ key }) => {
                 handleNoteSelect(key);
