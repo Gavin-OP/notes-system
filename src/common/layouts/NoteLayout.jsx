@@ -113,12 +113,38 @@ const NoteLayout = () => {
         </Row>
       </Header>
 
-      <Layout>
+      <Layout style={{ position: "relative" }}>
+        {/* Backdrop overlay for mobile menu */}
+        {isMobile && !collapsed && (
+          <div
+            onClick={() => setCollapsed(true)}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0, 0, 0, 0.5)",
+              zIndex: 99,
+            }}
+          />
+        )}
+
         {/* menu */}
         <Sider
           width={350}
           collapsedWidth={0}
-          style={{ background: colorBgContainer }}
+          style={{
+            background: colorBgContainer,
+            // Overlay mode on mobile, normal mode on desktop
+            ...(isMobile && {
+              position: "fixed",
+              left: 0,
+              top: 64,
+              bottom: 0,
+              zIndex: 100,
+            }),
+          }}
           collapsible
           collapsed={collapsed}
           trigger={null}
@@ -128,7 +154,13 @@ const NoteLayout = () => {
               mode="inline"
               style={{ height: "100%", borderInlineEnd: 0 }}
               items={menuItems}
-              onClick={({ key }) => handleNoteSelect(key)}
+              onClick={({ key }) => {
+                handleNoteSelect(key);
+                // Auto-close menu on mobile after selection
+                if (isMobile) {
+                  setCollapsed(true);
+                }
+              }}
             />
           )}
         </Sider>
