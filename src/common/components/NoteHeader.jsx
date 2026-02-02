@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Select, Switch, AutoComplete, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
@@ -12,6 +12,16 @@ function NoteHeader({
   // hooks
   const [showSearch, setShowSearch] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // constants
   const themeLabel = language === "cn" ? "主题" : "Theme";
@@ -21,8 +31,8 @@ function NoteHeader({
   const searchPlaceholder = language === "cn" ? "搜索..." : "Search...";
 
   return (
-    <div>
-      <Space>
+    <div style={{ paddingRight: isMobile ? "8px" : "0" }}>
+      <Space size={isMobile ? "small" : "middle"}>
         {/* search */}
         <span
           style={{ position: "relative" }}
@@ -39,7 +49,7 @@ function NoteHeader({
                 placeholder={searchPlaceholder}
                 showSearch
                 autoFocus
-                style={{ width: 200 }}
+                style={{ width: isMobile ? 150 : 200 }}
               ></AutoComplete>
             )}
             <SearchOutlined
@@ -49,8 +59,8 @@ function NoteHeader({
           </Space>
         </span>
 
-        {/* language switch */}
-        <span>{languageLabel}</span>
+        {/* language switch - hide label on mobile */}
+        {!isMobile && <span>{languageLabel}</span>}
         <Select
           value={language}
           options={[
@@ -58,15 +68,15 @@ function NoteHeader({
             { value: "cn", label: "中文" },
           ]}
           onChange={onLanguageChange}
-          style={{ width: 100 }}
+          style={{ width: isMobile ? 80 : 100 }}
         />
 
-        {/* theme switch */}
-        <span>{themeLabel}</span>
+        {/* theme switch - hide label on mobile */}
+        {!isMobile && <span>{themeLabel}</span>}
         <Switch
           checked={theme === "dark"}
-          checkedChildren={darkLabel}
-          unCheckedChildren={lightLabel}
+          checkedChildren={isMobile ? "" : darkLabel}
+          unCheckedChildren={isMobile ? "" : lightLabel}
           onChange={onThemeChange}
         />
       </Space>

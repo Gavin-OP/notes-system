@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout, Menu, Breadcrumb, Button, theme, Row, Col } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -17,8 +17,24 @@ const NoteLayout = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [collapsed, setCollapsed] = useState(false);
+  
+  // Detect mobile screen size
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [collapsed, setCollapsed] = useState(window.innerWidth < 768);
   const [showMenu, setShowMenu] = useState(true);
+
+  // Handle screen resize for responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile && !collapsed) {
+        setCollapsed(true);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [collapsed]);
 
   // redux
   const themeValue = useSelector((state) => state.preference.theme);
@@ -117,26 +133,29 @@ const NoteLayout = () => {
           )}
         </Sider>
 
-        <Layout style={{ padding: "0 24px 24px" }}>
+        <Layout style={{ padding: isMobile ? "0 12px 12px" : "0 24px 24px" }}>
           {/* breadcrumb and markdown renderer */}
-          <Breadcrumb items={breadcrumbItems} style={{ margin: "16px 0" }} />
+          <Breadcrumb items={breadcrumbItems} style={{ margin: isMobile ? "12px 0" : "16px 0" }} />
           <Layout>
             <Content
               style={{
                 flex: 1,
-                padding: 24,
+                padding: isMobile ? 12 : 24,
                 background: colorBgContainer,
                 borderRadius: borderRadiusLG,
               }}
             >
               <Outlet />
             </Content>
-            <Sider
-              width={350}
-              style={{ background: "transparent", padding: "0 24px" }}
-            >
-              <OutlineSider outline={outline} />
-            </Sider>
+            {/* Hide outline sider on mobile */}
+            {!isMobile && (
+              <Sider
+                width={350}
+                style={{ background: "transparent", padding: "0 24px" }}
+              >
+                <OutlineSider outline={outline} />
+              </Sider>
+            )}
           </Layout>
         </Layout>
       </Layout>
