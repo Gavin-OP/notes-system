@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Select, Switch, AutoComplete, Space } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Dropdown, AutoComplete, Space } from "antd";
+import {
+  SearchOutlined,
+  GlobalOutlined,
+  SunOutlined,
+  MoonOutlined,
+} from "@ant-design/icons";
 import "./NoteHeader.css";
 
 function NoteHeader({
@@ -18,17 +23,32 @@ function NoteHeader({
   // Redux state
   const isMobile = useSelector((state) => state.preference.isMobile);
 
-  // constants
-  const themeLabel = language === "cn" ? "主题" : "Theme";
-  const languageLabel = language === "cn" ? "语言" : "Language";
-  const darkLabel = language === "cn" ? "深色" : "Dark";
-  const lightLabel = language === "cn" ? "浅色" : "Light";
+  // Constants
   const searchPlaceholder = language === "cn" ? "搜索..." : "Search...";
+
+  // Language menu items
+  const languageItems = [
+    {
+      key: "en",
+      label: "English",
+      onClick: () => onLanguageChange("en"),
+    },
+    {
+      key: "cn",
+      label: "中文",
+      onClick: () => onLanguageChange("cn"),
+    },
+  ];
+
+  // Handle theme toggle
+  const handleThemeToggle = () => {
+    onThemeChange(theme !== "dark");
+  };
 
   return (
     <div>
       <Space size={isMobile ? "small" : "middle"}>
-        {/* search */}
+        {/* Search */}
         <span
           className="note-header__search-wrapper"
           onMouseEnter={() => setShowSearch(true)}
@@ -54,26 +74,27 @@ function NoteHeader({
           </Space>
         </span>
 
-        {/* language switch - hide label on mobile */}
-        {!isMobile && <span>{languageLabel}</span>}
-        <Select
-          className={`note-header__language-select ${isMobile ? 'note-header__language-select--mobile' : ''}`}
-          value={language}
-          options={[
-            { value: "en", label: "English" },
-            { value: "cn", label: "中文" },
-          ]}
-          onChange={onLanguageChange}
-        />
+        {/* Language selector - click globe icon to show dropdown */}
+        <Dropdown
+          menu={{ items: languageItems, selectable: true, selectedKeys: [language] }}
+          trigger={["click"]}
+          placement="bottomRight"
+        >
+          <GlobalOutlined className="note-header__icon note-header__icon--clickable" />
+        </Dropdown>
 
-        {/* theme switch - hide label on mobile */}
-        {!isMobile && <span>{themeLabel}</span>}
-        <Switch
-          checked={theme === "dark"}
-          checkedChildren={isMobile ? "" : darkLabel}
-          unCheckedChildren={isMobile ? "" : lightLabel}
-          onChange={onThemeChange}
-        />
+        {/* Theme toggle - click icon to switch theme */}
+        {theme === "dark" ? (
+          <MoonOutlined 
+            className="note-header__icon note-header__icon--clickable" 
+            onClick={handleThemeToggle}
+          />
+        ) : (
+          <SunOutlined 
+            className="note-header__icon note-header__icon--clickable" 
+            onClick={handleThemeToggle}
+          />
+        )}
       </Space>
     </div>
   );
