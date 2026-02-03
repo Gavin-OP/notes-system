@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { Layout, Menu, Breadcrumb, Button, theme, Row, Col } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  FolderOutlined,
+  FileTextOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setTheme, setLanguage } from "../../redux/preferenceSlice";
@@ -9,6 +15,29 @@ import OutlineSider from "../components/OutlineSider";
 import { buildMenuItems } from "../../utils/notesIndexUtils";
 
 const { Header, Sider, Content } = Layout;
+
+// Helper function to convert iconType to actual icon component
+const getIcon = (iconType) => {
+  switch (iconType) {
+    case "info":
+      return <InfoCircleOutlined />;
+    case "folder":
+      return <FolderOutlined />;
+    case "file":
+      return <FileTextOutlined />;
+    default:
+      return null;
+  }
+};
+
+// Add icons to menu items recursively
+const addIconsToMenuItems = (items) => {
+  return items.map((item) => ({
+    ...item,
+    icon: getIcon(item.iconType),
+    children: item.children ? addIconsToMenuItems(item.children) : undefined,
+  }));
+};
 
 const NoteLayout = () => {
   const {
@@ -43,8 +72,8 @@ const NoteLayout = () => {
   const currentMeta = useSelector((state) => state.currentNote.meta);
   const outline = useSelector((state) => state.currentNote.outline);
 
-  // menu
-  const menuItems = buildMenuItems(notesIndex);
+  // menu - build items and add icons
+  const menuItems = addIconsToMenuItems(buildMenuItems(notesIndex));
 
   // breadcrumb
   const breadcrumbItems = currentMeta
@@ -77,7 +106,7 @@ const NoteLayout = () => {
       <Header
         style={{
           background: colorBgContainer,
-          padding: 0,
+          padding: isMobile ? "0 12px" : "0 24px",
           display: "flex",
           alignItems: "center",
         }}
@@ -93,7 +122,7 @@ const NoteLayout = () => {
                 else setShowMenu(true);
                 setCollapsed(!collapsed);
               }}
-              style={{ fontSize: 20, marginRight: 16 }}
+              style={{ fontSize: 20, marginRight: isMobile ? 8 : 16 }}
             />
           </Col>
 

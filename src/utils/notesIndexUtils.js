@@ -17,21 +17,39 @@ function findMeta(data, key) {
   return null;
 }
 
+// Helper function to determine icon type
+function getIconType(item) {
+  const name = (item.name || "").toLowerCase();
+  const title = (item.title || "").toLowerCase();
+
+  if (name === "disclaimer.md" || title === "disclaimer") {
+    return "info";
+  } else if (item.type === "folder") {
+    return "folder";
+  } else {
+    return "file";
+  }
+}
+
 function buildMenuItems(data) {
   if (!data) return [];
   return data
     .filter((item) => item.display !== false)
     .map((item) => {
+      const iconType = getIconType(item);
+
       if (item.type === "folder" && item.children && item.children.length > 0) {
         return {
           key: item.url,
           label: item.title || item.name,
+          iconType: iconType,
           children: buildMenuItems(item.children),
         };
       }
       return {
         key: item.url,
         label: item.title || item.name,
+        iconType: iconType,
       };
     });
 }

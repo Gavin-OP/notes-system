@@ -31,7 +31,7 @@ function NoteHeader({
   const searchPlaceholder = language === "cn" ? "搜索..." : "Search...";
 
   return (
-    <div style={{ paddingRight: isMobile ? "8px" : "0" }}>
+    <div>
       <Space size={isMobile ? "small" : "middle"}>
         {/* search */}
         <span

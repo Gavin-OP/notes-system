@@ -29,9 +29,8 @@ const HeadingWithCopy = ({ level, children, ...props }) => {
   return (
     <Tag
       id={id}
+      className="markdown-heading-with-link"
       style={{ position: "relative" }}
-      onMouseEnter={() => {}}
-      onMouseLeave={() => {}}
     >
       {id && <CopyLinkIcon id={id} theme={theme} />}
       {children}
