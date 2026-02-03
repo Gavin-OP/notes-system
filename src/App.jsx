@@ -15,6 +15,7 @@ import enUSMobile from "antd-mobile/es/locales/en-US";
 
 import Routes from "./router/Routes";
 import { fetchNotesIndex } from "./redux/notesIndexSlice";
+import { setIsMobile } from "./redux/preferenceSlice";
 
 import "./App.css";
 
@@ -25,6 +26,20 @@ function App() {
   const language = useSelector((state) => state.preference.language);
   const themeMode = useSelector((state) => state.preference.theme);
   const status = useSelector((state) => state.notesIndex.status);
+
+  // Global mobile detection
+  useEffect(() => {
+    const handleResize = () => {
+      dispatch(setIsMobile(window.innerWidth < 768));
+    };
+    
+    // Initial check
+    handleResize();
+    
+    // Listen to resize
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [dispatch]);
 
   useEffect(() => {
     if (themeMode) {

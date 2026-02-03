@@ -48,30 +48,24 @@ const NoteLayout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
-  // Detect mobile screen size
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [collapsed, setCollapsed] = useState(window.innerWidth < 768);
-  const [showMenu, setShowMenu] = useState(true);
-
-  // Handle screen resize for responsive behavior
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-      if (mobile && !collapsed) {
-        setCollapsed(true);
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [collapsed]);
-
-  // redux
+  // Redux state
   const themeValue = useSelector((state) => state.preference.theme);
   const language = useSelector((state) => state.preference.language);
+  const isMobile = useSelector((state) => state.preference.isMobile);
   const notesIndex = useSelector((state) => state.notesIndex.data) || [];
   const currentMeta = useSelector((state) => state.currentNote.meta);
   const outline = useSelector((state) => state.currentNote.outline);
+
+  // Local component state
+  const [collapsed, setCollapsed] = useState(isMobile);
+  const [showMenu, setShowMenu] = useState(true);
+
+  // Auto-collapse menu when switching to mobile
+  useEffect(() => {
+    if (isMobile && !collapsed) {
+      setCollapsed(true);
+    }
+  }, [isMobile, collapsed]);
 
   // menu - build items and add icons
   const menuItems = addIconsToMenuItems(buildMenuItems(notesIndex));

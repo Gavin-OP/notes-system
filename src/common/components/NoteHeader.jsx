@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Select, Switch, AutoComplete, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import "./NoteHeader.css";
@@ -10,19 +11,12 @@ function NoteHeader({
   onLanguageChange,
   onSearch,
 }) {
-  // hooks
+  // Local state
   const [showSearch, setShowSearch] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-  // Detect mobile screen size
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  
+  // Redux state
+  const isMobile = useSelector((state) => state.preference.isMobile);
 
   // constants
   const themeLabel = language === "cn" ? "主题" : "Theme";
