@@ -18,7 +18,7 @@ If you would like to contribute to this project or if you find any errors in the
 Special thanks to all the contributors who have generously shared their knowledge and expertise to make this project possible:
 
 - [Anita](mailto:1155173850@link.cuhk.edu.hk)  
-- [Cindy](mailto:)
+- [Cindy](mailto:konnayuki0302@gmail.com)
 - [Gavin OP](mailto:HaoxiangZhang@link.cuhk.edu.hk)
 - [QIU Kexin (Chloe)](mailto:1155173885@link.cuhk.edu.hk)  
 - [Rosa](mailto:ruoshui2021@gmail.com)
