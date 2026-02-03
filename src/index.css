@@ -22,7 +22,7 @@ body {
   }
 }
 
-/* Mobile responsive styles */
+/* Mobile responsive styles - global components only */
 @media (max-width: 768px) {
   /* Mobile menu styles - larger touch targets */
   .ant-menu-item,
@@ -36,40 +36,5 @@ body {
   .ant-menu-submenu .ant-menu-item {
     height: 44px !important;
     line-height: 44px !important;
-  }
-
-  /* Ensure markdown content is readable on mobile */
-  .markdown-body {
-    font-size: 14px;
-  }
-
-  .markdown-body h1 {
-    font-size: 1.8em;
-  }
-
-  .markdown-body h2 {
-    font-size: 1.5em;
-  }
-
-  .markdown-body h3 {
-    font-size: 1.3em;
-  }
-
-  /* Ensure tables are scrollable on mobile */
-  .markdown-body table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  /* Ensure code blocks fit mobile screens */
-  .markdown-body pre {
-    font-size: 12px;
-    overflow-x: auto;
-  }
-
-  /* Adjust image margins on mobile */
-  .markdown-body img {
-    margin: 8px auto;
   }
 }
