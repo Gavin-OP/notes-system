@@ -15,6 +15,7 @@ import "katex/dist/katex.min.css";
 import CopyLinkIcon from "./CopyLinkIcon";
 import { resolveRelativePath } from "../../../utils/markdownUtils";
 import { remarkHighlightMark } from "../../../utils/markdownUtils";
+import "./MarkdownRenderer.css";
 
 const themeCssMap = {
   default_light: `${import.meta.env.BASE_URL}theme/github.css`,
@@ -30,7 +31,6 @@ const HeadingWithCopy = ({ level, children, ...props }) => {
     <Tag
       id={id}
       className="markdown-heading-with-link"
-      style={{ position: "relative" }}
     >
       {id && <CopyLinkIcon id={id} theme={theme} />}
       {children}
@@ -234,7 +234,7 @@ const MarkdownRenderer = ({ content, theme }) => {
     table({ node, ...props }) {
       return (
         <table
-          style={{ width: "100%", borderCollapse: "collapse" }}
+          className="markdown-table"
           {...props}
         />
       );

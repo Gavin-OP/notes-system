@@ -13,6 +13,7 @@ import { setTheme, setLanguage } from "../../redux/preferenceSlice";
 import NoteHeader from "../components/NoteHeader";
 import OutlineSider from "../components/OutlineSider";
 import { buildMenuItems } from "../../utils/notesIndexUtils";
+import "./NoteLayout.css";
 
 const { Header, Sider, Content } = Layout;
 
@@ -101,28 +102,31 @@ const NoteLayout = () => {
   const handleNoteSelect = (path) => navigate(path);
 
   return (
-    <Layout style={{ width: "100%", minHeight: "100vh" }}>
+    <Layout 
+      className="note-layout"
+      style={{
+        '--header-bg': colorBgContainer,
+        '--sider-bg': colorBgContainer,
+        '--content-bg': colorBgContainer,
+        '--content-radius': borderRadiusLG,
+      }}
+    >
       {/* header */}
       <Header
-        style={{
-          background: colorBgContainer,
-          padding: isMobile ? "0 12px" : "0 24px",
-          display: "flex",
-          alignItems: "center",
-        }}
+        className={`note-layout__header ${isMobile ? 'note-layout__header--mobile' : ''}`}
       >
         {/* menu collapse button */}
-        <Row align="middle" style={{ width: "100%" }}>
+        <Row align="middle" className="note-layout__header-row">
           <Col>
             <Button
               type="text"
+              className={`note-layout__menu-button ${isMobile ? 'note-layout__menu-button--mobile' : ''}`}
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               onClick={() => {
                 if (!collapsed) setShowMenu(false);
                 else setShowMenu(true);
                 setCollapsed(!collapsed);
               }}
-              style={{ fontSize: 20, marginRight: isMobile ? 8 : 16 }}
             />
           </Col>
 
@@ -142,20 +146,12 @@ const NoteLayout = () => {
         </Row>
       </Header>
 
-      <Layout style={{ position: "relative" }}>
+      <Layout className="note-layout__body">
         {/* Backdrop overlay for mobile menu */}
         {isMobile && !collapsed && (
           <div
+            className="note-layout__backdrop"
             onClick={() => setCollapsed(true)}
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: "transparent",
-              zIndex: 99,
-            }}
           />
         )}
 
@@ -163,18 +159,7 @@ const NoteLayout = () => {
         <Sider
           width={isMobile ? "100%" : 350}
           collapsedWidth={0}
-          style={{
-            background: colorBgContainer,
-            // Overlay mode on mobile, normal mode on desktop
-            ...(isMobile && {
-              position: "fixed",
-              left: 0,
-              top: 64,
-              bottom: 0,
-              zIndex: 100,
-              width: "100%",
-            }),
-          }}
+          className={`note-layout__sider ${isMobile ? 'note-layout__sider--mobile' : ''}`}
           collapsible
           collapsed={collapsed}
           trigger={null}
@@ -182,12 +167,7 @@ const NoteLayout = () => {
           {showMenu && (
             <Menu
               mode="inline"
-              style={{
-                height: "100%",
-                borderInlineEnd: 0,
-                // Larger font size on mobile for better readability
-                fontSize: isMobile ? "16px" : "14px",
-              }}
+              className={`note-layout__menu ${isMobile ? 'note-layout__menu--mobile' : ''}`}
               items={menuItems}
               onClick={({ key }) => {
                 handleNoteSelect(key);
@@ -200,17 +180,15 @@ const NoteLayout = () => {
           )}
         </Sider>
 
-        <Layout style={{ padding: isMobile ? "0 12px 12px" : "0 24px 24px" }}>
+        <Layout className={`note-layout__content-wrapper ${isMobile ? 'note-layout__content-wrapper--mobile' : ''}`}>
           {/* breadcrumb and markdown renderer */}
-          <Breadcrumb items={breadcrumbItems} style={{ margin: isMobile ? "12px 0" : "16px 0" }} />
+          <Breadcrumb 
+            items={breadcrumbItems} 
+            className={`note-layout__breadcrumb ${isMobile ? 'note-layout__breadcrumb--mobile' : ''}`}
+          />
           <Layout>
             <Content
-              style={{
-                flex: 1,
-                padding: isMobile ? 12 : 24,
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG,
-              }}
+              className={`note-layout__content ${isMobile ? 'note-layout__content--mobile' : ''}`}
             >
               <Outlet />
             </Content>
@@ -218,7 +196,7 @@ const NoteLayout = () => {
             {!isMobile && (
               <Sider
                 width={350}
-                style={{ background: "transparent", padding: "0 24px" }}
+                className="note-layout__outline-sider"
               >
                 <OutlineSider outline={outline} />
               </Sider>

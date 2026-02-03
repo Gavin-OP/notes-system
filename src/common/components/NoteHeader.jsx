@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Select, Switch, AutoComplete, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import "./NoteHeader.css";
 
 function NoteHeader({
   theme,
@@ -35,13 +36,14 @@ function NoteHeader({
       <Space size={isMobile ? "small" : "middle"}>
         {/* search */}
         <span
-          style={{ position: "relative" }}
+          className="note-header__search-wrapper"
           onMouseEnter={() => setShowSearch(true)}
           onMouseLeave={() => setShowSearch(false)}
         >
           <Space>
             {showSearch && (
               <AutoComplete
+                className={`note-header__search-input ${isMobile ? 'note-header__search-input--mobile' : ''}`}
                 value={searchValue}
                 options={[]}
                 onChange={setSearchValue}
@@ -49,11 +51,10 @@ function NoteHeader({
                 placeholder={searchPlaceholder}
                 showSearch
                 autoFocus
-                style={{ width: isMobile ? 150 : 200 }}
               ></AutoComplete>
             )}
             <SearchOutlined
-              style={{ fontSize: 18, cursor: "pointer" }}
+              className="note-header__search-icon"
               onClick={() => setShowSearch(true)}
             />
           </Space>
@@ -62,13 +63,13 @@ function NoteHeader({
         {/* language switch - hide label on mobile */}
         {!isMobile && <span>{languageLabel}</span>}
         <Select
+          className={`note-header__language-select ${isMobile ? 'note-header__language-select--mobile' : ''}`}
           value={language}
           options={[
             { value: "en", label: "English" },
             { value: "cn", label: "中文" },
           ]}
           onChange={onLanguageChange}
-          style={{ width: isMobile ? 80 : 100 }}
         />
 
         {/* theme switch - hide label on mobile */}

@@ -1,0 +1,10 @@
+/* OutlineSider - Table of contents styles */
+
+.outline-sider {
+  overflow: auto;
+}
+
+.outline-sider__item {
+  margin-left: var(--outline-indent);
+}
+

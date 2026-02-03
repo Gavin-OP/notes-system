@@ -1,15 +1,21 @@
 import { Anchor } from "antd";
+import "./OutlineSider.css";
 
 const OutlineSider = ({ outline }) => {
   return (
     <Anchor
       affix={true}
-      style={{ overflow: "auto" }}
+      className="outline-sider"
       items={outline.map((item) => ({
         key: item.id,
         href: `#${item.id}`,
         title: (
-          <span style={{ marginLeft: (item.level - 1) * 12 }}>{item.text}</span>
+          <span 
+            className="outline-sider__item"
+            style={{ '--outline-indent': `${(item.level - 1) * 12}px` }}
+          >
+            {item.text}
+          </span>
         ),
       }))}
     />

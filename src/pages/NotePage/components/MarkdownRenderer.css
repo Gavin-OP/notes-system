@@ -1,0 +1,11 @@
+/* MarkdownRenderer - Markdown content styles */
+
+.markdown-heading-with-link {
+  position: relative;
+}
+
+.markdown-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+

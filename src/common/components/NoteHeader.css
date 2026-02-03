@@ -1,0 +1,27 @@
+/* NoteHeader - Header controls styles */
+
+.note-header__search-wrapper {
+  position: relative;
+}
+
+.note-header__search-input {
+  width: 200px;
+}
+
+.note-header__search-input--mobile {
+  width: 150px;
+}
+
+.note-header__search-icon {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.note-header__language-select {
+  width: 100px;
+}
+
+.note-header__language-select--mobile {
+  width: 80px;
+}
+
