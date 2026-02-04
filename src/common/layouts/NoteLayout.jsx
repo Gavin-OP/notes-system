@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Layout, Menu, Breadcrumb, Button, theme, Row, Col } from "antd";
 import {
   MenuFoldOutlined,
@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setTheme, setLanguage } from "../../redux/preferenceSlice";
 import NoteHeader from "../components/NoteHeader";
 import OutlineSider from "../components/OutlineSider";
+import FloatingOutlineButton from "../components/FloatingOutlineButton";
 import { buildMenuItems } from "../../utils/notesIndexUtils";
 import "./NoteLayout.css";
 
@@ -59,13 +60,50 @@ const NoteLayout = () => {
   // Local component state
   const [collapsed, setCollapsed] = useState(isMobile);
   const [showMenu, setShowMenu] = useState(true);
+  const [outlineCollapsed, setOutlineCollapsed] = useState(false);
+  const [showFloatingButton, setShowFloatingButton] = useState(true);
+  
+  // Track previous isMobile value
+  const prevIsMobileRef = useRef(isMobile);
 
-  // Auto-collapse menu when switching to mobile
+  // Auto-collapse menu when switching FROM desktop TO mobile
   useEffect(() => {
-    if (isMobile && !collapsed) {
+    if (isMobile && !prevIsMobileRef.current) {
+      // Just switched to mobile, collapse the menu
       setCollapsed(true);
     }
-  }, [isMobile, collapsed]);
+    prevIsMobileRef.current = isMobile;
+  }, [isMobile]);
+
+  // Scroll listener for floating button (mobile only)
+  useEffect(() => {
+    if (!isMobile) return;
+
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          
+          // Hide button when scrolling down, show when scrolling up
+          if (currentScrollY > lastScrollY && currentScrollY > 100) {
+            setShowFloatingButton(false);
+          } else {
+            setShowFloatingButton(true);
+          }
+          
+          lastScrollY = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isMobile]);
 
   // menu - build items and add icons
   const menuItems = addIconsToMenuItems(buildMenuItems(notesIndex));
@@ -94,6 +132,7 @@ const NoteLayout = () => {
   const handleLanguageChange = (value) => dispatch(setLanguage(value));
   const handleSearch = (value) => {};
   const handleNoteSelect = (path) => navigate(path);
+  const handleOutlineCollapse = () => setOutlineCollapsed(!outlineCollapsed);
 
   return (
     <Layout 
@@ -140,7 +179,7 @@ const NoteLayout = () => {
         </Row>
       </Header>
 
-      <Layout className="note-layout__body">
+      <Layout className="note-layout__main">
         {/* Backdrop overlay for mobile menu */}
         {isMobile && !collapsed && (
           <div
@@ -190,14 +229,30 @@ const NoteLayout = () => {
             {!isMobile && (
               <Sider
                 width={350}
-                className="note-layout__outline-sider"
+                collapsedWidth={48}
+                className={`note-layout__outline-sider ${outlineCollapsed ? 'note-layout__outline-sider--collapsed' : ''}`}
+                collapsible
+                collapsed={outlineCollapsed}
+                trigger={null}
               >
-                <OutlineSider outline={outline} />
+                <OutlineSider 
+                  outline={outline}
+                  collapsed={outlineCollapsed}
+                  onCollapse={handleOutlineCollapse}
+                />
               </Sider>
             )}
           </Layout>
         </Layout>
       </Layout>
+      
+      {/* Floating outline button for mobile */}
+      {isMobile && (
+        <FloatingOutlineButton 
+          outline={outline}
+          visible={showFloatingButton}
+        />
+      )}
     </Layout>
   );
 };

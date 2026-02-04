@@ -31,8 +31,8 @@
   margin-right: 8px;
 }
 
-/* Body layout */
-.note-layout__body {
+/* Main layout */
+.note-layout__main {
   position: relative;
 }
 
@@ -106,5 +106,10 @@
 .note-layout__outline-sider {
   background: transparent;
   padding: 0 24px;
+  transition: all 0.2s ease;
+}
+
+.note-layout__outline-sider--collapsed {
+  padding: 0 4px;
 }
 
