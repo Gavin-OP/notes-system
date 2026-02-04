@@ -37,7 +37,7 @@ const CopyLinkIcon = ({ id }) => {
     >
       <LinkOutlined />
       {copied && (
-        <span className="copied-tip">
+        <span className="copy-link-icon__tip">
           {messages[language]?.copied || messages.cn.copied}
         </span>
       )}

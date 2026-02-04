@@ -29,7 +29,7 @@ const FloatingOutlineButton = ({ outline, visible }) => {
         placement="right"
         onClose={() => setDrawerOpen(false)}
         open={drawerOpen}
-        className="floating-outline-drawer"
+        className="floating-outline-button__drawer"
       >
         <OutlineSider
           outline={outline}
