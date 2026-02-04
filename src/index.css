@@ -23,6 +23,7 @@ body {
 }
 
 /* Mobile responsive styles - global components only */
+/* TODO make this into correct file */
 @media (max-width: 768px) {
   /* Mobile menu styles - larger touch targets */
   .ant-menu-item,

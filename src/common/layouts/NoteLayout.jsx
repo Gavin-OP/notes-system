@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Outlet, useNavigate } from "react-router-dom";
+
 import { Layout, Menu, Breadcrumb, Button, theme, Row, Col } from "antd";
 import {
   MenuFoldOutlined,
@@ -7,18 +10,19 @@ import {
   FileTextOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { setTheme, setLanguage } from "../../redux/preferenceSlice";
+
 import NoteHeader from "../components/NoteHeader";
 import OutlineSider from "../components/OutlineSider";
 import FloatingOutlineButton from "../components/FloatingOutlineButton";
+
 import { buildMenuItems } from "../../utils/notesIndexUtils";
+import { setTheme, setLanguage } from "../../redux/preferenceSlice";
+
 import "./NoteLayout.css";
 
 const { Header, Sider, Content } = Layout;
 
-// Helper function to convert iconType to actual icon component
+// convert icon type to icon
 const getIcon = (iconType) => {
   switch (iconType) {
     case "info":
@@ -32,7 +36,7 @@ const getIcon = (iconType) => {
   }
 };
 
-// Add icons to menu items recursively
+// add icons to menu items recursively
 const addIconsToMenuItems = (items) => {
   return items.map((item) => ({
     ...item,
@@ -48,8 +52,8 @@ const NoteLayout = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
-  // Redux state
+
+  // redux state
   const themeValue = useSelector((state) => state.preference.theme);
   const language = useSelector((state) => state.preference.language);
   const isMobile = useSelector((state) => state.preference.isMobile);
@@ -57,19 +61,19 @@ const NoteLayout = () => {
   const currentMeta = useSelector((state) => state.currentNote.meta);
   const outline = useSelector((state) => state.currentNote.outline);
 
-  // Local component state
+  // local state
   const [collapsed, setCollapsed] = useState(isMobile);
   const [showMenu, setShowMenu] = useState(true);
   const [outlineCollapsed, setOutlineCollapsed] = useState(false);
   const [showFloatingButton, setShowFloatingButton] = useState(true);
-  
-  // Track previous isMobile value
+
+  // track previous isMobile value
   const prevIsMobileRef = useRef(isMobile);
 
-  // Auto-collapse menu when switching FROM desktop TO mobile
+  // auto collapse menu when switching from desktop to mobile
   useEffect(() => {
     if (isMobile && !prevIsMobileRef.current) {
-      // Just switched to mobile, collapse the menu
+      // just switched to mobile, collapse the menu
       setCollapsed(true);
     }
     prevIsMobileRef.current = isMobile;
@@ -86,14 +90,14 @@ const NoteLayout = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
-          
-          // Hide button when scrolling down, show when scrolling up
+
+          // hide button when scrolling down, show when scrolling up
           if (currentScrollY > lastScrollY && currentScrollY > 100) {
             setShowFloatingButton(false);
           } else {
             setShowFloatingButton(true);
           }
-          
+
           lastScrollY = currentScrollY;
           ticking = false;
         });
@@ -105,7 +109,7 @@ const NoteLayout = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isMobile]);
 
-  // menu - build items and add icons
+  // menu contents & icons
   const menuItems = addIconsToMenuItems(buildMenuItems(notesIndex));
 
   // breadcrumb
@@ -135,25 +139,25 @@ const NoteLayout = () => {
   const handleOutlineCollapse = () => setOutlineCollapsed(!outlineCollapsed);
 
   return (
-    <Layout 
+    <Layout
       className="note-layout"
       style={{
-        '--header-bg': colorBgContainer,
-        '--sider-bg': colorBgContainer,
-        '--content-bg': colorBgContainer,
-        '--content-radius': borderRadiusLG,
+        "--header-bg": colorBgContainer,
+        "--sider-bg": colorBgContainer,
+        "--content-bg": colorBgContainer,
+        "--content-radius": borderRadiusLG,
       }}
     >
       {/* header */}
       <Header
-        className={`note-layout__header ${isMobile ? 'note-layout__header--mobile' : ''}`}
+        className={`note-layout__header ${isMobile ? "note-layout__header--mobile" : ""}`}
       >
         {/* menu collapse button */}
         <Row align="middle" className="note-layout__header-row">
           <Col>
             <Button
               type="text"
-              className={`note-layout__menu-button ${isMobile ? 'note-layout__menu-button--mobile' : ''}`}
+              className={`note-layout__menu-button ${isMobile ? "note-layout__menu-button--mobile" : ""}`}
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               onClick={() => {
                 if (!collapsed) setShowMenu(false);
@@ -180,7 +184,7 @@ const NoteLayout = () => {
       </Header>
 
       <Layout className="note-layout__main">
-        {/* Backdrop overlay for mobile menu */}
+        {/* backdrop overlay for mobile menu */}
         {isMobile && !collapsed && (
           <div
             className="note-layout__backdrop"
@@ -192,7 +196,7 @@ const NoteLayout = () => {
         <Sider
           width={isMobile ? "100%" : 350}
           collapsedWidth={0}
-          className={`note-layout__sider ${isMobile ? 'note-layout__sider--mobile' : ''}`}
+          className={`note-layout__sider ${isMobile ? "note-layout__sider--mobile" : ""}`}
           collapsible
           collapsed={collapsed}
           trigger={null}
@@ -200,11 +204,11 @@ const NoteLayout = () => {
           {showMenu && (
             <Menu
               mode="inline"
-              className={`note-layout__menu ${isMobile ? 'note-layout__menu--mobile' : ''}`}
+              className={`note-layout__menu ${isMobile ? "note-layout__menu--mobile" : ""}`}
               items={menuItems}
               onClick={({ key }) => {
                 handleNoteSelect(key);
-                // Auto-close menu on mobile after selection
+                // auto-close menu on mobile after selection
                 if (isMobile) {
                   setCollapsed(true);
                 }
@@ -213,29 +217,31 @@ const NoteLayout = () => {
           )}
         </Sider>
 
-        <Layout className={`note-layout__content-wrapper ${isMobile ? 'note-layout__content-wrapper--mobile' : ''}`}>
+        <Layout
+          className={`note-layout__content-wrapper ${isMobile ? "note-layout__content-wrapper--mobile" : ""}`}
+        >
           {/* breadcrumb and markdown renderer */}
-          <Breadcrumb 
-            items={breadcrumbItems} 
-            className={`note-layout__breadcrumb ${isMobile ? 'note-layout__breadcrumb--mobile' : ''}`}
+          <Breadcrumb
+            items={breadcrumbItems}
+            className={`note-layout__breadcrumb ${isMobile ? "note-layout__breadcrumb--mobile" : ""}`}
           />
           <Layout>
             <Content
-              className={`note-layout__content ${isMobile ? 'note-layout__content--mobile' : ''}`}
+              className={`note-layout__content ${isMobile ? "note-layout__content--mobile" : ""}`}
             >
               <Outlet />
             </Content>
-            {/* Hide outline sider on mobile */}
+            {/* hide outline sider on mobile */}
             {!isMobile && (
               <Sider
                 width={350}
                 collapsedWidth={48}
-                className={`note-layout__outline-sider ${outlineCollapsed ? 'note-layout__outline-sider--collapsed' : ''}`}
+                className={`note-layout__outline-sider ${outlineCollapsed ? "note-layout__outline-sider--collapsed" : ""}`}
                 collapsible
                 collapsed={outlineCollapsed}
                 trigger={null}
               >
-                <OutlineSider 
+                <OutlineSider
                   outline={outline}
                   collapsed={outlineCollapsed}
                   onCollapse={handleOutlineCollapse}
@@ -245,13 +251,10 @@ const NoteLayout = () => {
           </Layout>
         </Layout>
       </Layout>
-      
-      {/* Floating outline button for mobile */}
+
+      {/* floating outline button for mobile */}
       {isMobile && (
-        <FloatingOutlineButton 
-          outline={outline}
-          visible={showFloatingButton}
-        />
+        <FloatingOutlineButton outline={outline} visible={showFloatingButton} />
       )}
     </Layout>
   );

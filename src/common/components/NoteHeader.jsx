@@ -7,6 +7,7 @@ import {
   SunOutlined,
   MoonOutlined,
 } from "@ant-design/icons";
+
 import "./NoteHeader.css";
 
 function NoteHeader({
@@ -16,17 +17,17 @@ function NoteHeader({
   onLanguageChange,
   onSearch,
 }) {
-  // Local state
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
-  
-  // Redux state
+  // redux
   const isMobile = useSelector((state) => state.preference.isMobile);
 
-  // Constants
+  // state
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
+  // constants
   const searchPlaceholder = language === "cn" ? "搜索..." : "Search...";
 
-  // Language menu items
+  // language menu items
   const languageItems = [
     {
       key: "en",
@@ -40,7 +41,7 @@ function NoteHeader({
     },
   ];
 
-  // Handle theme toggle
+  // handle theme toggle
   const handleThemeToggle = () => {
     onThemeChange(theme !== "dark");
   };
@@ -48,7 +49,7 @@ function NoteHeader({
   return (
     <div>
       <Space size={isMobile ? "small" : "middle"}>
-        {/* Search */}
+        {/* search */}
         <span
           className="note-header__search-wrapper"
           onMouseEnter={() => setShowSearch(true)}
@@ -57,7 +58,7 @@ function NoteHeader({
           <Space>
             {showSearch && (
               <AutoComplete
-                className={`note-header__search-input ${isMobile ? 'note-header__search-input--mobile' : ''}`}
+                className={`note-header__search-input ${isMobile ? "note-header__search-input--mobile" : ""}`}
                 value={searchValue}
                 options={[]}
                 onChange={setSearchValue}
@@ -74,24 +75,28 @@ function NoteHeader({
           </Space>
         </span>
 
-        {/* Language selector - click globe icon to show dropdown */}
+        {/* language selector - click globe icon to show dropdown */}
         <Dropdown
-          menu={{ items: languageItems, selectable: true, selectedKeys: [language] }}
+          menu={{
+            items: languageItems,
+            selectable: true,
+            selectedKeys: [language],
+          }}
           trigger={["click"]}
           placement="bottomRight"
         >
           <GlobalOutlined className="note-header__icon note-header__icon--clickable" />
         </Dropdown>
 
-        {/* Theme toggle - click icon to switch theme */}
-        {theme === "dark" ? (
-          <MoonOutlined 
-            className="note-header__icon note-header__icon--clickable" 
+        {/* theme toggle - click icon to switch theme */}
+        {theme === "light" ? (
+          <MoonOutlined
+            className="note-header__icon note-header__icon--clickable"
             onClick={handleThemeToggle}
           />
         ) : (
-          <SunOutlined 
-            className="note-header__icon note-header__icon--clickable" 
+          <SunOutlined
+            className="note-header__icon note-header__icon--clickable"
             onClick={handleThemeToggle}
           />
         )}
