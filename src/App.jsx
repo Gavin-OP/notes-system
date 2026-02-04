@@ -39,6 +39,11 @@ function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, [dispatch]);
 
+  // set data-theme attribute for CSS styling
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", themeMode);
+  }, [themeMode]);
+
   // preference tracking
   useEffect(() => {
     if (themeMode) {
