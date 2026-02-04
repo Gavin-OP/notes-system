@@ -13,17 +13,17 @@
 }
 
 /* Drawer styles for mobile outline */
-.floating-outline-drawer .ant-drawer-header {
+.floating-outline-button__drawer .ant-drawer-header {
   padding: 16px 20px;
   border-bottom: 1px solid #f0f0f0;
 }
 
-.floating-outline-drawer .ant-drawer-body {
+.floating-outline-button__drawer .ant-drawer-body {
   padding: 16px 0 0 0;
 }
 
 /* Dark theme support */
-[data-theme="dark"] .floating-outline-drawer .ant-drawer-header {
+[data-theme="dark"] .floating-outline-button__drawer .ant-drawer-header {
   border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 

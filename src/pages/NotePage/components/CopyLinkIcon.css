@@ -15,7 +15,7 @@
 }
 
 /* Show icon on heading hover */
-.markdown-heading-with-link:hover .copy-link-icon {
+.markdown-renderer__heading-with-link:hover .copy-link-icon {
   opacity: 1;
 }
 
@@ -28,7 +28,7 @@
   color: var(--copy-link-icon-color-hover, #0969da);
 }
 
-.copy-link-icon .copied-tip {
+.copy-link-icon__tip {
   position: absolute;
   top: 100%;  /* Position below the icon */
   left: 50%;
@@ -44,9 +44,9 @@
 
 /* dark theme 适配，可根据父元素加 .dark-theme 或用 CSS 变量切换 */
 .dark-theme .copy-link-icon .anticon,
-.dark-theme .copy-link-icon .copied-tip {
+.dark-theme .copy-link-icon__tip {
   color: #bbb;
 }
-.dark-theme .copy-link-icon .copied-tip {
+.dark-theme .copy-link-icon__tip {
   background: #222;
 }

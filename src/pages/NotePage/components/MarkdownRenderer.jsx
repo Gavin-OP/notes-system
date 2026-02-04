@@ -31,7 +31,7 @@ const HeadingWithCopy = ({ level, children, ...props }) => {
   const Tag = `h${level}`;
   const theme = props.theme || "light";
   return (
-    <Tag id={id} className="markdown-heading-with-link">
+    <Tag id={id} className="markdown-renderer__heading-with-link">
       {id && <CopyLinkIcon id={id} theme={theme} />}
       {children}
     </Tag>
@@ -48,7 +48,7 @@ const MarkdownRenderer = ({ content, theme }) => {
     const resetStyle = document.createElement("style");
     resetStyle.id = "reset-code-style";
     resetStyle.innerHTML = `
-      .markdown-body pre > code {
+      .markdown-renderer__body pre > code {
         all: unset !important;
         display: block;
         white-space: pre;
@@ -102,7 +102,7 @@ const MarkdownRenderer = ({ content, theme }) => {
     const style = document.createElement("style");
     style.id = "li-tasklist-p-reset";
     style.innerHTML = `
-    .markdown-body li > p:has(> input[type="checkbox"]) {
+    .markdown-renderer__body li > p:has(> input[type="checkbox"]) {
       margin: 0 !important;
       padding: 0 !important;
       display: inline;
@@ -158,34 +158,34 @@ const MarkdownRenderer = ({ content, theme }) => {
     const style = document.createElement("style");
     style.id = "unified-scroll-style";
     style.innerHTML = `
-      .markdown-body pre,
-      .markdown-body .katex-display {
+      .markdown-renderer__body pre,
+      .markdown-renderer__body .katex-display {
         overflow-x: auto !important;
       }
-      .markdown-body pre {
+      .markdown-renderer__body pre {
         white-space: pre;
       }
-      .markdown-body .katex-display {
+      .markdown-renderer__body .katex-display {
         overflow-x: auto !important;
         overflow-y: hidden !important;
         white-space: nowrap !important;
         padding-bottom: 2px;
       }
-      .markdown-body .katex-display > .katex {
+      .markdown-renderer__body .katex-display > .katex {
         white-space: nowrap !important;
       }
-      .markdown-body pre::-webkit-scrollbar,
-      .markdown-body .katex-display::-webkit-scrollbar {
+      .markdown-renderer__body pre::-webkit-scrollbar,
+      .markdown-renderer__body .katex-display::-webkit-scrollbar {
         height: 8px;
         background: ${theme === "dark" ? "#222" : "#f0f0f0"};
       }
-      .markdown-body pre::-webkit-scrollbar-thumb,
-      .markdown-body .katex-display::-webkit-scrollbar-thumb {
+      .markdown-renderer__body pre::-webkit-scrollbar-thumb,
+      .markdown-renderer__body .katex-display::-webkit-scrollbar-thumb {
         background: ${theme === "dark" ? "#444" : "#bbb"};
         border-radius: 4px;
       }
-      .markdown-body pre::-webkit-scrollbar-thumb:hover,
-      .markdown-body .katex-display::-webkit-scrollbar-thumb:hover {
+      .markdown-renderer__body pre::-webkit-scrollbar-thumb:hover,
+      .markdown-renderer__body .katex-display::-webkit-scrollbar-thumb:hover {
         background: ${theme === "dark" ? "#666" : "#888"};
       }
     `;
@@ -232,7 +232,7 @@ const MarkdownRenderer = ({ content, theme }) => {
 
     // table styling
     table({ node, ...props }) {
-      return <table className="markdown-table" {...props} />;
+      return <table className="markdown-renderer__table" {...props} />;
     },
 
     li({ children, ...props }) {
@@ -257,7 +257,7 @@ const MarkdownRenderer = ({ content, theme }) => {
   };
 
   return (
-    <div className="markdown-body">
+    <div className="markdown-renderer__body">
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkMath, remarkHighlightMark, remarkSlug]}
         rehypePlugins={[
