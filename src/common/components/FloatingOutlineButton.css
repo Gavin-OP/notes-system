@@ -1,0 +1,29 @@
+/* FloatingOutlineButton - Mobile floating outline button */
+
+.floating-outline-button {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.floating-outline-button--hidden {
+  opacity: 0;
+  transform: translateY(80px);
+  pointer-events: none;
+}
+
+/* Drawer styles for mobile outline */
+.floating-outline-drawer .ant-drawer-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.floating-outline-drawer .ant-drawer-body {
+  padding: 16px 0 0 0;
+}
+
+/* Dark theme support */
+[data-theme="dark"] .floating-outline-drawer .ant-drawer-header {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+

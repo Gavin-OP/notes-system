@@ -1,6 +1,14 @@
 import { useState } from "react";
-import { Select, Switch, AutoComplete, Space } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import { Dropdown, AutoComplete, Space } from "antd";
+import {
+  SearchOutlined,
+  GlobalOutlined,
+  SunOutlined,
+  MoonOutlined,
+} from "@ant-design/icons";
+
+import "./NoteHeader.css";
 
 function NoteHeader({
   theme,
@@ -9,29 +17,48 @@ function NoteHeader({
   onLanguageChange,
   onSearch,
 }) {
-  // hooks
+  // redux
+  const isMobile = useSelector((state) => state.preference.isMobile);
+
+  // state
   const [showSearch, setShowSearch] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
   // constants
-  const themeLabel = language === "cn" ? "主题" : "Theme";
-  const languageLabel = language === "cn" ? "语言" : "Language";
-  const darkLabel = language === "cn" ? "深色" : "Dark";
-  const lightLabel = language === "cn" ? "浅色" : "Light";
   const searchPlaceholder = language === "cn" ? "搜索..." : "Search...";
+
+  // language menu items
+  const languageItems = [
+    {
+      key: "en",
+      label: "English",
+      onClick: () => onLanguageChange("en"),
+    },
+    {
+      key: "cn",
+      label: "中文",
+      onClick: () => onLanguageChange("cn"),
+    },
+  ];
+
+  // handle theme toggle
+  const handleThemeToggle = () => {
+    onThemeChange(theme !== "dark");
+  };
 
   return (
     <div>
-      <Space>
+      <Space size={isMobile ? "small" : "middle"}>
         {/* search */}
         <span
-          style={{ position: "relative" }}
+          className="note-header__search-wrapper"
           onMouseEnter={() => setShowSearch(true)}
           onMouseLeave={() => setShowSearch(false)}
         >
           <Space>
             {showSearch && (
               <AutoComplete
+                className={`note-header__search-input ${isMobile ? "note-header__search-input--mobile" : ""}`}
                 value={searchValue}
                 options={[]}
                 onChange={setSearchValue}
@@ -39,36 +66,40 @@ function NoteHeader({
                 placeholder={searchPlaceholder}
                 showSearch
                 autoFocus
-                style={{ width: 200 }}
               ></AutoComplete>
             )}
             <SearchOutlined
-              style={{ fontSize: 18, cursor: "pointer" }}
+              className="note-header__search-icon"
               onClick={() => setShowSearch(true)}
             />
           </Space>
         </span>
 
-        {/* language switch */}
-        <span>{languageLabel}</span>
-        <Select
-          value={language}
-          options={[
-            { value: "en", label: "English" },
-            { value: "cn", label: "中文" },
-          ]}
-          onChange={onLanguageChange}
-          style={{ width: 100 }}
-        />
+        {/* language selector - click globe icon to show dropdown */}
+        <Dropdown
+          menu={{
+            items: languageItems,
+            selectable: true,
+            selectedKeys: [language],
+          }}
+          trigger={["click"]}
+          placement="bottomRight"
+        >
+          <GlobalOutlined className="note-header__icon note-header__icon--clickable" />
+        </Dropdown>
 
-        {/* theme switch */}
-        <span>{themeLabel}</span>
-        <Switch
-          checked={theme === "dark"}
-          checkedChildren={darkLabel}
-          unCheckedChildren={lightLabel}
-          onChange={onThemeChange}
-        />
+        {/* theme toggle - click icon to switch theme */}
+        {theme === "light" ? (
+          <MoonOutlined
+            className="note-header__icon note-header__icon--clickable"
+            onClick={handleThemeToggle}
+          />
+        ) : (
+          <SunOutlined
+            className="note-header__icon note-header__icon--clickable"
+            onClick={handleThemeToggle}
+          />
+        )}
       </Space>
     </div>
   );

@@ -1,0 +1,115 @@
+/* NoteLayout - Main layout styles */
+
+.note-layout {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Header */
+.note-layout__header {
+  background: var(--header-bg);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+}
+
+.note-layout__header--mobile {
+  padding: 0 12px;
+}
+
+.note-layout__header-row {
+  width: 100%;
+}
+
+/* Menu button */
+.note-layout__menu-button {
+  font-size: 20px;
+  margin-right: 16px;
+}
+
+.note-layout__menu-button--mobile {
+  margin-right: 8px;
+}
+
+/* Main layout */
+.note-layout__main {
+  position: relative;
+}
+
+/* Mobile backdrop overlay */
+.note-layout__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 99;
+}
+
+/* Sidebar (menu) */
+.note-layout__sider {
+  background: var(--sider-bg);
+}
+
+.note-layout__sider--mobile {
+  position: fixed;
+  left: 0;
+  top: 64px;
+  bottom: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+/* Menu */
+.note-layout__menu {
+  height: 100%;
+  border-inline-end: 0;
+  font-size: 14px;
+}
+
+.note-layout__menu--mobile {
+  font-size: 16px;
+}
+
+/* Content wrapper */
+.note-layout__content-wrapper {
+  padding: 0 24px 24px;
+}
+
+.note-layout__content-wrapper--mobile {
+  padding: 0 12px 12px;
+}
+
+/* Breadcrumb */
+.note-layout__breadcrumb {
+  margin: 16px 0;
+}
+
+.note-layout__breadcrumb--mobile {
+  margin: 12px 0;
+}
+
+/* Main content */
+.note-layout__content {
+  flex: 1;
+  padding: 24px;
+  background: var(--content-bg);
+  border-radius: var(--content-radius);
+}
+
+.note-layout__content--mobile {
+  padding: 12px;
+}
+
+/* Outline sider */
+.note-layout__outline-sider {
+  background: transparent;
+  padding: 0 24px;
+  transition: all 0.2s ease;
+}
+
+.note-layout__outline-sider--collapsed {
+  padding: 0 4px;
+}
+

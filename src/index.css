@@ -21,3 +21,21 @@ body {
     background-color: #ffffff;
   }
 }
+
+/* Mobile responsive styles - global components only */
+/* TODO make this into correct file */
+@media (max-width: 768px) {
+  /* Mobile menu styles - larger touch targets */
+  .ant-menu-item,
+  .ant-menu-submenu-title {
+    font-size: 16px !important;
+    line-height: 48px !important;
+    height: 48px !important;
+    padding: 0 24px !important;
+  }
+
+  .ant-menu-submenu .ant-menu-item {
+    height: 44px !important;
+    line-height: 44px !important;
+  }
+}

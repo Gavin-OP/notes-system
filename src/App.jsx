@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactGA from "react-ga4";
+
 import {
   App as AntdApp,
   ConfigProvider as DesktopConfigProvider,
@@ -15,17 +16,40 @@ import enUSMobile from "antd-mobile/es/locales/en-US";
 
 import Routes from "./router/Routes";
 import { fetchNotesIndex } from "./redux/notesIndexSlice";
+import { setIsMobile } from "./redux/preferenceSlice";
 
 import "./App.css";
 
-
 function App() {
-
+  // redux
   const dispatch = useDispatch();
   const language = useSelector((state) => state.preference.language);
   const themeMode = useSelector((state) => state.preference.theme);
   const status = useSelector((state) => state.notesIndex.status);
 
+  // mobile detection
+  useEffect(() => {
+    const handleResize = () => {
+      dispatch(setIsMobile(window.innerWidth < 768));
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [dispatch]);
+
+  // preference tracking
+  useEffect(() => {
+    if (themeMode) {
+      ReactGA.set({ theme: themeMode });
+    }
+    if (language) {
+      ReactGA.set({ language });
+    }
+  }, [themeMode, language]);
+
+  // preference change tracking
   useEffect(() => {
     if (themeMode) {
       ReactGA.event({
@@ -46,6 +70,7 @@ function App() {
     }
   }, [language]);
 
+  // fetch notes index on idle status
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchNotesIndex());
