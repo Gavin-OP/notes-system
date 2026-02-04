@@ -12,19 +12,8 @@
   width: 150px;
 }
 
-.note-header__search-icon {
-  font-size: 18px;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.note-header__search-icon:hover {
-  color: #1890ff;
-}
-
 .note-header__icon {
   font-size: 18px;
-  color: #888;
   transition: all 0.2s ease;
 }
 
@@ -34,6 +23,5 @@
 
 .note-header__icon--clickable:hover {
   color: #1890ff;
-  transform: scale(1.1);
 }
 
