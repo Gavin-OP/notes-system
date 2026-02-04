@@ -30,7 +30,7 @@ function App() {
   // mobile detection
   useEffect(() => {
     const handleResize = () => {
-      dispatch(setIsMobile(window.innerWidth < 768));
+      dispatch(setIsMobile(window.innerWidth < 1024));
     };
 
     handleResize();
