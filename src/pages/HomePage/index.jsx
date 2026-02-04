@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 import { setLanguage, setTheme } from "../../redux/preferenceSlice";
 
-import "./HomePage.css";
-
 function HomePage() {
   const dispatch = useDispatch();
   const language = useSelector((state) => state.preference.language);
