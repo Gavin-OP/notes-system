@@ -83,6 +83,11 @@
   padding-top: 8px;
 }
 
+/* Remove padding when header is hidden (drawer mode) */
+.outline-sider-wrapper--no-header .outline-sider__anchor {
+  padding-top: 0;
+}
+
 /* Outline item indentation based on level */
 .outline-sider__item[data-level="1"] {
   margin-left: 0;

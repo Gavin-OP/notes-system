@@ -3,7 +3,7 @@ import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import "./OutlineSider.css";
 
-const OutlineSider = ({ outline, collapsed, onCollapse }) => {
+const OutlineSider = ({ outline, collapsed, onCollapse, hideHeader = false }) => {
   const language = useSelector((state) => state.preference.language);
   
   const outlineTitle = language === "cn" ? "大纲" : "Outline";
@@ -28,16 +28,18 @@ const OutlineSider = ({ outline, collapsed, onCollapse }) => {
   
   // Show full outline when expanded
   return (
-    <div className="outline-sider-wrapper">
-      {/* Header with collapse button */}
-      <div className="outline-sider__header">
-        <span className="outline-sider__title">{outlineTitle}</span>
-        <RightOutlined 
-          className="outline-sider__collapse-icon"
-          onClick={onCollapse}
-          title={collapseTitle}
-        />
-      </div>
+    <div className={`outline-sider-wrapper ${hideHeader ? 'outline-sider-wrapper--no-header' : ''}`}>
+      {/* Header with collapse button - hide in drawer mode */}
+      {!hideHeader && (
+        <div className="outline-sider__header">
+          <span className="outline-sider__title">{outlineTitle}</span>
+          <RightOutlined 
+            className="outline-sider__collapse-icon"
+            onClick={onCollapse}
+            title={collapseTitle}
+          />
+        </div>
+      )}
       
       {/* Outline content */}
       <Anchor

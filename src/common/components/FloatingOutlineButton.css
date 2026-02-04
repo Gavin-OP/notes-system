@@ -19,12 +19,7 @@
 }
 
 .floating-outline-drawer .ant-drawer-body {
-  padding: 0;
-}
-
-/* Hide the collapse button in drawer mode */
-.floating-outline-drawer .outline-sider__collapse-icon {
-  display: none;
+  padding: 16px 0 0 0;
 }
 
 /* Dark theme support */

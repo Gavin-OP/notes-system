@@ -10,14 +10,12 @@ const FloatingOutlineButton = ({ outline, visible }) => {
   const language = useSelector((state) => state.preference.language);
   
   const drawerTitle = language === "cn" ? "大纲" : "Outline";
-  const buttonTooltip = language === "cn" ? "查看大纲" : "View Outline";
   
   return (
     <>
       {/* Floating button */}
       <FloatButton
         icon={<UnorderedListOutlined />}
-        tooltip={buttonTooltip}
         onClick={() => setDrawerOpen(true)}
         className={`floating-outline-button ${visible ? '' : 'floating-outline-button--hidden'}`}
       />
@@ -35,6 +33,7 @@ const FloatingOutlineButton = ({ outline, visible }) => {
           outline={outline}
           collapsed={false}
           onCollapse={() => setDrawerOpen(false)}
+          hideHeader={true}
         />
       </Drawer>
     </>
