@@ -16,7 +16,7 @@ tags:
 
 选择适合你的学习路径：
 
-### 🗺️ [Mindmap - 知识图谱](#)
+### 🗺️ [Mindmap - 知识图谱](/notes-system/data-science/mindmap)
 浏览完整的 Data Science 概念地图，了解各个知识点之间的关系。适合：
 - 想要全局了解 Data Science 知识结构
 - 需要查找特定概念及其关联内容
@@ -27,6 +27,8 @@ tags:
 - 初学者系统学习
 - 需要明确学习顺序
 - 希望了解前置知识依赖
+
+（Learning Path 功能即将推出）
 
 ## 📊 知识模块
 

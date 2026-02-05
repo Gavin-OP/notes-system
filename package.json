@@ -34,6 +34,7 @@
     "react-mermaid2": "^0.1.4",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.12.0",
+    "reactflow": "^11.11.4",
     "rehype-highlight": "^7.0.2",
     "rehype-katex": "^7.0.1",
     "rehype-raw": "^7.0.0",

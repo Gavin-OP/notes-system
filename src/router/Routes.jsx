@@ -5,6 +5,8 @@ import ReactGA from "react-ga4";
 import NoteLayout from "../common/layouts/NoteLayout";
 import NotePage from "../pages/NotePage";
 import HomePage from "../pages/HomePage";
+import DataSciencePage from "../pages/DataSciencePage";
+import MindmapView from "../pages/DataSciencePage/components/MindmapView";
 
 // page view tracking
 function usePageTracking() {
@@ -24,6 +26,9 @@ function RoutesWithTracking() {
     <Routes>
       <Route path="note/*" element={<NoteLayout />}>
         <Route path="*" element={<NotePage />} />
+      </Route>
+      <Route path="data-science" element={<DataSciencePage />}>
+        <Route path="mindmap" element={<MindmapView />} />
       </Route>
       <Route path="home" element={<HomePage />} />
       <Route path="*" element={<HomePage />} />
