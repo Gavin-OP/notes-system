@@ -1,0 +1,197 @@
+/**
+ * MindmapView Styles - Reusable across all subjects
+ * Container and React Flow customizations
+ */
+
+/* ==========================================================================
+   Container
+   ========================================================================== */
+
+.mindmap-view {
+  width: 100%;
+  height: calc(100vh - 64px);
+  background: linear-gradient(180deg, #fafbfc 0%, #f0f2f5 100%);
+}
+
+/* Loading State */
+.mindmap-view--loading,
+.mindmap-view--error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+}
+
+.mindmap-view__spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #1890ff;
+  border-radius: 50%;
+  animation: mindmap-spinner 0.8s linear infinite;
+}
+
+@keyframes mindmap-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mindmap-view--loading p {
+  color: var(--text-color, #666);
+  font-size: 14px;
+}
+
+.mindmap-view--error p {
+  color: #ff4d4f;
+  font-size: 16px;
+}
+
+/* ==========================================================================
+   React Flow Customizations
+   ========================================================================== */
+
+/* Node cursor */
+.react-flow__node {
+  cursor: pointer;
+}
+
+/* Concept nodes have special cursor since they're clickable */
+.react-flow__node-conceptNode {
+  cursor: pointer;
+}
+
+.react-flow__node-centerNode,
+.react-flow__node-categoryNode {
+  cursor: default;
+}
+
+/* Edge styles - clean straight lines */
+.react-flow__edge-path {
+  transition: stroke-width 0.2s ease, stroke-opacity 0.2s ease;
+}
+
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke-width: 3 !important;
+  stroke-opacity: 0.9 !important;
+}
+
+/* Hide edge labels for cleaner look */
+.react-flow__edge-text {
+  display: none;
+}
+
+/* ==========================================================================
+   MiniMap Styles
+   ========================================================================== */
+
+.react-flow__minimap {
+  background: var(--content-bg, #ffffff);
+  border: 1px solid var(--border-color, #e8e8e8);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   Controls Styles
+   ========================================================================== */
+
+.react-flow__controls {
+  background: var(--content-bg, #ffffff);
+  border: 1px solid var(--border-color, #e8e8e8);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.react-flow__controls-button {
+  background: var(--content-bg, #ffffff);
+  border: none;
+  border-bottom: 1px solid var(--border-color, #e8e8e8);
+  width: 28px;
+  height: 28px;
+  transition: background-color 0.2s ease;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--hover-bg, #f5f5f5);
+}
+
+.react-flow__controls-button svg {
+  fill: var(--text-color, #666);
+  width: 14px;
+  height: 14px;
+}
+
+/* ==========================================================================
+   Background
+   ========================================================================== */
+
+.react-flow__background {
+  opacity: 0.5;
+}
+
+/* ==========================================================================
+   Dark Theme Support
+   ========================================================================== */
+
+[data-theme="dark"] .mindmap-view {
+  background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+}
+
+[data-theme="dark"] .mindmap-view__spinner {
+  border-color: rgba(255, 255, 255, 0.1);
+  border-top-color: #1890ff;
+}
+
+[data-theme="dark"] .mindmap-view--loading p {
+  color: var(--text-color, #aaa);
+}
+
+[data-theme="dark"] .react-flow__minimap {
+  background: var(--content-bg, #1e1e1e);
+  border-color: var(--border-color, #333);
+}
+
+[data-theme="dark"] .react-flow__controls {
+  background: var(--content-bg, #1e1e1e);
+  border-color: var(--border-color, #333);
+}
+
+[data-theme="dark"] .react-flow__controls-button {
+  background: var(--content-bg, #1e1e1e);
+  border-bottom-color: var(--border-color, #333);
+}
+
+[data-theme="dark"] .react-flow__controls-button:hover {
+  background: var(--hover-bg, #2a2a2a);
+}
+
+[data-theme="dark"] .react-flow__controls-button svg {
+  fill: var(--text-color, #bbb);
+}
+
+[data-theme="dark"] .react-flow__background pattern circle {
+  fill: #333;
+}
+
+/* ==========================================================================
+   Responsive Adjustments
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .mindmap-view {
+    height: calc(100vh - 56px);
+  }
+
+  .react-flow__minimap {
+    display: none;
+  }
+}
+
