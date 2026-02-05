@@ -9,7 +9,10 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "commit": "cz"
+    "commit": "cz",
+    "generate:notes": "node scripts/generateNotesIndex.js",
+    "generate:graph": "node scripts/generateSubjectGraph.js data-science",
+    "generate:all": "npm run generate:notes && npm run generate:graph"
   },
   "config": {
     "commitizen": {

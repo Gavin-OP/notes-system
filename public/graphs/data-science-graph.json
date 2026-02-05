@@ -1,0 +1,708 @@
+{
+  "meta": {
+    "subjectId": "data-science",
+    "subjectName": "Data Science",
+    "version": "1.0.0",
+    "lastGenerated": "2026-02-05T02:15:03.565Z",
+    "nodeCount": 10,
+    "edgeCount": 29
+  },
+  "categories": [
+    {
+      "id": "data-data-handling",
+      "name": "Data & Data Handling",
+      "displayName": "Data & Data Handling",
+      "color": "#FF9A76",
+      "order": 1,
+      "description": "",
+      "nodes": [
+        "data-cleaning",
+        "data-collection",
+        "feature-engineering"
+      ]
+    },
+    {
+      "id": "statistics-probability",
+      "name": "Statistics & Probability",
+      "displayName": "Statistics & Probability",
+      "color": "#74D3AE",
+      "order": 2,
+      "description": "",
+      "nodes": [
+        "descriptive-statistics",
+        "probability-basics"
+      ]
+    },
+    {
+      "id": "modeling-evaluation",
+      "name": "Modeling & Evaluation",
+      "displayName": "Modeling & Evaluation",
+      "color": "#4A9FF5",
+      "order": 3,
+      "description": "",
+      "nodes": [
+        "model-selection"
+      ]
+    },
+    {
+      "id": "machine-learning",
+      "name": "Machine Learning",
+      "displayName": "Machine Learning",
+      "color": "#5DBBDB",
+      "order": 4,
+      "description": "",
+      "nodes": [
+        "overfitting-underfitting",
+        "supervised-learning"
+      ]
+    },
+    {
+      "id": "foundations",
+      "name": "Foundations",
+      "displayName": "Foundations",
+      "color": "#FF7675",
+      "order": 5,
+      "description": "",
+      "nodes": [
+        "problem-framing",
+        "what-is-data-science"
+      ]
+    }
+  ],
+  "learningPhases": [
+    {
+      "phase": 0,
+      "name": "入门阶段",
+      "description": "了解基本概念和定义",
+      "estimatedHours": 0
+    },
+    {
+      "phase": 1,
+      "name": "基础阶段",
+      "description": "掌握核心知识和技能",
+      "estimatedHours": 0
+    },
+    {
+      "phase": 2,
+      "name": "进阶阶段",
+      "description": "深入学习高级技术",
+      "estimatedHours": 0
+    },
+    {
+      "phase": 3,
+      "name": "高级阶段",
+      "description": "综合应用和优化",
+      "estimatedHours": 0
+    }
+  ],
+  "nodes": [
+    {
+      "id": "data-cleaning",
+      "title": "Data Cleaning",
+      "displayTitle": "Data Cleaning",
+      "noteUrl": "/note/data-science/concepts/data-cleaning",
+      "filePath": "data-science/concepts/data-cleaning.md",
+      "category": "Data & Data Handling",
+      "subcategory": null,
+      "importance": "high",
+      "position": null,
+      "learningPhase": 1,
+      "learningOrder": 2,
+      "prerequisites": [
+        "data-collection"
+      ],
+      "estimatedMinutes": null,
+      "difficulty": "medium",
+      "tags": [
+        "data-science",
+        "data-handling",
+        "data-cleaning",
+        "preprocessing"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-collection",
+        "feature-engineering",
+        "descriptive-statistics"
+      ]
+    },
+    {
+      "id": "data-collection",
+      "title": "Data Collection",
+      "displayTitle": "Data Collection",
+      "noteUrl": "/note/data-science/concepts/data-collection",
+      "filePath": "data-science/concepts/data-collection.md",
+      "category": "Data & Data Handling",
+      "subcategory": null,
+      "importance": "high",
+      "position": null,
+      "learningPhase": 1,
+      "learningOrder": 1,
+      "prerequisites": [
+        "problem-framing"
+      ],
+      "estimatedMinutes": null,
+      "difficulty": "medium",
+      "tags": [
+        "data-science",
+        "data-handling",
+        "data-collection"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "problem-framing",
+        "data-cleaning",
+        "feature-engineering",
+        "model-selection"
+      ]
+    },
+    {
+      "id": "descriptive-statistics",
+      "title": "Descriptive Statistics",
+      "displayTitle": "Descriptive Statistics",
+      "noteUrl": "/note/data-science/concepts/descriptive-statistics",
+      "filePath": "data-science/concepts/descriptive-statistics.md",
+      "category": "Statistics & Probability",
+      "subcategory": null,
+      "importance": "high",
+      "position": null,
+      "learningPhase": 1,
+      "learningOrder": 3,
+      "prerequisites": [
+        "what-is-data-science"
+      ],
+      "estimatedMinutes": null,
+      "difficulty": "medium",
+      "tags": [
+        "data-science",
+        "statistics",
+        "descriptive-statistics"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "what-is-data-science",
+        "data-cleaning",
+        "probability-basics",
+        "feature-engineering"
+      ]
+    },
+    {
+      "id": "feature-engineering",
+      "title": "Feature Engineering",
+      "displayTitle": "Feature Engineering",
+      "noteUrl": "/note/data-science/concepts/feature-engineering",
+      "filePath": "data-science/concepts/feature-engineering.md",
+      "category": "Data & Data Handling",
+      "subcategory": null,
+      "importance": "high",
+      "position": null,
+      "learningPhase": 2,
+      "learningOrder": 1,
+      "prerequisites": [
+        "data-cleaning"
+      ],
+      "estimatedMinutes": null,
+      "difficulty": "medium",
+      "tags": [
+        "data-science",
+        "data-handling",
+        "feature-engineering",
+        "preprocessing"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-cleaning",
+        "supervised-learning",
+        "overfitting-underfitting",
+        "model-selection"
+      ]
+    },
+    {
+      "id": "model-selection",
+      "title": "Model Selection",
+      "displayTitle": "Model Selection",
+      "noteUrl": "/note/data-science/concepts/model-selection",
+      "filePath": "data-science/concepts/model-selection.md",
+      "category": "Modeling & Evaluation",
+      "subcategory": null,
+      "importance": "high",
+      "position": null,
+      "learningPhase": 3,
+      "learningOrder": 1,
+      "prerequisites": [
+        "supervised-learning",
+        "overfitting-underfitting"
+      ],
+      "estimatedMinutes": null,
+      "difficulty": "medium",
+      "tags": [
+        "data-science",
+        "model-evaluation",
+        "model-selection"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "feature-engineering",
+        "supervised-learning",
+        "overfitting-underfitting",
+        "probability-basics",
+        "problem-framing"
+      ]
+    },
+    {
+      "id": "overfitting-underfitting",
+      "title": "Overfitting & Underfitting",
+      "displayTitle": "Overfitting & Underfitting",
+      "noteUrl": "/note/data-science/concepts/overfitting-underfitting",
+      "filePath": "data-science/concepts/overfitting-underfitting.md",
+      "category": "Machine Learning",
+      "subcategory": null,
+      "importance": "high",
+      "position": null,
+      "learningPhase": 2,
+      "learningOrder": 3,
+      "prerequisites": [
+        "supervised-learning"
+      ],
+      "estimatedMinutes": null,
+      "difficulty": "medium",
+      "tags": [
+        "data-science",
+        "machine-learning",
+        "model-evaluation",
+        "overfitting"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "supervised-learning",
+        "feature-engineering",
+        "model-selection",
+        "probability-basics"
+      ]
+    },
+    {
+      "id": "probability-basics",
+      "title": "Probability Basics",
+      "displayTitle": "Probability Basics",
+      "noteUrl": "/note/data-science/concepts/probability-basics",
+      "filePath": "data-science/concepts/probability-basics.md",
+      "category": "Statistics & Probability",
+      "subcategory": null,
+      "importance": "high",
+      "position": null,
+      "learningPhase": 1,
+      "learningOrder": 4,
+      "prerequisites": [
+        "descriptive-statistics"
+      ],
+      "estimatedMinutes": null,
+      "difficulty": "medium",
+      "tags": [
+        "data-science",
+        "statistics",
+        "probability"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "descriptive-statistics",
+        "supervised-learning",
+        "overfitting-underfitting",
+        "model-selection"
+      ]
+    },
+    {
+      "id": "problem-framing",
+      "title": "Problem Framing",
+      "displayTitle": "Problem Framing",
+      "noteUrl": "/note/data-science/concepts/problem-framing",
+      "filePath": "data-science/concepts/problem-framing.md",
+      "category": "Foundations",
+      "subcategory": null,
+      "importance": "high",
+      "position": null,
+      "learningPhase": 0,
+      "learningOrder": 2,
+      "prerequisites": [
+        "what-is-data-science"
+      ],
+      "estimatedMinutes": null,
+      "difficulty": "medium",
+      "tags": [
+        "data-science",
+        "foundations",
+        "problem-solving"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "what-is-data-science",
+        "data-collection",
+        "supervised-learning"
+      ]
+    },
+    {
+      "id": "supervised-learning",
+      "title": "Supervised Learning",
+      "displayTitle": "Supervised Learning",
+      "noteUrl": "/note/data-science/concepts/supervised-learning",
+      "filePath": "data-science/concepts/supervised-learning.md",
+      "category": "Machine Learning",
+      "subcategory": null,
+      "importance": "high",
+      "position": null,
+      "learningPhase": 2,
+      "learningOrder": 2,
+      "prerequisites": [
+        "feature-engineering",
+        "probability-basics"
+      ],
+      "estimatedMinutes": null,
+      "difficulty": "medium",
+      "tags": [
+        "data-science",
+        "machine-learning",
+        "supervised-learning"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "feature-engineering",
+        "probability-basics",
+        "overfitting-underfitting",
+        "model-selection"
+      ]
+    },
+    {
+      "id": "what-is-data-science",
+      "title": "What is Data Science",
+      "displayTitle": "What is Data Science",
+      "noteUrl": "/note/data-science/concepts/what-is-data-science",
+      "filePath": "data-science/concepts/what-is-data-science.md",
+      "category": "Foundations",
+      "subcategory": null,
+      "importance": "high",
+      "position": null,
+      "learningPhase": 0,
+      "learningOrder": 1,
+      "prerequisites": [],
+      "estimatedMinutes": null,
+      "difficulty": "medium",
+      "tags": [
+        "data-science",
+        "foundations",
+        "introduction"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "problem-framing",
+        "data-collection",
+        "data-cleaning",
+        "feature-engineering",
+        "descriptive-statistics",
+        "probability-basics"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-0",
+      "source": "data-collection",
+      "target": "data-cleaning",
+      "type": "prerequisite",
+      "label": "前置知识",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-1",
+      "source": "data-cleaning",
+      "target": "feature-engineering",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-2",
+      "source": "data-cleaning",
+      "target": "descriptive-statistics",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-3",
+      "source": "problem-framing",
+      "target": "data-collection",
+      "type": "prerequisite",
+      "label": "前置知识",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-4",
+      "source": "data-collection",
+      "target": "feature-engineering",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-5",
+      "source": "data-collection",
+      "target": "model-selection",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-6",
+      "source": "what-is-data-science",
+      "target": "descriptive-statistics",
+      "type": "prerequisite",
+      "label": "前置知识",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-7",
+      "source": "descriptive-statistics",
+      "target": "probability-basics",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-8",
+      "source": "descriptive-statistics",
+      "target": "feature-engineering",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-9",
+      "source": "data-cleaning",
+      "target": "feature-engineering",
+      "type": "prerequisite",
+      "label": "前置知识",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-10",
+      "source": "feature-engineering",
+      "target": "supervised-learning",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-11",
+      "source": "feature-engineering",
+      "target": "overfitting-underfitting",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-12",
+      "source": "feature-engineering",
+      "target": "model-selection",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-13",
+      "source": "supervised-learning",
+      "target": "model-selection",
+      "type": "prerequisite",
+      "label": "前置知识",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-14",
+      "source": "overfitting-underfitting",
+      "target": "model-selection",
+      "type": "prerequisite",
+      "label": "前置知识",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-15",
+      "source": "model-selection",
+      "target": "probability-basics",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-16",
+      "source": "model-selection",
+      "target": "problem-framing",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-17",
+      "source": "supervised-learning",
+      "target": "overfitting-underfitting",
+      "type": "prerequisite",
+      "label": "前置知识",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-18",
+      "source": "overfitting-underfitting",
+      "target": "probability-basics",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-19",
+      "source": "descriptive-statistics",
+      "target": "probability-basics",
+      "type": "prerequisite",
+      "label": "前置知识",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-20",
+      "source": "probability-basics",
+      "target": "supervised-learning",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-21",
+      "source": "what-is-data-science",
+      "target": "problem-framing",
+      "type": "prerequisite",
+      "label": "前置知识",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-22",
+      "source": "problem-framing",
+      "target": "supervised-learning",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-23",
+      "source": "feature-engineering",
+      "target": "supervised-learning",
+      "type": "prerequisite",
+      "label": "前置知识",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-24",
+      "source": "probability-basics",
+      "target": "supervised-learning",
+      "type": "prerequisite",
+      "label": "前置知识",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-25",
+      "source": "what-is-data-science",
+      "target": "data-collection",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-26",
+      "source": "what-is-data-science",
+      "target": "data-cleaning",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-27",
+      "source": "what-is-data-science",
+      "target": "feature-engineering",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    },
+    {
+      "id": "edge-28",
+      "source": "what-is-data-science",
+      "target": "probability-basics",
+      "type": "related",
+      "label": "相关概念",
+      "strength": 0.7,
+      "bidirectional": true
+    }
+  ],
+  "layouts": {
+    "radial": {
+      "centerX": 500,
+      "centerY": 400,
+      "mainRadius": 300,
+      "subRadius": 150
+    },
+    "hierarchical": {
+      "direction": "TB",
+      "levelSeparation": 150,
+      "nodeSeparation": 100
+    }
+  },
+  "viewConfigs": {
+    "mindmap": {
+      "defaultLayout": "radial",
+      "showLabels": true,
+      "showEdges": true,
+      "nodeSize": {
+        "high": 80,
+        "medium": 60,
+        "low": 40
+      }
+    },
+    "learningPath": {
+      "defaultLayout": "hierarchical",
+      "showPrerequisites": true,
+      "showEstimatedTime": true,
+      "groupByPhase": true
+    }
+  }
+}
