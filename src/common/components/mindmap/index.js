@@ -3,10 +3,11 @@
  * Provides reusable mindmap visualization for any subject
  */
 
-// Main view component
+// Main view components
 export { default as MindmapView } from "./MindmapView";
+export { default as RadialMindmapView } from "./RadialMindmapView";
 
-// Node components
+// Node components (for React Flow)
 export { CenterNode, CategoryNode, ConceptNode } from "./nodes";
 
 // Utilities
@@ -16,3 +17,9 @@ export {
   calculateOrthogonalMindmapLayout,
   normalizeCategoryId,
 } from "./utils";
+
+// Radial tree utilities (for ECharts)
+export {
+  graphToRadialTree,
+  makeRadialTreeOption,
+} from "./utils/radialTreeUtils";
