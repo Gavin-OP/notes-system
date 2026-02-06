@@ -23,6 +23,7 @@ import { loadGraphData, convertToHierarchicalFormat } from "./utils/graphLoader"
 import { calculateOrthogonalMindmapLayout, DEFAULT_MINDMAP_LAYOUT_CONFIG } from "./utils/layoutUtils";
 import MindmapToolbar, { MINDMAP_TYPES } from "./MindmapToolbar";
 import RadialMindmapView from "./RadialMindmapView";
+import NetworkMindmapView from "./NetworkMindmapView";
 import "./nodes/nodes.css";
 import "./MindmapView.css";
 
@@ -216,6 +217,19 @@ const MindmapView = ({ subjectId }) => {
             subjectId={subjectId}
             onOpenNote={handleOpenNote}
             isDarkMode={false} // TODO: Get from theme context
+          />
+        </div>
+      );
+    }
+    
+    if (viewType === MINDMAP_TYPES.NETWORK) {
+      // Network View (Force-directed, Obsidian-style)
+      return (
+        <div className="mindmap-view__canvas">
+          <NetworkMindmapView
+            graphData={graphData}
+            subjectId={subjectId}
+            onOpenNote={handleOpenNote}
           />
         </div>
       );

@@ -49,7 +49,7 @@ const MindmapToolbar = ({ subjectId, currentType, onTypeChange, subjectName }) =
       icon: <ClusterOutlined />,
       label: "网络视图",
       description: "概念关系网络，适合深入理解",
-      disabled: true,  // 待实现
+      disabled: false,  // 已实现
     },
   ];
 
