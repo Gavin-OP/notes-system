@@ -1,12 +1,14 @@
 /**
  * Graph Data Loader and Converters
- * Reusable utilities for loading and processing knowledge graph data
- * Supports different view modes: hierarchical (图1), sunburst (图2), network (图3)
+ * Utilities for loading and processing knowledge graph data for mindmap visualization
  */
+
+import { normalizeCategoryId } from "./normalize";
 
 /**
  * Load graph data from JSON file
  * @param {string} subjectId - The subject identifier (e.g., "data-science", "statistics")
+ * @returns {Promise<Object|null>} Graph data or null on error
  */
 export async function loadGraphData(subjectId) {
   try {
@@ -25,9 +27,19 @@ export async function loadGraphData(subjectId) {
 }
 
 /**
- * Convert graph data to React Flow format for hierarchical view (图1 style)
- * Creates: Center Node → Category Nodes → Concept Nodes
- * Only shows edges between these levels (no concept-to-concept edges)
+ * Convert graph data to React Flow format for orthogonal mindmap view
+ * 
+ * Creates a three-level hierarchy:
+ * - Center Node (subject)
+ * - Category Nodes (main topics)
+ * - Concept Nodes (individual concepts)
+ * 
+ * Uses deterministic handle selection (left/right) based on relative positions
+ * for clean, consistent bezier curve edges.
+ * 
+ * @param {Object} graphData - Raw graph data from JSON
+ * @param {Object} layoutResult - Positioned nodes from layout algorithm
+ * @returns {Object} { nodes, edges } in React Flow format
  */
 export function convertToHierarchicalFormat(graphData, layoutResult) {
   if (!graphData || !layoutResult) return { nodes: [], edges: [] };
@@ -36,7 +48,19 @@ export function convertToHierarchicalFormat(graphData, layoutResult) {
   const nodes = [];
   const edges = [];
 
-  // 1. Center Node
+  // Helper: Determine which handles to use based on relative position
+  const getHandles = (sourcePos, targetPos) => {
+    const isTargetRight = targetPos.x > sourcePos.x;
+    return {
+      sourceHandle: isTargetRight ? "right" : "left",
+      targetHandle: isTargetRight ? "left" : "right",
+    };
+  };
+
+  // Extract subject ID from center node for unique edge IDs
+  const subjectId = centerNode.id.replace(/^center-/, "");
+
+  // 1. Center Node (subject)
   nodes.push({
     id: centerNode.id,
     type: "centerNode",
@@ -49,7 +73,7 @@ export function convertToHierarchicalFormat(graphData, layoutResult) {
     draggable: false,
   });
 
-  // 2. Category Nodes
+  // 2. Category Nodes (main topics)
   categoryNodes.forEach((category) => {
     nodes.push({
       id: category.id,
@@ -64,127 +88,61 @@ export function convertToHierarchicalFormat(graphData, layoutResult) {
       draggable: false,
     });
 
-    // Edge from center to category
+    // Edge from center to category - deterministic handles
+    const handles = getHandles(centerNode.position, category.position);
     edges.push({
-      id: `edge-center-${category.id}`,
+      id: `e-${subjectId}-${centerNode.id}-${category.id}`,
       source: centerNode.id,
       target: category.id,
-      type: "straight",
+      sourceHandle: handles.sourceHandle,
+      targetHandle: handles.targetHandle,
+      type: "bezier",
       style: {
         stroke: category.color,
         strokeWidth: 2.5,
-        opacity: 0.6,
+        opacity: 0.7,
       },
     });
   });
 
-  // 3. Concept Nodes
+  // 3. Concept Nodes (individual concepts)
   conceptNodes.forEach((concept) => {
-    const categoryId = concept.category
-      .toLowerCase()
-      .replace(/\s+&\s+/g, "-")
-      .replace(/\s+/g, "-");
+    // Use categoryId if already normalized, otherwise normalize from category name
+    const categoryId = concept.categoryId ?? normalizeCategoryId(concept.category);
+    const categoryNode = categoryNodes.find(c => c.categoryId === categoryId);
 
+    // Only keep fields actually used by ConceptNode component and MindmapView
     nodes.push({
       id: concept.id,
       type: "conceptNode",
       position: concept.position,
       data: {
-        ...concept,
         label: concept.title,
         color: concept.categoryColor,
+        importance: concept.importance,
         noteUrl: concept.noteUrl,
       },
       draggable: false,
     });
 
-    // Edge from category to concept
-    edges.push({
-      id: `edge-${categoryId}-${concept.id}`,
-      source: `category-${categoryId}`,
-      target: concept.id,
-      type: "straight",
-      style: {
-        stroke: concept.categoryColor,
-        strokeWidth: 1.5,
-        opacity: 0.5,
-      },
-    });
+    // Edge from category to concept - deterministic handles
+    if (categoryNode) {
+      const handles = getHandles(categoryNode.position, concept.position);
+      edges.push({
+        id: `e-${subjectId}-${categoryNode.id}-${concept.id}`,
+        source: categoryNode.id,  // Use categoryNode.id directly (safer)
+        target: concept.id,
+        sourceHandle: handles.sourceHandle,
+        targetHandle: handles.targetHandle,
+        type: "bezier",
+        style: {
+          stroke: concept.categoryColor,
+          strokeWidth: 1.5,
+          opacity: 0.6,
+        },
+      });
+    }
   });
 
   return { nodes, edges };
 }
-
-/**
- * Convert graph data to React Flow format (for network view - 图3)
- */
-export function convertToReactFlowFormat(graphData, positionedNodes) {
-  if (!graphData) return { nodes: [], edges: [] };
-
-  // Create a map of positioned nodes for quick lookup
-  const positionMap = new Map(
-    positionedNodes.map((n) => [n.id, n.position])
-  );
-
-  // Convert nodes
-  const nodes = graphData.nodes.map((node) => {
-    const position = positionMap.get(node.id) || { x: 0, y: 0 };
-    const categoryData = graphData.categories.find(
-      (cat) => cat.name === node.category
-    );
-
-    return {
-      id: node.id,
-      type: "concept",
-      position,
-      data: {
-        ...node,
-        color: categoryData?.color || "#95A5A6",
-        label: node.title,
-      },
-    };
-  });
-
-  // Convert edges
-  const edges = graphData.edges.map((edge) => ({
-    id: edge.id,
-    source: edge.source,
-    target: edge.target,
-    type: edge.bidirectional ? "default" : "smoothstep",
-    animated: edge.type === "prerequisite",
-    label: edge.label,
-    style: {
-      stroke: edge.type === "prerequisite" ? "#FF7675" : "#95A5A6",
-      strokeWidth: edge.strength * 2,
-    },
-    markerEnd: {
-      type: "arrowclosed",
-      color: edge.type === "prerequisite" ? "#FF7675" : "#95A5A6",
-    },
-  }));
-
-  return { nodes, edges };
-}
-
-/**
- * Get related concepts for a given concept ID
- */
-export function getRelatedConcepts(graphData, conceptId) {
-  if (!graphData) return [];
-
-  const relatedIds = new Set();
-
-  // Find all edges connected to this concept
-  graphData.edges.forEach((edge) => {
-    if (edge.source === conceptId) {
-      relatedIds.add(edge.target);
-    }
-    if (edge.target === conceptId) {
-      relatedIds.add(edge.source);
-    }
-  });
-
-  // Get the full node data for related concepts
-  return graphData.nodes.filter((node) => relatedIds.has(node.id));
-}
-

@@ -4,6 +4,10 @@ import { Handle, Position } from "reactflow";
 /**
  * Concept Node - Level 2 individual concepts (leaf nodes)
  * Reusable across all subjects
+ * 
+ * Styling: Uses CSS variable --node-color for border color.
+ * No inline styles except for passing the color variable.
+ * Leaf node: Only has target handles, no source handles.
  */
 const ConceptNode = memo(({ data }) => {
   const { label, color, importance } = data;
@@ -19,12 +23,12 @@ const ConceptNode = memo(({ data }) => {
   return (
     <div
       className={`mindmap-node mindmap-node--concept ${importanceClass}`}
-      style={{ borderColor: color }}
+      style={{ "--node-color": color }}
     >
-      <Handle type="target" position={Position.Left} style={{ opacity: 0 }} id="left" />
-      <Handle type="target" position={Position.Right} style={{ opacity: 0 }} id="right" />
-      <Handle type="target" position={Position.Top} style={{ opacity: 0 }} id="top" />
-      <Handle type="target" position={Position.Bottom} style={{ opacity: 0 }} id="bottom" />
+      {/* Target handles - only left and right for horizontal flow */}
+      <Handle type="target" position={Position.Right} id="right" />
+      <Handle type="target" position={Position.Left} id="left" />
+      
       <div className="mindmap-node__label">{label}</div>
     </div>
   );
@@ -33,4 +37,3 @@ const ConceptNode = memo(({ data }) => {
 ConceptNode.displayName = "ConceptNode";
 
 export default ConceptNode;
-

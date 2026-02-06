@@ -4,13 +4,13 @@
 export {
   loadGraphData,
   convertToHierarchicalFormat,
-  convertToReactFlowFormat,
-  getRelatedConcepts,
 } from "./graphLoader";
 
 export {
-  calculateHierarchicalRadialLayout,
-  calculateRadialLayout,
-  calculateHierarchicalLayout,
+  calculateOrthogonalMindmapLayout,
+  DEFAULT_MINDMAP_LAYOUT_CONFIG,
 } from "./layoutUtils";
 
+export {
+  normalizeCategoryId,
+} from "./normalize";

@@ -4,6 +4,9 @@ import { Handle, Position } from "reactflow";
 /**
  * Category Node - Level 1 categories (e.g., "Foundations", "Machine Learning")
  * Reusable across all subjects
+ * 
+ * Styling: Uses CSS variable --node-color for background and border colors.
+ * No inline styles except for passing the color variable.
  */
 const CategoryNode = memo(({ data }) => {
   const { label, color } = data;
@@ -11,20 +14,17 @@ const CategoryNode = memo(({ data }) => {
   return (
     <div
       className="mindmap-node mindmap-node--category"
-      style={{
-        backgroundColor: color,
-        borderColor: color,
-      }}
+      style={{ "--node-color": color }}
     >
-      <Handle type="target" position={Position.Left} style={{ opacity: 0 }} id="left" />
-      <Handle type="target" position={Position.Right} style={{ opacity: 0 }} id="right" />
-      <Handle type="target" position={Position.Top} style={{ opacity: 0 }} id="top" />
-      <Handle type="target" position={Position.Bottom} style={{ opacity: 0 }} id="bottom" />
+      {/* Target handles - only left and right for horizontal flow */}
+      <Handle type="target" position={Position.Right} id="right" />
+      <Handle type="target" position={Position.Left} id="left" />
+      
       <div className="mindmap-node__label">{label}</div>
-      <Handle type="source" position={Position.Left} style={{ opacity: 0 }} id="source-left" />
-      <Handle type="source" position={Position.Right} style={{ opacity: 0 }} id="source-right" />
-      <Handle type="source" position={Position.Top} style={{ opacity: 0 }} id="source-top" />
-      <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} id="source-bottom" />
+      
+      {/* Source handles - only left and right for horizontal flow */}
+      <Handle type="source" position={Position.Right} id="right" />
+      <Handle type="source" position={Position.Left} id="left" />
     </div>
   );
 });
@@ -32,4 +32,3 @@ const CategoryNode = memo(({ data }) => {
 CategoryNode.displayName = "CategoryNode";
 
 export default CategoryNode;
-

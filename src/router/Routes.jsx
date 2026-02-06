@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import ReactGA from "react-ga4";
 
@@ -24,6 +24,9 @@ function RoutesWithTracking() {
   usePageTracking();
   return (
     <Routes>
+      {/* Legacy redirects for old URLs */}
+      <Route path="data-science/mindmap" element={<Navigate to="../subject/data-science/mindmap" replace />} />
+
       {/* Subject-specific routes (mindmap, learning-path) */}
       {/* Dynamic routing: /subject/:subjectId/mindmap */}
       <Route path="subject/:subjectId" element={<SubjectEntry />}>

@@ -1,6 +1,11 @@
 /**
  * MindmapView - Reusable knowledge graph visualization component
  * Works with any subject by passing subjectId as prop
+ * 
+ * Node ID conventions (must stay consistent across layout + graphLoader):
+ * - center:   center-${subjectId}
+ * - category: category-${categoryId}
+ * - concept:  concept.id
  */
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +20,7 @@ import "reactflow/dist/style.css";
 
 import { CenterNode, CategoryNode, ConceptNode } from "./nodes";
 import { loadGraphData, convertToHierarchicalFormat } from "./utils/graphLoader";
-import { calculateHierarchicalRadialLayout } from "./utils/layoutUtils";
+import { calculateOrthogonalMindmapLayout, DEFAULT_MINDMAP_LAYOUT_CONFIG } from "./utils/layoutUtils";
 import "./nodes/nodes.css";
 import "./MindmapView.css";
 
@@ -44,8 +49,13 @@ const MindmapView = ({ subjectId }) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Store measured node dimensions and graph data for 2-pass layout
+  const [nodeDimensions, setNodeDimensions] = useState(null);
+  const [graphData, setGraphData] = useState(null);
+  const [needsRelayout, setNeedsRelayout] = useState(false);
 
-  // Load and process graph data
+  // Load graph data
   useEffect(() => {
     if (!subjectId) {
       setError("No subject specified");
@@ -56,35 +66,14 @@ const MindmapView = ({ subjectId }) => {
     async function loadGraph() {
       try {
         setLoading(true);
-        const graphData = await loadGraphData(subjectId);
+        const data = await loadGraphData(subjectId);
 
-        if (!graphData) {
+        if (!data) {
           setError("Failed to load knowledge graph");
           return;
         }
 
-        // Calculate hierarchical radial layout (图1 style)
-        const layoutResult = calculateHierarchicalRadialLayout(
-          graphData.categories,
-          graphData.nodes,
-          {
-            centerX: 600,
-            centerY: 400,
-            categoryRadius: 180,
-            conceptStartDistance: 80,
-            conceptVerticalGap: 50,
-            subjectId: subjectId,
-          }
-        );
-
-        // Convert to React Flow format
-        const { nodes: flowNodes, edges: flowEdges } = convertToHierarchicalFormat(
-          graphData,
-          layoutResult
-        );
-
-        setNodes(flowNodes);
-        setEdges(flowEdges);
+        setGraphData(data);
       } catch (err) {
         console.error("Error loading graph:", err);
         setError("An error occurred while loading the graph");
@@ -94,7 +83,82 @@ const MindmapView = ({ subjectId }) => {
     }
 
     loadGraph();
-  }, [subjectId, setNodes, setEdges]);
+  }, [subjectId]);
+
+  // PASS 1: Initial layout with estimated dimensions
+  useEffect(() => {
+    if (!graphData) return;
+
+    // Create base config with subject-specific overrides
+    const baseConfig = {
+      ...DEFAULT_MINDMAP_LAYOUT_CONFIG,
+      subjectId,
+      nodeDimensions: null,  // First pass - no measurements yet
+    };
+
+    const layoutResult = calculateOrthogonalMindmapLayout(
+      graphData.categories,
+      graphData.nodes,
+      baseConfig
+    );
+
+    const { nodes: flowNodes, edges: flowEdges } = convertToHierarchicalFormat(
+      graphData,
+      layoutResult
+    );
+
+    setNodes(flowNodes);
+    setEdges(flowEdges);
+    setNeedsRelayout(true);  // Trigger second pass after render
+  }, [graphData, subjectId, setNodes, setEdges]);
+
+  // PASS 2: Re-layout with measured dimensions after nodes are rendered
+  useEffect(() => {
+    if (!needsRelayout || !graphData || nodes.length === 0) return;
+
+    // Small delay to ensure nodes are rendered and measured
+    const timer = setTimeout(() => {
+      // Collect measured dimensions from rendered nodes
+      const dimensions = new Map();
+      nodes.forEach((node) => {
+        if (node.measured) {
+          dimensions.set(node.id, {
+            width: node.measured.width || node.width || 150,
+            height: node.measured.height || node.height || 45,
+          });
+        }
+      });
+
+      // Only re-layout if we have measurements
+      if (dimensions.size > 0) {
+        // Reuse base config, only updating measured dimensions
+        const baseConfig = {
+          ...DEFAULT_MINDMAP_LAYOUT_CONFIG,
+          subjectId,
+          nodeDimensions: dimensions,  // Second pass - with measured dimensions
+        };
+
+        const layoutResult = calculateOrthogonalMindmapLayout(
+          graphData.categories,
+          graphData.nodes,
+          baseConfig
+        );
+
+        const { nodes: flowNodes, edges: flowEdges } = convertToHierarchicalFormat(
+          graphData,
+          layoutResult
+        );
+
+        setNodes(flowNodes);
+        setEdges(flowEdges);
+        setNodeDimensions(dimensions);
+      }
+
+      setNeedsRelayout(false);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [needsRelayout, graphData, nodes, subjectId, setNodes, setEdges]);
 
   // Handle node click - navigate to the note (only for concept nodes)
   const onNodeClick = useCallback(
@@ -162,7 +226,8 @@ const MindmapView = ({ subjectId }) => {
           maskColor="rgba(0, 0, 0, 0.08)"
           pannable
           zoomable
-          position="bottom-left"
+          position="top-left"
+          style={{ width: 150, height: 100 }}
         />
       </ReactFlow>
     </div>

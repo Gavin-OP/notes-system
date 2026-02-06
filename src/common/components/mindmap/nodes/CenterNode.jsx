@@ -4,6 +4,9 @@ import { Handle, Position } from "reactflow";
 /**
  * Center Node - The main subject node (e.g., "Data Science")
  * Reusable across all subjects
+ * 
+ * Connections: Only LEFT and RIGHT source handles for deterministic
+ * horizontal layout. No automatic handle selection.
  */
 const CenterNode = memo(({ data }) => {
   const { label } = data;
@@ -11,11 +14,9 @@ const CenterNode = memo(({ data }) => {
   return (
     <div className="mindmap-node mindmap-node--center">
       <div className="mindmap-node__label">{label}</div>
-      {/* Hidden handles for edge connections */}
-      <Handle type="source" position={Position.Top} style={{ opacity: 0 }} id="top" />
-      <Handle type="source" position={Position.Right} style={{ opacity: 0 }} id="right" />
-      <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} id="bottom" />
-      <Handle type="source" position={Position.Left} style={{ opacity: 0 }} id="left" />
+      {/* Source handles - only left and right for deterministic horizontal connections */}
+      <Handle type="source" position={Position.Right} id="right" />
+      <Handle type="source" position={Position.Left} id="left" />
     </div>
   );
 });
@@ -23,4 +24,3 @@ const CenterNode = memo(({ data }) => {
 CenterNode.displayName = "CenterNode";
 
 export default CenterNode;
-
