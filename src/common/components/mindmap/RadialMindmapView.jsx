@@ -77,4 +77,3 @@ const RadialMindmapView = ({
 
 export default RadialMindmapView;
 
-

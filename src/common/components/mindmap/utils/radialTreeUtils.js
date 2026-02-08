@@ -158,4 +158,3 @@ export function makeRadialTreeOption(treeData, options = {}) {
   };
 }
 
-
