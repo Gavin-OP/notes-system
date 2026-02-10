@@ -7,15 +7,18 @@ import NotePage from "../pages/NotePage";
 import HomePage from "../pages/HomePage";
 import SubjectEntry from "../pages/NotePage/SubjectEntry";
 import SubjectMindmap from "../pages/NotePage/SubjectEntry/SubjectMindmap";
+import { isLocalhost } from "../utils/analyticsUtils";
 
 // page view tracking
 function usePageTracking() {
   const location = useLocation();
   useEffect(() => {
-    ReactGA.send({
-      hitType: "pageview",
-      page: location.pathname + location.search,
-    });
+    if (!isLocalhost()) {
+      ReactGA.send({
+        hitType: "pageview",
+        page: location.pathname + location.search,
+      });
+    }
   }, [location]);
 }
 
