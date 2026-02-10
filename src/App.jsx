@@ -18,6 +18,7 @@ import Routes from "./router/Routes";
 import { fetchNotesIndex } from "./redux/notesIndexSlice";
 import { setIsMobile } from "./redux/preferenceSlice";
 import { isLocalhost } from "./utils/analyticsUtils";
+import { isMobileViewport } from "./utils/breakpoints";
 
 import "./App.css";
 
@@ -31,7 +32,7 @@ function App() {
   // mobile detection
   useEffect(() => {
     const handleResize = () => {
-      dispatch(setIsMobile(window.innerWidth < 1024));
+      dispatch(setIsMobile(isMobileViewport()));
     };
 
     handleResize();
