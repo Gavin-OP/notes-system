@@ -10,7 +10,7 @@ function HomePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="card">
+    <div className="home-page__card">
       <button onClick={() => navigate("/note")}>go to note system</button>
     </div>
   );
