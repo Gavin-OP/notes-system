@@ -113,3 +113,17 @@
   padding: 0 4px;
 }
 
+/* Mobile responsive menu styles - larger touch targets */
+.note-layout__menu--mobile .ant-menu-item,
+.note-layout__menu--mobile .ant-menu-submenu-title {
+  font-size: 16px !important;
+  line-height: 48px !important;
+  height: 48px !important;
+  padding: 0 24px !important;
+}
+
+.note-layout__menu--mobile .ant-menu-submenu .ant-menu-item {
+  height: 44px !important;
+  line-height: 44px !important;
+}
+

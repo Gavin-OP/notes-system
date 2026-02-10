@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { isMobileViewport } from "../utils/breakpoints";
 
 const initialState = {
   language: "en",
   theme: "light",
-  isMobile: window.innerWidth < 768,
+  isMobile: isMobileViewport(),
 };
 
 const preferenceSlice = createSlice({

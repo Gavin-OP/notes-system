@@ -69,7 +69,7 @@ function NoteHeader({
               ></AutoComplete>
             )}
             <SearchOutlined
-              className="note-header__search-icon"
+              className="note-header__icon note-header__icon--clickable"
               onClick={() => setShowSearch(true)}
             />
           </Space>

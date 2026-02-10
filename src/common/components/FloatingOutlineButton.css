@@ -22,8 +22,21 @@
   padding: 16px 0 0 0;
 }
 
+/* Ensure drawer content wrapper has proper background */
+.floating-outline-drawer .ant-drawer-content-wrapper {
+  background: transparent;
+}
+
+.floating-outline-drawer .ant-drawer-content {
+  background: var(--color-bg-container, #ffffff);
+}
+
 /* Dark theme support */
 [data-theme="dark"] .floating-outline-drawer .ant-drawer-header {
   border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .floating-outline-drawer .ant-drawer-content {
+  background: var(--color-bg-container, #141414);
 }
 
