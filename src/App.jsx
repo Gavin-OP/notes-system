@@ -17,6 +17,7 @@ import enUSMobile from "antd-mobile/es/locales/en-US";
 import Routes from "./router/Routes";
 import { fetchNotesIndex } from "./redux/notesIndexSlice";
 import { setIsMobile } from "./redux/preferenceSlice";
+import { isLocalhost } from "./utils/analyticsUtils";
 
 import "./App.css";
 
@@ -46,17 +47,19 @@ function App() {
 
   // preference tracking
   useEffect(() => {
-    if (themeMode) {
-      ReactGA.set({ theme: themeMode });
-    }
-    if (language) {
-      ReactGA.set({ language });
+    if (!isLocalhost()) {
+      if (themeMode) {
+        ReactGA.set({ theme: themeMode });
+      }
+      if (language) {
+        ReactGA.set({ language });
+      }
     }
   }, [themeMode, language]);
 
   // preference change tracking
   useEffect(() => {
-    if (themeMode) {
+    if (!isLocalhost() && themeMode) {
       ReactGA.event({
         category: "Theme",
         action: "change",
@@ -66,7 +69,7 @@ function App() {
   }, [themeMode]);
 
   useEffect(() => {
-    if (language) {
+    if (!isLocalhost() && language) {
       ReactGA.event({
         category: "Language",
         action: "change",
