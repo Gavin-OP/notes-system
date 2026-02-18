@@ -8,18 +8,18 @@ tags:
   - documentation
 ---
 
-# Mindmap 系统完整实现逻辑
+# Complete Mindmap System Implementation Logic
 
-## 一、数据来源：从 Markdown 笔记到结构化数据
+## Part 1: Data Source - From Markdown Notes to Structured Data
 
-### 1.1 笔记文件结构
+### 1.1 Note File Structure
 
-每个概念都是一个 Markdown 文件，存放在 `public/notes/{学科}/concepts/` 目录下：
+Each concept is a Markdown file stored in the `public/notes/{subject}/concepts/` directory:
 
 ```text
 public/notes/
 └── data-science/
-    ├── _index.md          # 学科首页
+    ├── _index.md          # Subject homepage
     └── concepts/
         ├── data-cleaning.md
         ├── data-collection.md
@@ -27,9 +27,9 @@ public/notes/
         └── ...
 ```
 
-### 1.2 Markdown 文件的 Frontmatter（元数据）
+### 1.2 Markdown File Frontmatter (Metadata)
 
-每个笔记文件开头都有一个 YAML 格式的 frontmatter，包含该概念的所有元信息：
+Each note file begins with a YAML-formatted frontmatter containing all metadata for that concept:
 
 ```yaml
 ---
@@ -37,13 +37,13 @@ title: "Data Cleaning"
 slug: "data-cleaning"
 subject: "data-science"
 
-# Mindmap 相关配置
+# Mindmap configuration
 mindmap_category: "Data & Data Handling"
 mindmap_importance: "high"   # high / medium / low
 
-# Learning Path 相关
-learning_phase: 1            # 学习阶段 (0-3)
-learning_order: 2            # 在该阶段的学习顺序
+# Learning Path configuration
+learning_phase: 1            # Learning phase (0-3)
+learning_order: 2            # Order within this phase
 prerequisites: ["data-collection"]
 
 tags:
@@ -52,35 +52,35 @@ tags:
 ---
 ```
 
-### 1.3 双向链接（Bidirectional Links）
+### 1.3 Bidirectional Links
 
-在笔记正文中，使用 `[[concept-id]]` 语法来引用其他概念：
+In the note body, use `[[concept-id]]` syntax to reference other concepts:
 
 ```markdown
-数据清洗在 [[data-collection]] 之后进行。
-清洗后的数据会被用于 [[feature-engineering]]。
+Data cleaning is performed after [[data-collection]].
+Cleaned data will be used for [[feature-engineering]].
 ```
 
-双向链接表示概念之间的关联关系：
+Bidirectional links represent relationships between concepts:
 
-- `prerequisites` 字段：表示前置知识（必须先学）
-- `[[...]]` 链接：表示相关概念（有关联但不是强制顺序）
+- `prerequisites` field: Represents prerequisite knowledge (must be learned first)
+- `[[...]]` links: Represents related concepts (connected but not mandatory order)
 
-### 1.4 数据提取与转换
+### 1.4 Data Extraction and Conversion
 
-通过一个脚本（通常是 Node.js）扫描所有 Markdown 文件，提取 frontmatter 和 `[[...]]` 链接，生成结构化 JSON：
+A script (typically Node.js) scans all Markdown files, extracts frontmatter and `[[...]]` links, and generates structured JSON:
 
 ```text
-Markdown 笔记 → 脚本解析 → data-science-graph.json
+Markdown notes → Script parsing → data-science-graph.json
 ```
 
-生成的 JSON 文件存放在：
+The generated JSON file is stored at:
 
 ```text
 public/graphs/data-science-graph.json
 ```
 
-## 二、数据结构：Graph JSON 的组成
+## Part 2: Data Structure - Graph JSON Composition
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -90,11 +90,11 @@ public/graphs/data-science-graph.json
 │    subjectId, subjectName, nodeCount, edgeCount, ...        │
 │  }                                                          │
 ├─────────────────────────────────────────────────────────────┤
-│  categories: [                 ← 分类信息                    │
+│  categories: [                 ← Category information       │
 │    { id, name, color, order, nodes: [...] }                 │
 │  ]                                                          │
 ├─────────────────────────────────────────────────────────────┤
-│  nodes: [                      ← 所有概念节点                 │
+│  nodes: [                      ← All concept nodes           │
 │    {                                                        │
 │      id, title, noteUrl,                                    │
 │      category,                                              │
@@ -104,7 +104,7 @@ public/graphs/data-science-graph.json
 │    }                                                        │
 │  ]                                                          │
 ├─────────────────────────────────────────────────────────────┤
-│  edges: [                      ← 所有连线                    │
+│  edges: [                      ← All connections             │
 │    {                                                        │
 │      source, target,                                        │
 │      type: "prerequisite" | "related",                      │
@@ -114,25 +114,25 @@ public/graphs/data-science-graph.json
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 三、三种 Mindmap 视图的实现
+## Part 3: Implementation of Three Mindmap Views
 
-### 图 1：层级视图（Hierarchical View）
+### View 1: Hierarchical View
 
-适合场景：初学者入门，理解整体知识结构
+**Use case**: Beginners learning, understanding overall knowledge structure
 
-技术栈：React Flow + 自定义正交布局
+**Tech stack**: React Flow + Custom orthogonal layout
 
-数据流程：
+**Data flow**:
 
 ```text
 graph.json
   → loadGraphData()
   → calculateOrthogonalMindmapLayout()
   → convertToHierarchicalFormat()
-  → ReactFlow 渲染
+  → ReactFlow rendering
 ```
 
-布局逻辑：
+**Layout logic**:
 
 ```text
                     Center (Subject)
@@ -144,30 +144,30 @@ graph.json
        Concept         Concept         Concept
 ```
 
-特点：
+**Features**:
 
-- 三层结构：中心 → 分类 → 概念
-- 分类左右分布，概念在外侧
-- 仅显示层级关系边
-- 节点不可拖动
-- 使用 Bezier 曲线连接
+- Three-layer structure: Center → Category → Concept
+- Categories distributed left/right, concepts on the outer side
+- Only shows hierarchical relationship edges
+- Nodes are not draggable
+- Uses Bezier curves for connections
 
-### 图 2：径向视图（Radial View）
+### View 2: Radial View
 
-适合场景：整体概览、展示型可视化
+**Use case**: Overall overview, presentation-style visualization
 
-技术栈：Apache ECharts（radial tree）
+**Tech stack**: Apache ECharts (radial tree)
 
-数据流程：
+**Data flow**:
 
 ```text
 graph.json
   → graphToRadialTree()
   → makeRadialTreeOption()
-  → ECharts 渲染
+  → ECharts rendering
 ```
 
-布局逻辑：
+**Layout logic**:
 
 ```text
                 Concept
@@ -181,29 +181,29 @@ Center            Concept
                 Concept
 ```
 
-特点：
+**Features**:
 
-- 从中心向外辐射
-- 自动计算角度与层级
-- 支持动画与缩放
-- 非编辑型视图，偏展示
+- Radiates outward from center
+- Automatically calculates angles and levels
+- Supports animation and zoom
+- Non-editable view, presentation-focused
 
-### 图 3：网络视图（Network View）
+### View 3: Network View
 
-适合场景：深入学习，理解复杂关系
+**Use case**: Deep learning, understanding complex relationships
 
-技术栈：React Flow + D3-force
+**Tech stack**: React Flow + D3-force
 
-数据流程：
+**Data flow**:
 
 ```text
 graph.json
   → convertToNetworkFormat()
   → D3 force simulation
-  → React Flow 渲染
+  → React Flow rendering
 ```
 
-布局逻辑：
+**Layout logic**:
 
 ```text
     ●────●────●
@@ -213,42 +213,42 @@ graph.json
     ●────●────●
 ```
 
-特点：
+**Features**:
 
-- 显示所有关系边（prerequisite + related）
-- 节点大小与重要度相关
-- Hover 高亮局部关系
-- 支持拖动
-- Obsidian 风格视觉
+- Shows all relationship edges (prerequisite + related)
+- Node size related to importance
+- Hover highlights local relationships
+- Supports dragging
+- Obsidian-style visuals
 
-## 四、技术栈总结
+## Part 4: Tech Stack Summary
 
-| 模块 | 技术 | 用途 |
+| Module | Technology | Purpose |
 |-----|------|------|
-| 数据存储 | Markdown + YAML | 内容与元数据 |
-| 数据提取 | Node.js 脚本 | 生成 JSON |
-| 层级视图 | React Flow | 结构化展示 |
-| 正交布局 | 自定义算法 | 稳定布局 |
-| 径向视图 | Apache ECharts | 展示型可视化 |
-| 网络视图 | React Flow + D3-force | 关系探索 |
-| 样式 | CSS Variables | 主题与暗色模式 |
+| Data Storage | Markdown + YAML | Content and metadata |
+| Data Extraction | Node.js scripts | Generate JSON |
+| Hierarchical View | React Flow | Structured display |
+| Orthogonal Layout | Custom algorithm | Stable layout |
+| Radial View | Apache ECharts | Presentation visualization |
+| Network View | React Flow + D3-force | Relationship exploration |
+| Styling | CSS Variables | Theme and dark mode |
 
-## 五、完整数据流示意
+## Part 5: Complete Data Flow Diagram
 
 ```text
-Markdown 笔记
+Markdown notes
    ↓
-脚本解析
+Script parsing
    ↓
 graph.json
    ↓
 ┌─────────────┬─────────────┬─────────────┐
-│ 层级视图     │ 径向视图     │ 网络视图      │
+│ Hierarchical│ Radial View  │ Network View│
 │ React Flow  │ ECharts     │ RF + D3     │
 └─────────────┴─────────────┴─────────────┘
 ```
 
-## 六、核心代码结构
+## Part 6: Core Code Structure
 
 ```text
 src/common/components/mindmap/
@@ -270,5 +270,3 @@ src/common/components/mindmap/
     ├── networkLayoutUtils.js
     └── normalize.js
 ```
- 
-

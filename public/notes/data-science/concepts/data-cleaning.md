@@ -23,33 +23,32 @@ tags:
 
 # Data Cleaning
 
-## 概念简介
+## Concept Overview
 
-Data Cleaning（数据清洗）是识别和纠正数据质量问题的过程，包括处理缺失值、异常值、重复数据等。
+Data Cleaning is the process of identifying and correcting data quality issues, including handling missing values, outliers, duplicate data, etc.
 
-据统计，数据科学家80%的时间都花在数据清洗上。
+According to statistics, data scientists spend 80% of their time on data cleaning.
 
-## 常见数据质量问题
+## Common Data Quality Issues
 
-- **缺失值** - 数据不完整
-- **异常值** - 不符合正常分布的极端值
-- **重复数据** - 同一记录出现多次
-- **格式不一致** - 同一字段有不同的表示方式
-- **数据类型错误** - 数值型数据被存储为字符串
+- **Missing Values** - Incomplete data
+- **Outliers** - Extreme values that don't conform to normal distribution
+- **Duplicate Data** - Same record appearing multiple times
+- **Inconsistent Formats** - Same field represented in different ways
+- **Wrong Data Types** - Numeric data stored as strings
 
-## 与其他概念的关系
+## Relationships with Other Concepts
 
-数据清洗在 [[data-collection]] 之后进行，是数据预处理的第一步。
+Data cleaning is performed after [[data-collection]] and is the first step of data preprocessing.
 
-清洗后的数据会被用于 [[feature-engineering]]，创建用于建模的特征。
+Cleaned data will be used for [[feature-engineering]] to create features for modeling.
 
-不当的数据清洗可能导致信息丢失，影响 [[descriptive-statistics]] 的准确性。
+Improper data cleaning may lead to information loss, affecting the accuracy of [[descriptive-statistics]].
 
-## 处理方法
+## Processing Methods
 
-（本节内容将在后续完善）
+(This section will be refined in future updates)
 
-- 缺失值处理：删除、填充、插值
-- 异常值检测：统计方法、可视化
-- 数据标准化和归一化
-
+- Missing value handling: deletion, imputation, interpolation
+- Outlier detection: statistical methods, visualization
+- Data standardization and normalization

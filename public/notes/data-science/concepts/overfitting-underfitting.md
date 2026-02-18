@@ -23,59 +23,58 @@ tags:
 
 # Overfitting & Underfitting
 
-## 概念简介
+## Concept Overview
 
-Overfitting（过拟合）和 Underfitting（欠拟合）是机器学习中的两个核心问题，关系到模型的泛化能力。
+Overfitting and Underfitting are two core problems in machine learning, relating to model generalization capability.
 
-## 过拟合（Overfitting）
+## Overfitting
 
-模型在训练数据上表现很好，但在新数据上表现很差。
+The model performs well on training data but poorly on new data.
 
-**原因：**
-- 模型过于复杂
-- 训练数据太少
-- 训练时间过长
+**Causes:**
+- Model too complex
+- Too little training data
+- Training for too long
 
-**表现：**
-- 训练误差很小，但测试误差很大
-- 模型学习了数据中的噪声
+**Symptoms:**
+- Small training error but large test error
+- Model learned noise in the data
 
-## 欠拟合（Underfitting）
+## Underfitting
 
-模型过于简单，连训练数据的模式都没有学好。
+The model is too simple and hasn't even learned the patterns in the training data.
 
-**原因：**
-- 模型太简单
-- 特征不够好
-- 训练不充分
+**Causes:**
+- Model too simple
+- Features not good enough
+- Insufficient training
 
-**表现：**
-- 训练误差和测试误差都很大
-- 模型没有捕捉到数据的真实规律
+**Symptoms:**
+- Both training and test errors are large
+- Model hasn't captured the true patterns in the data
 
-## 与其他概念的关系
+## Relationships with Other Concepts
 
-这是 [[supervised-learning]] 训练过程中最常见的问题。
+This is the most common problem in [[supervised-learning]] training processes.
 
-不当的 [[feature-engineering]] 可能加剧过拟合或欠拟合。
+Improper [[feature-engineering]] may exacerbate overfitting or underfitting.
 
-[[model-selection]] 的一个重要目标就是找到过拟合和欠拟合之间的最佳平衡点。
+An important goal of [[model-selection]] is to find the optimal balance between overfitting and underfitting.
 
-理解偏差-方差权衡需要 [[probability-basics]] 的知识。
+Understanding bias-variance tradeoff requires knowledge of [[probability-basics]].
 
-## 解决方法
+## Solutions
 
-（本节内容将在后续完善）
+(This section will be refined in future updates)
 
-### 防止过拟合
-- 增加训练数据
-- 正则化（L1/L2）
-- 交叉验证
+### Preventing Overfitting
+- Increase training data
+- Regularization (L1/L2)
+- Cross-validation
 - Early stopping
 - Dropout
 
-### 防止欠拟合
-- 增加模型复杂度
-- 添加更多特征
-- 减少正则化强度
-
+### Preventing Underfitting
+- Increase model complexity
+- Add more features
+- Reduce regularization strength

@@ -22,31 +22,30 @@ tags:
 
 # What is Data Science
 
-## 概念简介
+## Concept Overview
 
-Data Science（数据科学）是一个跨学科领域，结合了统计学、计算机科学和领域知识，从数据中提取有价值的洞察和知识。
+Data Science is an interdisciplinary field that combines statistics, computer science, and domain knowledge to extract valuable insights and knowledge from data.
 
-## 核心要素
+## Core Components
 
-数据科学包含三个核心要素：
+Data science includes three core components:
 
-1. **数据处理能力** - 能够收集、清洗和处理大规模数据
-2. **统计分析能力** - 运用统计方法理解数据模式
-3. **领域知识** - 将分析结果应用到实际问题中
+1. **Data Processing Capabilities** - Ability to collect, clean, and process large-scale data
+2. **Statistical Analysis Capabilities** - Using statistical methods to understand data patterns
+3. **Domain Knowledge** - Applying analysis results to real-world problems
 
-## 与其他概念的关系
+## Relationships with Other Concepts
 
-开始学习数据科学，首先需要理解如何进行 [[problem-framing]]，即如何将实际问题转化为数据科学问题。
+To begin learning data science, you first need to understand how to perform [[problem-framing]], that is, how to transform real-world problems into data science problems.
 
-数据科学的核心工作流程包括 [[data-collection]]、[[data-cleaning]] 和 [[feature-engineering]]。
+The core workflow of data science includes [[data-collection]], [[data-cleaning]], and [[feature-engineering]].
 
-要深入理解数据科学，还需要掌握 [[descriptive-statistics]] 和 [[probability-basics]] 等基础知识。
+To deeply understand data science, you also need to master foundational knowledge such as [[descriptive-statistics]] and [[probability-basics]].
 
-## 学习建议
+## Learning Recommendations
 
-（本节内容将在后续完善）
+(This section will be refined in future updates)
 
-- 建立扎实的数学和统计基础
-- 学习编程（Python/R）
-- 通过实际项目练习
-
+- Build a solid foundation in mathematics and statistics
+- Learn programming (Python/R)
+- Practice through real projects

@@ -22,41 +22,40 @@ tags:
 
 # Probability Basics
 
-## 概念简介
+## Concept Overview
 
-Probability（概率）是量化不确定性的数学工具，是理解和建立统计模型的基础。
+Probability is a mathematical tool for quantifying uncertainty and is the foundation for understanding and building statistical models.
 
-## 核心概念
+## Core Concepts
 
-概率论的基础概念包括：
+Fundamental concepts of probability theory include:
 
-- **随机事件** - 不确定会不会发生的事件
-- **概率空间** - 所有可能结果的集合
-- **条件概率** - 在某个条件下事件发生的概率
-- **独立性** - 事件之间是否相互影响
-- **贝叶斯定理** - 根据新信息更新概率
+- **Random Events** - Events that may or may not occur
+- **Probability Space** - Set of all possible outcomes
+- **Conditional Probability** - Probability of an event occurring under certain conditions
+- **Independence** - Whether events influence each other
+- **Bayes' Theorem** - Updating probabilities based on new information
 
-## 常见概率分布
+## Common Probability Distributions
 
-- 离散分布：二项分布、泊松分布
-- 连续分布：正态分布、指数分布
+- Discrete distributions: Binomial distribution, Poisson distribution
+- Continuous distributions: Normal distribution, Exponential distribution
 
-## 与其他概念的关系
+## Relationships with Other Concepts
 
-概率论建立在 [[descriptive-statistics]] 的基础之上。
+Probability theory builds upon [[descriptive-statistics]].
 
-概率概念是理解 [[supervised-learning]] 中许多算法的关键，特别是贝叶斯方法和概率图模型。
+Probability concepts are key to understanding many algorithms in [[supervised-learning]], especially Bayesian methods and probabilistic graphical models.
 
-概率论帮助我们理解 [[overfitting-underfitting]] 背后的数学原理。
+Probability theory helps us understand the mathematical principles behind [[overfitting-underfitting]].
 
-在 [[model-selection]] 中，我们使用概率方法来评估模型的不确定性。
+In [[model-selection]], we use probabilistic methods to assess model uncertainty.
 
-## 应用场景
+## Application Scenarios
 
-（本节内容将在后续完善）
+(This section will be refined in future updates)
 
-- A/B测试
-- 风险评估
-- 预测建模
-- 假设检验
-
+- A/B testing
+- Risk assessment
+- Predictive modeling
+- Hypothesis testing

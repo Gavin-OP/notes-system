@@ -85,10 +85,10 @@ export function makeRadialTreeOption(treeData, options = {}) {
       formatter: (params) => {
         const data = params.data;
         if (data.noteUrl) {
-          return `<strong>${data.name}</strong><br/><span style="color:#888">点击查看笔记</span>`;
+          return `<strong>${data.name}</strong><br/><span style="color:#888">Click to view note</span>`;
         }
         if (data.children && data.children.length > 0) {
-          return `<strong>${data.name}</strong><br/><span style="color:#888">${data.children.length} 个概念</span>`;
+          return `<strong>${data.name}</strong><br/><span style="color:#888">${data.children.length} concepts</span>`;
         }
         return `<strong>${data.name}</strong>`;
       },

@@ -22,40 +22,39 @@ tags:
 
 # Descriptive Statistics
 
-## 概念简介
+## Concept Overview
 
-Descriptive Statistics（描述统计）使用统计指标和可视化方法来总结和描述数据的主要特征。
+Descriptive Statistics uses statistical indicators and visualization methods to summarize and describe the main characteristics of data.
 
-## 核心指标
+## Core Indicators
 
-描述统计的主要指标包括：
+Main indicators of descriptive statistics include:
 
-### 集中趋势
-- **均值** - 数据的平均水平
-- **中位数** - 数据的中间值
-- **众数** - 出现最频繁的值
+### Central Tendency
+- **Mean** - Average level of data
+- **Median** - Middle value of data
+- **Mode** - Most frequently occurring value
 
-### 离散程度
-- **方差** - 数据的波动程度
-- **标准差** - 方差的平方根
-- **四分位距** - 数据的分布范围
+### Dispersion
+- **Variance** - Degree of data fluctuation
+- **Standard Deviation** - Square root of variance
+- **Interquartile Range** - Distribution range of data
 
-## 与其他概念的关系
+## Relationships with Other Concepts
 
-描述统计是 [[what-is-data-science]] 分析的基础工具。
+Descriptive statistics is a fundamental tool for [[what-is-data-science]] analysis.
 
-它常用于 [[data-cleaning]] 阶段，帮助识别异常值和数据质量问题。
+It is commonly used in the [[data-cleaning]] stage to help identify outliers and data quality issues.
 
-描述统计与 [[probability-basics]] 密切相关，为推断统计奠定基础。
+Descriptive statistics is closely related to [[probability-basics]] and lays the foundation for inferential statistics.
 
-理解数据分布对 [[feature-engineering]] 中的特征变换很重要。
+Understanding data distribution is important for feature transformation in [[feature-engineering]].
 
-## 可视化方法
+## Visualization Methods
 
-（本节内容将在后续完善）
+(This section will be refined in future updates)
 
-- 直方图
-- 箱线图
-- 散点图
-- 热力图
-
+- Histograms
+- Box plots
+- Scatter plots
+- Heatmaps

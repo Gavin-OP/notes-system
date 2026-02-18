@@ -22,53 +22,52 @@ tags:
 
 # Model Selection
 
-## 概念简介
+## Concept Overview
 
-Model Selection（模型选择）是从多个候选模型中选择最佳模型的过程，是构建高质量机器学习系统的关键步骤。
+Model Selection is the process of choosing the best model from multiple candidate models, a key step in building high-quality machine learning systems.
 
-## 为什么重要
+## Why It Matters
 
-没有一个模型在所有问题上都是最优的（No Free Lunch Theorem）。因此，我们需要：
+No single model is optimal for all problems (No Free Lunch Theorem). Therefore, we need to:
 
-- 比较不同算法的性能
-- 选择合适的超参数
-- 在性能和复杂度之间权衡
-- 评估模型的泛化能力
+- Compare performance of different algorithms
+- Select appropriate hyperparameters
+- Balance between performance and complexity
+- Evaluate model generalization capability
 
-## 评估方法
+## Evaluation Methods
 
-### 交叉验证
-- K折交叉验证
-- 留一法
-- 时间序列交叉验证
+### Cross-Validation
+- K-fold cross-validation
+- Leave-one-out
+- Time series cross-validation
 
-### 评估指标
-- **分类问题**：准确率、精确率、召回率、F1分数、AUC
-- **回归问题**：MSE、RMSE、MAE、R²
+### Evaluation Metrics
+- **Classification**: Accuracy, Precision, Recall, F1-score, AUC
+- **Regression**: MSE, RMSE, MAE, R²
 
-## 与其他概念的关系
+## Relationships with Other Concepts
 
-模型选择是在完成 [[feature-engineering]] 和 [[supervised-learning]] 训练后进行的。
+Model selection is performed after completing [[feature-engineering]] and [[supervised-learning]] training.
 
-好的模型选择需要理解 [[overfitting-underfitting]]，在模型复杂度和泛化能力之间找到平衡。
+Good model selection requires understanding [[overfitting-underfitting]] to find balance between model complexity and generalization capability.
 
-[[probability-basics]] 中的统计推断方法帮助我们评估模型性能的显著性。
+Statistical inference methods from [[probability-basics]] help us assess the significance of model performance.
 
-模型选择会影响整个 [[problem-framing]] 到部署的端到端流程。
+Model selection affects the entire end-to-end process from [[problem-framing]] to deployment.
 
-## 选择策略
+## Selection Strategy
 
-（本节内容将在后续完善）
+(This section will be refined in future updates)
 
-- 业务需求优先
-- 考虑模型可解释性
-- 评估计算成本
-- 考虑维护难度
-- A/B测试验证
+- Prioritize business requirements
+- Consider model interpretability
+- Evaluate computational costs
+- Consider maintenance difficulty
+- A/B testing validation
 
-## 高级话题
+## Advanced Topics
 
-- 自动化机器学习（AutoML）
-- 神经架构搜索（NAS）
-- 集成学习（Ensemble）
-
+- Automated Machine Learning (AutoML)
+- Neural Architecture Search (NAS)
+- Ensemble Learning

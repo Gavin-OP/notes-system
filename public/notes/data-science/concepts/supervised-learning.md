@@ -22,48 +22,47 @@ tags:
 
 # Supervised Learning
 
-## 概念简介
+## Concept Overview
 
-Supervised Learning（监督学习）是机器学习的一种范式，通过标注数据训练模型，使其能够对新数据进行预测。
+Supervised Learning is a paradigm of machine learning that trains models using labeled data, enabling them to make predictions on new data.
 
-## 核心思想
+## Core Idea
 
-监督学习的基本流程：
+The basic workflow of supervised learning:
 
-1. **收集标注数据** - 包含输入特征和对应的正确答案
-2. **训练模型** - 让模型学习输入到输出的映射关系
-3. **评估性能** - 在测试集上验证模型效果
-4. **预测** - 对新数据进行预测
+1. **Collect Labeled Data** - Contains input features and corresponding correct answers
+2. **Train Model** - Let the model learn the mapping from input to output
+3. **Evaluate Performance** - Validate model effectiveness on test set
+4. **Predict** - Make predictions on new data
 
-## 主要类型
+## Main Types
 
-- **分类问题** - 预测离散的类别标签（如垃圾邮件检测）
-- **回归问题** - 预测连续的数值（如房价预测）
+- **Classification Problems** - Predict discrete category labels (e.g., spam detection)
+- **Regression Problems** - Predict continuous values (e.g., house price prediction)
 
-## 常见算法
+## Common Algorithms
 
-- 线性回归/逻辑回归
-- 决策树
-- 随机森林
-- 支持向量机（SVM）
-- 神经网络
+- Linear regression/Logistic regression
+- Decision trees
+- Random forests
+- Support Vector Machines (SVM)
+- Neural networks
 
-## 与其他概念的关系
+## Relationships with Other Concepts
 
-监督学习需要经过 [[feature-engineering]] 处理的高质量特征。
+Supervised learning requires high-quality features processed through [[feature-engineering]].
 
-理解 [[probability-basics]] 有助于掌握许多监督学习算法的原理。
+Understanding [[probability-basics]] helps master the principles of many supervised learning algorithms.
 
-训练监督学习模型时需要警惕 [[overfitting-underfitting]] 问题。
+When training supervised learning models, beware of [[overfitting-underfitting]] issues.
 
-[[model-selection]] 帮助我们在不同的监督学习算法中选择最佳模型。
+[[model-selection]] helps us choose the best model among different supervised learning algorithms.
 
-## 挑战
+## Challenges
 
-（本节内容将在后续完善）
+(This section will be refined in future updates)
 
-- 需要大量标注数据
-- 标注成本高
-- 泛化能力
-- 类别不平衡
-
+- Requires large amounts of labeled data
+- High labeling costs
+- Generalization capability
+- Class imbalance

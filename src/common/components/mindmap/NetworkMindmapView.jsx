@@ -278,7 +278,7 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
     <div className="network-mindmap-view" ref={containerRef}>
       {isSimulationRunning && (
         <div className="network-mindmap-view__loading">
-          <span>布局计算中...</span>
+          <span>Calculating layout...</span>
         </div>
       )}
       <ReactFlow

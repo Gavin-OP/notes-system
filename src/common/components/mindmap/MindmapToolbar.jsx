@@ -10,9 +10,9 @@ import "./MindmapToolbar.css";
  * Mindmap view types
  */
 export const MINDMAP_TYPES = {
-  HIERARCHICAL: "hierarchical",  // Type 1: 清晰的层级结构
-  RADIAL: "radial",              // Type 2: 径向分组布局 (待实现)
-  NETWORK: "network",            // Type 3: 网状关系图 (待实现)
+  HIERARCHICAL: "hierarchical",  // Type 1: Clear hierarchical structure
+  RADIAL: "radial",              // Type 2: Radial grouped layout
+  NETWORK: "network",            // Type 3: Network relationship graph
 };
 
 /**
@@ -34,22 +34,22 @@ const MindmapToolbar = ({ subjectId, currentType, onTypeChange, subjectName }) =
     {
       type: MINDMAP_TYPES.HIERARCHICAL,
       icon: <AppstoreOutlined />,
-      label: "层级视图",
-      description: "清晰的分类结构，适合入门",
+      label: "Hierarchical",
+      description: "Clear category structure, suitable for beginners",
     },
     {
       type: MINDMAP_TYPES.RADIAL,
       icon: <BranchesOutlined />,
-      label: "径向视图",
-      description: "美观的分组布局",
-      disabled: false,  // 已实现
+      label: "Radial",
+      description: "Beautiful grouped layout",
+      disabled: false,  // Implemented
     },
     {
       type: MINDMAP_TYPES.NETWORK,
       icon: <ClusterOutlined />,
-      label: "网络视图",
-      description: "概念关系网络，适合深入理解",
-      disabled: false,  // 已实现
+      label: "Network",
+      description: "Concept relationship network, suitable for deep understanding",
+      disabled: false,  // Implemented
     },
   ];
 
@@ -59,21 +59,21 @@ const MindmapToolbar = ({ subjectId, currentType, onTypeChange, subjectName }) =
         <button
           className="mindmap-toolbar__back-btn"
           onClick={handleBack}
-          title="返回"
+          title="Back"
         >
           <ArrowLeftOutlined />
-          <span>返回</span>
+          <span>Back</span>
         </button>
         {subjectName && (
           <div className="mindmap-toolbar__title">
-            <h2>{subjectName} - 知识图谱</h2>
+            <h2>{subjectName} - Knowledge Graph</h2>
           </div>
         )}
       </div>
 
       <div className="mindmap-toolbar__right">
         <div className="mindmap-toolbar__view-switcher">
-          <span className="mindmap-toolbar__view-label">视图类型：</span>
+          <span className="mindmap-toolbar__view-label">View Type:</span>
           <div className="mindmap-toolbar__view-options">
             {viewOptions.map((option) => (
               <button
@@ -83,11 +83,11 @@ const MindmapToolbar = ({ subjectId, currentType, onTypeChange, subjectName }) =
                 } ${option.disabled ? "mindmap-toolbar__view-btn--disabled" : ""}`}
                 onClick={() => !option.disabled && onTypeChange(option.type)}
                 disabled={option.disabled}
-                title={option.disabled ? `${option.label}（即将推出）` : option.description}
+                title={option.disabled ? `${option.label} (Coming Soon)` : option.description}
               >
                 {option.icon}
                 <span>{option.label}</span>
-                {option.disabled && <span className="mindmap-toolbar__badge">敬请期待</span>}
+                {option.disabled && <span className="mindmap-toolbar__badge">Coming Soon</span>}
               </button>
             ))}
           </div>

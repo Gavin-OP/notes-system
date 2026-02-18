@@ -8,40 +8,39 @@ tags:
   - index
 ---
 
-# Data Science 知识体系
+# Data Science Knowledge System
 
-欢迎来到 Data Science 知识体系！这里提供系统性的数据科学学习内容，适合本科生到授课制硕士阶段的学习者。
+Welcome to the Data Science Knowledge System! This provides systematic data science learning content suitable for learners from undergraduate to taught master's level.
 
-## 📚 学习方式
+## 📚 Learning Methods
 
-选择适合你的学习路径：
+Choose the learning path that suits you:
 
-### 🗺️ [Mindmap - 知识图谱](/notes-system/subject/data-science/mindmap)
-浏览完整的 Data Science 概念地图，了解各个知识点之间的关系。适合：
-- 想要全局了解 Data Science 知识结构
-- 需要查找特定概念及其关联内容
-- 希望探索式学习
+### 🗺️ [Mindmap - Knowledge Graph](/notes-system/subject/data-science/mindmap)
+Browse the complete Data Science concept map to understand the relationships between various knowledge points. Suitable for:
+- Wanting a global understanding of Data Science knowledge structure
+- Needing to find specific concepts and their related content
+- Hoping for exploratory learning
 
-### 🎯 [Learning Path - 学习路径](#)
-跟随结构化的学习路径，循序渐进地掌握 Data Science。适合：
-- 初学者系统学习
-- 需要明确学习顺序
-- 希望了解前置知识依赖
+### 🎯 [Learning Path - Learning Path](#)
+Follow a structured learning path to master Data Science step by step. Suitable for:
+- Beginners learning systematically
+- Needing clear learning order
+- Hoping to understand prerequisite dependencies
 
-（Learning Path 功能即将推出）
+(Learning Path feature coming soon)
 
-## 📊 知识模块
+## 📊 Knowledge Modules
 
-本知识体系包含以下核心模块：
+This knowledge system includes the following core modules:
 
-- **Foundations** - 基础概念
-- **Data & Data Handling** - 数据处理
-- **Statistics & Probability** - 统计与概率
-- **Machine Learning** - 机器学习
-- **Modeling & Evaluation** - 建模与评估
-- **Ethics & Applications** - 伦理与应用
+- **Foundations** - Fundamental concepts
+- **Data & Data Handling** - Data processing
+- **Statistics & Probability** - Statistics and probability
+- **Machine Learning** - Machine learning
+- **Modeling & Evaluation** - Modeling and evaluation
+- **Ethics & Applications** - Ethics and applications
 
 ---
 
-💡 **提示**：每个概念笔记都包含相关概念链接，方便你探索知识网络。
-
+💡 **Tip**: Each concept note contains links to related concepts, making it easy for you to explore the knowledge network.

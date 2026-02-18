@@ -23,37 +23,36 @@ tags:
 
 # Feature Engineering
 
-## 概念简介
+## Concept Overview
 
-Feature Engineering（特征工程）是将原始数据转换为更适合机器学习模型的特征的过程。它是提升模型性能的关键环节。
+Feature Engineering is the process of transforming raw data into features that are more suitable for machine learning models. It is a key step in improving model performance.
 
 "Applied machine learning is basically feature engineering." - Andrew Ng
 
-## 核心技术
+## Core Techniques
 
-特征工程包括多个方面：
+Feature engineering includes multiple aspects:
 
-- **特征创建** - 从现有特征生成新特征
-- **特征变换** - 改变特征的分布或尺度
-- **特征选择** - 选择最有价值的特征
-- **特征编码** - 将类别变量转换为数值
+- **Feature Creation** - Generate new features from existing ones
+- **Feature Transformation** - Change feature distribution or scale
+- **Feature Selection** - Select the most valuable features
+- **Feature Encoding** - Convert categorical variables to numeric
 
-## 与其他概念的关系
+## Relationships with Other Concepts
 
-特征工程在 [[data-cleaning]] 完成后进行。
+Feature engineering is performed after [[data-cleaning]] is completed.
 
-好的特征工程可以显著提升 [[supervised-learning]] 模型的性能。
+Good feature engineering can significantly improve the performance of [[supervised-learning]] models.
 
-但需要注意避免 [[overfitting-underfitting]]，不要创建过多复杂特征。
+However, care must be taken to avoid [[overfitting-underfitting]] by not creating too many complex features.
 
-特征工程的质量会直接影响 [[model-selection]] 的效果。
+The quality of feature engineering directly affects the effectiveness of [[model-selection]].
 
-## 最佳实践
+## Best Practices
 
-（本节内容将在后续完善）
+(This section will be refined in future updates)
 
-- 基于领域知识创建特征
-- 使用特征重要性进行筛选
-- 注意特征之间的相关性
-- 警惕数据泄露问题
-
+- Create features based on domain knowledge
+- Use feature importance for filtering
+- Pay attention to correlations between features
+- Beware of data leakage issues
