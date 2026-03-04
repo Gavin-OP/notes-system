@@ -49,3 +49,20 @@ npm run ai-agents:topic -- --course Python --topic introduction-to-base-python-p
 ```bash
 npm run ai-agents:batch -- --course Python
 ```
+
+## Regenerate notes index and mindmap graphs
+
+After notes are generated/renamed, rebuild index and all subject graphs (Python, Data Science, etc.):
+
+```bash
+npm run generate:all
+```
+
+Or run individually:
+
+```bash
+npm run generate:notes
+npm run generate:graph              # discovers and generates all subjects
+npm run generate:graph -- python   # generate only Python
+npm run generate:graph -- data-science
+```

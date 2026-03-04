@@ -29,6 +29,7 @@ function RoutesWithTracking() {
     <Routes>
       {/* Legacy redirects for old URLs */}
       <Route path="data-science/mindmap" element={<Navigate to="../subject/data-science/mindmap" replace />} />
+      <Route path="python/mindmap" element={<Navigate to="../subject/python/mindmap" replace />} />
 
       {/* Subject-specific routes (mindmap, learning-path) */}
       {/* Dynamic routing: /subject/:subjectId/mindmap */}
