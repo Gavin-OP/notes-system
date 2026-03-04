@@ -1,0 +1,37 @@
+{
+  "slug": "computer-science-fundamentals",
+  "title": "Computer Science fundamentals",
+  "prerequisites": [],
+  "learning_objectives": [
+    "Build a high-level mental model of core computer science foundations before programming",
+    "Differentiate hardware, software, and development environment responsibilities",
+    "Understand major ways to run Python code and when to use each approach"
+  ],
+  "core_explanation": "Computer Science fundamentals lay the groundwork for understanding how computers work and how to interact with them effectively, even before writing complex code. It involves grasping the distinction between hardware (physical components like CPU, memory, storage) and software (programs and operating systems). Understanding file systems, permissions, and the command line is crucial for navigating your computer. For Python, you'll learn about different ways to run code: directly via an interpreter, using text editors with the command line, integrated development environments (IDEs) like VS Code, or interactive notebooks like Jupyter. This foundational knowledge ensures a smoother journey into programming.",
+  "worked_examples": [
+    "**Navigating the Command Line:** Open your terminal (macOS/Linux) or Command Prompt/PowerShell (Windows). Type `pwd` (print working directory) or `cd` (change directory) to move around. For example, `cd Documents` moves into the Documents folder. This helps you understand your computer's file structure.",
+    "**Running a Simple Python Script:** Create a file named `hello.py` with `print('Hello, CS Fundamentals!')`. Save it. Open your terminal, navigate to the file's directory, and run `python hello.py`. This executes your first Python program.",
+    "**Interactive Python Interpreter:** Open your terminal and type `python`. You'll see `>>>`. Type `2 + 2` and press Enter. The interpreter immediately shows `4`. This is great for testing small snippets of code or exploring Python features interactively.",
+    "**Using an IDE (VS Code):** Install VS Code. Open it, create a new file, save it as `my_script.py`, and write some Python code. VS Code provides features like syntax highlighting, auto-completion, and a built-in terminal to run your script directly, streamlining development."
+  ],
+  "common_pitfalls": [
+    "Incorrect file paths when running scripts from the command line.",
+    "Forgetting to save changes before running a Python file.",
+    "Not having Python installed or configured correctly in the system's PATH.",
+    "Confusing syntax errors with runtime errors in the interpreter."
+  ],
+  "practice_tasks": [
+    "Explore your computer's file system using command line commands.",
+    "Create a Python file that prints your name and run it.",
+    "Use the interactive Python interpreter to perform basic math.",
+    "Install VS Code and run a simple Python script within its terminal."
+  ],
+  "tags": [
+    "python",
+    "foundations",
+    "computer-science",
+    "setup"
+  ],
+  "difficulty": 1,
+  "estimated_time_minutes": 30
+}

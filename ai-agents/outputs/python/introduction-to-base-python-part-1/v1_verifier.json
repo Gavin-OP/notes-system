@@ -1,0 +1,16 @@
+{
+  "issues": [
+    {
+      "severity": "minor",
+      "location": "worked_examples[2]",
+      "message": "The description incorrectly refers to `len()` as an 'attribute-like property'. `len()` is a built-in function, not an attribute.",
+      "suggested_fix": "Change 'getting its length using the `len()` function (an attribute-like property)' to 'getting its length using the built-in `len()` function'.",
+      "confidence": 1
+    }
+  ],
+  "summary": {
+    "blocker": 0,
+    "major": 0,
+    "minor": 1
+  }
+}

@@ -1,4 +1,4 @@
-import { loadEnv } from "../lib/io/env";
+import { loadEnv } from "../lib/io/core";
 import { loadCourseOutline, runTopicPipeline } from "../lib/pipeline";
 
 function getArg(flag: string): string | undefined {

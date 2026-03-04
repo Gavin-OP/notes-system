@@ -10,7 +10,6 @@
     "core_explanation",
     "worked_examples",
     "common_pitfalls",
-    "quick_check_quiz",
     "practice_tasks",
     "tags",
     "difficulty",
@@ -46,24 +45,6 @@
     "common_pitfalls": {
       "type": "array",
       "items": { "type": "string", "minLength": 1 }
-    },
-    "quick_check_quiz": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["question", "choices", "answer_index", "explanation"],
-        "properties": {
-          "question": { "type": "string", "minLength": 1 },
-          "choices": {
-            "type": "array",
-            "items": { "type": "string", "minLength": 1 },
-            "minItems": 2
-          },
-          "answer_index": { "type": "integer", "minimum": 0 },
-          "explanation": { "type": "string", "minLength": 1 }
-        }
-      }
     },
     "practice_tasks": {
       "type": "array",

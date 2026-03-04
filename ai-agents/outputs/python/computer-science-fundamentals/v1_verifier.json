@@ -1,0 +1,16 @@
+{
+  "issues": [
+    {
+      "severity": "minor",
+      "location": "worked_examples[0]",
+      "message": "The explanation for `pwd` is slightly inaccurate and not fully cross-platform. `pwd` is for *printing* the working directory, not for 'moving around'. Also, `pwd` is not a standard command in Windows Command Prompt (though it's an alias in PowerShell), which could confuse users on that platform.",
+      "suggested_fix": "Clarify that `pwd` is for printing the current directory and is primarily a Unix-like command (macOS/Linux/PowerShell). For Windows Command Prompt, `cd` without arguments shows the current directory. Rephrase to separate the purpose of `pwd` and `cd` more clearly, e.g., 'Type `pwd` (print working directory, common on macOS/Linux and PowerShell) or `cd` (change directory, works everywhere). On Windows Command Prompt, `cd` without arguments shows the current directory. For example, `cd Documents` moves into the Documents folder.'",
+      "confidence": 0.9
+    }
+  ],
+  "summary": {
+    "blocker": 0,
+    "major": 0,
+    "minor": 1
+  }
+}

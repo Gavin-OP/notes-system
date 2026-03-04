@@ -4,8 +4,13 @@ import { runEditor } from "../agents/editor";
 import { runPedagogyReview } from "../agents/pedagogy";
 import { runVerifier } from "../agents/verifier";
 import { runWriter } from "../agents/writer";
-import { loadModelsConfig } from "./io/config";
-import { ensureDir, readJsonFile, writeJsonFile, writeTextFile } from "./io/json";
+import {
+  ensureDir,
+  loadModelsConfig,
+  readJsonFile,
+  writeJsonFile,
+  writeTextFile,
+} from "./io/core";
 import type { PedagogyReport, Topic, TopicOutline, VerifierReport } from "./types";
 
 type OutlineFile = {
@@ -53,18 +58,6 @@ function buildMindmapNode(topic: Topic) {
 }
 
 function renderTopicMarkdown(topic: Topic): string {
-  const quizMarkdown = topic.quick_check_quiz
-    .map((q, idx) => {
-      const choices = q.choices.map((choice, cIdx) => `  - ${cIdx}. ${choice}`).join("\n");
-      return [
-        `${idx + 1}. ${q.question}`,
-        choices,
-        `  - Answer: ${q.answer_index}`,
-        `  - Why: ${q.explanation}`,
-      ].join("\n");
-    })
-    .join("\n\n");
-
   const workedExamples = topic.worked_examples.map((item) => `- ${item}`).join("\n");
   const pitfalls = topic.common_pitfalls.map((item) => `- ${item}`).join("\n");
   const objectives = topic.learning_objectives.map((item) => `- ${item}`).join("\n");
@@ -92,9 +85,6 @@ function renderTopicMarkdown(topic: Topic): string {
     "",
     "## Common Pitfalls",
     pitfalls || "- none",
-    "",
-    "## Quick Check Quiz",
-    quizMarkdown || "- none",
     "",
     "## Practice Tasks",
     tasks || "- none",
@@ -179,7 +169,6 @@ export async function runTopicPipeline(input: {
     }
   }
 
-  await writeJsonFile(path.join(artifactsDir, "quiz.json"), currentTopic.quick_check_quiz);
   await writeJsonFile(path.join(artifactsDir, "image_spec.json"), buildImageSpec(currentTopic));
   await writeJsonFile(path.join(artifactsDir, "mindmap_node.json"), buildMindmapNode(currentTopic));
   await writeTextFile(finalMarkdownPath, renderTopicMarkdown(currentTopic));

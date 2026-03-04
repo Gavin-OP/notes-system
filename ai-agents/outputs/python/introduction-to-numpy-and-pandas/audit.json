@@ -1,0 +1,27 @@
+{
+  "topic_slug": "introduction-to-numpy-and-pandas",
+  "models": {
+    "writer_model": "gemini-2.5-flash",
+    "verifier_model": "gemini-2.5-flash",
+    "pedagogy_model": "gemini-2.5-flash",
+    "editor_model": "gemini-2.5-flash"
+  },
+  "iterations": 1,
+  "max_iters": 3,
+  "stop_reason": "quality_threshold_met",
+  "issues_found": [
+    {
+      "iter": 1,
+      "verifier": {
+        "blocker": 0,
+        "major": 0,
+        "minor": 1
+      },
+      "pedagogy": {
+        "major": 0,
+        "minor": 3,
+        "alignment_score": 0.88
+      }
+    }
+  ]
+}

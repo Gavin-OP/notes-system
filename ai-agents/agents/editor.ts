@@ -1,6 +1,6 @@
 import { createLlmClient } from "../lib/clients";
-import { fillTemplate, loadPrompt } from "../lib/io/prompts";
-import { generateAndParseJson } from "../lib/io/llmJson";
+import { fillTemplate, loadPrompt } from "../lib/io/core";
+import { generateAndParseJson } from "../lib/io/llm";
 import { assertValidTopic } from "../lib/validate/topicSchema";
 import type { PedagogyReport, Topic, VerifierReport } from "../lib/types";
 

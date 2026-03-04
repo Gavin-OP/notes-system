@@ -1,6 +1,6 @@
 import { createLlmClient } from "../lib/clients";
-import { fillTemplate, loadPrompt } from "../lib/io/prompts";
-import { generateAndParseJson } from "../lib/io/llmJson";
+import { fillTemplate, loadPrompt } from "../lib/io/core";
+import { generateAndParseJson } from "../lib/io/llm";
 import type { Topic, VerifierIssue, VerifierReport } from "../lib/types";
 
 function normalizeVerifierIssue(issue: Partial<VerifierIssue>): VerifierIssue {

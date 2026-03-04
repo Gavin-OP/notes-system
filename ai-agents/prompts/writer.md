@@ -11,14 +11,12 @@ Rules:
 {{schema_json}}
 - Respect the input slug and title from outline.
 - Keep all fields meaningful and non-empty.
-- Include 2-4 worked examples and 3-5 quiz questions.
-- Quiz format: each item has question, choices, answer_index, explanation.
+- Include 2-4 worked examples.
 - Make code examples short and runnable in principle.
 - Keep output concise to avoid truncation:
   - core_explanation <= 180 words
   - each worked_examples item <= 80 words
   - each common_pitfalls item <= 35 words
-  - each quiz explanation <= 30 words
   - each practice_tasks item <= 35 words
 
 Input outline JSON:

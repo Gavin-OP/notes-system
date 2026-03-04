@@ -1,0 +1,16 @@
+{
+  "issues": [
+    {
+      "severity": "minor",
+      "location": "common_pitfalls[1]",
+      "message": "The pitfall 'Overlapping plots' correctly identifies a common issue but could be more actionable by briefly suggesting how to avoid it.",
+      "suggested_fix": "Expand the explanation to suggest using `plt.figure()` or the object-oriented approach (`fig, ax = plt.subplots()`) to create new plots, e.g., 'Overlapping plots: Not creating new figures or axes for distinct plots can lead to messy, unreadable visuals. Always use `plt.figure()` or the object-oriented `fig, ax = plt.subplots()` for each new plot to ensure proper separation.'",
+      "confidence": 0.8
+    }
+  ],
+  "summary": {
+    "blocker": 0,
+    "major": 0,
+    "minor": 1
+  }
+}

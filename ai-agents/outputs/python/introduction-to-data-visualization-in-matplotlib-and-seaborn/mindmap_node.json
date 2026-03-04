@@ -1,0 +1,15 @@
+{
+  "slug": "introduction-to-data-visualization-in-matplotlib-and-seaborn",
+  "title": "Introduction to Data Visualization in Matplotlib and Seaborn",
+  "prerequisites": [
+    "introduction-to-numpy-and-pandas"
+  ],
+  "tags": [
+    "python",
+    "matplotlib",
+    "seaborn",
+    "visualization"
+  ],
+  "estimated_time_minutes": 60,
+  "difficulty": 2
+}

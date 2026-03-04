@@ -11,7 +11,6 @@ Rules:
 {{schema_json}}
 - Keep the same slug as input draft.
 - Preserve useful content and improve weak parts.
-- Ensure quiz questions align to learning objectives.
 
 Input draft:
 {{draft_json}}

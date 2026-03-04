@@ -1,0 +1,16 @@
+{
+  "slug": "introduction-to-base-python-part-2",
+  "title": "Introduction to base python (part-2)",
+  "prerequisites": [
+    "introduction-to-base-python-part-1"
+  ],
+  "tags": [
+    "python",
+    "control-flow",
+    "functions",
+    "file-io",
+    "algorithms"
+  ],
+  "estimated_time_minutes": 150,
+  "difficulty": 2
+}

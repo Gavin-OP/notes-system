@@ -6,12 +6,6 @@ export type Topic = {
   core_explanation: string;
   worked_examples: string[];
   common_pitfalls: string[];
-  quick_check_quiz: Array<{
-    question: string;
-    choices: string[];
-    answer_index: number;
-    explanation: string;
-  }>;
   practice_tasks: string[];
   tags: string[];
   difficulty: number;

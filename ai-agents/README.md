@@ -27,7 +27,6 @@ Generated files include:
 - `v{i}_verifier.json`
 - `v{i}_pedagogy.json`
 - `v{i}_final.json`
-- `quiz.json` (extracted from latest final)
 - `image_spec.json`
 - `mindmap_node.json`
 - `audit.json`

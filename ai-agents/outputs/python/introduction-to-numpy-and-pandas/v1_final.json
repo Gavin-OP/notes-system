@@ -1,0 +1,39 @@
+{
+  "slug": "introduction-to-numpy-and-pandas",
+  "title": "Introduction to Numpy and Pandas",
+  "prerequisites": [
+    "introduction-to-base-python-part-2"
+  ],
+  "learning_objectives": [
+    "Import and alias common Python data packages in a consistent style",
+    "Understand why NumPy improves numeric computation speed and array handling",
+    "Use Pandas for basic tabular data manipulation and summary statistics"
+  ],
+  "core_explanation": "NumPy (Numerical Python) is fundamental for scientific computing in Python. It provides a high-performance multidimensional array object and tools for working with these arrays. Its core strength lies in vectorized operations, which are significantly faster than traditional Python loops for numerical tasks. NumPy is ideal for numerical and scientific data, such as processing images, audio signals, or performing complex mathematical operations. Pandas builds on NumPy, offering powerful data structures like DataFrames for tabular data. DataFrames are ideal for handling structured data, such as CSV files, database tables, or spreadsheets, allowing for easy manipulation, cleaning, and analysis. The examples provided leverage these vectorized operations for efficiency. Together, NumPy and Pandas form the backbone of data analysis workflows in Python, enabling efficient handling of large datasets.",
+  "worked_examples": [
+    "Importing NumPy and creating an array:\nimport numpy as np\nmy_array = np.array([1, 2, 3, 4, 5])\nprint(my_array * 2)\n# Output: [ 2  4  6  8 10]",
+    "Importing Pandas and creating a DataFrame:\nimport pandas as pd\ndata = {'Name': ['Alice', 'Bob'], 'Age': [25, 30]}\ndf = pd.DataFrame(data)\nprint(df)\n# Output:\n#     Name  Age\n# 0  Alice   25\n# 1    Bob   30",
+    "Performing a basic operation on a NumPy array:\nimport numpy as np\narr1 = np.array([10, 20, 30])\narr2 = np.array([1, 2, 3])\nresult = arr1 + arr2\nprint(result)\n# Output: [11 22 33]",
+    "Selecting a column and calculating the mean in Pandas:\nimport pandas as pd\ndata = {'Score': [85, 90, 78, 92]}\ndf = pd.DataFrame(data)\nmean_score = df['Score'].mean()\nprint(f\"Average Score: {mean_score}\")\n# Output: Average Score: 86.25"
+  ],
+  "common_pitfalls": [
+    "Forgetting to import NumPy as `np` or Pandas as `pd`. Using these standard aliases is a widely adopted best practice for readability and consistency in the data science community.",
+    "Trying to perform vectorized operations on standard Python lists instead of NumPy arrays, which can lead to significantly slower performance.",
+    "Confusing DataFrame column selection with row selection or incorrect indexing.",
+    "Not understanding that NumPy operations often return new arrays, rather than modifying arrays in-place."
+  ],
+  "practice_tasks": [
+    "Create a NumPy array of 10 zeros and multiply each element by 7.",
+    "Create a Pandas DataFrame with two columns: 'Product' and 'Price'. Add 3 rows.",
+    "From your DataFrame, select the 'Price' column and find its maximum value.",
+    "Create two 3x3 NumPy arrays and perform element-wise multiplication."
+  ],
+  "tags": [
+    "python",
+    "numpy",
+    "pandas",
+    "data-analysis"
+  ],
+  "difficulty": 2,
+  "estimated_time_minutes": 30
+}

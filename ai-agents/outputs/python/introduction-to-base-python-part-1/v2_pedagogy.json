@@ -1,0 +1,16 @@
+{
+  "alignment_score": 0.95,
+  "issues": [
+    {
+      "severity": "minor",
+      "location": "content_coverage",
+      "message": "The learning objective explicitly states 'Identify and use common built-in data types (numbers, booleans, strings)', but the 'worked_examples' and 'practice_tasks' do not include any explicit demonstration or opportunity for learners to 'use' boolean data types. While booleans are mentioned in the 'core_explanation', their practical application is missing.",
+      "suggested_fix": "Add a simple worked example or a practice task that involves assigning or using boolean values, perhaps in a basic conditional context (e.g., 'is_adult = age >= 18') or as a simple flag (e.g., 'is_active = True'). This would fully support the 'use' aspect of the objective for booleans.",
+      "confidence": 0.9
+    }
+  ],
+  "summary": {
+    "major": 0,
+    "minor": 1
+  }
+}
