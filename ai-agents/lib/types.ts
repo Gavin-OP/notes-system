@@ -48,7 +48,6 @@ export type AgentModels = {
   writer_model: string;
   verifier_model: string;
   pedagogy_model: string;
-  editor_model: string;
 };
 
 export type TopicOutline = {

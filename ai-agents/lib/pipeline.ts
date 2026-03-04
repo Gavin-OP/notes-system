@@ -16,9 +16,25 @@ type OutlineFile = {
   topics: TopicOutline[];
 };
 
+function toTitleFileName(title: string): string {
+  return title
+    .replace(/[\\/:*?"<>|]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export async function loadCourseOutline(course: string): Promise<OutlineFile> {
-  const filePath = path.join(process.cwd(), "ai-agents", "inputs", course, "outline.json");
-  return readJsonFile<OutlineFile>(filePath);
+  const candidates = [course, course.toLowerCase()];
+  let lastError: unknown;
+  for (const name of candidates) {
+    const filePath = path.join(process.cwd(), "ai-agents", "inputs", name, "outline.json");
+    try {
+      return await readJsonFile<OutlineFile>(filePath);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("Failed to load course outline.");
 }
 
 function buildImageSpec(input: { title: string; learning_objectives: string[] }) {
@@ -59,7 +75,7 @@ export async function runTopicPipeline(input: {
 }) {
   const artifactsDir = path.join(process.cwd(), "ai-agents", "outputs", input.course, input.topicOutline.slug);
   const finalNotesDir = path.join(process.cwd(), "public", "notes", input.course);
-  const finalMarkdownPath = path.join(finalNotesDir, `${input.topicOutline.slug}.md`);
+  const finalMarkdownPath = path.join(finalNotesDir, `${toTitleFileName(input.topicOutline.title)}.md`);
   await ensureDir(artifactsDir);
   await ensureDir(finalNotesDir);
 
@@ -96,6 +112,7 @@ export async function runTopicPipeline(input: {
   const metadata = {
     slug: input.topicOutline.slug,
     title: input.topicOutline.title,
+    note_file_name: `${toTitleFileName(input.topicOutline.title)}.md`,
     prerequisites: input.topicOutline.prerequisites ?? [],
     learning_objectives: input.topicOutline.learning_objectives ?? [],
     tags: input.topicOutline.tags ?? [],

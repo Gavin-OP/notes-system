@@ -13,7 +13,7 @@ Artifacts are written to:
 - `ai-agents/outputs/<course>/<topic_slug>/`
 
 Public notes output is markdown only:
-- `public/notes/<course>/<topic_slug>.md`
+- `public/notes/<course>/<Topic Title>.md`
 
 Generated files include:
 - `v1_draft.md`
@@ -23,7 +23,7 @@ Generated files include:
 - `image_spec.json`
 - `mindmap_node.json`
 - `audit.json`
-- and one final markdown file in `public/notes/<course>/<topic_slug>.md`
+- and one final markdown file in `public/notes/<course>/<Topic Title>.md`
 
 ## Setup
 
@@ -41,11 +41,11 @@ Current MVP provider is Gemini. Model mapping is configured in:
 ## Run one topic
 
 ```bash
-npm run ai-agents:topic -- --course python --topic python-variables
+npm run ai-agents:topic -- --course Python --topic introduction-to-base-python-part-1
 ```
 
 ## Run full batch for a course
 
 ```bash
-npm run ai-agents:batch -- --course python
+npm run ai-agents:batch -- --course Python
 ```

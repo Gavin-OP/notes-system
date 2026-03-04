@@ -1,6 +1,5 @@
 {
   "writer_model": "gemini-2.5-flash",
   "verifier_model": "gemini-2.5-flash",
-  "pedagogy_model": "gemini-2.5-flash",
-  "editor_model": "gemini-2.5-flash"
+  "pedagogy_model": "gemini-2.5-flash"
 }
