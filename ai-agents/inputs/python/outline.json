@@ -1,0 +1,47 @@
+{
+  "course": "python",
+  "topics": [
+    {
+      "slug": "python-variables",
+      "title": "Python Variables and Basic Types",
+      "prerequisites": [],
+      "learning_objectives": [
+        "Define variables using Python naming rules",
+        "Differentiate int, float, str, and bool",
+        "Use type conversion for simple input handling"
+      ],
+      "tags": ["python", "basics", "types"],
+      "difficulty": 1,
+      "estimated_time_minutes": 20,
+      "notes": "Introduce assignment, type() inspection, and casting with int()/float()/str()."
+    },
+    {
+      "slug": "python-conditionals",
+      "title": "Python Conditionals with if/elif/else",
+      "prerequisites": ["python-variables"],
+      "learning_objectives": [
+        "Write boolean conditions with comparison operators",
+        "Use if/elif/else for branching logic",
+        "Avoid common indentation and condition-order mistakes"
+      ],
+      "tags": ["python", "control-flow"],
+      "difficulty": 1,
+      "estimated_time_minutes": 25,
+      "notes": "Focus on readable branching and practical examples like grading or login checks."
+    },
+    {
+      "slug": "python-for-loops",
+      "title": "Python for Loops and range()",
+      "prerequisites": ["python-variables", "python-conditionals"],
+      "learning_objectives": [
+        "Iterate over lists and strings with for loops",
+        "Use range() for counted loops",
+        "Combine loops and conditionals for filtering tasks"
+      ],
+      "tags": ["python", "loops"],
+      "difficulty": 2,
+      "estimated_time_minutes": 30,
+      "notes": "Emphasize iteration patterns and beginner debugging habits."
+    }
+  ]
+}

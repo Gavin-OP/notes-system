@@ -1,0 +1,14 @@
+{
+  "slug": "python-for-loops",
+  "title": "Python for Loops and range()",
+  "prerequisites": [
+    "python-variables",
+    "python-conditionals"
+  ],
+  "tags": [
+    "python",
+    "loops"
+  ],
+  "estimated_time_minutes": 30,
+  "difficulty": 2
+}

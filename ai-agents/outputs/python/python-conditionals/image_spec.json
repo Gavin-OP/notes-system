@@ -1,0 +1,5 @@
+{
+  "type": "mermaid",
+  "source": "mindmap\n  root((Python Conditionals with if/elif/else))\n    Write boolean conditions with comparison operators\n    Combine conditions using logical operators (`and`, `or`, `not`)\n    Use if/elif/else for branching logic",
+  "alt_text": "Mindmap for topic Python Conditionals with if/elif/else"
+}

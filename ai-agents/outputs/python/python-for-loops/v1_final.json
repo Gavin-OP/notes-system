@@ -1,0 +1,84 @@
+{
+  "slug": "python-for-loops",
+  "title": "Python for Loops and range()",
+  "prerequisites": [
+    "python-variables",
+    "python-conditionals"
+  ],
+  "learning_objectives": [
+    "Iterate over lists and strings with for loops",
+    "Use range() for counted loops",
+    "Combine loops and conditionals for filtering tasks"
+  ],
+  "core_explanation": "Python's 'for' loop is a fundamental tool for iterating over sequences, such as lists and strings, executing a block of code for each item. It's also versatile and works with other iterable objects like tuples, dictionaries, and sets. The 'range()' function is frequently used with 'for' loops to generate a sequence of numbers, useful for repeating actions a specific number of times or accessing elements by index. 'range(stop)' generates numbers from 0 up to (but not including) 'stop'. 'range(start, stop)' generates numbers from 'start' up to (but not including) 'stop'. Combining 'for' loops with 'if' statements enables powerful data processing, such as filtering items based on conditions.",
+  "worked_examples": [
+    "numbers = [1, 2, 3, 4, 5]\nfor num in numbers:\n    print(num * 2)\n\nThis loop prints each number in the 'numbers' list, multiplied by 2. Output: 2, 4, 6, 8, 10.",
+    "word = \"hello\"\nfor char in word:\n    print(char.upper())\n\nThis loop goes through each character in 'hello' and prints its uppercase version. Output: H, E, L, L, O.",
+    "for i in range(3):\n    print(\"Python is fun!\")\n\nThis loop runs 3 times (for i=0, 1, 2), printing the message each time. Output: Python is fun! (x3).",
+    "data = [10, 7, 22, 5, 18]\neven_numbers = []\nfor x in data:\n    if x % 2 == 0:\n        even_numbers.append(x)\nprint(even_numbers)\n\nThis code iterates through 'data' and adds only the even numbers to 'even_numbers'. Output: [10, 22, 18]."
+  ],
+  "common_pitfalls": [
+    "Forgetting to indent the code block inside the loop. Python uses indentation to define code blocks.",
+    "Modifying the list you are iterating over directly. This can lead to unexpected behavior or skipped items.",
+    "Off-by-one errors with 'range()', especially when using 'range(stop)' which excludes the 'stop' value.",
+    "Confusing 'for' loops with 'while' loops; 'for' is for iterating over sequences, 'while' for conditional repetition."
+  ],
+  "quick_check_quiz": [
+    {
+      "question": "What will this code print?\nfor i in range(2):\n    print(\"Loop\")",
+      "choices": [
+        "Loop",
+        "Loop\nLoop",
+        "Error",
+        "Nothing"
+      ],
+      "answer_index": 1,
+      "explanation": "`range(2)` generates 0, 1. The loop runs twice, printing \"Loop\" each time."
+    },
+    {
+      "question": "How do you iterate through a list called `items`?",
+      "choices": [
+        "`for item in items:`",
+        "`while item in items:`",
+        "`loop items:`",
+        "`iterate items:`"
+      ],
+      "answer_index": 0,
+      "explanation": "The `for item in iterable:` syntax is the correct way to iterate over lists."
+    },
+    {
+      "question": "What is the last number printed by `for x in range(1, 5): print(x)`?",
+      "choices": [
+        "1",
+        "4",
+        "5",
+        "0"
+      ],
+      "answer_index": 1,
+      "explanation": "`range(1, 5)` generates 1, 2, 3, 4. The `stop` value (5) is excluded."
+    },
+    {
+      "question": "Which code snippet correctly prints only numbers greater than 10 from `nums = [5, 12, 8, 15]`?",
+      "choices": [
+        "`for n in nums:\n    if n > 10:\n        print(n)`",
+        "`if n > 10:\n    for n in nums:\n        print(n)`",
+        "`for n in nums and n > 10:\n    print(n)`",
+        "`for n in nums:\n    print(n > 10)`"
+      ],
+      "answer_index": 0,
+      "explanation": "The `if` statement correctly filters elements inside the loop."
+    }
+  ],
+  "practice_tasks": [
+    "Create a list of names and print each name with a greeting, e.g., 'Hello, Alice!'.",
+    "Write a loop that prints all odd numbers from 1 to 10 using `range()` and an `if` condition.",
+    "Calculate the sum of all numbers in a given list using a `for` loop.",
+    "Count how many times the letter 'a' appears in a string."
+  ],
+  "tags": [
+    "python",
+    "loops"
+  ],
+  "difficulty": 2,
+  "estimated_time_minutes": 30
+}

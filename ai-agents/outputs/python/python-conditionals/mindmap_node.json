@@ -1,0 +1,13 @@
+{
+  "slug": "python-conditionals",
+  "title": "Python Conditionals with if/elif/else",
+  "prerequisites": [
+    "python-variables"
+  ],
+  "tags": [
+    "python",
+    "control-flow"
+  ],
+  "estimated_time_minutes": 60,
+  "difficulty": 1
+}

@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "slug",
+    "title",
+    "prerequisites",
+    "learning_objectives",
+    "core_explanation",
+    "worked_examples",
+    "common_pitfalls",
+    "quick_check_quiz",
+    "practice_tasks",
+    "tags",
+    "difficulty",
+    "estimated_time_minutes"
+  ],
+  "properties": {
+    "slug": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "learning_objectives": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "core_explanation": {
+      "type": "string",
+      "minLength": 40
+    },
+    "worked_examples": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "common_pitfalls": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "quick_check_quiz": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["question", "choices", "answer_index", "explanation"],
+        "properties": {
+          "question": { "type": "string", "minLength": 1 },
+          "choices": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "minItems": 2
+          },
+          "answer_index": { "type": "integer", "minimum": 0 },
+          "explanation": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "practice_tasks": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "difficulty": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "estimated_time_minutes": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 180
+    }
+  }
+}

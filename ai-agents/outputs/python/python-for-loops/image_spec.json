@@ -1,0 +1,5 @@
+{
+  "type": "mermaid",
+  "source": "mindmap\n  root((Python for Loops and range()))\n    Iterate over lists and strings with for loops\n    Use range() for counted loops\n    Combine loops and conditionals for filtering tasks",
+  "alt_text": "Mindmap for topic Python for Loops and range()"
+}
