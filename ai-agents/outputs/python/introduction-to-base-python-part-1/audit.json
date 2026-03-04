@@ -3,38 +3,22 @@
   "models": {
     "writer_model": "gemini-2.5-flash",
     "verifier_model": "gemini-2.5-flash",
-    "pedagogy_model": "gemini-2.5-flash",
-    "editor_model": "gemini-2.5-flash"
+    "pedagogy_model": "gemini-2.5-flash"
   },
-  "iterations": 2,
-  "max_iters": 3,
-  "stop_reason": "quality_threshold_met",
-  "issues_found": [
-    {
-      "iter": 1,
-      "verifier": {
-        "blocker": 0,
-        "major": 0,
-        "minor": 1
-      },
-      "pedagogy": {
-        "major": 1,
-        "minor": 3,
-        "alignment_score": 0.4
-      }
-    },
-    {
-      "iter": 2,
-      "verifier": {
-        "blocker": 0,
-        "major": 1,
-        "minor": 0
-      },
-      "pedagogy": {
-        "major": 0,
-        "minor": 1,
-        "alignment_score": 0.95
-      }
-    }
+  "pipeline": [
+    "writer",
+    "verifier",
+    "pedagogy"
+  ],
+  "iterations": 1,
+  "stop_reason": "completed_single_pass",
+  "output_files": [
+    "v1_draft.md",
+    "v1_verifier.md",
+    "v1_final.md",
+    "metadata.json",
+    "mindmap_node.json",
+    "image_spec.json",
+    "audit.json"
   ]
 }

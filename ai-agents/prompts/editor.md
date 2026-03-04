@@ -11,6 +11,11 @@ Rules:
 {{schema_json}}
 - Keep the same slug as input draft.
 - Preserve useful content and improve weak parts.
+- Keep a course-note narrative flow:
+  - clear `introduction_markdown`
+  - progressive `concept_sections` with embedded examples
+  - concise `conclusion_markdown` when useful
+- Do not create standalone worked example, pitfalls, practice, or quiz fields.
 
 Input draft:
 {{draft_json}}

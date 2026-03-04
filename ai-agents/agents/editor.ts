@@ -19,12 +19,15 @@ export async function runEditor(input: {
     pedagogy_json: JSON.stringify(input.pedagogy, null, 2),
     schema_json: input.schemaJson,
   });
+  const responseSchema = JSON.parse(input.schemaJson) as Record<string, unknown>;
+  delete responseSchema.$schema;
   const candidate = await generateAndParseJson<unknown>({
     client,
     model: input.model,
     prompt,
     agentName: "editor",
     systemInstruction: "Return strictly valid JSON only.",
+    responseSchema,
   });
   return assertValidTopic(candidate);
 }

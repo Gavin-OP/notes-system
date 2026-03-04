@@ -1,0 +1,18 @@
+{
+  "slug": "computer-science-fundamentals",
+  "title": "Computer Science fundamentals",
+  "prerequisites": [],
+  "learning_objectives": [
+    "Build a high-level mental model of core computer science foundations before programming",
+    "Differentiate hardware, software, and development environment responsibilities",
+    "Understand major ways to run Python code and when to use each approach"
+  ],
+  "tags": [
+    "python",
+    "foundations",
+    "computer-science",
+    "setup"
+  ],
+  "difficulty": 1,
+  "estimated_time_minutes": 30
+}

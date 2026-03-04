@@ -1,6 +1,6 @@
 {
   "slug": "introduction-to-base-python-part-1",
-  "title": "Introduction to Python: Basic Operations and Built-in Data Types",
+  "title": "Introduction to base python (part-1)",
   "prerequisites": [
     "computer-science-fundamentals"
   ],
@@ -8,11 +8,7 @@
     "python",
     "basics",
     "data-types",
-    "operators",
-    "io",
-    "numbers",
-    "strings",
-    "booleans"
+    "data-structures"
   ],
   "estimated_time_minutes": 25,
   "difficulty": 1

@@ -7,10 +7,8 @@
     "title",
     "prerequisites",
     "learning_objectives",
-    "core_explanation",
-    "worked_examples",
-    "common_pitfalls",
-    "practice_tasks",
+    "introduction_markdown",
+    "concept_sections",
     "tags",
     "difficulty",
     "estimated_time_minutes"
@@ -33,22 +31,32 @@
       "items": { "type": "string", "minLength": 1 },
       "minItems": 1
     },
-    "core_explanation": {
+    "introduction_markdown": {
       "type": "string",
-      "minLength": 40
+      "minLength": 60
     },
-    "worked_examples": {
+    "concept_sections": {
       "type": "array",
-      "items": { "type": "string", "minLength": 1 },
-      "minItems": 1
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["heading", "content_markdown"],
+        "properties": {
+          "heading": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content_markdown": {
+            "type": "string",
+            "minLength": 80
+          }
+        }
+      }
     },
-    "common_pitfalls": {
-      "type": "array",
-      "items": { "type": "string", "minLength": 1 }
-    },
-    "practice_tasks": {
-      "type": "array",
-      "items": { "type": "string", "minLength": 1 }
+    "conclusion_markdown": {
+      "type": "string",
+      "minLength": 20
     },
     "tags": {
       "type": "array",

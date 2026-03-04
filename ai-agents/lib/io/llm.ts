@@ -141,6 +141,7 @@ export async function generateAndParseJson<T>(input: {
   agentName: string;
   maxAttempts?: number;
   requireObject?: boolean;
+  responseSchema?: unknown;
 }): Promise<T> {
   const maxAttempts = input.maxAttempts ?? 5;
   const requireObject = input.requireObject ?? true;
@@ -158,6 +159,7 @@ export async function generateAndParseJson<T>(input: {
       model: input.model,
       prompt,
       systemInstruction: input.systemInstruction,
+      responseSchema: input.responseSchema,
     });
     lastRaw = raw;
     try {
@@ -188,6 +190,7 @@ export async function generateAndParseJson<T>(input: {
       model: input.model,
       prompt: repairPrompt,
       systemInstruction: "Return strictly valid JSON only.",
+      responseSchema: input.responseSchema,
     });
     const repaired = parseJsonFromModelText<T>(repairedRaw);
     if (requireObject && !isPlainObject(repaired)) {

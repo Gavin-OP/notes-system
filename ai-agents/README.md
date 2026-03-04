@@ -1,20 +1,13 @@
 # AI Agents Pipeline (Phase 1)
 
-This folder contains a modular 4-agent GenAI pipeline that generates structured topic artifacts for the Notes System frontend.
+This folder contains a modular 3-agent GenAI pipeline that generates markdown-first course notes and lightweight metadata artifacts.
 
 ## What it does
 
 For each topic in `ai-agents/inputs/<course>/outline.json`, the pipeline runs:
-1. Writer -> creates `v1_draft.json`
-2. Verifier -> creates `v{i}_verifier.json`
-3. Pedagogy Reviewer -> creates `v{i}_pedagogy.json`
-4. Editor -> creates `v{i}_final.json`
-
-It iterates up to 3 rounds (configurable with `--max-iters`) and stops early when:
-- `tech_blockers == 0`
-- `tech_major <= 1`
-- `pedagogy_major <= 1`
-- `alignment_score >= 0.85`
+1. Writer -> creates `v1_draft.md`
+2. Verifier -> revises draft into `v1_verifier.md`
+3. Pedagogy Reviewer -> revises verifier output into `v1_final.md`
 
 Artifacts are written to:
 - `ai-agents/outputs/<course>/<topic_slug>/`
@@ -23,10 +16,10 @@ Public notes output is markdown only:
 - `public/notes/<course>/<topic_slug>.md`
 
 Generated files include:
-- `v1_draft.json`
-- `v{i}_verifier.json`
-- `v{i}_pedagogy.json`
-- `v{i}_final.json`
+- `v1_draft.md`
+- `v1_verifier.md`
+- `v1_final.md`
+- `metadata.json`
 - `image_spec.json`
 - `mindmap_node.json`
 - `audit.json`

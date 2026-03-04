@@ -11,11 +11,9 @@ async function main() {
   loadEnv();
 
   const course = getArg("--course");
-  const maxItersArg = getArg("--max-iters");
-  const maxIters = maxItersArg ? Number(maxItersArg) : 3;
 
   if (!course) {
-    throw new Error("Usage: tsx ai-agents/runners/run_batch.ts --course <course> [--max-iters 3]");
+    throw new Error("Usage: tsx ai-agents/runners/run_batch.ts --course <course>");
   }
   if (!process.env.GEMINI_API_KEY) {
     throw new Error("Missing GEMINI_API_KEY. Set it in .env.local or environment.");
@@ -28,7 +26,6 @@ async function main() {
     const result = await runTopicPipeline({
       course,
       topicOutline,
-      maxIters,
     });
     console.log(
       JSON.stringify(

@@ -3,10 +3,12 @@ export type Topic = {
   title: string;
   prerequisites: string[];
   learning_objectives: string[];
-  core_explanation: string;
-  worked_examples: string[];
-  common_pitfalls: string[];
-  practice_tasks: string[];
+  introduction_markdown: string;
+  concept_sections: Array<{
+    heading: string;
+    content_markdown: string;
+  }>;
+  conclusion_markdown?: string;
   tags: string[];
   difficulty: number;
   estimated_time_minutes: number;
