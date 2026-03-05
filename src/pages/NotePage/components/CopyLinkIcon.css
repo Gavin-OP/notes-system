@@ -1,32 +1,45 @@
-/* .copy-link-icon {
+/* Copy link icon - GitHub style */
+.copy-link-icon {
   position: absolute;
-  left: -24px;
+  left: -20px;
   top: 50%;
   transform: translateY(-50%);
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 0.15s ease-in-out;
   cursor: pointer;
   z-index: 1;
   user-select: none;
   display: flex;
   align-items: center;
-} */
+  font-size: 16px; /* Fixed size regardless of heading size */
+}
 
-.heading-hover .copy-link-icon {
+/* Show icon on heading hover */
+.markdown-heading-with-link:hover .copy-link-icon {
   opacity: 1;
 }
 
 .copy-link-icon .anticon {
-  color: var(--copy-link-icon-color, #666);
+  color: var(--copy-link-icon-color, #57606a);
+  font-size: 16px; /* Ensure icon is always 16px */
+}
+
+.copy-link-icon:hover .anticon {
+  color: var(--copy-link-icon-color-hover, #0969da);
 }
 
 .copy-link-icon .copied-tip {
-  margin-left: 4px;
+  position: absolute;
+  top: 100%;  /* Position below the icon */
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;  /* Small gap between icon and tip */
   font-size: 0.8em;
   color: var(--copy-link-icon-color, #666);
   background: var(--copy-link-tip-bg, #f8f8f8);
   border-radius: 4px;
   padding: 0 4px;
+  white-space: nowrap;  /* Prevent text wrapping */
 }
 
 /* dark theme 适配，可根据父元素加 .dark-theme 或用 CSS 变量切换 */

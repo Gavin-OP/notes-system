@@ -1,20 +1,26 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import ReactGA from "react-ga4";
+
 import NoteLayout from "../common/layouts/NoteLayout";
 import NotePage from "../pages/NotePage";
 import HomePage from "../pages/HomePage";
+import { isLocalhost } from "../utils/analyticsUtils";
 
+// page view tracking
 function usePageTracking() {
   const location = useLocation();
   useEffect(() => {
-    ReactGA.send({
-      hitType: "pageview",
-      page: location.pathname + location.search,
-    });
+    if (!isLocalhost()) {
+      ReactGA.send({
+        hitType: "pageview",
+        page: location.pathname + location.search,
+      });
+    }
   }, [location]);
 }
 
+// routes
 function RoutesWithTracking() {
   usePageTracking();
   return (

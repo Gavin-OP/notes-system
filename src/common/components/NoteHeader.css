@@ -1,0 +1,27 @@
+/* NoteHeader - Header controls styles */
+
+.note-header__search-wrapper {
+  position: relative;
+}
+
+.note-header__search-input {
+  width: 200px;
+}
+
+.note-header__search-input--mobile {
+  width: 150px;
+}
+
+.note-header__icon {
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+
+.note-header__icon--clickable {
+  cursor: pointer;
+}
+
+.note-header__icon--clickable:hover {
+  color: #1890ff;
+}
+

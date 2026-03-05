@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { LinkOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
+import { LinkOutlined } from "@ant-design/icons";
+
 import "./CopyLinkIcon.css";
 
 const CopyLinkIcon = ({ id }) => {
+  const currentTheme = useSelector((state) => state.preference.theme);
+  const language = useSelector((state) => state.preference.language) || "cn";
+
   const [copied, setCopied] = useState(false);
 
   const handleCopy = (e) => {
@@ -13,9 +17,6 @@ const CopyLinkIcon = ({ id }) => {
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
   };
-
-  const currentTheme = useSelector((state) => state.preference.theme);
-  const language = useSelector((state) => state.preference.language) || "cn";
 
   const messages = {
     cn: { title: "复制链接", copied: "已复制" },

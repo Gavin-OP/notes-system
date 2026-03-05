@@ -1,20 +1,24 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import remarkSlug from "remark-slug";
 import rehypeRaw from "rehype-raw";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
-import remarkSlug from "remark-slug";
 import { rehypeMermaid, MermaidBlock } from "react-markdown-mermaid";
 import Mermaid from "react-mermaid2";
 
 import "katex/dist/katex.min.css";
 
 import CopyLinkIcon from "./CopyLinkIcon";
+
 import { resolveRelativePath } from "../../../utils/markdownUtils";
 import { remarkHighlightMark } from "../../../utils/markdownUtils";
+
+import "./MarkdownRenderer.css";
 
 const themeCssMap = {
   default_light: `${import.meta.env.BASE_URL}theme/github.css`,
@@ -27,12 +31,7 @@ const HeadingWithCopy = ({ level, children, ...props }) => {
   const Tag = `h${level}`;
   const theme = props.theme || "light";
   return (
-    <Tag
-      id={id}
-      style={{ position: "relative" }}
-      onMouseEnter={() => {}}
-      onMouseLeave={() => {}}
-    >
+    <Tag id={id} className="markdown-heading-with-link">
       {id && <CopyLinkIcon id={id} theme={theme} />}
       {children}
     </Tag>
@@ -233,12 +232,7 @@ const MarkdownRenderer = ({ content, theme }) => {
 
     // table styling
     table({ node, ...props }) {
-      return (
-        <table
-          style={{ width: "100%", borderCollapse: "collapse" }}
-          {...props}
-        />
-      );
+      return <table className="markdown-table" {...props} />;
     },
 
     li({ children, ...props }) {

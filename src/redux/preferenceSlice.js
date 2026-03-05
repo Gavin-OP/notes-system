@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { isMobileViewport } from "../utils/breakpoints";
 
 const initialState = {
   language: "en",
   theme: "light",
+  isMobile: isMobileViewport(),
 };
 
 const preferenceSlice = createSlice({
@@ -15,8 +17,11 @@ const preferenceSlice = createSlice({
     setTheme(state, action) {
       state.theme = action.payload;
     },
+    setIsMobile(state, action) {
+      state.isMobile = action.payload;
+    },
   },
 });
 
-export const { setLanguage, setTheme } = preferenceSlice.actions;
+export const { setLanguage, setTheme, setIsMobile } = preferenceSlice.actions;
 export default preferenceSlice.reducer;
