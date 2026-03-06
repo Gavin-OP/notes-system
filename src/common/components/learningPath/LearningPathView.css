@@ -1,0 +1,214 @@
+.learning-path-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+}
+
+.learning-path-view__content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+}
+
+.learning-path-view__card {
+  border-radius: 12px;
+}
+
+.learning-path-view__graph-card .ant-card-body {
+  padding: 8px;
+}
+
+.learning-path-view__graph {
+  width: 100%;
+  height: 460px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+.learning-path-view__graph .react-flow__node.learning-path-graph__node {
+  border: 1px solid #93c5fd;
+  color: #1e3a8a;
+  border-radius: 8px;
+  min-width: 200px;
+  max-width: 240px;
+  width: 220px;
+  padding: 10px 12px;
+  font-size: 13px;
+  text-align: center;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-0 { background: #e0f2fe; }
+.learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-1 { background: #cfe7fb; }
+.learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-2 { background: #bfdcf8; }
+.learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-3 { background: #aed1f5; }
+.learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-4 { background: #9dc6f2; }
+.learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-5 { background: #8dbbee; color: #1e3a8a; }
+.learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-6 { background: #7cb0eb; color: #1e3a8a; }
+.learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-7 { background: #6ba5e8; color: #fff; }
+.learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-8 { background: #5b9ae5; color: #fff; }
+.learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-9 { background: #4A90E2; color: #fff; }
+
+.learning-path-view__graph .react-flow__edge-path {
+  stroke: #2563eb;
+  stroke-width: 2;
+}
+
+.learning-path-view__ordered-list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.learning-path-view__ordered-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.learning-path-view__topic-btn {
+  border: none;
+  background: transparent;
+  color: #2563eb;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+}
+
+.learning-path-view__topic-btn:hover {
+  text-decoration: underline;
+}
+
+.learning-path-view__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+}
+
+.learning-path-view__layers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.learning-path-view__layer {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.learning-path-view__layer-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.learning-path-view__layer-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.learning-path-view__chip {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.learning-path-view__chip:hover {
+  border-color: #93c5fd;
+  color: #1d4ed8;
+}
+
+.learning-path-view__empty {
+  color: #6b7280;
+  margin: 0;
+}
+
+.learning-path-view--loading,
+.learning-path-view--error {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  gap: 10px;
+}
+
+.learning-path-view__spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #dbeafe;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: learning-path-spin 1s linear infinite;
+}
+
+@keyframes learning-path-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+[data-theme="dark"] .learning-path-view {
+  background: #020617;
+}
+
+[data-theme="dark"] .learning-path-view__meta,
+[data-theme="dark"] .learning-path-view__empty,
+[data-theme="dark"] .learning-path-view--loading,
+[data-theme="dark"] .learning-path-view--error {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .learning-path-view__layer {
+  border-color: #334155;
+}
+
+[data-theme="dark"] .learning-path-view__layer-title {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .learning-path-view__chip {
+  border-color: #334155;
+  background: #111827;
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .learning-path-view__graph {
+  background: #0b1220;
+  border-color: #334155;
+}
+
+[data-theme="dark"]
+  .learning-path-view__graph
+  .react-flow__node.learning-path-graph__node {
+  border-color: #2563eb;
+}
+
+[data-theme="dark"] .learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-0 { background: #0f172a; color: #dbeafe; }
+[data-theme="dark"] .learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-1 { background: #1e293b; color: #dbeafe; }
+[data-theme="dark"] .learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-2 { background: #334155; color: #e2e8f0; }
+[data-theme="dark"] .learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-3 { background: #475569; color: #e2e8f0; }
+[data-theme="dark"] .learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-4 { background: #5b9ae5; color: #fff; }
+[data-theme="dark"] .learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-5 { background: #6ba5e8; color: #fff; }
+[data-theme="dark"] .learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-6 { background: #7cb0eb; color: #fff; }
+[data-theme="dark"] .learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-7 { background: #5b9ae5; color: #fff; }
+[data-theme="dark"] .learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-8 { background: #4A90E2; color: #fff; }
+[data-theme="dark"] .learning-path-view__graph .react-flow__node.learning-path-graph__node--depth-9 { background: #4A90E2; color: #fff; }

@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Dropdown, AutoComplete, Space } from "antd";
+import { Dropdown, AutoComplete, Space, Tooltip } from "antd";
 import {
   SearchOutlined,
   GlobalOutlined,
   SunOutlined,
   MoonOutlined,
+  AudioOutlined,
+  PauseCircleOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 
 import "./NoteHeader.css";
@@ -16,6 +19,9 @@ function NoteHeader({
   language,
   onLanguageChange,
   onSearch,
+  narrationState = "idle",
+  isNarrationPlaying = false,
+  onToggleNarration,
 }) {
   // redux
   const isMobile = useSelector((state) => state.preference.isMobile);
@@ -44,6 +50,21 @@ function NoteHeader({
   // handle theme toggle
   const handleThemeToggle = () => {
     onThemeChange(theme !== "dark");
+  };
+
+  const narrationDisabled = narrationState !== "ready";
+  let narrationLabel = "Narration unavailable";
+  if (narrationState === "loading") narrationLabel = "Loading narration audio";
+  if (narrationState === "ready") {
+    narrationLabel = isNarrationPlaying ? "Pause narration" : "Play narration";
+  }
+  if (narrationState === "error") narrationLabel = "Narration failed";
+
+  const handleNarrationKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      if (!narrationDisabled) onToggleNarration?.();
+    }
   };
 
   return (
@@ -100,6 +121,32 @@ function NoteHeader({
             onClick={handleThemeToggle}
           />
         )}
+
+        <Tooltip title={narrationLabel}>
+          <span
+            role="button"
+            tabIndex={narrationDisabled ? -1 : 0}
+            aria-label={narrationLabel}
+            onClick={() => {
+              if (!narrationDisabled) onToggleNarration?.();
+            }}
+            onKeyDown={handleNarrationKeyDown}
+            className={`note-header__icon note-header__icon--clickable ${
+              narrationDisabled ? "note-header__icon--disabled" : ""
+            }`}
+          >
+            {narrationState === "loading" ? (
+              <LoadingOutlined />
+            ) : isNarrationPlaying ? (
+              <PauseCircleOutlined />
+            ) : (
+              <AudioOutlined />
+            )}
+          </span>
+        </Tooltip>
+        <span className="note-header__sr-only" aria-live="polite">
+          {narrationLabel}
+        </span>
       </Space>
     </div>
   );

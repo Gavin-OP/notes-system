@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "slug",
+    "title",
+    "prerequisites",
+    "learning_objectives",
+    "introduction_markdown",
+    "concept_sections",
+    "tags",
+    "difficulty",
+    "estimated_time_minutes"
+  ],
+  "properties": {
+    "slug": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "learning_objectives": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "introduction_markdown": {
+      "type": "string",
+      "minLength": 60
+    },
+    "concept_sections": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["heading", "content_markdown"],
+        "properties": {
+          "heading": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content_markdown": {
+            "type": "string",
+            "minLength": 80
+          }
+        }
+      }
+    },
+    "conclusion_markdown": {
+      "type": "string",
+      "minLength": 20
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "difficulty": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "estimated_time_minutes": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 180
+    }
+  }
+}

@@ -18,11 +18,25 @@ A markdown notes system based on ReactJS.
     npm run dev
     ```
 
+    If you want local narration API support at the same time:
+
+    ```
+    npm run dev:with-tts
+    ```
+
     or
 
     ```
     npx vite
     ```
+
+## Narration audio prebuild (ElevenLabs)
+
+Set `ELEVENLABS_API_KEY` and `ELEVENLABS_VOICE_ID` in `.env.local`, then:
+
+```
+npm run ai-agents:narration:batch -- --course python
+```
 
 4. Publish and Deploy  
 

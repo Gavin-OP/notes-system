@@ -5,4 +5,12 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   base: "/notes-system/",
   plugins: [react()],
+  server: {
+    proxy: {
+      "/api/tts": {
+        target: "http://localhost:8787",
+        changeOrigin: true,
+      },
+    },
+  },
 });

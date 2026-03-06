@@ -1,0 +1,20 @@
+{
+  "slug": "introduction-to-numpy-and-pandas",
+  "title": "Introduction to Numpy and Pandas",
+  "prerequisites": [
+    "introduction-to-base-python-part-2"
+  ],
+  "learning_objectives": [
+    "Import and alias common Python data packages in a consistent style",
+    "Understand why NumPy improves numeric computation speed and array handling",
+    "Use Pandas for basic tabular data manipulation and summary statistics"
+  ],
+  "tags": [
+    "python",
+    "numpy",
+    "pandas",
+    "data-analysis"
+  ],
+  "difficulty": 2,
+  "estimated_time_minutes": 30
+}

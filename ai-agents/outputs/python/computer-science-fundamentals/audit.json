@@ -1,0 +1,24 @@
+{
+  "topic_slug": "computer-science-fundamentals",
+  "models": {
+    "writer_model": "gemini-2.5-flash",
+    "verifier_model": "gemini-2.5-flash",
+    "pedagogy_model": "gemini-2.5-flash"
+  },
+  "pipeline": [
+    "writer",
+    "verifier",
+    "pedagogy"
+  ],
+  "iterations": 1,
+  "stop_reason": "completed_single_pass",
+  "output_files": [
+    "v1_draft.md",
+    "v1_verifier.md",
+    "v1_final.md",
+    "metadata.json",
+    "mindmap_node.json",
+    "image_spec.json",
+    "audit.json"
+  ]
+}

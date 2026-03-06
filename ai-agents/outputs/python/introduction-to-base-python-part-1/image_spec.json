@@ -1,0 +1,5 @@
+{
+  "type": "mermaid",
+  "source": "mindmap\n  root((Introduction to base python (part-1)))\n    Write simple Python programs with arithmetic, console output, and user input\n    Recognize built-in data types and select suitable structures for small tasks\n    Understand foundational data structure concepts such as methods and attributes",
+  "alt_text": "Mindmap for topic Introduction to base python (part-1)"
+}

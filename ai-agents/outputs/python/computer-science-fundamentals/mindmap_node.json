@@ -1,0 +1,13 @@
+{
+  "slug": "computer-science-fundamentals",
+  "title": "Computer Science fundamentals",
+  "prerequisites": [],
+  "tags": [
+    "python",
+    "foundations",
+    "computer-science",
+    "setup"
+  ],
+  "estimated_time_minutes": 30,
+  "difficulty": 1
+}

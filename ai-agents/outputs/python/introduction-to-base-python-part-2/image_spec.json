@@ -1,0 +1,5 @@
+{
+  "type": "mermaid",
+  "source": "mindmap\n  root((Introduction to base python (part-2)))\n    Translate simple problem ideas into pseudocode and executable Python steps\n    Apply conditionals, loops, and functions to structure program flow\n    Handle basic file input and output reliably",
+  "alt_text": "Mindmap for topic Introduction to base python (part-2)"
+}

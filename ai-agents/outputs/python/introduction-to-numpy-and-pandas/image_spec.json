@@ -1,0 +1,5 @@
+{
+  "type": "mermaid",
+  "source": "mindmap\n  root((Introduction to Numpy and Pandas))\n    Import and alias common Python data packages in a consistent style\n    Understand why NumPy improves numeric computation speed and array handling\n    Use Pandas for basic tabular data manipulation and summary statistics",
+  "alt_text": "Mindmap for topic Introduction to Numpy and Pandas"
+}

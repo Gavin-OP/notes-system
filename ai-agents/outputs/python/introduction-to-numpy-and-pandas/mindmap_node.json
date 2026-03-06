@@ -1,0 +1,15 @@
+{
+  "slug": "introduction-to-numpy-and-pandas",
+  "title": "Introduction to Numpy and Pandas",
+  "prerequisites": [
+    "introduction-to-base-python-part-2"
+  ],
+  "tags": [
+    "python",
+    "numpy",
+    "pandas",
+    "data-analysis"
+  ],
+  "estimated_time_minutes": 30,
+  "difficulty": 2
+}
