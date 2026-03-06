@@ -1,4 +1,7 @@
 import path from "node:path";
+import { runNarrationPedagogyReview } from "../agents/narrationPedagogy";
+import { runNarrationVerifier } from "../agents/narrationVerifier";
+import { runNarrationWriter } from "../agents/narration";
 import { runPedagogyReview } from "../agents/pedagogy";
 import { runVerifier } from "../agents/verifier";
 import { runWriter } from "../agents/writer";
@@ -84,8 +87,11 @@ export async function runTopicPipeline(input: {
   const writerModel = models.writer_model;
   const verifierModel = models.verifier_model;
   const pedagogyModel = models.pedagogy_model;
+  const narrationWriterModel = models.narration_writer_model;
+  const narrationVerifierModel = models.narration_verifier_model;
+  const narrationPedagogyModel = models.narration_pedagogy_model;
   console.log(
-    `[ai-agents] models: writer=${writerModel}, verifier=${verifierModel}, pedagogy=${pedagogyModel}`,
+    `[ai-agents] models: writer=${writerModel}, verifier=${verifierModel}, pedagogy=${pedagogyModel}, narration_writer=${narrationWriterModel}, narration_verifier=${narrationVerifierModel}, narration_pedagogy=${narrationPedagogyModel}`,
   );
 
   const draftMarkdown = await runWriter({
@@ -109,6 +115,27 @@ export async function runTopicPipeline(input: {
   await writeTextFile(path.join(artifactsDir, "v1_final.md"), finalMarkdown);
   await writeTextFile(finalMarkdownPath, finalMarkdown);
 
+  const narrationDraftMarkdown = await runNarrationWriter({
+    model: narrationWriterModel,
+    topicOutline: input.topicOutline,
+    draftMarkdown,
+  });
+  await writeTextFile(path.join(artifactsDir, "v1_narration_draft.md"), narrationDraftMarkdown);
+
+  const narrationVerifiedMarkdown = await runNarrationVerifier({
+    model: narrationVerifierModel,
+    topicOutline: input.topicOutline,
+    narrationDraftMarkdown,
+  });
+  await writeTextFile(path.join(artifactsDir, "v1_narration_verifier.md"), narrationVerifiedMarkdown);
+
+  const narrationFinalMarkdown = await runNarrationPedagogyReview({
+    model: narrationPedagogyModel,
+    topicOutline: input.topicOutline,
+    narrationVerifiedMarkdown,
+  });
+  await writeTextFile(path.join(artifactsDir, "v1_narration_final.md"), narrationFinalMarkdown);
+
   const metadata = {
     slug: input.topicOutline.slug,
     title: input.topicOutline.title,
@@ -120,9 +147,22 @@ export async function runTopicPipeline(input: {
     estimated_time_minutes: input.topicOutline.estimated_time_minutes ?? 25,
   };
 
+  const narrationManifest = {
+    course: input.course,
+    topic_slug: input.topicOutline.slug,
+    note_file_name: metadata.note_file_name,
+    script_file: "v1_narration_final.md",
+    audio_rel_path: `audio/${input.course}/${input.topicOutline.slug}.mp3`,
+    voice_id: process.env.ELEVENLABS_VOICE_ID ?? "",
+    model_id: process.env.ELEVENLABS_MODEL_ID ?? "eleven_multilingual_v2",
+    duration_sec: null,
+    generated_at: new Date().toISOString(),
+  };
+
   await writeJsonFile(path.join(artifactsDir, "metadata.json"), metadata);
   await writeJsonFile(path.join(artifactsDir, "image_spec.json"), buildImageSpec(metadata));
   await writeJsonFile(path.join(artifactsDir, "mindmap_node.json"), buildMindmapNode(metadata));
+  await writeJsonFile(path.join(artifactsDir, "narration.json"), narrationManifest);
 
   await writeJsonFile(path.join(artifactsDir, "audit.json"), {
     topic_slug: input.topicOutline.slug,
@@ -130,11 +170,26 @@ export async function runTopicPipeline(input: {
       writer_model: writerModel,
       verifier_model: verifierModel,
       pedagogy_model: pedagogyModel,
+      narration_writer_model: narrationWriterModel,
+      narration_verifier_model: narrationVerifierModel,
+      narration_pedagogy_model: narrationPedagogyModel,
     },
-    pipeline: ["writer", "verifier", "pedagogy"],
+    pipeline: ["writer", "verifier", "pedagogy", "narration_writer", "narration_verifier", "narration_pedagogy"],
     iterations: 1,
     stop_reason: "completed_single_pass",
-    output_files: ["v1_draft.md", "v1_verifier.md", "v1_final.md", "metadata.json", "mindmap_node.json", "image_spec.json", "audit.json"],
+    output_files: [
+      "v1_draft.md",
+      "v1_verifier.md",
+      "v1_final.md",
+      "v1_narration_draft.md",
+      "v1_narration_verifier.md",
+      "v1_narration_final.md",
+      "metadata.json",
+      "mindmap_node.json",
+      "image_spec.json",
+      "narration.json",
+      "audit.json",
+    ],
   });
 
   return {

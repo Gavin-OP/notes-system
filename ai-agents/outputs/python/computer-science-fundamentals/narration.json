@@ -1,0 +1,12 @@
+{
+  "course": "python",
+  "topic_slug": "computer-science-fundamentals",
+  "note_file_name": "Computer Science Fundamentals.md",
+  "script_file": "v1_narration_final.md",
+  "audio_rel_path": "audio/python/computer-science-fundamentals.mp3",
+  "voice_id": "xKhbyU7E3bC6T89Kn26c",
+  "model_id": "eleven_multilingual_v2",
+  "duration_sec": null,
+  "generated_at": "2026-03-06T01:55:26.927Z",
+  "source": "public_note_markdown"
+}
