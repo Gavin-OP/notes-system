@@ -16,12 +16,17 @@ function getOutline(markdown) {
   unified().use(remarkParse).use(remarkSlug).runSync(tree);
 
   const outline = [];
+  function collectText(n) {
+    if (n.type === "text") return n.value ?? "";
+    if (n.type === "link" || n.type === "image") {
+      return (n.children ?? []).map(collectText).join("") || n.alt || "";
+    }
+    if (n.children) return n.children.map(collectText).join("");
+    return "";
+  }
   function visit(node) {
     if (node.type === "heading") {
-      const text = node.children
-        .filter((child) => child.type === "text")
-        .map((child) => child.value)
-        .join("");
+      const text = (node.children ?? []).map(collectText).join("").trim();
       outline.push({
         level: node.depth,
         text,

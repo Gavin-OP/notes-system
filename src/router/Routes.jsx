@@ -7,6 +7,7 @@ import NotePage from "../pages/NotePage";
 import HomePage from "../pages/HomePage";
 import SubjectEntry from "../pages/NotePage/SubjectEntry";
 import SubjectMindmap from "../pages/NotePage/SubjectEntry/SubjectMindmap";
+import SubjectLearningPath from "../pages/NotePage/SubjectEntry/SubjectLearningPath";
 import { isLocalhost } from "../utils/analyticsUtils";
 
 // page view tracking
@@ -30,12 +31,13 @@ function RoutesWithTracking() {
       {/* Legacy redirects for old URLs */}
       <Route path="data-science/mindmap" element={<Navigate to="../subject/data-science/mindmap" replace />} />
       <Route path="python/mindmap" element={<Navigate to="../subject/python/mindmap" replace />} />
+      <Route path="python/learning-path" element={<Navigate to="../subject/python/learning-path" replace />} />
 
       {/* Subject-specific routes (mindmap, learning-path) */}
       {/* Dynamic routing: /subject/:subjectId/mindmap */}
       <Route path="subject/:subjectId" element={<SubjectEntry />}>
         <Route path="mindmap" element={<SubjectMindmap />} />
-        {/* Future: <Route path="learning-path" element={<SubjectLearningPath />} /> */}
+        <Route path="learning-path" element={<SubjectLearningPath />} />
       </Route>
 
       {/* Note content routes */}

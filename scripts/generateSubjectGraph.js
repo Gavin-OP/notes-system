@@ -1,12 +1,14 @@
+/* eslint-env node */
 /**
  * Generate knowledge graph JSON for a subject (unified).
  *
  * Supports two data sources:
- * 1. ai-agents outputs: reads metadata.json from ai-agents/outputs/<course>/<topic>/
+ * 1. ai-agents outputs: reads mindmap_node.json (preferred) or metadata.json fallback
  * 2. Markdown notes: reads front matter from public/notes/<subject>/concepts/*.md
  *
  * Output: public/graphs/{subjectId}-graph.json
- * Data contract matches existing mindmap renderers (graphLoader, networkGraphLoader, radialTreeUtils).
+ * Data contract matches existing mindmap renderers (graphLoader, networkGraphLoader, radialTreeUtils)
+ * and now includes a learningPath section for the Learning Path feature.
  */
 
 import fs from "fs";
@@ -14,6 +16,7 @@ import path from "path";
 import matter from "gray-matter";
 import yaml from "js-yaml";
 import { fileURLToPath } from "url";
+import process from "node:process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,6 +53,26 @@ function toSubjectName(subjectId) {
     .split(/[-_]/)
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
     .join(" ");
+}
+
+function parseNumericDifficulty(value) {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string") {
+    const lowered = value.trim().toLowerCase();
+    if (!lowered) return 99;
+    if (/^\d+$/.test(lowered)) return Number(lowered);
+    if (lowered === "easy") return 1;
+    if (lowered === "medium") return 2;
+    if (lowered === "hard") return 3;
+  }
+  return 99;
+}
+
+function toDifficultyLabel(value) {
+  const level = parseNumericDifficulty(value);
+  if (level <= 1) return "easy";
+  if (level <= 2) return "medium";
+  return "hard";
 }
 
 // ====== Resolve ai-agents outputs directory (case-insensitive) ======
@@ -116,31 +139,105 @@ function buildTitleToNoteUrlMap(subjectId) {
   return map;
 }
 
-// ====== Topological order for learning order ======
-function topologicalOrder(nodes) {
-  const byId = new Map(nodes.map((n) => [n.id, n]));
-  const inDegree = new Map(nodes.map((n) => [n.id, 0]));
-  const next = new Map(nodes.map((n) => [n.id, []]));
-  for (const n of nodes) {
-    for (const prereq of n.prerequisites ?? []) {
-      if (!byId.has(prereq)) continue;
-      inDegree.set(n.id, (inDegree.get(n.id) ?? 0) + 1);
-      next.get(prereq)?.push(n.id);
+// ====== Learning path computations ======
+function compareLearningPriority(a, b) {
+  const diffA = parseNumericDifficulty(a.difficulty);
+  const diffB = parseNumericDifficulty(b.difficulty);
+  if (diffA !== diffB) return diffA - diffB;
+
+  const timeA =
+    typeof a.estimatedMinutes === "number" && Number.isFinite(a.estimatedMinutes)
+      ? a.estimatedMinutes
+      : Number.POSITIVE_INFINITY;
+  const timeB =
+    typeof b.estimatedMinutes === "number" && Number.isFinite(b.estimatedMinutes)
+      ? b.estimatedMinutes
+      : Number.POSITIVE_INFINITY;
+  if (timeA !== timeB) return timeA - timeB;
+
+  return String(a.id).localeCompare(String(b.id));
+}
+
+function computeLearningPath(nodes) {
+  const byId = new Map(nodes.map((node) => [node.id, node]));
+  const inDegree = new Map(nodes.map((node) => [node.id, 0]));
+  const next = new Map(nodes.map((node) => [node.id, []]));
+  const warnings = [];
+
+  for (const node of nodes) {
+    for (const prereq of node.prerequisites ?? []) {
+      if (!byId.has(prereq)) {
+        warnings.push(
+          `Topic "${node.id}" references missing prerequisite "${prereq}"`,
+        );
+        continue;
+      }
+      inDegree.set(node.id, (inDegree.get(node.id) ?? 0) + 1);
+      next.get(prereq)?.push(node.id);
     }
   }
-  const queue = nodes.filter((n) => (inDegree.get(n.id) ?? 0) === 0).map((n) => n.id);
-  const order = [];
-  while (queue.length > 0) {
-    const id = queue.shift();
-    if (!id) break;
-    order.push(id);
-    for (const childId of next.get(id) ?? []) {
-      const deg = (inDegree.get(childId) ?? 0) - 1;
-      inDegree.set(childId, deg);
-      if (deg === 0) queue.push(childId);
+
+  const sortIds = (ids) =>
+    [...ids].sort((a, b) =>
+      compareLearningPriority(byId.get(a), byId.get(b)),
+    );
+
+  let available = sortIds(
+    nodes
+      .filter((node) => (inDegree.get(node.id) ?? 0) === 0)
+      .map((node) => node.id),
+  );
+  const roots = [...available];
+
+  const ordered = [];
+  const layers = [];
+
+  while (available.length > 0) {
+    const currentLayer = [...available];
+    layers.push(currentLayer);
+    available = [];
+
+    for (const id of currentLayer) {
+      ordered.push(id);
+      for (const childId of next.get(id) ?? []) {
+        const nextDegree = (inDegree.get(childId) ?? 0) - 1;
+        inDegree.set(childId, nextDegree);
+        if (nextDegree === 0) {
+          available.push(childId);
+        }
+      }
     }
+
+    available = sortIds(available);
   }
-  return order.length === nodes.length ? order : nodes.map((n) => n.id);
+
+  const orderedSet = new Set(ordered);
+  const cycleNodes = nodes
+    .map((node) => node.id)
+    .filter((id) => !orderedSet.has(id))
+    .sort((a, b) => String(a).localeCompare(String(b)));
+
+  return {
+    ordered,
+    layers,
+    roots,
+    hasCycle: cycleNodes.length > 0,
+    cycleNodes,
+    warnings,
+  };
+}
+
+function loadTopicMetaFromDir(topicDir) {
+  const mindmapNodePath = path.join(topicDir, "mindmap_node.json");
+  const metadataPath = path.join(topicDir, "metadata.json");
+
+  if (fs.existsSync(mindmapNodePath)) {
+    return loadJson(mindmapNodePath);
+  }
+  if (fs.existsSync(metadataPath)) {
+    return loadJson(metadataPath);
+  }
+  return null;
 }
 
 // ====== Extract bidirectional links from markdown ======
@@ -155,7 +252,7 @@ function extractBidirectionalLinks(content) {
   return links;
 }
 
-// ====== Source A: Build graph from ai-agents metadata ======
+// ====== Source A: Build graph from ai-agents outputs ======
 function buildGraphFromAiAgents(subjectId, outputsDir) {
   const topicDirs = fs
     .readdirSync(outputsDir, { withFileTypes: true })
@@ -164,36 +261,57 @@ function buildGraphFromAiAgents(subjectId, outputsDir) {
 
   const titleToUrl = buildTitleToNoteUrlMap(subjectId);
   const nodes = [];
+  let skippedMissingNotes = 0;
 
   for (const topicDir of topicDirs) {
-    const metadataPath = path.join(topicDir, "metadata.json");
-    if (!fs.existsSync(metadataPath)) continue;
-    const metadata = loadJson(metadataPath);
-    const keyCandidates = [normalize(metadata.slug), normalize(metadata.title)];
+    const topicMeta = loadTopicMetaFromDir(topicDir);
+    if (!topicMeta?.slug) continue;
+    const keyCandidates = [normalize(topicMeta.slug), normalize(topicMeta.title)];
     const matchedUrl = keyCandidates.map((k) => titleToUrl.get(k)).find(Boolean);
-    const noteFileName = metadata.note_file_name ?? `${metadata.slug}.md`;
+    const noteFileName = topicMeta.note_file_name ?? `${topicMeta.slug}.md`;
+    const numericDifficulty = parseNumericDifficulty(topicMeta.difficulty);
+    const learningPhase =
+      numericDifficulty <= 1 ? 0 : numericDifficulty <= 2 ? 1 : 2;
+
+    const noteSlug = noteFileName.replace(/\.md$/i, "");
+    const noteFilePath = path.join(rootDir, "public", "notes", subjectId, noteFileName);
+    const resolvedNoteUrl = matchedUrl ?? (fs.existsSync(noteFilePath) ? `/note/${subjectId}/${noteSlug}` : null);
+    if (!resolvedNoteUrl) {
+      skippedMissingNotes += 1;
+      continue;
+    }
+
     nodes.push({
-      id: metadata.slug,
-      title: metadata.title,
-      displayTitle: metadata.title,
-      noteUrl: matchedUrl ?? `/note/${subjectId}/${noteFileName.replace(/\.md$/i, "")}`,
+      id: topicMeta.slug,
+      title: topicMeta.title ?? topicMeta.slug,
+      displayTitle: topicMeta.title ?? topicMeta.slug,
+      noteUrl: resolvedNoteUrl,
       filePath: `${subjectId}/${noteFileName}`,
-      category: getCategoryFromTags(subjectId, metadata.tags),
-      categoryId: normalizeCategoryId(getCategoryFromTags(subjectId, metadata.tags)),
-      importance: (metadata.difficulty ?? 2) >= 3 ? "high" : "medium",
-      learningPhase: (metadata.difficulty ?? 1) <= 1 ? 0 : (metadata.difficulty ?? 1) <= 2 ? 1 : 2,
-      prerequisites: Array.isArray(metadata.prerequisites) ? metadata.prerequisites : [],
-      estimatedMinutes: metadata.estimated_time_minutes ?? null,
-      difficulty: (metadata.difficulty ?? 2) <= 2 ? "medium" : "hard",
-      tags: Array.isArray(metadata.tags) ? metadata.tags : [],
+      category: getCategoryFromTags(subjectId, topicMeta.tags),
+      categoryId: normalizeCategoryId(getCategoryFromTags(subjectId, topicMeta.tags)),
+      importance: numericDifficulty >= 3 ? "high" : "medium",
+      learningPhase,
+      prerequisites: Array.isArray(topicMeta.prerequisites) ? topicMeta.prerequisites : [],
+      estimatedMinutes: topicMeta.estimated_time_minutes ?? null,
+      difficulty: toDifficultyLabel(topicMeta.difficulty),
+      difficultyLevel: Number.isFinite(numericDifficulty) ? numericDifficulty : null,
+      tags: Array.isArray(topicMeta.tags) ? topicMeta.tags : [],
       description: "",
       keywords: [],
       linkedConcepts: [],
     });
   }
 
-  const order = topologicalOrder(nodes);
-  const orderMap = new Map(order.map((id, idx) => [id, idx + 1]));
+  if (skippedMissingNotes > 0) {
+    logInfo(
+      `Skipped ${skippedMissingNotes} ai topic(s) without matching note files or note-index URLs for subject "${subjectId}"`,
+    );
+  }
+
+  const learningPath = computeLearningPath(nodes);
+  const orderMap = new Map(
+    learningPath.ordered.map((id, idx) => [id, idx + 1]),
+  );
 
   const categoryColors = {
     Foundations: "#FF7675",
@@ -283,6 +401,7 @@ function buildGraphFromAiAgents(subjectId, outputsDir) {
     learningPhases,
     nodes,
     edges,
+    learningPath,
   };
 }
 
@@ -429,6 +548,13 @@ function buildGraphFromMarkdown(subjectId, conceptsDir) {
   const edges = buildEdges(nodes);
   const categories = extractCategories(nodes);
   const learningPhases = extractLearningPhases(nodes);
+  const learningPath = computeLearningPath(nodes);
+  const orderMap = new Map(
+    learningPath.ordered.map((id, idx) => [id, idx + 1]),
+  );
+  for (const node of nodes) {
+    node.learningOrder = orderMap.get(node.id) ?? node.learningOrder ?? 999;
+  }
 
   return {
     meta: {
@@ -443,6 +569,7 @@ function buildGraphFromMarkdown(subjectId, conceptsDir) {
     learningPhases,
     nodes,
     edges,
+    learningPath,
   };
 }
 
@@ -481,7 +608,9 @@ function generateSubjectGraph(subjectId) {
     try {
       const meta = yaml.load(fs.readFileSync(metaPath, "utf8"));
       if (meta?.title) graph.meta.subjectName = meta.title;
-    } catch (_) {}
+    } catch {
+      // Ignore malformed subject metadata and continue with derived name.
+    }
   }
 
   graph.layouts = {

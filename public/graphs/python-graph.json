@@ -3,7 +3,7 @@
     "subjectId": "python",
     "subjectName": "Python",
     "version": "1.0.0",
-    "lastGenerated": "2026-03-04T22:38:49.524Z",
+    "lastGenerated": "2026-03-06T04:51:20.732Z",
     "nodeCount": 5,
     "edgeCount": 5
   },
@@ -87,7 +87,8 @@
       "learningPhase": 0,
       "prerequisites": [],
       "estimatedMinutes": 30,
-      "difficulty": "medium",
+      "difficulty": "easy",
+      "difficultyLevel": 1,
       "tags": [
         "python",
         "foundations",
@@ -115,7 +116,8 @@
         "computer-science-fundamentals"
       ],
       "estimatedMinutes": 25,
-      "difficulty": "medium",
+      "difficulty": "easy",
+      "difficultyLevel": 1,
       "tags": [
         "python",
         "basics",
@@ -145,6 +147,7 @@
       ],
       "estimatedMinutes": 30,
       "difficulty": "medium",
+      "difficultyLevel": 2,
       "tags": [
         "python",
         "control-flow",
@@ -175,6 +178,7 @@
       ],
       "estimatedMinutes": 30,
       "difficulty": "medium",
+      "difficultyLevel": 2,
       "tags": [
         "python",
         "matplotlib",
@@ -203,6 +207,7 @@
       ],
       "estimatedMinutes": 30,
       "difficulty": "medium",
+      "difficultyLevel": 2,
       "tags": [
         "python",
         "numpy",
@@ -265,6 +270,38 @@
       "bidirectional": false
     }
   ],
+  "learningPath": {
+    "ordered": [
+      "computer-science-fundamentals",
+      "introduction-to-base-python-part-1",
+      "introduction-to-base-python-part-2",
+      "introduction-to-numpy-and-pandas",
+      "introduction-to-data-visualization-in-matplotlib-and-seaborn"
+    ],
+    "layers": [
+      [
+        "computer-science-fundamentals"
+      ],
+      [
+        "introduction-to-base-python-part-1"
+      ],
+      [
+        "introduction-to-base-python-part-2"
+      ],
+      [
+        "introduction-to-numpy-and-pandas"
+      ],
+      [
+        "introduction-to-data-visualization-in-matplotlib-and-seaborn"
+      ]
+    ],
+    "roots": [
+      "computer-science-fundamentals"
+    ],
+    "hasCycle": false,
+    "cycleNodes": [],
+    "warnings": []
+  },
   "layouts": {
     "radial": {
       "centerX": 500,

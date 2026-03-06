@@ -1,5 +1,0 @@
-{
-  "type": "mermaid",
-  "source": "mindmap\n  root((Python Variables and Basic Types))\n    Define variables using Python naming rules\n    Differentiate int, float, str, and bool\n    Use type conversion for simple input handling",
-  "alt_text": "Mindmap for topic Python Variables and Basic Types"
-}

@@ -20,6 +20,9 @@ Use the three integrated views:
 - Network Mindmap
 - Radial Mindmap
 
+### [Learning Path - Structured Sequence](/notes-system/subject/python/learning-path)
+Follow a prerequisite-aware topic progression with branching layers.
+
 ## Included Topics
 
 - Computer Science Fundamentals
