@@ -1,7 +1,5 @@
 import path from "node:path";
 import { readdir, readFile } from "node:fs/promises";
-import { runNarrationPedagogyReview } from "../agents/narrationPedagogy";
-import { runNarrationVerifier } from "../agents/narrationVerifier";
 import { runNarrationWriter } from "../agents/narration";
 import { ensureDir, loadEnv, loadModelsConfig, writeJsonFile, writeTextFile } from "../lib/io/core";
 import type { TopicOutline } from "../lib/types";
@@ -45,9 +43,7 @@ async function listCourseNoteFiles(course: string): Promise<string[]> {
 async function runForNote(input: {
   course: string;
   noteFileName: string;
-  writerModel: string;
-  verifierModel: string;
-  pedagogyModel: string;
+  narrationModel: string;
 }) {
   const notesPath = path.join(process.cwd(), "public", "notes", input.course, input.noteFileName);
   const raw = await readFile(notesPath, "utf-8");
@@ -63,24 +59,10 @@ async function runForNote(input: {
   const artifactsDir = path.join(process.cwd(), "ai-agents", "outputs", input.course, slug);
   await ensureDir(artifactsDir);
 
-  const narrationDraftMarkdown = await runNarrationWriter({
-    model: input.writerModel,
+  const narrationFinalMarkdown = await runNarrationWriter({
+    model: input.narrationModel,
     topicOutline,
-    draftMarkdown: noteMarkdown,
-  });
-  await writeTextFile(path.join(artifactsDir, "v1_narration_draft.md"), narrationDraftMarkdown);
-
-  const narrationVerifiedMarkdown = await runNarrationVerifier({
-    model: input.verifierModel,
-    topicOutline,
-    narrationDraftMarkdown,
-  });
-  await writeTextFile(path.join(artifactsDir, "v1_narration_verifier.md"), narrationVerifiedMarkdown);
-
-  const narrationFinalMarkdown = await runNarrationPedagogyReview({
-    model: input.pedagogyModel,
-    topicOutline,
-    narrationVerifiedMarkdown,
+    finalNoteMarkdown: noteMarkdown,
   });
   await writeTextFile(path.join(artifactsDir, "v1_narration_final.md"), narrationFinalMarkdown);
 
@@ -126,11 +108,9 @@ async function main() {
   }
 
   const models = await loadModelsConfig();
-  const writerModel = models.narration_writer_model;
-  const verifierModel = models.narration_verifier_model;
-  const pedagogyModel = models.narration_pedagogy_model;
+  const narrationModel = models.narration_model;
   console.log(
-    `[ai-agents] narration models: writer=${writerModel}, verifier=${verifierModel}, pedagogy=${pedagogyModel}`,
+    `[ai-agents] narration model: ${narrationModel}`,
   );
 
   const noteFiles = noteArg ? [noteArg] : await listCourseNoteFiles(course);
@@ -142,9 +122,7 @@ async function main() {
     await runForNote({
       course,
       noteFileName,
-      writerModel,
-      verifierModel,
-      pedagogyModel,
+      narrationModel,
     });
   }
 }

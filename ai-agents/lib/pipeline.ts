@@ -1,6 +1,4 @@
 import path from "node:path";
-import { runNarrationPedagogyReview } from "../agents/narrationPedagogy";
-import { runNarrationVerifier } from "../agents/narrationVerifier";
 import { runNarrationWriter } from "../agents/narration";
 import { runPedagogyReview } from "../agents/pedagogy";
 import { runVerifier } from "../agents/verifier";
@@ -87,11 +85,9 @@ export async function runTopicPipeline(input: {
   const writerModel = models.writer_model;
   const verifierModel = models.verifier_model;
   const pedagogyModel = models.pedagogy_model;
-  const narrationWriterModel = models.narration_writer_model;
-  const narrationVerifierModel = models.narration_verifier_model;
-  const narrationPedagogyModel = models.narration_pedagogy_model;
+  const narrationModel = models.narration_model;
   console.log(
-    `[ai-agents] models: writer=${writerModel}, verifier=${verifierModel}, pedagogy=${pedagogyModel}, narration_writer=${narrationWriterModel}, narration_verifier=${narrationVerifierModel}, narration_pedagogy=${narrationPedagogyModel}`,
+    `[ai-agents] models: writer=${writerModel}, verifier=${verifierModel}, pedagogy=${pedagogyModel}, narration=${narrationModel}`,
   );
 
   const draftMarkdown = await runWriter({
@@ -115,24 +111,10 @@ export async function runTopicPipeline(input: {
   await writeTextFile(path.join(artifactsDir, "v1_final.md"), finalMarkdown);
   await writeTextFile(finalMarkdownPath, finalMarkdown);
 
-  const narrationDraftMarkdown = await runNarrationWriter({
-    model: narrationWriterModel,
+  const narrationFinalMarkdown = await runNarrationWriter({
+    model: narrationModel,
     topicOutline: input.topicOutline,
-    draftMarkdown,
-  });
-  await writeTextFile(path.join(artifactsDir, "v1_narration_draft.md"), narrationDraftMarkdown);
-
-  const narrationVerifiedMarkdown = await runNarrationVerifier({
-    model: narrationVerifierModel,
-    topicOutline: input.topicOutline,
-    narrationDraftMarkdown,
-  });
-  await writeTextFile(path.join(artifactsDir, "v1_narration_verifier.md"), narrationVerifiedMarkdown);
-
-  const narrationFinalMarkdown = await runNarrationPedagogyReview({
-    model: narrationPedagogyModel,
-    topicOutline: input.topicOutline,
-    narrationVerifiedMarkdown,
+    finalNoteMarkdown: finalMarkdown,
   });
   await writeTextFile(path.join(artifactsDir, "v1_narration_final.md"), narrationFinalMarkdown);
 
@@ -170,19 +152,15 @@ export async function runTopicPipeline(input: {
       writer_model: writerModel,
       verifier_model: verifierModel,
       pedagogy_model: pedagogyModel,
-      narration_writer_model: narrationWriterModel,
-      narration_verifier_model: narrationVerifierModel,
-      narration_pedagogy_model: narrationPedagogyModel,
+      narration_model: narrationModel,
     },
-    pipeline: ["writer", "verifier", "pedagogy", "narration_writer", "narration_verifier", "narration_pedagogy"],
+    pipeline: ["writer", "verifier", "pedagogy", "narration"],
     iterations: 1,
     stop_reason: "completed_single_pass",
     output_files: [
       "v1_draft.md",
       "v1_verifier.md",
       "v1_final.md",
-      "v1_narration_draft.md",
-      "v1_narration_verifier.md",
       "v1_narration_final.md",
       "metadata.json",
       "mindmap_node.json",

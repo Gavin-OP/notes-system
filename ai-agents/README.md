@@ -8,9 +8,7 @@ For each topic in `ai-agents/inputs/<course>/outline.json`, the pipeline runs:
 1. Writer -> creates `v1_draft.md`
 2. Verifier -> revises draft into `v1_verifier.md`
 3. Pedagogy Reviewer -> revises verifier output into `v1_final.md`
-4. Narration Writer -> converts note draft into `v1_narration_draft.md`
-5. Narration Verifier -> checks narration correctness into `v1_narration_verifier.md`
-6. Narration Pedagogy Reviewer -> improves narration delivery into `v1_narration_final.md`
+4. Narration Script Agent -> converts final note into `v1_narration_final.md` with correctness + delivery/pacing tuning in one pass
 
 Artifacts are written to:
 - `ai-agents/outputs/<course>/<topic_slug>/`
@@ -22,8 +20,6 @@ Generated files include:
 - `v1_draft.md`
 - `v1_verifier.md`
 - `v1_final.md`
-- `v1_narration_draft.md`
-- `v1_narration_verifier.md`
 - `v1_narration_final.md`
 - `metadata.json`
 - `image_spec.json`

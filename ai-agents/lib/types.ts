@@ -48,9 +48,7 @@ export type AgentModels = {
   writer_model: string;
   verifier_model: string;
   pedagogy_model: string;
-  narration_writer_model: string;
-  narration_verifier_model: string;
-  narration_pedagogy_model: string;
+  narration_model: string;
 };
 
 export type TopicOutline = {

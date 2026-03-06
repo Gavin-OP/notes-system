@@ -2,7 +2,5 @@
   "writer_model": "gemini-2.5-flash",
   "verifier_model": "gemini-2.5-flash",
   "pedagogy_model": "gemini-2.5-flash",
-  "narration_writer_model": "gemini-2.5-flash",
-  "narration_verifier_model": "gemini-2.5-flash",
-  "narration_pedagogy_model": "gemini-2.5-flash"
+  "narration_model": "gemini-2.5-flash"
 }

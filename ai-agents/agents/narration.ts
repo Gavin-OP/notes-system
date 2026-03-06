@@ -5,18 +5,19 @@ import type { TopicOutline } from "../lib/types";
 export async function runNarrationWriter(input: {
   model: string;
   topicOutline: TopicOutline;
-  draftMarkdown: string;
+  finalNoteMarkdown: string;
 }): Promise<string> {
   const client = createLlmClient();
-  const template = await loadPrompt("narration_writer.md");
+  const template = await loadPrompt("narration.md");
   const prompt = fillTemplate(template, {
     topic_outline_json: JSON.stringify(input.topicOutline, null, 2),
-    draft_markdown: input.draftMarkdown,
+    final_note_markdown: input.finalNoteMarkdown,
   });
-  const narrationDraftMarkdown = await client.generateText({
+  const narrationFinalMarkdown = await client.generateText({
     model: input.model,
     prompt,
-    systemInstruction: "Return narration markdown only. Keep spoken flow with explicit pause markers.",
+    systemInstruction:
+      "Return narration markdown only. Ensure factual correctness, smooth delivery, and pacing with explicit pause markers.",
   });
-  return narrationDraftMarkdown;
+  return narrationFinalMarkdown;
 }

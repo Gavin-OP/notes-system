@@ -8,7 +8,7 @@ export async function runPedagogyReview(input: {
   verifiedMarkdown: string;
 }): Promise<string> {
   const client = createLlmClient();
-  const template = await loadPrompt("pedagogy_reviewer.md");
+  const template = await loadPrompt("pedagogy.md");
   const prompt = fillTemplate(template, {
     topic_outline_json: JSON.stringify(input.topicOutline, null, 2),
     verified_markdown: input.verifiedMarkdown,
