@@ -1,6 +1,397 @@
 [
   {
     "type": "file",
+    "name": "mindmap.md",
+    "directory": ".",
+    "url": "/note/mindmap.md",
+    "slug": "mindmap.md",
+    "title": "Mindmap",
+    "display": true,
+    "order": 0,
+    "tags": [
+      "mindmap",
+      "documentation"
+    ],
+    "lastEditName": "CindyLyu1953",
+    "lastEditTime": "2026-03-09 14:50:27 +0000"
+  },
+  {
+    "type": "folder",
+    "name": "data-science",
+    "directory": "data-science",
+    "url": "/note/data-science",
+    "slug": "data-science",
+    "title": "Data Science",
+    "display": true,
+    "order": 1,
+    "tags": [
+      "data-science",
+      "index",
+      "data-handling",
+      "data-cleaning",
+      "preprocessing",
+      "data-collection",
+      "statistics",
+      "descriptive-statistics",
+      "feature-engineering",
+      "model-evaluation",
+      "model-selection",
+      "machine-learning",
+      "overfitting",
+      "probability",
+      "foundations",
+      "problem-solving",
+      "supervised-learning",
+      "introduction",
+      "subject"
+    ],
+    "children": [
+      {
+        "type": "file",
+        "name": "_index.md",
+        "directory": "data-science",
+        "url": "/note/data-science/index",
+        "slug": "index",
+        "title": "Data Science Knowledge System",
+        "display": true,
+        "order": 0,
+        "tags": [
+          "data-science",
+          "index"
+        ],
+        "lastEditName": "CindyLyu1953",
+        "lastEditTime": "2026-03-09 14:50:27 +0000"
+      },
+      {
+        "type": "folder",
+        "name": "concepts",
+        "directory": "data-science/concepts",
+        "url": "/note/data-science/concepts",
+        "slug": "concepts",
+        "title": "Concepts",
+        "display": true,
+        "order": 1,
+        "tags": [
+          "data-science",
+          "data-handling",
+          "data-cleaning",
+          "preprocessing",
+          "data-collection",
+          "statistics",
+          "descriptive-statistics",
+          "feature-engineering",
+          "model-evaluation",
+          "model-selection",
+          "machine-learning",
+          "overfitting",
+          "probability",
+          "foundations",
+          "problem-solving",
+          "supervised-learning",
+          "introduction"
+        ],
+        "children": [
+          {
+            "type": "file",
+            "name": "what-is-data-science.md",
+            "directory": "data-science/concepts",
+            "url": "/note/data-science/concepts/what-is-data-science",
+            "slug": "what-is-data-science",
+            "title": "What is Data Science",
+            "display": true,
+            "order": 1,
+            "tags": [
+              "data-science",
+              "foundations",
+              "introduction"
+            ],
+            "lastEditName": "CindyLyu1953",
+            "lastEditTime": "2026-03-09 14:50:27 +0000"
+          },
+          {
+            "type": "file",
+            "name": "problem-framing.md",
+            "directory": "data-science/concepts",
+            "url": "/note/data-science/concepts/problem-framing",
+            "slug": "problem-framing",
+            "title": "Problem Framing",
+            "display": true,
+            "order": 2,
+            "tags": [
+              "data-science",
+              "foundations",
+              "problem-solving"
+            ],
+            "lastEditName": "CindyLyu1953",
+            "lastEditTime": "2026-03-09 14:50:27 +0000"
+          },
+          {
+            "type": "file",
+            "name": "data-collection.md",
+            "directory": "data-science/concepts",
+            "url": "/note/data-science/concepts/data-collection",
+            "slug": "data-collection",
+            "title": "Data Collection",
+            "display": true,
+            "order": 3,
+            "tags": [
+              "data-science",
+              "data-handling",
+              "data-collection"
+            ],
+            "lastEditName": "CindyLyu1953",
+            "lastEditTime": "2026-03-09 14:50:27 +0000"
+          },
+          {
+            "type": "file",
+            "name": "data-cleaning.md",
+            "directory": "data-science/concepts",
+            "url": "/note/data-science/concepts/data-cleaning",
+            "slug": "data-cleaning",
+            "title": "Data Cleaning",
+            "display": true,
+            "order": 4,
+            "tags": [
+              "data-science",
+              "data-handling",
+              "data-cleaning",
+              "preprocessing"
+            ],
+            "lastEditName": "CindyLyu1953",
+            "lastEditTime": "2026-03-09 14:50:27 +0000"
+          },
+          {
+            "type": "file",
+            "name": "feature-engineering.md",
+            "directory": "data-science/concepts",
+            "url": "/note/data-science/concepts/feature-engineering",
+            "slug": "feature-engineering",
+            "title": "Feature Engineering",
+            "display": true,
+            "order": 5,
+            "tags": [
+              "data-science",
+              "data-handling",
+              "feature-engineering",
+              "preprocessing"
+            ],
+            "lastEditName": "CindyLyu1953",
+            "lastEditTime": "2026-03-09 14:50:27 +0000"
+          },
+          {
+            "type": "file",
+            "name": "descriptive-statistics.md",
+            "directory": "data-science/concepts",
+            "url": "/note/data-science/concepts/descriptive-statistics",
+            "slug": "descriptive-statistics",
+            "title": "Descriptive Statistics",
+            "display": true,
+            "order": 6,
+            "tags": [
+              "data-science",
+              "statistics",
+              "descriptive-statistics"
+            ],
+            "lastEditName": "CindyLyu1953",
+            "lastEditTime": "2026-03-09 14:50:27 +0000"
+          },
+          {
+            "type": "file",
+            "name": "probability-basics.md",
+            "directory": "data-science/concepts",
+            "url": "/note/data-science/concepts/probability-basics",
+            "slug": "probability-basics",
+            "title": "Probability Basics",
+            "display": true,
+            "order": 7,
+            "tags": [
+              "data-science",
+              "statistics",
+              "probability"
+            ],
+            "lastEditName": "CindyLyu1953",
+            "lastEditTime": "2026-03-09 14:50:27 +0000"
+          },
+          {
+            "type": "file",
+            "name": "supervised-learning.md",
+            "directory": "data-science/concepts",
+            "url": "/note/data-science/concepts/supervised-learning",
+            "slug": "supervised-learning",
+            "title": "Supervised Learning",
+            "display": true,
+            "order": 8,
+            "tags": [
+              "data-science",
+              "machine-learning",
+              "supervised-learning"
+            ],
+            "lastEditName": "CindyLyu1953",
+            "lastEditTime": "2026-03-09 14:50:27 +0000"
+          },
+          {
+            "type": "file",
+            "name": "overfitting-underfitting.md",
+            "directory": "data-science/concepts",
+            "url": "/note/data-science/concepts/overfitting-underfitting",
+            "slug": "overfitting-underfitting",
+            "title": "Overfitting & Underfitting",
+            "display": true,
+            "order": 9,
+            "tags": [
+              "data-science",
+              "machine-learning",
+              "model-evaluation",
+              "overfitting"
+            ],
+            "lastEditName": "CindyLyu1953",
+            "lastEditTime": "2026-03-09 14:50:27 +0000"
+          },
+          {
+            "type": "file",
+            "name": "model-selection.md",
+            "directory": "data-science/concepts",
+            "url": "/note/data-science/concepts/model-selection",
+            "slug": "model-selection",
+            "title": "Model Selection",
+            "display": true,
+            "order": 10,
+            "tags": [
+              "data-science",
+              "model-evaluation",
+              "model-selection"
+            ],
+            "lastEditName": "CindyLyu1953",
+            "lastEditTime": "2026-03-09 14:50:27 +0000"
+          }
+        ]
+      },
+      {
+        "type": "folder",
+        "name": "assets",
+        "directory": "data-science/assets",
+        "url": "/note/data-science/assets",
+        "slug": "assets",
+        "title": "Assets",
+        "display": false,
+        "order": -1,
+        "tags": [],
+        "children": []
+      },
+      {
+        "type": "folder",
+        "name": "attachments",
+        "directory": "data-science/attachments",
+        "url": "/note/data-science/attachments",
+        "slug": "attachments",
+        "title": "Attachments",
+        "display": false,
+        "order": -1,
+        "tags": [],
+        "children": []
+      }
+    ]
+  },
+  {
+    "type": "folder",
+    "name": "python",
+    "directory": "python",
+    "url": "/note/python",
+    "slug": "python",
+    "title": "Python",
+    "display": true,
+    "order": 2,
+    "tags": [
+      "python",
+      "index",
+      "subject"
+    ],
+    "children": [
+      {
+        "type": "file",
+        "name": "_index.md",
+        "directory": "python",
+        "url": "/note/python/index",
+        "slug": "index",
+        "title": "Python Knowledge System",
+        "display": true,
+        "order": 0,
+        "tags": [
+          "python",
+          "index"
+        ],
+        "lastEditName": "CindyLyu1953",
+        "lastEditTime": "2026-03-09 14:50:27 +0000"
+      },
+      {
+        "type": "file",
+        "name": "Computer Science Fundamentals.md",
+        "directory": "python",
+        "url": "/note/python/computer-science-fundamentals.md",
+        "slug": "computer-science-fundamentals.md",
+        "title": "Computer Science Fundamentals.md",
+        "display": true,
+        "order": -1,
+        "tags": [],
+        "lastEditName": "CindyLyu1953",
+        "lastEditTime": "2026-03-09 14:50:27 +0000"
+      },
+      {
+        "type": "file",
+        "name": "Introduction to Base Python (Part 1).md",
+        "directory": "python",
+        "url": "/note/python/introduction-to-base-python-(part-1).md",
+        "slug": "introduction-to-base-python-(part-1).md",
+        "title": "Introduction to Base Python (Part 1).md",
+        "display": true,
+        "order": -1,
+        "tags": [],
+        "lastEditName": "CindyLyu1953",
+        "lastEditTime": "2026-03-09 14:50:27 +0000"
+      },
+      {
+        "type": "file",
+        "name": "Introduction to Base Python (Part 2).md",
+        "directory": "python",
+        "url": "/note/python/introduction-to-base-python-(part-2).md",
+        "slug": "introduction-to-base-python-(part-2).md",
+        "title": "Introduction to Base Python (Part 2).md",
+        "display": true,
+        "order": -1,
+        "tags": [],
+        "lastEditName": "CindyLyu1953",
+        "lastEditTime": "2026-03-09 14:50:27 +0000"
+      },
+      {
+        "type": "file",
+        "name": "Introduction to Data Visualization in Matplotlib and Seaborn.md",
+        "directory": "python",
+        "url": "/note/python/introduction-to-data-visualization-in-matplotlib-and-seaborn.md",
+        "slug": "introduction-to-data-visualization-in-matplotlib-and-seaborn.md",
+        "title": "Introduction to Data Visualization in Matplotlib and Seaborn.md",
+        "display": true,
+        "order": -1,
+        "tags": [],
+        "lastEditName": "CindyLyu1953",
+        "lastEditTime": "2026-03-09 14:50:27 +0000"
+      },
+      {
+        "type": "file",
+        "name": "Introduction to NumPy and Pandas.md",
+        "directory": "python",
+        "url": "/note/python/introduction-to-numpy-and-pandas.md",
+        "slug": "introduction-to-numpy-and-pandas.md",
+        "title": "Introduction to NumPy and Pandas.md",
+        "display": true,
+        "order": -1,
+        "tags": [],
+        "lastEditName": "CindyLyu1953",
+        "lastEditTime": "2026-03-09 14:50:27 +0000"
+      }
+    ]
+  },
+  {
+    "type": "file",
     "name": "disclaimer.md",
     "directory": ".",
     "url": "/note/disclaimer.md",
@@ -11,8 +402,8 @@
     "tags": [
       "disclaimer"
     ],
-    "lastEditName": "Gavin-OP",
-    "lastEditTime": "2026-03-08 14:24:31 +0800"
+    "lastEditName": "CindyLyu1953",
+    "lastEditTime": "2026-03-09 14:50:27 +0000"
   },
   {
     "type": "folder",
@@ -35,8 +426,8 @@
         "display": true,
         "order": -1,
         "tags": [],
-        "lastEditName": "Gavin-OP",
-        "lastEditTime": "2026-03-08 14:24:31 +0800"
+        "lastEditName": "CindyLyu1953",
+        "lastEditTime": "2026-03-09 14:50:27 +0000"
       },
       {
         "type": "folder",
@@ -59,8 +450,8 @@
             "display": true,
             "order": -1,
             "tags": [],
-            "lastEditName": "Gavin-OP",
-            "lastEditTime": "2026-03-08 14:24:31 +0800"
+            "lastEditName": "CindyLyu1953",
+            "lastEditTime": "2026-03-09 14:50:27 +0000"
           },
           {
             "type": "image",

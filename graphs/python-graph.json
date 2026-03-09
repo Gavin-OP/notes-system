@@ -1,0 +1,336 @@
+{
+  "meta": {
+    "subjectId": "python",
+    "subjectName": "Python",
+    "version": "1.0.0",
+    "lastGenerated": "2026-03-06T04:51:20.732Z",
+    "nodeCount": 5,
+    "edgeCount": 5
+  },
+  "categories": [
+    {
+      "id": "foundations",
+      "name": "Foundations",
+      "displayName": "Foundations",
+      "color": "#FF7675",
+      "order": 1,
+      "description": "",
+      "nodes": [
+        "computer-science-fundamentals"
+      ]
+    },
+    {
+      "id": "core-python",
+      "name": "Core Python",
+      "displayName": "Core Python",
+      "color": "#5DBBDB",
+      "order": 2,
+      "description": "",
+      "nodes": [
+        "introduction-to-base-python-part-1",
+        "introduction-to-base-python-part-2"
+      ]
+    },
+    {
+      "id": "visualization",
+      "name": "Visualization",
+      "displayName": "Visualization",
+      "color": "#4A9FF5",
+      "order": 3,
+      "description": "",
+      "nodes": [
+        "introduction-to-data-visualization-in-matplotlib-and-seaborn"
+      ]
+    },
+    {
+      "id": "data-libraries",
+      "name": "Data Libraries",
+      "displayName": "Data Libraries",
+      "color": "#74D3AE",
+      "order": 4,
+      "description": "",
+      "nodes": [
+        "introduction-to-numpy-and-pandas"
+      ]
+    }
+  ],
+  "learningPhases": [
+    {
+      "phase": 0,
+      "name": "Foundations",
+      "description": "Core setup and fundamentals",
+      "estimatedHours": 0
+    },
+    {
+      "phase": 1,
+      "name": "Core Skills",
+      "description": "Primary skills",
+      "estimatedHours": 0
+    },
+    {
+      "phase": 2,
+      "name": "Applied Tools",
+      "description": "Libraries and advanced workflow",
+      "estimatedHours": 0
+    }
+  ],
+  "nodes": [
+    {
+      "id": "computer-science-fundamentals",
+      "title": "Computer Science fundamentals",
+      "displayTitle": "Computer Science fundamentals",
+      "noteUrl": "/note/python/computer-science-fundamentals.md",
+      "filePath": "python/computer-science-fundamentals.md",
+      "category": "Foundations",
+      "categoryId": "foundations",
+      "importance": "medium",
+      "learningPhase": 0,
+      "prerequisites": [],
+      "estimatedMinutes": 30,
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "tags": [
+        "python",
+        "foundations",
+        "computer-science",
+        "setup"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "introduction-to-base-python-part-1"
+      ],
+      "learningOrder": 1
+    },
+    {
+      "id": "introduction-to-base-python-part-1",
+      "title": "Introduction to base python (part-1)",
+      "displayTitle": "Introduction to base python (part-1)",
+      "noteUrl": "/note/python/introduction-to-base-python-(part-1).md",
+      "filePath": "python/introduction-to-base-python-part-1.md",
+      "category": "Core Python",
+      "categoryId": "core-python",
+      "importance": "medium",
+      "learningPhase": 0,
+      "prerequisites": [
+        "computer-science-fundamentals"
+      ],
+      "estimatedMinutes": 25,
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "tags": [
+        "python",
+        "basics",
+        "data-types",
+        "data-structures"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "computer-science-fundamentals",
+        "introduction-to-base-python-part-2"
+      ],
+      "learningOrder": 2
+    },
+    {
+      "id": "introduction-to-base-python-part-2",
+      "title": "Introduction to base python (part-2)",
+      "displayTitle": "Introduction to base python (part-2)",
+      "noteUrl": "/note/python/introduction-to-base-python-(part-2).md",
+      "filePath": "python/introduction-to-base-python-part-2.md",
+      "category": "Core Python",
+      "categoryId": "core-python",
+      "importance": "medium",
+      "learningPhase": 1,
+      "prerequisites": [
+        "introduction-to-base-python-part-1"
+      ],
+      "estimatedMinutes": 30,
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "tags": [
+        "python",
+        "control-flow",
+        "functions",
+        "file-io",
+        "algorithms"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "introduction-to-base-python-part-1",
+        "introduction-to-numpy-and-pandas"
+      ],
+      "learningOrder": 3
+    },
+    {
+      "id": "introduction-to-data-visualization-in-matplotlib-and-seaborn",
+      "title": "Introduction to Data Visualization in Matplotlib and Seaborn",
+      "displayTitle": "Introduction to Data Visualization in Matplotlib and Seaborn",
+      "noteUrl": "/note/python/introduction-to-data-visualization-in-matplotlib-and-seaborn.md",
+      "filePath": "python/introduction-to-data-visualization-in-matplotlib-and-seaborn.md",
+      "category": "Visualization",
+      "categoryId": "visualization",
+      "importance": "medium",
+      "learningPhase": 1,
+      "prerequisites": [
+        "introduction-to-numpy-and-pandas"
+      ],
+      "estimatedMinutes": 30,
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "tags": [
+        "python",
+        "matplotlib",
+        "seaborn",
+        "visualization"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "introduction-to-numpy-and-pandas"
+      ],
+      "learningOrder": 5
+    },
+    {
+      "id": "introduction-to-numpy-and-pandas",
+      "title": "Introduction to Numpy and Pandas",
+      "displayTitle": "Introduction to Numpy and Pandas",
+      "noteUrl": "/note/python/introduction-to-numpy-and-pandas.md",
+      "filePath": "python/introduction-to-numpy-and-pandas.md",
+      "category": "Data Libraries",
+      "categoryId": "data-libraries",
+      "importance": "medium",
+      "learningPhase": 1,
+      "prerequisites": [
+        "introduction-to-base-python-part-2"
+      ],
+      "estimatedMinutes": 30,
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "tags": [
+        "python",
+        "numpy",
+        "pandas",
+        "data-analysis"
+      ],
+      "description": "",
+      "keywords": [],
+      "linkedConcepts": [
+        "introduction-to-data-visualization-in-matplotlib-and-seaborn",
+        "introduction-to-base-python-part-2"
+      ],
+      "learningOrder": 4
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-0",
+      "source": "computer-science-fundamentals",
+      "target": "introduction-to-base-python-part-1",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-1",
+      "source": "introduction-to-base-python-part-1",
+      "target": "introduction-to-base-python-part-2",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-2",
+      "source": "introduction-to-numpy-and-pandas",
+      "target": "introduction-to-data-visualization-in-matplotlib-and-seaborn",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-3",
+      "source": "introduction-to-base-python-part-2",
+      "target": "introduction-to-numpy-and-pandas",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-4",
+      "source": "introduction-to-base-python-part-1",
+      "target": "introduction-to-base-python-part-2",
+      "type": "related",
+      "label": "Related",
+      "strength": 0.6,
+      "bidirectional": false
+    }
+  ],
+  "learningPath": {
+    "ordered": [
+      "computer-science-fundamentals",
+      "introduction-to-base-python-part-1",
+      "introduction-to-base-python-part-2",
+      "introduction-to-numpy-and-pandas",
+      "introduction-to-data-visualization-in-matplotlib-and-seaborn"
+    ],
+    "layers": [
+      [
+        "computer-science-fundamentals"
+      ],
+      [
+        "introduction-to-base-python-part-1"
+      ],
+      [
+        "introduction-to-base-python-part-2"
+      ],
+      [
+        "introduction-to-numpy-and-pandas"
+      ],
+      [
+        "introduction-to-data-visualization-in-matplotlib-and-seaborn"
+      ]
+    ],
+    "roots": [
+      "computer-science-fundamentals"
+    ],
+    "hasCycle": false,
+    "cycleNodes": [],
+    "warnings": []
+  },
+  "layouts": {
+    "radial": {
+      "centerX": 500,
+      "centerY": 400,
+      "mainRadius": 300,
+      "subRadius": 150
+    },
+    "hierarchical": {
+      "direction": "TB",
+      "levelSeparation": 150,
+      "nodeSeparation": 100
+    }
+  },
+  "viewConfigs": {
+    "mindmap": {
+      "defaultLayout": "radial",
+      "showLabels": true,
+      "showEdges": true,
+      "nodeSize": {
+        "high": 80,
+        "medium": 60,
+        "low": 40
+      }
+    },
+    "learningPath": {
+      "defaultLayout": "hierarchical",
+      "showPrerequisites": true,
+      "showEstimatedTime": true,
+      "groupByPhase": true
+    }
+  }
+}
