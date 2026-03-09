@@ -1,5 +1,0 @@
-{
-  "type": "mermaid",
-  "source": "mindmap\n  root((Computer Science fundamentals))\n    Build a high-level mental model of core computer science foundations before programming\n    Differentiate hardware, software, and development environment responsibilities\n    Understand major ways to run Python code and when to use each approach",
-  "alt_text": "Mindmap for topic Computer Science fundamentals"
-}

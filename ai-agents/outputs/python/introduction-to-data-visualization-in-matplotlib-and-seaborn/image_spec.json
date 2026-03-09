@@ -1,5 +1,0 @@
-{
-  "type": "mermaid",
-  "source": "mindmap\n  root((Introduction to Data Visualization in Matplotlib and Seaborn))\n    Understand the pyplot plotting workflow and its relation to MATLAB-style usage\n    Use Matplotlib for plot structure, geometry control, and basic charting\n    Use Seaborn on top of Matplotlib/Pandas for quick statistical visualizations",
-  "alt_text": "Mindmap for topic Introduction to Data Visualization in Matplotlib and Seaborn"
-}
