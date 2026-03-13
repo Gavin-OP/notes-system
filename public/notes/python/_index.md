@@ -14,19 +14,31 @@ Welcome to the Python knowledge system.
 
 ## Explore
 
-### [Mindmap - Knowledge Graph](/notes-system/subject/python/mindmap)
+### [Open Mindmap](/notes-system/subject/python/mindmap)
 Use the three integrated views:
 - Hierarchical Mindmap
 - Network Mindmap
 - Radial Mindmap
 
-### [Learning Path - Structured Sequence](/notes-system/subject/python/learning-path)
+### [Open Learning Path](/notes-system/subject/python/learning-path)
 Follow a prerequisite-aware topic progression with branching layers.
 
 ## Included Topics
 
-- Computer Science Fundamentals
-- Introduction to Base Python (Part 1)
-- Introduction to Base Python (Part 2)
-- Introduction to NumPy and Pandas
-- Introduction to Data Visualization in Matplotlib and Seaborn
+- Introduction to Python
+- Python Basics and Variables
+- Operators
+- Conditional Statements
+- Loops
+- Lists
+- Tuples
+- Sets
+- Dictionaries
+- Functions
+- Input and Output
+- File I/O
+- Modules and Packages
+- Error Handling
+- Basic Object-Oriented Programming
+- Virtual Environments and Pip
+- Building a Simple Project
