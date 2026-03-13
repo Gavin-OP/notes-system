@@ -3,6 +3,35 @@ import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import "./OutlineSider.css";
 
+/** Build nested Anchor items from flat outline (preserves h3/h4 under h2, etc.) */
+function buildAnchorItems(outline) {
+  if (!outline?.length) return [];
+  const stack = [{ level: 0, children: [] }];
+  for (const item of outline) {
+    const anchorItem = {
+      key: item.id || `outline-${item.level}-${item.text}`,
+      href: item.id ? `#${item.id}` : undefined,
+      title: (
+        <span className="outline-sider__item" data-level={item.level}>
+          {item.text}
+        </span>
+      ),
+      children: [],
+    };
+    while (stack.length > 1 && stack[stack.length - 1].level >= item.level) {
+      stack.pop();
+    }
+    stack[stack.length - 1].children.push(anchorItem);
+    stack.push({ level: item.level, children: anchorItem.children });
+  }
+  function dropEmptyChildren(arr) {
+    return arr.map(({ children, ...rest }) =>
+      children?.length ? { ...rest, children: dropEmptyChildren(children) } : rest
+    );
+  }
+  return dropEmptyChildren(stack[0].children);
+}
+
 const OutlineSider = ({ outline, collapsed, onCollapse, hideHeader = false }) => {
   const language = useSelector((state) => state.preference.language);
   
@@ -41,22 +70,11 @@ const OutlineSider = ({ outline, collapsed, onCollapse, hideHeader = false }) =>
         </div>
       )}
       
-      {/* Outline content */}
+      {/* Outline content - use nested structure so all heading levels (incl. h3) display */}
       <Anchor
         affix={true}
         className="outline-sider__anchor"
-        items={outline.map((item) => ({
-          key: item.id,
-          href: `#${item.id}`,
-          title: (
-            <span 
-              className="outline-sider__item"
-              data-level={item.level}
-            >
-              {item.text}
-            </span>
-          ),
-        }))}
+        items={buildAnchorItems(outline)}
       />
     </div>
   );

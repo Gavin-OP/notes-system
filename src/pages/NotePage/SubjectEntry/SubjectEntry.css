@@ -1,0 +1,12 @@
+/**
+ * SubjectEntry Page Styles
+ * Container for subject-specific views (mindmap, learning path)
+ */
+
+.subject-entry {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+

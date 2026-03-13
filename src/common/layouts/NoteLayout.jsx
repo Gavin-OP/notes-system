@@ -66,6 +66,13 @@ const NoteLayout = () => {
   const [showMenu, setShowMenu] = useState(true);
   const [outlineCollapsed, setOutlineCollapsed] = useState(false);
   const [showFloatingButton, setShowFloatingButton] = useState(true);
+  const [narrationState, setNarrationState] = useState("idle");
+  const [narrationAudioUrls, setNarrationAudioUrls] = useState([]);
+  const [currentNarrationChunkIndex, setCurrentNarrationChunkIndex] = useState(0);
+  const [isNarrationPlaying, setIsNarrationPlaying] = useState(false);
+  const narrationAudioRef = useRef(null);
+  const narrationAudioUrlsRef = useRef([]);
+  const narrationChunkIndexRef = useRef(0);
 
   // track previous isMobile value
   const prevIsMobileRef = useRef(isMobile);
@@ -138,6 +145,124 @@ const NoteLayout = () => {
   const handleNoteSelect = (path) => navigate(path);
   const handleOutlineCollapse = () => setOutlineCollapsed(!outlineCollapsed);
 
+  useEffect(() => {
+    narrationAudioUrlsRef.current = narrationAudioUrls;
+  }, [narrationAudioUrls]);
+
+  useEffect(() => {
+    narrationChunkIndexRef.current = currentNarrationChunkIndex;
+  }, [currentNarrationChunkIndex]);
+
+  useEffect(() => {
+    const audio = narrationAudioRef.current;
+    if (!audio) return undefined;
+    const onPlay = () => setIsNarrationPlaying(true);
+    const onPause = () => setIsNarrationPlaying(false);
+    const onEnded = async () => {
+      const urls = narrationAudioUrlsRef.current;
+      const idx = narrationChunkIndexRef.current;
+      const hasNext = idx + 1 < urls.length;
+      if (!hasNext) {
+        setIsNarrationPlaying(false);
+        return;
+      }
+      const nextIdx = idx + 1;
+      setCurrentNarrationChunkIndex(nextIdx);
+      requestAnimationFrame(() => {
+        const player = narrationAudioRef.current;
+        if (!player) return;
+        player.play().catch((error) => {
+          console.error("Narration next chunk playback failed:", error);
+          setNarrationState("error");
+        });
+      });
+    };
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("pause", onPause);
+    audio.addEventListener("ended", onEnded);
+    return () => {
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("pause", onPause);
+      audio.removeEventListener("ended", onEnded);
+    };
+  }, []);
+
+  useEffect(() => {
+    async function resolveNarration() {
+      const noteKey =
+        currentMeta && currentMeta.name
+          ? currentMeta.directory === "."
+            ? currentMeta.name
+            : `${currentMeta.directory}/${currentMeta.name}`
+          : "";
+
+      const audio = narrationAudioRef.current;
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      setIsNarrationPlaying(false);
+      setNarrationAudioUrls([]);
+      setCurrentNarrationChunkIndex(0);
+
+      if (!noteKey) {
+        setNarrationState("idle");
+        return;
+      }
+      setNarrationState("loading");
+      try {
+        const res = await fetch(`${import.meta.env.BASE_URL}audio/narration-index.json`, {
+          cache: "no-store",
+        });
+        if (!res.ok) {
+          setNarrationState("no_audio");
+          return;
+        }
+        const indexData = await res.json();
+        const hit = indexData?.by_note_key?.[noteKey];
+        const relPaths = Array.isArray(hit?.audio_rel_paths)
+          ? hit.audio_rel_paths
+          : hit?.audio_rel_path
+            ? [hit.audio_rel_path]
+            : [];
+        if (relPaths.length === 0) {
+          setNarrationState("no_audio");
+          return;
+        }
+        setNarrationAudioUrls(
+          relPaths.map((relPath) => {
+            const cleanRelPath = String(relPath).replace(/^\/+/, "");
+            return `${import.meta.env.BASE_URL}${cleanRelPath}`;
+          }),
+        );
+        setCurrentNarrationChunkIndex(0);
+        setNarrationState("ready");
+      } catch (error) {
+        console.error("Failed to load narration index:", error);
+        setNarrationState("error");
+      }
+    }
+    resolveNarration();
+  }, [currentMeta]);
+
+  const handleToggleNarration = async () => {
+    if (narrationState !== "ready" || !narrationAudioRef.current) return;
+    const audio = narrationAudioRef.current;
+    try {
+      if (audio.paused) {
+        if (currentNarrationChunkIndex >= narrationAudioUrls.length) {
+          setCurrentNarrationChunkIndex(0);
+        }
+        await audio.play();
+      } else {
+        audio.pause();
+      }
+    } catch (error) {
+      console.error("Narration playback failed:", error);
+      setNarrationState("error");
+    }
+  };
+
   return (
     <Layout
       className="note-layout"
@@ -178,6 +303,9 @@ const NoteLayout = () => {
               onThemeChange={handleThemeChange}
               onLanguageChange={handleLanguageChange}
               onSearch={handleSearch}
+              narrationState={narrationState}
+              isNarrationPlaying={isNarrationPlaying}
+              onToggleNarration={handleToggleNarration}
             />
           </Col>
         </Row>
@@ -256,6 +384,11 @@ const NoteLayout = () => {
       {isMobile && (
         <FloatingOutlineButton outline={outline} visible={showFloatingButton} />
       )}
+      <audio
+        ref={narrationAudioRef}
+        src={narrationAudioUrls[currentNarrationChunkIndex] ?? ""}
+        preload="none"
+      />
     </Layout>
   );
 };

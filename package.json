@@ -6,10 +6,21 @@
   "homepage": "https://notes-system.github.io/notes-system/",
   "scripts": {
     "dev": "vite",
+    "dev:with-tts": "concurrently \"npm run tts:proxy\" \"npm run dev\"",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "commit": "cz"
+    "commit": "cz",
+    "generate:notes": "node scripts/generateNotesIndex.js",
+    "generate:graph": "node scripts/generateSubjectGraph.js",
+    "generate:narration:audio": "node scripts/generateNarrationAudio.js",
+    "generate:all": "npm run generate:notes && npm run generate:graph",
+    "ai-agents:topic": "tsx ai-agents/runners/run_topic.ts",
+    "ai-agents:batch": "tsx ai-agents/runners/run_batch.ts",
+    "ai-agents:narration:from-notes": "tsx ai-agents/runners/run_narration_from_notes.ts",
+    "ai-agents:narration:batch": "node scripts/generateNarrationAudio.js",
+    "ai-agents:narration:notes-to-audio": "npm run ai-agents:narration:from-notes -- --course python && npm run ai-agents:narration:batch -- --course python",
+    "tts:proxy": "node server/ttsProxy.js"
   },
   "config": {
     "commitizen": {
@@ -18,11 +29,19 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.1",
+    "@types/dagre": "^0.7.53",
+    "ajv": "^8.18.0",
     "antd": "^6.1.3",
     "antd-mobile": "^5.41.1",
+    "d3": "^7.9.0",
+    "dagre": "^0.8.5",
+    "dotenv": "^17.3.1",
+    "echarts": "^6.0.0",
+    "echarts-for-react": "^3.0.6",
     "github-markdown-css": "^5.8.1",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.1",
+    "jsonrepair": "^3.13.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-ga4": "^2.1.0",
@@ -31,6 +50,7 @@
     "react-mermaid2": "^0.1.4",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.12.0",
+    "reactflow": "^11.11.4",
     "rehype-highlight": "^7.0.2",
     "rehype-katex": "^7.0.1",
     "rehype-raw": "^7.0.0",
@@ -47,11 +67,13 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "commitizen": "^4.3.1",
+    "concurrently": "^9.2.1",
     "cz-git": "^1.12.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "tsx": "^4.21.0",
     "vite": "^7.2.4"
   }
 }

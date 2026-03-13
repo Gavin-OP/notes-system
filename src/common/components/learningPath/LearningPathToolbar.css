@@ -1,0 +1,50 @@
+.learning-path-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.learning-path-toolbar__back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #1f2937;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.learning-path-toolbar__back-btn:hover {
+  background: #f9fafb;
+}
+
+.learning-path-toolbar__title h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+[data-theme="dark"] .learning-path-toolbar {
+  background: #0f172a;
+  border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .learning-path-toolbar__back-btn {
+  background: #111827;
+  border-color: #334155;
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .learning-path-toolbar__back-btn:hover {
+  background: #1f2937;
+}
+
+[data-theme="dark"] .learning-path-toolbar__title h2 {
+  color: #e2e8f0;
+}

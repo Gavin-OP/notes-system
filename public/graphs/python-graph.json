@@ -1,0 +1,997 @@
+{
+  "meta": {
+    "subjectId": "python",
+    "subjectName": "Python",
+    "version": "2.0.0",
+    "lastGenerated": "2026-03-13T05:56:36.404Z",
+    "nodeCount": 17,
+    "edgeCount": 26,
+    "sourceOutlinePath": "content/subjects/python/outline/outline.json"
+  },
+  "categories": [
+    {
+      "id": "foundations",
+      "name": "Foundations",
+      "displayName": "Foundations",
+      "color": "#FF7675",
+      "order": 1,
+      "description": "",
+      "nodes": [
+        "introduction-to-python",
+        "python-basics-and-variables"
+      ]
+    },
+    {
+      "id": "operators",
+      "name": "Operators",
+      "displayName": "Operators",
+      "color": "#95A5A6",
+      "order": 2,
+      "description": "",
+      "nodes": [
+        "operators"
+      ]
+    },
+    {
+      "id": "input",
+      "name": "Input",
+      "displayName": "Input",
+      "color": "#95A5A6",
+      "order": 3,
+      "description": "",
+      "nodes": [
+        "input-and-output"
+      ]
+    },
+    {
+      "id": "core-concepts",
+      "name": "Core Concepts",
+      "displayName": "Core Concepts",
+      "color": "#5DBBDB",
+      "order": 4,
+      "description": "",
+      "nodes": [
+        "conditional-statements",
+        "loops",
+        "functions",
+        "basic-object-oriented-programming"
+      ]
+    },
+    {
+      "id": "data-structures",
+      "name": "Data Structures",
+      "displayName": "Data Structures",
+      "color": "#74D3AE",
+      "order": 5,
+      "description": "",
+      "nodes": [
+        "lists",
+        "tuples",
+        "dictionaries",
+        "sets"
+      ]
+    },
+    {
+      "id": "modules",
+      "name": "Modules",
+      "displayName": "Modules",
+      "color": "#95A5A6",
+      "order": 6,
+      "description": "",
+      "nodes": [
+        "modules-and-packages"
+      ]
+    },
+    {
+      "id": "tools-and-practice",
+      "name": "Tools and Practice",
+      "displayName": "Tools and Practice",
+      "color": "#4A9FF5",
+      "order": 7,
+      "description": "",
+      "nodes": [
+        "file-io",
+        "virtual-environments-and-pip",
+        "building-a-simple-project"
+      ]
+    },
+    {
+      "id": "error-handling",
+      "name": "Error Handling",
+      "displayName": "Error Handling",
+      "color": "#95A5A6",
+      "order": 8,
+      "description": "",
+      "nodes": [
+        "error-handling"
+      ]
+    }
+  ],
+  "learningPhases": [
+    {
+      "phase": 0,
+      "name": "Foundations",
+      "description": "Getting started and fundamentals",
+      "estimatedHours": 0
+    },
+    {
+      "phase": 1,
+      "name": "Core Skills",
+      "description": "Main concepts and workflows",
+      "estimatedHours": 0
+    },
+    {
+      "phase": 2,
+      "name": "Advanced Practice",
+      "description": "Complex usage and integration",
+      "estimatedHours": 0
+    }
+  ],
+  "nodes": [
+    {
+      "id": "introduction-to-python",
+      "title": "Introduction to Python and Setup",
+      "displayTitle": "Introduction to Python and Setup",
+      "noteUrl": "/note/python/introduction-to-python.md",
+      "filePath": "python/introduction-to-python.md",
+      "category": "Foundations",
+      "categoryId": "foundations",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 45,
+      "learningPhase": 0,
+      "learningOrder": 1,
+      "tags": [
+        "introduction",
+        "setup",
+        "basics"
+      ],
+      "description": "Explain what Python is, its uses, and guide users through installing Python and a suitable IDE (like VS Code) or using an online interpreter. Cover 'Hello, World!'.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python-basics-and-variables"
+      ]
+    },
+    {
+      "id": "python-basics-and-variables",
+      "title": "Basic Syntax, Variables, and Data Types",
+      "displayTitle": "Basic Syntax, Variables, and Data Types",
+      "noteUrl": "/note/python/python-basics-and-variables.md",
+      "filePath": "python/python-basics-and-variables.md",
+      "category": "Foundations",
+      "categoryId": "foundations",
+      "importance": "low",
+      "prerequisites": [
+        "introduction-to-python"
+      ],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningPhase": 0,
+      "learningOrder": 2,
+      "tags": [
+        "syntax",
+        "variables",
+        "data-types",
+        "basics"
+      ],
+      "description": "Cover basic syntax rules, comments, declaring variables, and fundamental data types: integers, floats, strings, and booleans. Explain type() function.",
+      "keywords": [],
+      "linkedConcepts": [
+        "introduction-to-python",
+        "operators",
+        "input-and-output"
+      ]
+    },
+    {
+      "id": "operators",
+      "title": "Operators in Python",
+      "displayTitle": "Operators in Python",
+      "noteUrl": "/note/python/operators.md",
+      "filePath": "python/operators.md",
+      "category": "Operators",
+      "categoryId": "operators",
+      "importance": "medium",
+      "prerequisites": [
+        "python-basics-and-variables"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 45,
+      "learningPhase": 1,
+      "learningOrder": 4,
+      "tags": [
+        "operators",
+        "arithmetic",
+        "comparison",
+        "logical"
+      ],
+      "description": "Explain arithmetic, assignment, comparison, logical, identity, and membership operators with practical examples.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python-basics-and-variables",
+        "conditional-statements"
+      ]
+    },
+    {
+      "id": "input-and-output",
+      "title": "User Input and Output",
+      "displayTitle": "User Input and Output",
+      "noteUrl": "/note/python/input-and-output.md",
+      "filePath": "python/input-and-output.md",
+      "category": "Input",
+      "categoryId": "input",
+      "importance": "low",
+      "prerequisites": [
+        "python-basics-and-variables"
+      ],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 30,
+      "learningPhase": 0,
+      "learningOrder": 3,
+      "tags": [
+        "input",
+        "output",
+        "print",
+        "console"
+      ],
+      "description": "Focus on the `print()` function (formatting output) and the `input()` function for getting user input. Emphasize type conversion for input.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python-basics-and-variables",
+        "conditional-statements",
+        "building-a-simple-project"
+      ]
+    },
+    {
+      "id": "conditional-statements",
+      "title": "Conditional Statements (if, elif, else)",
+      "displayTitle": "Conditional Statements (if, elif, else)",
+      "noteUrl": "/note/python/conditional-statements.md",
+      "filePath": "python/conditional-statements.md",
+      "category": "Core Concepts",
+      "categoryId": "core-concepts",
+      "importance": "medium",
+      "prerequisites": [
+        "operators",
+        "input-and-output"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 60,
+      "learningPhase": 1,
+      "learningOrder": 5,
+      "tags": [
+        "control-flow",
+        "conditionals",
+        "if",
+        "else"
+      ],
+      "description": "Introduce `if`, `elif`, and `else` statements. Cover nested conditionals and practical examples like decision-making programs.",
+      "keywords": [],
+      "linkedConcepts": [
+        "operators",
+        "input-and-output",
+        "loops",
+        "building-a-simple-project"
+      ]
+    },
+    {
+      "id": "loops",
+      "title": "Loops (for and while)",
+      "displayTitle": "Loops (for and while)",
+      "noteUrl": "/note/python/loops.md",
+      "filePath": "python/loops.md",
+      "category": "Core Concepts",
+      "categoryId": "core-concepts",
+      "importance": "medium",
+      "prerequisites": [
+        "conditional-statements"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningPhase": 1,
+      "learningOrder": 6,
+      "tags": [
+        "control-flow",
+        "loops",
+        "for",
+        "while"
+      ],
+      "description": "Explain `for` loops (with `range()`) and `while` loops. Cover `break` and `continue` statements. Provide examples for iteration.",
+      "keywords": [],
+      "linkedConcepts": [
+        "conditional-statements",
+        "lists",
+        "functions",
+        "building-a-simple-project"
+      ]
+    },
+    {
+      "id": "lists",
+      "title": "Data Structure: Lists",
+      "displayTitle": "Data Structure: Lists",
+      "noteUrl": "/note/python/lists.md",
+      "filePath": "python/lists.md",
+      "category": "Data Structures",
+      "categoryId": "data-structures",
+      "importance": "medium",
+      "prerequisites": [
+        "loops"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningPhase": 1,
+      "learningOrder": 7,
+      "tags": [
+        "data-structures",
+        "lists",
+        "sequences"
+      ],
+      "description": "Introduce lists: creation, accessing elements (indexing, slicing), modifying, adding/removing elements, and common list methods. Emphasize mutability.",
+      "keywords": [],
+      "linkedConcepts": [
+        "loops",
+        "tuples",
+        "dictionaries",
+        "functions",
+        "building-a-simple-project"
+      ]
+    },
+    {
+      "id": "tuples",
+      "title": "Data Structure: Tuples",
+      "displayTitle": "Data Structure: Tuples",
+      "noteUrl": "/note/python/tuples.md",
+      "filePath": "python/tuples.md",
+      "category": "Data Structures",
+      "categoryId": "data-structures",
+      "importance": "medium",
+      "prerequisites": [
+        "lists"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 45,
+      "learningPhase": 1,
+      "learningOrder": 8,
+      "tags": [
+        "data-structures",
+        "tuples",
+        "sequences"
+      ],
+      "description": "Explain tuples as immutable sequences. Cover creation, accessing elements, and when to use tuples instead of lists.",
+      "keywords": [],
+      "linkedConcepts": [
+        "lists"
+      ]
+    },
+    {
+      "id": "dictionaries",
+      "title": "Data Structure: Dictionaries",
+      "displayTitle": "Data Structure: Dictionaries",
+      "noteUrl": "/note/python/dictionaries.md",
+      "filePath": "python/dictionaries.md",
+      "category": "Data Structures",
+      "categoryId": "data-structures",
+      "importance": "medium",
+      "prerequisites": [
+        "lists"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 75,
+      "learningPhase": 1,
+      "learningOrder": 9,
+      "tags": [
+        "data-structures",
+        "dictionaries",
+        "key-value"
+      ],
+      "description": "Introduce dictionaries: creation, accessing values by keys, adding/modifying entries, and common dictionary methods. Explain key-value pairs.",
+      "keywords": [],
+      "linkedConcepts": [
+        "lists",
+        "sets",
+        "functions",
+        "building-a-simple-project"
+      ]
+    },
+    {
+      "id": "sets",
+      "title": "Data Structure: Sets",
+      "displayTitle": "Data Structure: Sets",
+      "noteUrl": "/note/python/sets.md",
+      "filePath": "python/sets.md",
+      "category": "Data Structures",
+      "categoryId": "data-structures",
+      "importance": "medium",
+      "prerequisites": [
+        "dictionaries"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 45,
+      "learningPhase": 1,
+      "learningOrder": 10,
+      "tags": [
+        "data-structures",
+        "sets",
+        "unique-elements"
+      ],
+      "description": "Explain sets: creation, adding/removing elements, and set operations (union, intersection, difference). Emphasize uniqueness and unordered nature.",
+      "keywords": [],
+      "linkedConcepts": [
+        "dictionaries"
+      ]
+    },
+    {
+      "id": "functions",
+      "title": "Functions: Organizing Your Code",
+      "displayTitle": "Functions: Organizing Your Code",
+      "noteUrl": "/note/python/functions.md",
+      "filePath": "python/functions.md",
+      "category": "Core Concepts",
+      "categoryId": "core-concepts",
+      "importance": "medium",
+      "prerequisites": [
+        "loops",
+        "lists",
+        "dictionaries"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 90,
+      "learningPhase": 1,
+      "learningOrder": 11,
+      "tags": [
+        "functions",
+        "code-organization",
+        "reusability"
+      ],
+      "description": "Cover defining functions, parameters, arguments, return values, default arguments, keyword arguments, and basic scope (local vs. global).",
+      "keywords": [],
+      "linkedConcepts": [
+        "loops",
+        "lists",
+        "dictionaries",
+        "modules-and-packages",
+        "file-io",
+        "basic-object-oriented-programming",
+        "building-a-simple-project"
+      ]
+    },
+    {
+      "id": "modules-and-packages",
+      "title": "Modules and Packages: Reusing Code",
+      "displayTitle": "Modules and Packages: Reusing Code",
+      "noteUrl": "/note/python/modules-and-packages.md",
+      "filePath": "python/modules-and-packages.md",
+      "category": "Modules",
+      "categoryId": "modules",
+      "importance": "medium",
+      "prerequisites": [
+        "functions"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 60,
+      "learningPhase": 1,
+      "learningOrder": 12,
+      "tags": [
+        "modules",
+        "packages",
+        "import",
+        "standard-library"
+      ],
+      "description": "Explain how to import and use modules. Introduce common built-in modules (e.g., `math`, `random`). Briefly touch upon creating simple custom modules.",
+      "keywords": [],
+      "linkedConcepts": [
+        "functions",
+        "virtual-environments-and-pip"
+      ]
+    },
+    {
+      "id": "file-io",
+      "title": "File Input/Output",
+      "displayTitle": "File Input/Output",
+      "noteUrl": "/note/python/file-io.md",
+      "filePath": "python/file-io.md",
+      "category": "Tools and Practice",
+      "categoryId": "tools-and-practice",
+      "importance": "medium",
+      "prerequisites": [
+        "functions"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 75,
+      "learningPhase": 1,
+      "learningOrder": 13,
+      "tags": [
+        "file-handling",
+        "io",
+        "read",
+        "write"
+      ],
+      "description": "Cover opening, reading from, and writing to text files. Introduce `with open()` statement for safe file handling. Discuss different modes ('r', 'w', 'a').",
+      "keywords": [],
+      "linkedConcepts": [
+        "functions",
+        "error-handling",
+        "building-a-simple-project"
+      ]
+    },
+    {
+      "id": "error-handling",
+      "title": "Error Handling (try-except)",
+      "displayTitle": "Error Handling (try-except)",
+      "noteUrl": "/note/python/error-handling.md",
+      "filePath": "python/error-handling.md",
+      "category": "Error Handling",
+      "categoryId": "error-handling",
+      "importance": "medium",
+      "prerequisites": [
+        "file-io"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 60,
+      "learningPhase": 1,
+      "learningOrder": 16,
+      "tags": [
+        "error-handling",
+        "exceptions",
+        "try-except"
+      ],
+      "description": "Introduce `try`, `except`, `else`, and `finally` blocks. Explain common types of errors and how to handle them gracefully.",
+      "keywords": [],
+      "linkedConcepts": [
+        "file-io",
+        "building-a-simple-project"
+      ]
+    },
+    {
+      "id": "basic-object-oriented-programming",
+      "title": "Introduction to Object-Oriented Programming (OOP)",
+      "displayTitle": "Introduction to Object-Oriented Programming (OOP)",
+      "noteUrl": "/note/python/basic-object-oriented-programming.md",
+      "filePath": "python/basic-object-oriented-programming.md",
+      "category": "Core Concepts",
+      "categoryId": "core-concepts",
+      "importance": "high",
+      "prerequisites": [
+        "functions"
+      ],
+      "difficulty": "hard",
+      "difficultyLevel": 4,
+      "estimatedMinutes": 90,
+      "learningPhase": 2,
+      "learningOrder": 14,
+      "tags": [
+        "oop",
+        "classes",
+        "objects",
+        "methods",
+        "attributes"
+      ],
+      "description": "Provide a gentle introduction to OOP concepts: classes, objects, attributes, and methods. Demonstrate creating a simple class with an `__init__` method.",
+      "keywords": [],
+      "linkedConcepts": [
+        "functions"
+      ]
+    },
+    {
+      "id": "virtual-environments-and-pip",
+      "title": "Virtual Environments and Pip",
+      "displayTitle": "Virtual Environments and Pip",
+      "noteUrl": "/note/python/virtual-environments-and-pip.md",
+      "filePath": "python/virtual-environments-and-pip.md",
+      "category": "Tools and Practice",
+      "categoryId": "tools-and-practice",
+      "importance": "medium",
+      "prerequisites": [
+        "modules-and-packages"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 45,
+      "learningPhase": 1,
+      "learningOrder": 15,
+      "tags": [
+        "tools",
+        "dependencies",
+        "pip",
+        "virtualenv"
+      ],
+      "description": "Explain the importance of virtual environments. Guide users through creating and activating a virtual environment. Introduce `pip` for installing external packages.",
+      "keywords": [],
+      "linkedConcepts": [
+        "modules-and-packages"
+      ]
+    },
+    {
+      "id": "building-a-simple-project",
+      "title": "Project: Command-Line To-Do List Application",
+      "displayTitle": "Project: Command-Line To-Do List Application",
+      "noteUrl": "/note/python/building-a-simple-project.md",
+      "filePath": "python/building-a-simple-project.md",
+      "category": "Tools and Practice",
+      "categoryId": "tools-and-practice",
+      "importance": "high",
+      "prerequisites": [
+        "input-and-output",
+        "conditional-statements",
+        "loops",
+        "lists",
+        "dictionaries",
+        "functions",
+        "file-io",
+        "error-handling"
+      ],
+      "difficulty": "hard",
+      "difficultyLevel": 4,
+      "estimatedMinutes": 120,
+      "learningPhase": 2,
+      "learningOrder": 17,
+      "tags": [
+        "project",
+        "application",
+        "review",
+        "practice"
+      ],
+      "description": "Guide students through building a simple command-line to-do list application that can add, view, mark as complete, and save/load tasks from a file. This project should integrate many previously learned concepts.",
+      "keywords": [],
+      "linkedConcepts": [
+        "input-and-output",
+        "conditional-statements",
+        "loops",
+        "lists",
+        "dictionaries",
+        "functions",
+        "file-io",
+        "error-handling"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-0",
+      "source": "introduction-to-python",
+      "target": "python-basics-and-variables",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-1",
+      "source": "python-basics-and-variables",
+      "target": "operators",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-2",
+      "source": "python-basics-and-variables",
+      "target": "input-and-output",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-3",
+      "source": "operators",
+      "target": "conditional-statements",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-4",
+      "source": "input-and-output",
+      "target": "conditional-statements",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-5",
+      "source": "conditional-statements",
+      "target": "loops",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-6",
+      "source": "loops",
+      "target": "lists",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-7",
+      "source": "lists",
+      "target": "tuples",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-8",
+      "source": "lists",
+      "target": "dictionaries",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-9",
+      "source": "dictionaries",
+      "target": "sets",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-10",
+      "source": "loops",
+      "target": "functions",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-11",
+      "source": "lists",
+      "target": "functions",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-12",
+      "source": "dictionaries",
+      "target": "functions",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-13",
+      "source": "functions",
+      "target": "modules-and-packages",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-14",
+      "source": "functions",
+      "target": "file-io",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-15",
+      "source": "file-io",
+      "target": "error-handling",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-16",
+      "source": "functions",
+      "target": "basic-object-oriented-programming",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-17",
+      "source": "modules-and-packages",
+      "target": "virtual-environments-and-pip",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-18",
+      "source": "input-and-output",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-19",
+      "source": "conditional-statements",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-20",
+      "source": "loops",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-21",
+      "source": "lists",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-22",
+      "source": "dictionaries",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-23",
+      "source": "functions",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-24",
+      "source": "file-io",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-25",
+      "source": "error-handling",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    }
+  ],
+  "learningPath": {
+    "ordered": [
+      "introduction-to-python",
+      "python-basics-and-variables",
+      "input-and-output",
+      "operators",
+      "conditional-statements",
+      "loops",
+      "lists",
+      "tuples",
+      "dictionaries",
+      "sets",
+      "functions",
+      "modules-and-packages",
+      "file-io",
+      "basic-object-oriented-programming",
+      "virtual-environments-and-pip",
+      "error-handling",
+      "building-a-simple-project"
+    ],
+    "layers": [
+      [
+        "introduction-to-python"
+      ],
+      [
+        "python-basics-and-variables"
+      ],
+      [
+        "input-and-output",
+        "operators"
+      ],
+      [
+        "conditional-statements"
+      ],
+      [
+        "loops"
+      ],
+      [
+        "lists"
+      ],
+      [
+        "tuples",
+        "dictionaries"
+      ],
+      [
+        "sets",
+        "functions"
+      ],
+      [
+        "modules-and-packages",
+        "file-io",
+        "basic-object-oriented-programming"
+      ],
+      [
+        "virtual-environments-and-pip",
+        "error-handling"
+      ],
+      [
+        "building-a-simple-project"
+      ]
+    ],
+    "roots": [
+      "introduction-to-python"
+    ],
+    "hasCycle": false,
+    "cycleNodes": [],
+    "warnings": []
+  },
+  "layouts": {
+    "radial": {
+      "centerX": 500,
+      "centerY": 400,
+      "mainRadius": 300,
+      "subRadius": 150
+    },
+    "hierarchical": {
+      "direction": "TB",
+      "levelSeparation": 150,
+      "nodeSeparation": 100
+    }
+  },
+  "viewConfigs": {
+    "mindmap": {
+      "defaultLayout": "radial",
+      "showLabels": true,
+      "showEdges": true,
+      "nodeSize": {
+        "high": 80,
+        "medium": 60,
+        "low": 40
+      }
+    },
+    "learningPath": {
+      "defaultLayout": "hierarchical",
+      "showPrerequisites": true,
+      "showEstimatedTime": true,
+      "groupByPhase": true
+    }
+  }
+}
