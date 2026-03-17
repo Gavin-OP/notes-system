@@ -228,18 +228,18 @@
   top: calc(var(--node-size, 10px) + 8px);
   left: 50%;
   transform: translateX(-50%);
-  white-space: nowrap;
-  font-size: 11px;
+  white-space: normal;
+  text-align: center;
+  font-size: 14px;
   font-weight: 500;
   color: #e0e0e0;
   background: rgba(30, 30, 35, 0.9);
-  padding: 4px 8px;
+  padding: 5px 10px;
   border-radius: 4px;
   pointer-events: none;
   z-index: 10;
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  max-width: 220px;
+  overflow: visible;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -257,7 +257,7 @@
 }
 
 .network-node--highlighted .network-node__label {
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 600;
 }
 

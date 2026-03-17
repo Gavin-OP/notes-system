@@ -118,8 +118,8 @@
 
 /* Edge styling */
 .network-mindmap-view .react-flow__edge-path {
-  stroke: #555;
-  stroke-opacity: 0.3;
+  stroke: #7a8a9a;
+  stroke-opacity: 0.65;
 }
 
 /* Selection box */

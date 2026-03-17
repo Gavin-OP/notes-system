@@ -49,10 +49,10 @@ export const DEFAULT_NETWORK_LAYOUT_CONFIG = {
   
   // Edge styling
   edge: {
-    strokeWidth: 2.2,
-    strokeOpacity: 0.58,
+    strokeWidth: 3.2,
+    strokeOpacity: 0.78,
     highlightOpacity: 0.96,
-    dimmedOpacity: 0.14,
+    dimmedOpacity: 0.22,
   },
   
   // Node styling

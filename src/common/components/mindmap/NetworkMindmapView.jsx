@@ -425,7 +425,9 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
             opacity: connectedEdges.has(e.id)
               ? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.highlightOpacity
               : DEFAULT_NETWORK_LAYOUT_CONFIG.edge.dimmedOpacity,
-            strokeWidth: connectedEdges.has(e.id) ? 2 : 1,
+            strokeWidth: connectedEdges.has(e.id)
+                ? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth + 0.5
+                : DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth * 0.5,
           },
         }))
       );
