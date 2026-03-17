@@ -2,302 +2,263 @@
 
 ## Learning Objectives
 By the end of this lesson, you will be able to:
-- Understand what operators are and why they are fundamental in Python programming.
-- Identify and use various arithmetic operators to perform mathematical calculations.
-- Apply assignment operators to efficiently store and update variable values.
-- Utilize comparison operators to evaluate relationships between values and produce Boolean results.
-- Combine conditions using logical operators (`and`, `or`, `not`) to control program flow.
-- Differentiate between identity (`is`, `is not`) and membership (`in`, `not in`) operators and know when to use them.
+- Identify and use various types of operators in Python, including arithmetic, assignment, comparison, and logical operators.
+- Understand the difference between value equality (`==`) and object identity (`is`).
+- Check for the presence of an element within a sequence using membership operators (`in`, `not in`).
+- Write simple Python expressions that combine different operators to perform calculations and make decisions.
 
 ## Introduction
-Imagine you're building with LEGOs. You have different types of bricks (your data), but you also need tools to connect them, separate them, or check if they fit together. In Python, variables hold your data, and **operators** are your essential tools! They allow you to perform actions on data, combine values, make decisions, and much more.
+Imagine your programming journey as building something complex, like a house. You have raw materials (data and variables), but you also need tools to shape, connect, and manipulate them. In Python, **operators** are precisely these tools. They are special symbols or keywords that perform specific operations on values and variables.
 
-Without operators, your Python programs would just be static collections of information. Operators bring your data to life, enabling calculations, comparisons, and complex logic that make programs useful and interactive. In this lesson, we'll explore the most common types of operators, starting with the ones you might already be familiar with from math class, and then moving on to more Python-specific tools.
+Why are operators so crucial? Because programming isn't just about storing information; it's about *acting* on that information. Whether you need to add numbers, compare two pieces of data, update a variable's value, or check if certain conditions are met, operators are the fundamental building blocks that make these actions possible. They empower your programs to calculate, make decisions, and interact with data, truly bringing your code to life.
+
+Let's dive in and explore the essential operators that will empower you to write more dynamic and interactive Python programs!
 
 ## Concept Progression
 
-### What are Operators? The "Action" Words of Python
+### Arithmetic Operators: Your Basic Math Tools
+Just like you learned addition, subtraction, multiplication, and division in school, Python provides operators for these fundamental mathematical operations. These are known as **arithmetic operators**. They take numerical values (or variables holding numbers) and return a new numerical value as a result.
 
-At its core, an operator is a special symbol or keyword that tells Python to perform a specific operation on one or more values. These values are called **operands**.
+Let's look at the most common ones:
 
-Consider a simple mathematical expression: `2 + 3`.
-Here, `2` and `3` are the **operands** (the values being acted upon), and `+` is the **operator** (the action being performed). The operator `+` tells Python to *add* the two operands together.
-
-Python has many different types of operators, each designed for a specific purpose. We'll break them down into categories, making it easier to understand their roles and when to use them.
-
-### Arithmetic Operators: Your Basic Math Toolkit
-
-Arithmetic operators are used to perform common mathematical calculations. You've likely encountered most of these in everyday math!
-
-| Operator | Description                  | Example        | Result |
-| :------- | :--------------------------- | :------------- | :----- |
-| `+`      | Addition                     | `5 + 2`        | `7`    |
-| `-`      | Subtraction                  | `5 - 2`        | `3`    |
-| `*`      | Multiplication               | `5 * 2`        | `10`   |
-| `/`      | Division (always float)      | `5 / 2`        | `2.5`  |
-| `%`      | Modulus (Remainder of division)| `5 % 2`        | `1`    |
-| `**`     | Exponentiation (Power)       | `5 ** 2`       | `25`   |
-| `//`     | Floor Division (Integer division)| `5 // 2`       | `2`    |
+| Operator | Description        | Example      | Result |
+| :------- | :----------------- | :----------- | :----- |
+| `+`      | Addition           | `5 + 3`      | `8`    |
+| `-`      | Subtraction        | `10 - 4`     | `6`    |
+| `*`      | Multiplication     | `6 * 2`      | `12`   |
+| `/`      | Division           | `10 / 2`     | `5.0`  |
+| `//`     | Floor Division     | `10 // 3`    | `3`    |
+| `%`      | Modulo (Remainder) | `10 % 3`     | `1`    |
+| `**`     | Exponentiation     | `2 ** 3`     | `8`    |
 
 Let's see these operators in action with some Python code:
 
 ```python
-# Addition: Combining quantities
-total_apples = 10 + 5
-print(f"Total apples: {total_apples}") # Output: Total apples: 15
+# Addition
+result_add = 15 + 7
+print(f"15 + 7 = {result_add}") # Output: 15 + 7 = 22
 
-# Subtraction: Finding the difference
-remaining_cookies = 20 - 7
-print(f"Remaining cookies: {remaining_cookies}") # Output: Remaining cookies: 13
+# Subtraction
+result_sub = 20 - 8
+print(f"20 - 8 = {result_sub}") # Output: 20 - 8 = 12
 
-# Multiplication: Repeating a quantity
-cost_per_item = 2.5
-number_of_items = 4
-total_cost = cost_per_item * number_of_items
-print(f"Total cost: ${total_cost}") # Output: Total cost: $10.0
+# Multiplication
+result_mul = 4 * 6
+print(f"4 * 6 = {result_mul}") # Output: 4 * 6 = 24
 
-# Division: Splitting into equal parts. Note: It always returns a floating-point number.
-average_score = 95 / 2
-print(f"Average score: {average_score}") # Output: Average score: 47.5
+# Division (Note: always returns a float, even if the result is a whole number)
+result_div = 10 / 2
+print(f"10 / 2 = {result_div}") # Output: 10 / 2 = 5.0
 
-# Modulus (%): Finding the remainder after division.
-# This is super useful for tasks like checking if a number is even (number % 2 == 0).
-remainder = 10 % 3 # 10 divided by 3 is 3 with a remainder of 1
-print(f"Remainder of 10 divided by 3: {remainder}") # Output: Remainder of 1
+# Floor Division (discards the fractional part, effectively rounding down for positive numbers)
+result_floor_div = 10 // 3
+print(f"10 // 3 = {result_floor_div}") # Output: 10 // 3 = 3
 
-# Exponentiation (**): Raising a number to a power.
-power_result = 2 ** 3 # This means 2 * 2 * 2
-print(f"2 to the power of 3: {power_result}") # Output: 8
+# Modulo (gives the remainder of a division)
+result_modulo = 10 % 3
+print(f"10 % 3 = {result_modulo}") # Output: 10 % 3 = 1
 
-# Floor Division (//): Divides two numbers and rounds the result *down* to the nearest whole number.
-# For positive numbers, it effectively discards the fractional part.
-floor_result = 10 // 3 # 10 divided by 3 is 3.33..., floor division rounds down to 3
-print(f"Floor division of 10 by 3: {floor_result}") # Output: 3
-
-# A quick note on Floor Division with negative numbers:
-# For negative results, floor division rounds towards negative infinity.
-# For example, -10 // 3 results in -4 (not -3), because -4 is the next whole number down from -3.33...
-# For this lesson, we'll primarily focus on positive examples for clarity.
+# Exponentiation (raises a number to a power)
+result_exp = 2 ** 4 # 2 to the power of 4 (2*2*2*2)
+print(f"2 ** 4 = {result_exp}") # Output: 2 ** 4 = 16
 ```
 
-### Assignment Operators: Shortcutting Variable Updates
+**Why `//` (Floor Division) and `%` (Modulo) are particularly useful:**
+-   `//` (Floor Division) is handy when you only care about how many whole times one number fits into another. For example, calculating how many full packs of 12 eggs you can make from 38 eggs would be `38 // 12`, which gives `3` packs.
+-   `%` (Modulo) is perfect for finding out what's left over after a division. Using the egg example, `38 % 12` would tell you there are `2` eggs left over. It's also frequently used to check if a number is even or odd (a number `% 2` will be `0` if even, `1` if odd).
 
-You've already used the most fundamental assignment operator: `=`. It takes the value on its right and stores it in the variable on its left.
+### Assignment Operators: Giving Values to Variables
+Now that you can perform calculations, how do you store and efficiently update those results? You've already encountered the most basic assignment operator: the equals sign (`=`). This operator assigns the value on its right to the variable on its left.
 
 ```python
-my_age = 30 # The '=' assigns the value 30 to the variable my_age
+my_number = 10 # Assigns the value 10 to the variable my_number
 ```
 
-But what if you want to update a variable based on its *current* value? For instance, if you want to increase `my_age` by 5?
+But what if you want to update a variable's value based on its *current* value? For instance, if you want to add 5 to `my_number`, you could write:
 
-You could write it out like this:
 ```python
-my_age = 30
-my_age = my_age + 5 # Take the current value of my_age (30), add 5, then assign the new result (35) back to my_age
-print(my_age) # Output: 35
+my_number = my_number + 5
+print(my_number) # Output: 15
 ```
 
-Python offers **compound assignment operators** as a convenient and more concise shortcut for these common update tasks. They perform an arithmetic operation and then assign the result back to the original variable.
+Python offers a more concise shorthand for this common operation, known as **compound assignment operators**. These operators combine an arithmetic operation with an assignment.
 
-| Operator | Example        | Equivalent To      |
-| :------- | :------------- | :----------------- |
-| `+=`     | `x += 5`       | `x = x + 5`        |
-| `-=`     | `x -= 3`       | `x = x - 3`        |
-| `*=`     | `x *= 2`       | `x = x * 2`        |
-| `/=`     | `x /= 4`       | `x = x / 4`        |
-| `%=`     | `x %= 2`       | `x = x % 2`        |
-| `**=`    | `x **= 3`      | `x = x ** 3`       |
-| `//=`    | `x //= 2`      | `x = x // 2`       |
+| Operator | Example      | Equivalent to      |
+| :------- | :----------- | :----------------- |
+| `+=`     | `x += 5`     | `x = x + 5`        |
+| `-=`     | `x -= 3`     | `x = x - 3`        |
+| `*=`     | `x *= 2`     | `x = x * 2`        |
+| `/=`     | `x /= 4`     | `x = x / 4`        |
+| `//=`    | `x //= 2`    | `x = x // 2`       |
+| `%=`     | `x %= 3`     | `x = x % 3`        |
+| `**=`    | `x **= 2`    | `x = x ** 2`       |
 
-Let's see how much cleaner our `my_age` example becomes using a compound assignment operator:
+Let's see these in action, updating a `score` variable:
 
 ```python
-my_age = 30
-my_age += 5 # This is a shorthand for my_age = my_age + 5
-print(f"My age after update: {my_age}") # Output: My age after update: 35
-
 score = 100
-score -= 10 # This is a shorthand for score = score - 10
-print(f"Score after penalty: {score}") # Output: Score after penalty: 90
+print(f"Initial score: {score}") # Output: Initial score: 100
 
-price = 15.0
-price *= 1.05 # This is a shorthand for price = price * 1.05 (e.g., adding 5% tax)
-print(f"Price with tax: {price}") # Output: Price with tax: 15.75
+# Add 20 to score
+score += 20 # This is equivalent to: score = score + 20
+print(f"Score after bonus: {score}") # Output: Score after bonus: 120
+
+# Halve the score
+score /= 2 # This is equivalent to: score = score / 2
+print(f"Score after penalty: {score}") # Output: Score after penalty: 60.0
+
+# Double the score
+score *= 2 # This is equivalent to: score = score * 2
+print(f"Score after doubling: {score}") # Output: Score after doubling: 120.0
 ```
-These operators make your code more concise and often easier to read when you're updating a variable based on its own value.
+These compound assignment operators make your code more compact and often clearer when you're modifying a variable's value in place.
 
-### Comparison Operators: Asking "Is This True or False?"
-
-Comparison operators are used to compare two values. The outcome of any comparison operation is always a **Boolean** value: either `True` or `False`. These operators are fundamental for making decisions and controlling the flow of your programs.
+### Comparison Operators: Asking Questions About Values
+Once you have values stored in variables, you'll often need to ask questions about them. For example, "Is this value greater than that one?" or "Are these two values the same?" This is where **comparison operators** come in. They compare two values and always return a `boolean` value: either `True` or `False`. These operators are absolutely crucial for making decisions in your programs, a concept we'll explore further in a later lesson on [control-flow](../python/conditional-statements.md).
 
 | Operator | Description                     | Example        | Result |
 | :------- | :------------------------------ | :------------- | :----- |
 | `==`     | Equal to                        | `5 == 5`       | `True` |
 | `!=`     | Not equal to                    | `5 != 3`       | `True` |
-| `>`      | Greater than                    | `5 > 3`        | `True` |
-| `<`      | Less than                       | `5 < 3`        | `False`|
-| `>=`     | Greater than or equal to        | `5 >= 5`       | `True` |
-| `<=`     | Less than or equal to           | `5 <= 3`       | `False`|
+| `>`      | Greater than                    | `10 > 7`       | `True` |
+| `<`      | Less than                       | `4 < 9`        | `True` |
+| `>=`     | Greater than or equal to        | `8 >= 8`       | `True` |
+| `<=`     | Less than or equal to           | `6 <= 10`      | `True` |
 
-Let's look at some practical examples:
+Let's try some comparisons:
 
 ```python
-temperature = 25
-is_hot = temperature > 30 # Is 25 greater than 30? False.
-print(f"Is it hot? {is_hot}") # Output: Is it hot? False
+age = 25
+min_age_for_license = 18
 
-user_name = "Alice"
-is_admin = (user_name == "Admin") # Is "Alice" equal to "Admin"? False.
-print(f"Is the user an admin? {is_admin}") # Output: Is the user an admin? False
+# Is age equal to 25?
+is_twenty_five = (age == 25)
+print(f"Is age 25? {is_twenty_five}") # Output: Is age 25? True
 
-password_correct = (1234 != 5678) # Is 1234 not equal to 5678? True.
-print(f"Is the password incorrect? {password_correct}") # Output: Is the password incorrect? True
+# Is age less than min_age_for_license?
+is_too_young = (age < min_age_for_license)
+print(f"Is age less than {min_age_for_license}? {is_too_young}") # Output: Is age less than 18? False
 
-age = 18
-can_vote = (age >= 18) # Is 18 greater than or equal to 18? True.
-print(f"Can this person vote? {can_vote}") # Output: Can this person vote? True
+# Is age greater than or equal to min_age_for_license?
+can_get_license = (age >= min_age_for_license)
+print(f"Can get license? {can_get_license}") # Output: Can get license? True
 
-# Important distinction: '==' vs '='
-# A common mistake for beginners is to use a single '=' (assignment) when they mean '==' (comparison).
-# Remember:
-#   `=` assigns a value (e.g., `x = 10`)
-#   `==` checks if two values are equal (e.g., `x == 10` returns True or False)
-# Python will raise an error if you try to use `=` in a comparison context like `if x = 10:`.
+# Comparison also works for strings (case-sensitive!)
+name1 = "Alice"
+name2 = "alice"
+are_names_equal = (name1 == name2)
+print(f"Are '{name1}' and '{name2}' equal? {are_names_equal}") # Output: Are 'Alice' and 'alice' equal? False
 ```
-Comparison operators are the building blocks for conditional statements (like `if` statements), allowing your program to take different actions based on whether a condition is true or false. But what if you need to check *multiple* conditions at once? That's where logical operators come in.
+It's important to note that `==` checks for *value equality*. It asks, "Do these two things hold the same value?" Keep this in mind as we move to the next type of comparison.
 
 ### Logical Operators: Combining Conditions
+Sometimes, a single comparison isn't enough. What if you need to check multiple conditions at once? For example, "Is the user logged in *AND* is their subscription active?" Or "Is it raining *OR* is it snowing?" This is where **logical operators** come in. They combine boolean values (`True` or `False`) and return a new boolean value, allowing you to build complex decision-making logic.
 
-Sometimes, a single comparison isn't enough. You might need to check if several conditions are true, or if at least one of several conditions is true. This is where **logical operators** become indispensable. They combine Boolean values (`True` or `False`) and return a single Boolean result.
+Python has three logical operators: `and`, `or`, and `not`.
 
-The three primary logical operators in Python are `and`, `or`, and `not`.
-
-1.  **`and` operator**: Returns `True` if *both* conditions it connects are `True`. If even one condition is `False`, the entire expression becomes `False`.
-    *   **Analogy**: Think of it like: "Is it sunny *and* is it warm?" Both statements must be true for you to answer "Yes, it's sunny and warm."
-
+1.  **`and` operator:** Returns `True` if *both* conditions it connects are `True`. If even one condition is `False`, the entire expression becomes `False`.
     ```python
-    is_sunny = True
-    is_warm = True
-    go_to_beach = is_sunny and is_warm # Both are True, so the result is True
-    print(f"Go to beach? {go_to_beach}") # Output: Go to beach? True
+    is_logged_in = True
+    has_active_subscription = False
 
+    can_access_premium = is_logged_in and has_active_subscription
+    print(f"Can access premium? {can_access_premium}") # Output: Can access premium? False
+    ```
+    (Here, `is_logged_in` is `True`, but `has_active_subscription` is `False`, so `True and False` results in `False`).
+
+2.  **`or` operator:** Returns `True` if *at least one* of the conditions it connects is `True`. It only returns `False` if *both* conditions are `False`.
+    ```python
+    has_coupon = True
+    is_first_time_customer = False
+
+    gets_discount = has_coupon or is_first_time_customer
+    print(f"Gets discount? {gets_discount}") # Output: Gets discount? True
+    ```
+    (Here, `has_coupon` is `True`, so `True or False` results in `True`).
+
+3.  **`not` operator:** Reverses the boolean value of a single condition. If a condition is `True`, `not` makes it `False`, and vice-versa.
+    ```python
     is_raining = True
-    stay_inside = is_sunny and is_raining # Sunny is True, but Raining is True. Can't be both!
-    print(f"Stay inside? {stay_inside}") # Output: Stay inside? False (because one condition is effectively false in context)
+    should_take_umbrella = not is_raining # Reverses the value of is_raining
+    print(f"Should take umbrella? {should_take_umbrella}") # Output: Should take umbrella? False
     ```
+    (Since `is_raining` is `True`, `not True` becomes `False`).
 
-2.  **`or` operator**: Returns `True` if *at least one* of the conditions it connects is `True`. It only returns `False` if *both* conditions are `False`.
-    *   **Analogy**: Think of it like: "Do you want coffee *or* tea?" If you want either one (or both!), the answer is "Yes." You only say "No" if you want neither.
-
-    ```python
-    has_ticket = True
-    has_id = False
-    can_enter = has_ticket or has_id # You only need one to enter (assuming this rule)
-    print(f"Can enter? {can_enter}") # Output: Can enter? True (because has_ticket is True)
-
-    is_tired = False
-    is_bored = False
-    take_a_nap = is_tired or is_bored # Neither is True, so the result is False
-    print(f"Take a nap? {take_a_nap}") # Output: Take a nap? False
-    ```
-
-3.  **`not` operator**: Reverses the Boolean value of a single condition. If a condition is `True`, `not` makes it `False`, and vice-versa.
-    *   **Analogy**: Think of it like: "Is it *not* cold?" If it *is* cold, then "not cold" is false. If it's *not* cold, then "not cold" is true.
-
-    ```python
-    is_weekend = False
-    is_weekday = not is_weekend # Reverses False to True
-    print(f"Is it a weekday? {is_weekday}") # Output: Is it a weekday? True
-
-    is_hungry = True
-    not_hungry = not is_hungry # Reverses True to False
-    print(f"Not hungry? {not_hungry}") # Output: Not hungry? False
-    ```
-
-[IMAGE_PLACEHOLDER: A truth table diagram showing the inputs and outputs for 'and', 'or', and 'not' logical operators. The table should have columns for 'Condition A', 'Condition B', 'A and B', 'A or B', and 'not A'. Rows should cover all combinations of True/False for A and B.]
-
-### Identity Operators: Are They the *Same* Object?
-
-Identity operators (`is` and `is not`) are a bit more nuanced than comparison operators. While `==` checks if two variables have the *same value*, `is` checks if two variables refer to the *exact same object in memory*.
-
-Think of it this way:
-*   `==` asks: "Do these two people have the same name?" (Comparing values)
-*   `is` asks: "Are these two variables pointing to the *same person*?" (Comparing object identity, i.e., are they literally the same entity in the computer's memory?)
-
-Let's illustrate this crucial difference:
+You can combine these operators to create very sophisticated conditions:
 
 ```python
-list1 = [1, 2, 3]
-list2 = [1, 2, 3] # This creates a *new* list object with the same values
-list3 = list1     # This makes list3 point to the *exact same* list object as list1
+temperature = 28
+is_sunny = True
+is_weekend = False
 
-print(f"list1 == list2: {list1 == list2}") # Output: True (Their values/contents are the same)
-print(f"list1 is list2: {list1 is list2}") # Output: False (They are two separate list objects in memory, even if their contents are identical)
-
-print(f"list1 == list3: {list1 == list3}") # Output: True (Their values/contents are the same)
-print(f"list1 is list3: {list1 is list3}") # Output: True (They are the exact same object in memory)
-
-# Python's Optimization for Immutable Types:
-# For certain immutable types like small integers (typically -5 to 256) and short string literals,
-# Python often optimizes by reusing (interning) objects to save memory.
-# This means 'is' *might* return True for identical values in these specific cases.
-a = 5
-b = 5
-print(f"a is b: {a is b}") # Output: True (Python often reuses small integer objects)
-
-c = "hello"
-d = "hello"
-print(f"c is d: {c is d}") # Output: True (Python often reuses identical string literals)
-
-# However, for mutable objects like lists, or for objects created dynamically (even strings that aren't simple literals),
-# this optimization generally does not apply, and distinct objects will have distinct identities.
-g = [1000]
-h = [1000]
-print(f"g is h: {g is h}") # Output: False (Lists are mutable, so they are distinct objects unless explicitly assigned to the same reference)
+# Is it hot AND sunny AND not the weekend?
+go_to_beach = (temperature > 25 and is_sunny) and (not is_weekend)
+print(f"Go to beach? {go_to_beach}") # Output: Go to beach? True
 ```
 
-[IMAGE_PLACEHOLDER: A diagram illustrating memory addresses. Two variables, 'list1' and 'list2', both point to separate memory locations containing `[1, 2, 3]`. A third variable, 'list3', points to the *same* memory location as 'list1'. This visually explains why `list1 is list2` is False, but `list1 is list3` is True.]
+### Identity Operators: Are They the *Same* Object?
+While comparison operators like `==` are excellent for checking if two variables hold the same *value*, Python offers a more specific way to compare if two variables are literally the *same object* in the computer's memory. This is the job of **identity operators** (`is` and `is not`).
 
-Use `is` when you specifically need to check if two variables refer to the *exact same instance* of an object in memory, not just if they happen to hold the same value. This is particularly important when dealing with mutable objects where changes to one reference would affect the other if they were the same object.
+Think of it like this: two identical twins might have the same name and look exactly alike (same value), but they are still two distinct people (different objects). Similarly, two variables can hold identical values but refer to entirely separate objects in memory.
+
+-   `is`: Returns `True` if both variables point to the exact same object in memory.
+-   `is not`: Returns `True` if both variables do *not* point to the same object in memory.
+
+This distinction is particularly important when dealing with mutable objects like [lists](/note/python/lists.md), which can be changed after they are created.
+
+```python
+a = [1, 2, 3] # Creates a list object
+b = [1, 2, 3] # Creates a *new* list object, even if content is identical
+c = a         # 'c' now refers to the *exact same* list object that 'a' refers to
+
+print(f"a == b: {a == b}")     # Output: a == b: True (Values are equal)
+print(f"a is b: {a is b}")     # Output: a is b: False (They are different list objects in memory)
+
+print(f"a == c: {a == c}")     # Output: a == c: True (Values are equal)
+print(f"a is c: {a is c}")     # Output: a is c: True (They are the *same* list object in memory)
+
+# Let's visualize this:
+[IMAGE_PLACEHOLDER: A diagram showing three boxes representing memory locations. Box 1 contains list [1, 2, 3] and has an arrow from variable 'a' pointing to it. Box 2 contains list [1, 2, 3] and has an arrow from variable 'b' pointing to it. A second arrow from variable 'c' also points to Box 1, illustrating that 'a' and 'c' reference the same object, while 'b' references a different object with the same content. Labels for 'a', 'b', 'c' and their respective memory addresses/objects.]
+```
+
+For simple immutable types like numbers and strings, Python often optimizes by making variables with the same value point to the same object (especially for small integers or short, interned strings). However, relying on `is` for value comparison is generally discouraged; always use `==` for that. Use `is` when you specifically need to check if two variables are the *exact same instance* of an object.
 
 ### Membership Operators: Checking for Presence
+Beyond comparing values or objects, you'll often need to check if a particular item exists *within* a collection of items. Have you ever needed to see if a specific name is in a list of users, or if a character is part of a string? **Membership operators** (`in` and `not in`) allow you to do just that. They are used to test if a sequence (like a string, list, or tuple) contains a certain value.
 
-Membership operators (`in` and `not in`) are used to test if a specific value is present within a sequence (like a string, list, or tuple) or a collection (like a set or dictionary keys). They also return a Boolean (`True` or `False`).
+-   `in`: Returns `True` if the value is found anywhere within the sequence.
+-   `not in`: Returns `True` if the value is *not* found within the sequence.
 
-1.  **`in` operator**: Returns `True` if the specified value is found anywhere within the sequence.
+```python
+fruits = ["apple", "banana", "cherry"]
+my_fruit = "banana"
+other_fruit = "grape"
 
-    ```python
-    my_fruits = ["apple", "banana", "cherry"]
-    print(f"'banana' in my_fruits: {'banana' in my_fruits}") # Output: True
-    print(f"'grape' in my_fruits: {'grape' in my_fruits}")   # Output: False
+# Is 'banana' in the fruits list?
+is_banana_present = my_fruit in fruits
+print(f"Is '{my_fruit}' in fruits? {is_banana_present}") # Output: Is 'banana' in fruits? True
 
-    message = "Hello, world!"
-    print(f"'world' in message: {'world' in message}")     # Output: True (checks for substring)
-    print(f"'python' in message: {'python' in message}")   # Output: False
-    ```
+# Is 'grape' not in the fruits list?
+is_grape_absent = other_fruit not in fruits
+print(f"Is '{other_fruit}' not in fruits? {is_grape_absent}") # Output: Is 'grape' not in fruits? True
 
-2.  **`not in` operator**: Returns `True` if the specified value is *not* found within the sequence. It's simply the inverse of `in`.
+# Membership also works for checking substrings within strings
+message = "Hello, Python!"
+is_hello_in_message = "Hello" in message
+print(f"Is 'Hello' in message? {is_hello_in_message}") # Output: Is 'Hello' in message? True
 
-    ```python
-    my_numbers = (10, 20, 30) # This is a tuple
-    print(f"50 not in my_numbers: {50 not in my_numbers}") # Output: True (50 is indeed not in the tuple)
-    print(f"20 not in my_numbers: {20 not in my_numbers}") # Output: False (20 *is* in the tuple)
-
-    sentence = "Python is fun"
-    print(f"'boring' not in sentence: {'boring' not in sentence}") # Output: True
-    ```
+is_world_in_message = "World" in message
+print(f"Is 'World' in message? {is_world_in_message}") # Output: Is 'World' in message? False
+```
 Membership operators are incredibly useful for searching, validating data, and controlling program flow based on the contents of collections.
 
 ## Wrap-Up
+Congratulations! You've now explored the essential "tools" in Python's operator toolbox. We've covered:
+-   **Arithmetic operators** for performing calculations.
+-   **Assignment operators** for efficiently updating variables.
+-   **Comparison operators** for asking questions about values, returning `True` or `False`.
+-   **Logical operators** for combining multiple conditions.
+-   **Identity operators** for checking if variables refer to the *exact same object* in memory.
+-   **Membership operators** for checking if an item exists within a sequence.
 
-Congratulations! You've now taken a significant step in understanding how to make your Python programs dynamic and interactive. Operators are the verbs of your code, allowing you to perform calculations, compare values, combine conditions, and check for object identity or membership. Mastering them is key to writing effective and intelligent programs.
-
-We covered:
-*   **Arithmetic operators** (`+`, `-`, `*`, `/`, `%`, `**`, `//`) for basic mathematical operations.
-*   **Assignment operators** (`+=`, `-=`, `*=`, etc.) for efficient variable updates.
-*   **Comparison operators** (`==`, `!=`, `>`, `<`, `>=`, `<=`) for making `True`/`False` evaluations between values.
-*   **Logical operators** (`and`, `or`, `not`) for combining and negating Boolean conditions.
-*   **Identity operators** (`is`, `is not`) for checking if two variables refer to the *exact same object* in memory.
-*   **Membership operators** (`in`, `not in`) for checking if a value exists within a sequence or collection.
-
-In upcoming lessons, you'll see how these operators are put to work in control flow statements (like `if/else` conditions and loops) to build programs that can make decisions and repeat actions. Keep practicing with these examples, and soon, using operators will feel like second nature!
+Understanding operators is fundamental because they are the verbs of your Python programs, allowing you to perform actions and make decisions. As you move forward, you'll find yourself using these operators constantly to build more complex and intelligent applications. In the next lesson, we'll see how these comparison and logical operators become the backbone for [control-flow](../python/conditional-statements.md), enabling your programs to make choices and execute different code paths based on conditions.

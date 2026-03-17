@@ -2,10 +2,14 @@
   "meta": {
     "subjectId": "python",
     "subjectName": "Python",
-    "version": "2.0.0",
-    "lastGenerated": "2026-03-13T05:56:36.404Z",
+    "version": "2.1.0",
+    "lastGenerated": "2026-03-17T00:25:36.270Z",
     "nodeCount": 17,
     "edgeCount": 26,
+    "prerequisiteEdgeCount": 26,
+    "networkEdgeCount": 27,
+    "unresolvedWikiTargets": 0,
+    "view": "default",
     "sourceOutlinePath": "content/subjects/python/outline/outline.json"
   },
   "categories": [
@@ -152,7 +156,10 @@
       "keywords": [],
       "linkedConcepts": [
         "python-basics-and-variables"
-      ]
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
     },
     {
       "id": "python-basics-and-variables",
@@ -180,10 +187,14 @@
       "description": "Cover basic syntax rules, comments, declaring variables, and fundamental data types: integers, floats, strings, and booleans. Explain type() function.",
       "keywords": [],
       "linkedConcepts": [
+        "input-and-output",
         "introduction-to-python",
-        "operators",
-        "input-and-output"
-      ]
+        "lists",
+        "operators"
+      ],
+      "degree": 2,
+      "weightedDegree": 5,
+      "networkSize": 56
     },
     {
       "id": "operators",
@@ -211,9 +222,14 @@
       "description": "Explain arithmetic, assignment, comparison, logical, identity, and membership operators with practical examples.",
       "keywords": [],
       "linkedConcepts": [
+        "conditional-statements",
+        "lists",
         "python-basics-and-variables",
-        "conditional-statements"
-      ]
+        "sets"
+      ],
+      "degree": 3,
+      "weightedDegree": 5,
+      "networkSize": 64
     },
     {
       "id": "input-and-output",
@@ -241,10 +257,14 @@
       "description": "Focus on the `print()` function (formatting output) and the `input()` function for getting user input. Emphasize type conversion for input.",
       "keywords": [],
       "linkedConcepts": [
-        "python-basics-and-variables",
+        "building-a-simple-project",
         "conditional-statements",
-        "building-a-simple-project"
-      ]
+        "functions",
+        "python-basics-and-variables"
+      ],
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
     },
     {
       "id": "conditional-statements",
@@ -273,11 +293,14 @@
       "description": "Introduce `if`, `elif`, and `else` statements. Cover nested conditionals and practical examples like decision-making programs.",
       "keywords": [],
       "linkedConcepts": [
-        "operators",
+        "building-a-simple-project",
         "input-and-output",
         "loops",
-        "building-a-simple-project"
-      ]
+        "operators"
+      ],
+      "degree": 3,
+      "weightedDegree": 8,
+      "networkSize": 64
     },
     {
       "id": "loops",
@@ -305,11 +328,14 @@
       "description": "Explain `for` loops (with `range()`) and `while` loops. Cover `break` and `continue` statements. Provide examples for iteration.",
       "keywords": [],
       "linkedConcepts": [
+        "building-a-simple-project",
         "conditional-statements",
-        "lists",
         "functions",
-        "building-a-simple-project"
-      ]
+        "lists"
+      ],
+      "degree": 4,
+      "weightedDegree": 6,
+      "networkSize": 72
     },
     {
       "id": "lists",
@@ -336,12 +362,18 @@
       "description": "Introduce lists: creation, accessing elements (indexing, slicing), modifying, adding/removing elements, and common list methods. Emphasize mutability.",
       "keywords": [],
       "linkedConcepts": [
-        "loops",
-        "tuples",
+        "building-a-simple-project",
         "dictionaries",
         "functions",
-        "building-a-simple-project"
-      ]
+        "loops",
+        "operators",
+        "python-basics-and-variables",
+        "sets",
+        "tuples"
+      ],
+      "degree": 8,
+      "weightedDegree": 33,
+      "networkSize": 104
     },
     {
       "id": "tuples",
@@ -368,8 +400,14 @@
       "description": "Explain tuples as immutable sequences. Cover creation, accessing elements, and when to use tuples instead of lists.",
       "keywords": [],
       "linkedConcepts": [
-        "lists"
-      ]
+        "dictionaries",
+        "functions",
+        "lists",
+        "sets"
+      ],
+      "degree": 4,
+      "weightedDegree": 19,
+      "networkSize": 72
     },
     {
       "id": "dictionaries",
@@ -396,11 +434,15 @@
       "description": "Introduce dictionaries: creation, accessing values by keys, adding/modifying entries, and common dictionary methods. Explain key-value pairs.",
       "keywords": [],
       "linkedConcepts": [
+        "building-a-simple-project",
+        "functions",
         "lists",
         "sets",
-        "functions",
-        "building-a-simple-project"
-      ]
+        "tuples"
+      ],
+      "degree": 5,
+      "weightedDegree": 21,
+      "networkSize": 80
     },
     {
       "id": "sets",
@@ -427,8 +469,15 @@
       "description": "Explain sets: creation, adding/removing elements, and set operations (union, intersection, difference). Emphasize uniqueness and unordered nature.",
       "keywords": [],
       "linkedConcepts": [
-        "dictionaries"
-      ]
+        "dictionaries",
+        "lists",
+        "operators",
+        "tuples",
+        "virtual-environments-and-pip"
+      ],
+      "degree": 5,
+      "weightedDegree": 10,
+      "networkSize": 80
     },
     {
       "id": "functions",
@@ -457,14 +506,19 @@
       "description": "Cover defining functions, parameters, arguments, return values, default arguments, keyword arguments, and basic scope (local vs. global).",
       "keywords": [],
       "linkedConcepts": [
-        "loops",
-        "lists",
-        "dictionaries",
-        "modules-and-packages",
-        "file-io",
         "basic-object-oriented-programming",
-        "building-a-simple-project"
-      ]
+        "building-a-simple-project",
+        "dictionaries",
+        "file-io",
+        "input-and-output",
+        "lists",
+        "loops",
+        "modules-and-packages",
+        "tuples"
+      ],
+      "degree": 8,
+      "weightedDegree": 24,
+      "networkSize": 104
     },
     {
       "id": "modules-and-packages",
@@ -494,7 +548,10 @@
       "linkedConcepts": [
         "functions",
         "virtual-environments-and-pip"
-      ]
+      ],
+      "degree": 1,
+      "weightedDegree": 10,
+      "networkSize": 48
     },
     {
       "id": "file-io",
@@ -522,10 +579,13 @@
       "description": "Cover opening, reading from, and writing to text files. Introduce `with open()` statement for safe file handling. Discuss different modes ('r', 'w', 'a').",
       "keywords": [],
       "linkedConcepts": [
-        "functions",
+        "building-a-simple-project",
         "error-handling",
-        "building-a-simple-project"
-      ]
+        "functions"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
     },
     {
       "id": "error-handling",
@@ -552,9 +612,12 @@
       "description": "Introduce `try`, `except`, `else`, and `finally` blocks. Explain common types of errors and how to handle them gracefully.",
       "keywords": [],
       "linkedConcepts": [
-        "file-io",
-        "building-a-simple-project"
-      ]
+        "building-a-simple-project",
+        "file-io"
+      ],
+      "degree": 1,
+      "weightedDegree": 2,
+      "networkSize": 48
     },
     {
       "id": "basic-object-oriented-programming",
@@ -584,7 +647,10 @@
       "keywords": [],
       "linkedConcepts": [
         "functions"
-      ]
+      ],
+      "degree": 1,
+      "weightedDegree": 6,
+      "networkSize": 48
     },
     {
       "id": "virtual-environments-and-pip",
@@ -612,8 +678,12 @@
       "description": "Explain the importance of virtual environments. Guide users through creating and activating a virtual environment. Introduce `pip` for installing external packages.",
       "keywords": [],
       "linkedConcepts": [
-        "modules-and-packages"
-      ]
+        "modules-and-packages",
+        "sets"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
     },
     {
       "id": "building-a-simple-project",
@@ -648,15 +718,18 @@
       "description": "Guide students through building a simple command-line to-do list application that can add, view, mark as complete, and save/load tasks from a file. This project should integrate many previously learned concepts.",
       "keywords": [],
       "linkedConcepts": [
-        "input-and-output",
         "conditional-statements",
-        "loops",
-        "lists",
         "dictionaries",
-        "functions",
+        "error-handling",
         "file-io",
-        "error-handling"
-      ]
+        "functions",
+        "input-and-output",
+        "lists",
+        "loops"
+      ],
+      "degree": 6,
+      "weightedDegree": 16,
+      "networkSize": 88
     }
   ],
   "edges": [
@@ -895,6 +968,568 @@
       "bidirectional": false
     }
   ],
+  "prerequisiteEdges": [
+    {
+      "id": "edge-0",
+      "source": "introduction-to-python",
+      "target": "python-basics-and-variables",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-1",
+      "source": "python-basics-and-variables",
+      "target": "operators",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-2",
+      "source": "python-basics-and-variables",
+      "target": "input-and-output",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-3",
+      "source": "operators",
+      "target": "conditional-statements",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-4",
+      "source": "input-and-output",
+      "target": "conditional-statements",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-5",
+      "source": "conditional-statements",
+      "target": "loops",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-6",
+      "source": "loops",
+      "target": "lists",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-7",
+      "source": "lists",
+      "target": "tuples",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-8",
+      "source": "lists",
+      "target": "dictionaries",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-9",
+      "source": "dictionaries",
+      "target": "sets",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-10",
+      "source": "loops",
+      "target": "functions",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-11",
+      "source": "lists",
+      "target": "functions",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-12",
+      "source": "dictionaries",
+      "target": "functions",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-13",
+      "source": "functions",
+      "target": "modules-and-packages",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-14",
+      "source": "functions",
+      "target": "file-io",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-15",
+      "source": "file-io",
+      "target": "error-handling",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-16",
+      "source": "functions",
+      "target": "basic-object-oriented-programming",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-17",
+      "source": "modules-and-packages",
+      "target": "virtual-environments-and-pip",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-18",
+      "source": "input-and-output",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-19",
+      "source": "conditional-statements",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-20",
+      "source": "loops",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-21",
+      "source": "lists",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-22",
+      "source": "dictionaries",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-23",
+      "source": "functions",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-24",
+      "source": "file-io",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-25",
+      "source": "error-handling",
+      "target": "building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    }
+  ],
+  "networkEdges": [
+    {
+      "id": "network-edge-0",
+      "source": "basic-object-oriented-programming",
+      "target": "functions",
+      "type": "related",
+      "label": "Related",
+      "strength": 6,
+      "frequency": 6,
+      "weight": 6,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-1",
+      "source": "building-a-simple-project",
+      "target": "conditional-statements",
+      "type": "related",
+      "label": "Related",
+      "strength": 2,
+      "frequency": 2,
+      "weight": 2,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-2",
+      "source": "building-a-simple-project",
+      "target": "dictionaries",
+      "type": "related",
+      "label": "Related",
+      "strength": 5,
+      "frequency": 5,
+      "weight": 5,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-3",
+      "source": "building-a-simple-project",
+      "target": "error-handling",
+      "type": "related",
+      "label": "Related",
+      "strength": 2,
+      "frequency": 2,
+      "weight": 2,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-4",
+      "source": "building-a-simple-project",
+      "target": "functions",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-5",
+      "source": "building-a-simple-project",
+      "target": "lists",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-6",
+      "source": "building-a-simple-project",
+      "target": "loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-7",
+      "source": "conditional-statements",
+      "target": "loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-8",
+      "source": "conditional-statements",
+      "target": "operators",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-9",
+      "source": "dictionaries",
+      "target": "functions",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-10",
+      "source": "dictionaries",
+      "target": "lists",
+      "type": "related",
+      "label": "Related",
+      "strength": 9,
+      "frequency": 9,
+      "weight": 9,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-11",
+      "source": "dictionaries",
+      "target": "sets",
+      "type": "related",
+      "label": "Related",
+      "strength": 2,
+      "frequency": 2,
+      "weight": 2,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-12",
+      "source": "dictionaries",
+      "target": "tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 4,
+      "frequency": 4,
+      "weight": 4,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-13",
+      "source": "functions",
+      "target": "input-and-output",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-14",
+      "source": "functions",
+      "target": "lists",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-15",
+      "source": "functions",
+      "target": "loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-16",
+      "source": "functions",
+      "target": "modules-and-packages",
+      "type": "related",
+      "label": "Related",
+      "strength": 10,
+      "frequency": 10,
+      "weight": 10,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-17",
+      "source": "functions",
+      "target": "tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-18",
+      "source": "input-and-output",
+      "target": "python-basics-and-variables",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-19",
+      "source": "lists",
+      "target": "loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-20",
+      "source": "lists",
+      "target": "operators",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-21",
+      "source": "lists",
+      "target": "python-basics-and-variables",
+      "type": "related",
+      "label": "Related",
+      "strength": 4,
+      "frequency": 4,
+      "weight": 4,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-22",
+      "source": "lists",
+      "target": "sets",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-23",
+      "source": "lists",
+      "target": "tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 11,
+      "frequency": 11,
+      "weight": 11,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-24",
+      "source": "operators",
+      "target": "sets",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-25",
+      "source": "sets",
+      "target": "tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-26",
+      "source": "sets",
+      "target": "virtual-environments-and-pip",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    }
+  ],
   "learningPath": {
     "ordered": [
       "introduction-to-python",
@@ -992,6 +1627,13 @@
       "showPrerequisites": true,
       "showEstimatedTime": true,
       "groupByPhase": true
+    },
+    "network": {
+      "defaultLayout": "radial",
+      "edgeMetric": "weight",
+      "edgeWeightField": "weight",
+      "nodeMetric": "degree",
+      "nodeSizeField": "networkSize"
     }
   }
 }

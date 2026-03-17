@@ -2,678 +2,792 @@
   "meta": {
     "subjectId": "data-science",
     "subjectName": "Data Science",
-    "version": "1.0.0",
-    "lastGenerated": "2026-03-04T22:38:49.530Z",
-    "nodeCount": 10,
-    "edgeCount": 29
+    "version": "2.1.0",
+    "lastGenerated": "2026-03-17T00:25:36.282Z",
+    "nodeCount": 11,
+    "edgeCount": 12,
+    "prerequisiteEdgeCount": 12,
+    "networkEdgeCount": 0,
+    "unresolvedWikiTargets": 0,
+    "view": "default",
+    "sourceOutlinePath": "content/subjects/data_science/outline/outline.json"
   },
   "categories": [
     {
-      "id": "data-data-handling",
-      "name": "Data & Data Handling",
-      "displayName": "Data & Data Handling",
-      "color": "#FF9A76",
+      "id": "foundations",
+      "name": "Foundations",
+      "displayName": "Foundations",
+      "color": "#FF7675",
       "order": 1,
       "description": "",
       "nodes": [
-        "data-cleaning",
-        "data-collection",
-        "feature-engineering"
+        "introduction-to-data-science"
       ]
     },
     {
-      "id": "statistics-probability",
-      "name": "Statistics & Probability",
-      "displayName": "Statistics & Probability",
-      "color": "#74D3AE",
+      "id": "data",
+      "name": "Data",
+      "displayName": "Data",
+      "color": "#95A5A6",
       "order": 2,
       "description": "",
       "nodes": [
-        "descriptive-statistics",
-        "probability-basics"
+        "introduction-to-data"
       ]
     },
     {
-      "id": "modeling-evaluation",
-      "name": "Modeling & Evaluation",
-      "displayName": "Modeling & Evaluation",
-      "color": "#4A9FF5",
+      "id": "data-cleaning",
+      "name": "Data Cleaning",
+      "displayName": "Data Cleaning",
+      "color": "#95A5A6",
       "order": 3,
       "description": "",
       "nodes": [
-        "model-selection"
+        "data-cleaning-and-preprocessing"
+      ]
+    },
+    {
+      "id": "eda",
+      "name": "Eda",
+      "displayName": "Eda",
+      "color": "#95A5A6",
+      "order": 4,
+      "description": "",
+      "nodes": [
+        "exploratory-data-analysis"
       ]
     },
     {
       "id": "machine-learning",
       "name": "Machine Learning",
       "displayName": "Machine Learning",
-      "color": "#5DBBDB",
-      "order": 4,
-      "description": "",
-      "nodes": [
-        "overfitting-underfitting",
-        "supervised-learning"
-      ]
-    },
-    {
-      "id": "foundations",
-      "name": "Foundations",
-      "displayName": "Foundations",
-      "color": "#FF7675",
+      "color": "#95A5A6",
       "order": 5,
       "description": "",
       "nodes": [
-        "problem-framing",
-        "what-is-data-science"
+        "introduction-to-machine-learning"
+      ]
+    },
+    {
+      "id": "supervised-learning",
+      "name": "Supervised Learning",
+      "displayName": "Supervised Learning",
+      "color": "#95A5A6",
+      "order": 6,
+      "description": "",
+      "nodes": [
+        "supervised-learning-regression",
+        "supervised-learning-classification"
+      ]
+    },
+    {
+      "id": "unsupervised-learning",
+      "name": "Unsupervised Learning",
+      "displayName": "Unsupervised Learning",
+      "color": "#95A5A6",
+      "order": 7,
+      "description": "",
+      "nodes": [
+        "unsupervised-learning-clustering"
+      ]
+    },
+    {
+      "id": "model-evaluation",
+      "name": "Model Evaluation",
+      "displayName": "Model Evaluation",
+      "color": "#95A5A6",
+      "order": 8,
+      "description": "",
+      "nodes": [
+        "model-evaluation-and-selection"
+      ]
+    },
+    {
+      "id": "communication",
+      "name": "Communication",
+      "displayName": "Communication",
+      "color": "#95A5A6",
+      "order": 9,
+      "description": "",
+      "nodes": [
+        "data-storytelling-and-communication"
+      ]
+    },
+    {
+      "id": "tools-and-practice",
+      "name": "Tools and Practice",
+      "displayName": "Tools and Practice",
+      "color": "#4A9FF5",
+      "order": 10,
+      "description": "",
+      "nodes": [
+        "next-steps-in-data-science"
       ]
     }
   ],
   "learningPhases": [
     {
       "phase": 0,
-      "name": "入门阶段",
-      "description": "了解基本概念和定义",
+      "name": "Foundations",
+      "description": "Getting started and fundamentals",
       "estimatedHours": 0
     },
     {
       "phase": 1,
-      "name": "基础阶段",
-      "description": "掌握核心知识和技能",
+      "name": "Core Skills",
+      "description": "Main concepts and workflows",
       "estimatedHours": 0
     },
     {
       "phase": 2,
-      "name": "进阶阶段",
-      "description": "深入学习高级技术",
-      "estimatedHours": 0
-    },
-    {
-      "phase": 3,
-      "name": "高级阶段",
-      "description": "综合应用和优化",
+      "name": "Advanced Practice",
+      "description": "Complex usage and integration",
       "estimatedHours": 0
     }
   ],
   "nodes": [
     {
-      "id": "data-cleaning",
-      "title": "Data Cleaning",
-      "displayTitle": "Data Cleaning",
-      "noteUrl": "/note/data-science/concepts/data-cleaning",
-      "filePath": "data-science/concepts/data-cleaning.md",
-      "category": "Data & Data Handling",
-      "subcategory": null,
-      "importance": "high",
-      "position": null,
-      "learningPhase": 1,
+      "id": "introduction-to-data-science",
+      "title": "Introduction to Data Science",
+      "displayTitle": "Introduction to Data Science",
+      "noteUrl": "/note/data-science/introduction-to-data-science.md",
+      "filePath": "data_science/introduction-to-data-science.md",
+      "category": "Foundations",
+      "categoryId": "foundations",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningPhase": 0,
+      "learningOrder": 1,
+      "tags": [
+        "introduction",
+        "overview",
+        "career"
+      ],
+      "description": "Define data science, its importance, common applications, and the typical roles within the field. Discuss the data science lifecycle.",
+      "keywords": [],
+      "linkedConcepts": [
+        "introduction-to-data"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "introduction-to-data",
+      "title": "Understanding Data: Types and Sources",
+      "displayTitle": "Understanding Data: Types and Sources",
+      "noteUrl": "/note/data-science/introduction-to-data.md",
+      "filePath": "data_science/introduction-to-data.md",
+      "category": "Data",
+      "categoryId": "data",
+      "importance": "low",
+      "prerequisites": [
+        "introduction-to-data-science"
+      ],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningPhase": 0,
       "learningOrder": 2,
-      "prerequisites": [
-        "data-collection"
-      ],
-      "estimatedMinutes": null,
-      "difficulty": "medium",
       "tags": [
-        "data-science",
-        "data-handling",
-        "data-cleaning",
-        "preprocessing"
+        "data",
+        "concepts",
+        "types"
       ],
-      "description": "",
+      "description": "Explain different types of data (numerical, categorical, ordinal, nominal), data sources (databases, APIs, files), and basic data terminology.",
       "keywords": [],
       "linkedConcepts": [
-        "data-collection",
-        "feature-engineering",
-        "descriptive-statistics"
-      ]
+        "data-cleaning-and-preprocessing",
+        "introduction-to-data-science"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
     },
     {
-      "id": "data-collection",
-      "title": "Data Collection",
-      "displayTitle": "Data Collection",
-      "noteUrl": "/note/data-science/concepts/data-collection",
-      "filePath": "data-science/concepts/data-collection.md",
-      "category": "Data & Data Handling",
-      "subcategory": null,
-      "importance": "high",
-      "position": null,
-      "learningPhase": 1,
-      "learningOrder": 1,
+      "id": "data-cleaning-and-preprocessing",
+      "title": "Data Cleaning and Preprocessing Techniques",
+      "displayTitle": "Data Cleaning and Preprocessing Techniques",
+      "noteUrl": "/note/data-science/data-cleaning-and-preprocessing.md",
+      "filePath": "data_science/data-cleaning-and-preprocessing.md",
+      "category": "Data Cleaning",
+      "categoryId": "data-cleaning",
+      "importance": "medium",
       "prerequisites": [
-        "problem-framing"
+        "introduction-to-data"
       ],
-      "estimatedMinutes": null,
       "difficulty": "medium",
-      "tags": [
-        "data-science",
-        "data-handling",
-        "data-collection"
-      ],
-      "description": "",
-      "keywords": [],
-      "linkedConcepts": [
-        "problem-framing",
-        "data-cleaning",
-        "feature-engineering",
-        "model-selection"
-      ]
-    },
-    {
-      "id": "descriptive-statistics",
-      "title": "Descriptive Statistics",
-      "displayTitle": "Descriptive Statistics",
-      "noteUrl": "/note/data-science/concepts/descriptive-statistics",
-      "filePath": "data-science/concepts/descriptive-statistics.md",
-      "category": "Statistics & Probability",
-      "subcategory": null,
-      "importance": "high",
-      "position": null,
+      "difficultyLevel": 3,
+      "estimatedMinutes": 150,
       "learningPhase": 1,
       "learningOrder": 3,
-      "prerequisites": [
-        "what-is-data-science"
-      ],
-      "estimatedMinutes": null,
-      "difficulty": "medium",
       "tags": [
-        "data-science",
-        "statistics",
-        "descriptive-statistics"
-      ],
-      "description": "",
-      "keywords": [],
-      "linkedConcepts": [
-        "what-is-data-science",
         "data-cleaning",
-        "probability-basics",
+        "preprocessing",
+        "missing-data",
+        "outliers",
         "feature-engineering"
-      ]
-    },
-    {
-      "id": "feature-engineering",
-      "title": "Feature Engineering",
-      "displayTitle": "Feature Engineering",
-      "noteUrl": "/note/data-science/concepts/feature-engineering",
-      "filePath": "data-science/concepts/feature-engineering.md",
-      "category": "Data & Data Handling",
-      "subcategory": null,
-      "importance": "high",
-      "position": null,
-      "learningPhase": 2,
-      "learningOrder": 1,
-      "prerequisites": [
-        "data-cleaning"
       ],
-      "estimatedMinutes": null,
-      "difficulty": "medium",
-      "tags": [
-        "data-science",
-        "data-handling",
-        "feature-engineering",
-        "preprocessing"
-      ],
-      "description": "",
+      "description": "Address common data quality issues: handling missing values, dealing with outliers, data type conversion, encoding categorical variables (one-hot, label encoding), and feature scaling.",
       "keywords": [],
       "linkedConcepts": [
-        "data-cleaning",
-        "supervised-learning",
-        "overfitting-underfitting",
-        "model-selection"
-      ]
+        "exploratory-data-analysis",
+        "introduction-to-data"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
     },
     {
-      "id": "model-selection",
-      "title": "Model Selection",
-      "displayTitle": "Model Selection",
-      "noteUrl": "/note/data-science/concepts/model-selection",
-      "filePath": "data-science/concepts/model-selection.md",
-      "category": "Modeling & Evaluation",
-      "subcategory": null,
-      "importance": "high",
-      "position": null,
-      "learningPhase": 3,
-      "learningOrder": 1,
+      "id": "exploratory-data-analysis",
+      "title": "Exploratory Data Analysis (EDA)",
+      "displayTitle": "Exploratory Data Analysis (EDA)",
+      "noteUrl": "/note/data-science/exploratory-data-analysis.md",
+      "filePath": "data_science/exploratory-data-analysis.md",
+      "category": "Eda",
+      "categoryId": "eda",
+      "importance": "medium",
       "prerequisites": [
-        "supervised-learning",
-        "overfitting-underfitting"
+        "data-cleaning-and-preprocessing"
       ],
-      "estimatedMinutes": null,
       "difficulty": "medium",
-      "tags": [
-        "data-science",
-        "model-evaluation",
-        "model-selection"
-      ],
-      "description": "",
-      "keywords": [],
-      "linkedConcepts": [
-        "feature-engineering",
-        "supervised-learning",
-        "overfitting-underfitting",
-        "probability-basics",
-        "problem-framing"
-      ]
-    },
-    {
-      "id": "overfitting-underfitting",
-      "title": "Overfitting & Underfitting",
-      "displayTitle": "Overfitting & Underfitting",
-      "noteUrl": "/note/data-science/concepts/overfitting-underfitting",
-      "filePath": "data-science/concepts/overfitting-underfitting.md",
-      "category": "Machine Learning",
-      "subcategory": null,
-      "importance": "high",
-      "position": null,
-      "learningPhase": 2,
-      "learningOrder": 3,
-      "prerequisites": [
-        "supervised-learning"
-      ],
-      "estimatedMinutes": null,
-      "difficulty": "medium",
-      "tags": [
-        "data-science",
-        "machine-learning",
-        "model-evaluation",
-        "overfitting"
-      ],
-      "description": "",
-      "keywords": [],
-      "linkedConcepts": [
-        "supervised-learning",
-        "feature-engineering",
-        "model-selection",
-        "probability-basics"
-      ]
-    },
-    {
-      "id": "probability-basics",
-      "title": "Probability Basics",
-      "displayTitle": "Probability Basics",
-      "noteUrl": "/note/data-science/concepts/probability-basics",
-      "filePath": "data-science/concepts/probability-basics.md",
-      "category": "Statistics & Probability",
-      "subcategory": null,
-      "importance": "high",
-      "position": null,
+      "difficultyLevel": 3,
+      "estimatedMinutes": 180,
       "learningPhase": 1,
       "learningOrder": 4,
-      "prerequisites": [
-        "descriptive-statistics"
-      ],
-      "estimatedMinutes": null,
-      "difficulty": "medium",
       "tags": [
-        "data-science",
+        "eda",
+        "visualization",
         "statistics",
-        "probability"
+        "matplotlib",
+        "seaborn"
       ],
-      "description": "",
+      "description": "Teach how to summarize data using descriptive statistics and visualize data using Matplotlib and Seaborn. Cover common plots (histograms, scatter plots, box plots, bar charts) to uncover patterns and insights.",
       "keywords": [],
       "linkedConcepts": [
-        "descriptive-statistics",
-        "supervised-learning",
-        "overfitting-underfitting",
-        "model-selection"
-      ]
+        "data-cleaning-and-preprocessing",
+        "data-storytelling-and-communication",
+        "introduction-to-machine-learning"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
     },
     {
-      "id": "problem-framing",
-      "title": "Problem Framing",
-      "displayTitle": "Problem Framing",
-      "noteUrl": "/note/data-science/concepts/problem-framing",
-      "filePath": "data-science/concepts/problem-framing.md",
-      "category": "Foundations",
-      "subcategory": null,
-      "importance": "high",
-      "position": null,
-      "learningPhase": 0,
-      "learningOrder": 2,
-      "prerequisites": [
-        "what-is-data-science"
-      ],
-      "estimatedMinutes": null,
-      "difficulty": "medium",
-      "tags": [
-        "data-science",
-        "foundations",
-        "problem-solving"
-      ],
-      "description": "",
-      "keywords": [],
-      "linkedConcepts": [
-        "what-is-data-science",
-        "data-collection",
-        "supervised-learning"
-      ]
-    },
-    {
-      "id": "supervised-learning",
-      "title": "Supervised Learning",
-      "displayTitle": "Supervised Learning",
-      "noteUrl": "/note/data-science/concepts/supervised-learning",
-      "filePath": "data-science/concepts/supervised-learning.md",
+      "id": "introduction-to-machine-learning",
+      "title": "Introduction to Machine Learning",
+      "displayTitle": "Introduction to Machine Learning",
+      "noteUrl": "/note/data-science/introduction-to-machine-learning.md",
+      "filePath": "data_science/introduction-to-machine-learning.md",
       "category": "Machine Learning",
-      "subcategory": null,
-      "importance": "high",
-      "position": null,
-      "learningPhase": 2,
-      "learningOrder": 2,
+      "categoryId": "machine-learning",
+      "importance": "medium",
       "prerequisites": [
-        "feature-engineering",
-        "probability-basics"
+        "exploratory-data-analysis"
       ],
-      "estimatedMinutes": null,
       "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningPhase": 1,
+      "learningOrder": 5,
       "tags": [
-        "data-science",
         "machine-learning",
-        "supervised-learning"
+        "ml",
+        "concepts",
+        "supervised",
+        "unsupervised"
       ],
-      "description": "",
+      "description": "Explain what machine learning is, its types (supervised, unsupervised, reinforcement), common use cases, and the basic ML workflow (data prep, model training, evaluation).",
       "keywords": [],
       "linkedConcepts": [
-        "feature-engineering",
-        "probability-basics",
-        "overfitting-underfitting",
-        "model-selection"
-      ]
+        "exploratory-data-analysis",
+        "supervised-learning-regression",
+        "unsupervised-learning-clustering"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
     },
     {
-      "id": "what-is-data-science",
-      "title": "What is Data Science",
-      "displayTitle": "What is Data Science",
-      "noteUrl": "/note/data-science/concepts/what-is-data-science",
-      "filePath": "data-science/concepts/what-is-data-science.md",
-      "category": "Foundations",
-      "subcategory": null,
+      "id": "supervised-learning-regression",
+      "title": "Supervised Learning: Regression Models",
+      "displayTitle": "Supervised Learning: Regression Models",
+      "noteUrl": "/note/data-science/supervised-learning-regression.md",
+      "filePath": "data_science/supervised-learning-regression.md",
+      "category": "Supervised Learning",
+      "categoryId": "supervised-learning",
       "importance": "high",
-      "position": null,
-      "learningPhase": 0,
-      "learningOrder": 1,
-      "prerequisites": [],
-      "estimatedMinutes": null,
-      "difficulty": "medium",
-      "tags": [
-        "data-science",
-        "foundations",
-        "introduction"
+      "prerequisites": [
+        "introduction-to-machine-learning"
       ],
-      "description": "",
+      "difficulty": "hard",
+      "difficultyLevel": 4,
+      "estimatedMinutes": 150,
+      "learningPhase": 2,
+      "learningOrder": 7,
+      "tags": [
+        "supervised-learning",
+        "regression",
+        "linear-regression",
+        "model-evaluation"
+      ],
+      "description": "Focus on Linear Regression. Explain the concept, implementation using scikit-learn, and evaluation metrics (MAE, MSE, R-squared). Discuss assumptions and limitations.",
       "keywords": [],
       "linkedConcepts": [
-        "problem-framing",
-        "data-collection",
-        "data-cleaning",
-        "feature-engineering",
-        "descriptive-statistics",
-        "probability-basics"
-      ]
+        "introduction-to-machine-learning",
+        "supervised-learning-classification"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "supervised-learning-classification",
+      "title": "Supervised Learning: Classification Models",
+      "displayTitle": "Supervised Learning: Classification Models",
+      "noteUrl": "/note/data-science/supervised-learning-classification.md",
+      "filePath": "data_science/supervised-learning-classification.md",
+      "category": "Supervised Learning",
+      "categoryId": "supervised-learning",
+      "importance": "high",
+      "prerequisites": [
+        "supervised-learning-regression"
+      ],
+      "difficulty": "hard",
+      "difficultyLevel": 4,
+      "estimatedMinutes": 180,
+      "learningPhase": 2,
+      "learningOrder": 8,
+      "tags": [
+        "supervised-learning",
+        "classification",
+        "logistic-regression",
+        "decision-trees",
+        "model-evaluation"
+      ],
+      "description": "Introduce Logistic Regression and Decision Trees for classification. Cover concepts, scikit-learn implementation, and evaluation metrics (accuracy, precision, recall, F1-score, confusion matrix).",
+      "keywords": [],
+      "linkedConcepts": [
+        "model-evaluation-and-selection",
+        "supervised-learning-regression"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "unsupervised-learning-clustering",
+      "title": "Unsupervised Learning: Clustering",
+      "displayTitle": "Unsupervised Learning: Clustering",
+      "noteUrl": "/note/data-science/unsupervised-learning-clustering.md",
+      "filePath": "data_science/unsupervised-learning-clustering.md",
+      "category": "Unsupervised Learning",
+      "categoryId": "unsupervised-learning",
+      "importance": "medium",
+      "prerequisites": [
+        "introduction-to-machine-learning"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 120,
+      "learningPhase": 1,
+      "learningOrder": 6,
+      "tags": [
+        "unsupervised-learning",
+        "clustering",
+        "k-means"
+      ],
+      "description": "Explain the concept of unsupervised learning and introduce K-Means clustering. Cover the algorithm, how to choose K, and basic interpretation of clusters.",
+      "keywords": [],
+      "linkedConcepts": [
+        "introduction-to-machine-learning",
+        "model-evaluation-and-selection"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "model-evaluation-and-selection",
+      "title": "Advanced Model Evaluation and Selection",
+      "displayTitle": "Advanced Model Evaluation and Selection",
+      "noteUrl": "/note/data-science/model-evaluation-and-selection.md",
+      "filePath": "data_science/model-evaluation-and-selection.md",
+      "category": "Model Evaluation",
+      "categoryId": "model-evaluation",
+      "importance": "high",
+      "prerequisites": [
+        "supervised-learning-classification",
+        "unsupervised-learning-clustering"
+      ],
+      "difficulty": "hard",
+      "difficultyLevel": 4,
+      "estimatedMinutes": 120,
+      "learningPhase": 2,
+      "learningOrder": 9,
+      "tags": [
+        "model-evaluation",
+        "cross-validation",
+        "overfitting",
+        "hyperparameter-tuning"
+      ],
+      "description": "Discuss concepts like overfitting, underfitting, bias-variance trade-off. Introduce cross-validation, basic hyperparameter tuning (Grid Search), and feature importance.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-storytelling-and-communication",
+        "supervised-learning-classification",
+        "unsupervised-learning-clustering"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "data-storytelling-and-communication",
+      "title": "Data Storytelling and Communication",
+      "displayTitle": "Data Storytelling and Communication",
+      "noteUrl": "/note/data-science/data-storytelling-and-communication.md",
+      "filePath": "data_science/data-storytelling-and-communication.md",
+      "category": "Communication",
+      "categoryId": "communication",
+      "importance": "medium",
+      "prerequisites": [
+        "exploratory-data-analysis",
+        "model-evaluation-and-selection"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 90,
+      "learningPhase": 1,
+      "learningOrder": 10,
+      "tags": [
+        "communication",
+        "storytelling",
+        "presentation",
+        "visualization-best-practices"
+      ],
+      "description": "Teach how to effectively communicate data insights. Focus on structuring a data story, choosing appropriate visualizations, and presenting findings clearly to non-technical audiences.",
+      "keywords": [],
+      "linkedConcepts": [
+        "exploratory-data-analysis",
+        "model-evaluation-and-selection",
+        "next-steps-in-data-science"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "next-steps-in-data-science",
+      "title": "Next Steps in Your Data Science Journey",
+      "displayTitle": "Next Steps in Your Data Science Journey",
+      "noteUrl": "/note/data-science/next-steps-in-data-science.md",
+      "filePath": "data_science/next-steps-in-data-science.md",
+      "category": "Tools and Practice",
+      "categoryId": "tools-and-practice",
+      "importance": "low",
+      "prerequisites": [
+        "data-storytelling-and-communication"
+      ],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningPhase": 0,
+      "learningOrder": 11,
+      "tags": [
+        "career",
+        "future-learning",
+        "ethics",
+        "project"
+      ],
+      "description": "Provide guidance on further learning paths (deep learning, big data, specialized domains), ethical considerations in data science, and advice on building a portfolio.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-storytelling-and-communication"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
     }
   ],
   "edges": [
     {
       "id": "edge-0",
-      "source": "data-collection",
-      "target": "data-cleaning",
+      "source": "introduction-to-data-science",
+      "target": "introduction-to-data",
       "type": "prerequisite",
-      "label": "前置知识",
+      "label": "Prerequisite",
       "strength": 1,
       "bidirectional": false
     },
     {
       "id": "edge-1",
-      "source": "data-cleaning",
-      "target": "feature-engineering",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
+      "source": "introduction-to-data",
+      "target": "data-cleaning-and-preprocessing",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
     },
     {
       "id": "edge-2",
-      "source": "data-cleaning",
-      "target": "descriptive-statistics",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
+      "source": "data-cleaning-and-preprocessing",
+      "target": "exploratory-data-analysis",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
     },
     {
       "id": "edge-3",
-      "source": "problem-framing",
-      "target": "data-collection",
+      "source": "exploratory-data-analysis",
+      "target": "introduction-to-machine-learning",
       "type": "prerequisite",
-      "label": "前置知识",
+      "label": "Prerequisite",
       "strength": 1,
       "bidirectional": false
     },
     {
       "id": "edge-4",
-      "source": "data-collection",
-      "target": "feature-engineering",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
+      "source": "introduction-to-machine-learning",
+      "target": "supervised-learning-regression",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
     },
     {
       "id": "edge-5",
-      "source": "data-collection",
-      "target": "model-selection",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
+      "source": "supervised-learning-regression",
+      "target": "supervised-learning-classification",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
     },
     {
       "id": "edge-6",
-      "source": "what-is-data-science",
-      "target": "descriptive-statistics",
+      "source": "introduction-to-machine-learning",
+      "target": "unsupervised-learning-clustering",
       "type": "prerequisite",
-      "label": "前置知识",
+      "label": "Prerequisite",
       "strength": 1,
       "bidirectional": false
     },
     {
       "id": "edge-7",
-      "source": "descriptive-statistics",
-      "target": "probability-basics",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
+      "source": "supervised-learning-classification",
+      "target": "model-evaluation-and-selection",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
     },
     {
       "id": "edge-8",
-      "source": "descriptive-statistics",
-      "target": "feature-engineering",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
+      "source": "unsupervised-learning-clustering",
+      "target": "model-evaluation-and-selection",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
     },
     {
       "id": "edge-9",
-      "source": "data-cleaning",
-      "target": "feature-engineering",
+      "source": "exploratory-data-analysis",
+      "target": "data-storytelling-and-communication",
       "type": "prerequisite",
-      "label": "前置知识",
+      "label": "Prerequisite",
       "strength": 1,
       "bidirectional": false
     },
     {
       "id": "edge-10",
-      "source": "feature-engineering",
-      "target": "supervised-learning",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
+      "source": "model-evaluation-and-selection",
+      "target": "data-storytelling-and-communication",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
     },
     {
       "id": "edge-11",
-      "source": "feature-engineering",
-      "target": "overfitting-underfitting",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
-    },
-    {
-      "id": "edge-12",
-      "source": "feature-engineering",
-      "target": "model-selection",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
-    },
-    {
-      "id": "edge-13",
-      "source": "supervised-learning",
-      "target": "model-selection",
+      "source": "data-storytelling-and-communication",
+      "target": "next-steps-in-data-science",
       "type": "prerequisite",
-      "label": "前置知识",
+      "label": "Prerequisite",
       "strength": 1,
       "bidirectional": false
-    },
-    {
-      "id": "edge-14",
-      "source": "overfitting-underfitting",
-      "target": "model-selection",
-      "type": "prerequisite",
-      "label": "前置知识",
-      "strength": 1,
-      "bidirectional": false
-    },
-    {
-      "id": "edge-15",
-      "source": "model-selection",
-      "target": "probability-basics",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
-    },
-    {
-      "id": "edge-16",
-      "source": "model-selection",
-      "target": "problem-framing",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
-    },
-    {
-      "id": "edge-17",
-      "source": "supervised-learning",
-      "target": "overfitting-underfitting",
-      "type": "prerequisite",
-      "label": "前置知识",
-      "strength": 1,
-      "bidirectional": false
-    },
-    {
-      "id": "edge-18",
-      "source": "overfitting-underfitting",
-      "target": "probability-basics",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
-    },
-    {
-      "id": "edge-19",
-      "source": "descriptive-statistics",
-      "target": "probability-basics",
-      "type": "prerequisite",
-      "label": "前置知识",
-      "strength": 1,
-      "bidirectional": false
-    },
-    {
-      "id": "edge-20",
-      "source": "probability-basics",
-      "target": "supervised-learning",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
-    },
-    {
-      "id": "edge-21",
-      "source": "what-is-data-science",
-      "target": "problem-framing",
-      "type": "prerequisite",
-      "label": "前置知识",
-      "strength": 1,
-      "bidirectional": false
-    },
-    {
-      "id": "edge-22",
-      "source": "problem-framing",
-      "target": "supervised-learning",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
-    },
-    {
-      "id": "edge-23",
-      "source": "feature-engineering",
-      "target": "supervised-learning",
-      "type": "prerequisite",
-      "label": "前置知识",
-      "strength": 1,
-      "bidirectional": false
-    },
-    {
-      "id": "edge-24",
-      "source": "probability-basics",
-      "target": "supervised-learning",
-      "type": "prerequisite",
-      "label": "前置知识",
-      "strength": 1,
-      "bidirectional": false
-    },
-    {
-      "id": "edge-25",
-      "source": "what-is-data-science",
-      "target": "data-collection",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
-    },
-    {
-      "id": "edge-26",
-      "source": "what-is-data-science",
-      "target": "data-cleaning",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
-    },
-    {
-      "id": "edge-27",
-      "source": "what-is-data-science",
-      "target": "feature-engineering",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
-    },
-    {
-      "id": "edge-28",
-      "source": "what-is-data-science",
-      "target": "probability-basics",
-      "type": "related",
-      "label": "相关概念",
-      "strength": 0.7,
-      "bidirectional": true
     }
   ],
+  "prerequisiteEdges": [
+    {
+      "id": "edge-0",
+      "source": "introduction-to-data-science",
+      "target": "introduction-to-data",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-1",
+      "source": "introduction-to-data",
+      "target": "data-cleaning-and-preprocessing",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-2",
+      "source": "data-cleaning-and-preprocessing",
+      "target": "exploratory-data-analysis",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-3",
+      "source": "exploratory-data-analysis",
+      "target": "introduction-to-machine-learning",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-4",
+      "source": "introduction-to-machine-learning",
+      "target": "supervised-learning-regression",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-5",
+      "source": "supervised-learning-regression",
+      "target": "supervised-learning-classification",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-6",
+      "source": "introduction-to-machine-learning",
+      "target": "unsupervised-learning-clustering",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-7",
+      "source": "supervised-learning-classification",
+      "target": "model-evaluation-and-selection",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-8",
+      "source": "unsupervised-learning-clustering",
+      "target": "model-evaluation-and-selection",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-9",
+      "source": "exploratory-data-analysis",
+      "target": "data-storytelling-and-communication",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-10",
+      "source": "model-evaluation-and-selection",
+      "target": "data-storytelling-and-communication",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-11",
+      "source": "data-storytelling-and-communication",
+      "target": "next-steps-in-data-science",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    }
+  ],
+  "networkEdges": [],
+  "learningPath": {
+    "ordered": [
+      "introduction-to-data-science",
+      "introduction-to-data",
+      "data-cleaning-and-preprocessing",
+      "exploratory-data-analysis",
+      "introduction-to-machine-learning",
+      "unsupervised-learning-clustering",
+      "supervised-learning-regression",
+      "supervised-learning-classification",
+      "model-evaluation-and-selection",
+      "data-storytelling-and-communication",
+      "next-steps-in-data-science"
+    ],
+    "layers": [
+      [
+        "introduction-to-data-science"
+      ],
+      [
+        "introduction-to-data"
+      ],
+      [
+        "data-cleaning-and-preprocessing"
+      ],
+      [
+        "exploratory-data-analysis"
+      ],
+      [
+        "introduction-to-machine-learning"
+      ],
+      [
+        "unsupervised-learning-clustering",
+        "supervised-learning-regression"
+      ],
+      [
+        "supervised-learning-classification"
+      ],
+      [
+        "model-evaluation-and-selection"
+      ],
+      [
+        "data-storytelling-and-communication"
+      ],
+      [
+        "next-steps-in-data-science"
+      ]
+    ],
+    "roots": [
+      "introduction-to-data-science"
+    ],
+    "hasCycle": false,
+    "cycleNodes": [],
+    "warnings": []
+  },
   "layouts": {
     "radial": {
       "centerX": 500,
@@ -703,6 +817,13 @@
       "showPrerequisites": true,
       "showEstimatedTime": true,
       "groupByPhase": true
+    },
+    "network": {
+      "defaultLayout": "radial",
+      "edgeMetric": "weight",
+      "edgeWeightField": "weight",
+      "nodeMetric": "degree",
+      "nodeSizeField": "networkSize"
     }
   }
 }

@@ -1,0 +1,2456 @@
+{
+  "meta": {
+    "subjectId": "all",
+    "subjectName": "All Subjects",
+    "version": "2.2.0",
+    "lastGenerated": "2026-03-17T00:25:36.338Z",
+    "nodeCount": 28,
+    "edgeCount": 29,
+    "prerequisiteEdgeCount": 38,
+    "networkEdgeCount": 29,
+    "unresolvedWikiTargets": 0,
+    "view": "network",
+    "networkScope": "global",
+    "focusSubject": "python"
+  },
+  "categories": [
+    {
+      "id": "subject-data-science",
+      "name": "Data Science Concepts",
+      "displayName": "Data Science Concepts",
+      "color": "#74D3AE",
+      "order": 1,
+      "description": "",
+      "subject": "data-science",
+      "nodes": [
+        "data-science/introduction-to-data-science",
+        "data-science/introduction-to-data",
+        "data-science/data-cleaning-and-preprocessing",
+        "data-science/exploratory-data-analysis",
+        "data-science/introduction-to-machine-learning",
+        "data-science/supervised-learning-regression",
+        "data-science/supervised-learning-classification",
+        "data-science/unsupervised-learning-clustering",
+        "data-science/model-evaluation-and-selection",
+        "data-science/data-storytelling-and-communication",
+        "data-science/next-steps-in-data-science"
+      ]
+    },
+    {
+      "id": "subject-python",
+      "name": "Python Concepts",
+      "displayName": "Python Concepts",
+      "color": "#B18CFF",
+      "order": 2,
+      "description": "",
+      "subject": "python",
+      "nodes": [
+        "python/introduction-to-python",
+        "python/python-basics-and-variables",
+        "python/operators",
+        "python/input-and-output",
+        "python/conditional-statements",
+        "python/loops",
+        "python/lists",
+        "python/tuples",
+        "python/dictionaries",
+        "python/sets",
+        "python/functions",
+        "python/modules-and-packages",
+        "python/file-io",
+        "python/error-handling",
+        "python/basic-object-oriented-programming",
+        "python/virtual-environments-and-pip",
+        "python/building-a-simple-project"
+      ]
+    }
+  ],
+  "learningPhases": [
+    {
+      "phase": 0,
+      "name": "Foundations",
+      "description": "Getting started and fundamentals",
+      "estimatedHours": 0
+    },
+    {
+      "phase": 1,
+      "name": "Core Skills",
+      "description": "Main concepts and workflows",
+      "estimatedHours": 0
+    },
+    {
+      "phase": 2,
+      "name": "Advanced Practice",
+      "description": "Complex usage and integration",
+      "estimatedHours": 0
+    }
+  ],
+  "nodes": [
+    {
+      "id": "python/basic-object-oriented-programming",
+      "title": "Introduction to Object-Oriented Programming (OOP)",
+      "displayTitle": "Introduction to Object-Oriented Programming (OOP)",
+      "noteUrl": "/note/python/basic-object-oriented-programming.md",
+      "filePath": "python/basic-object-oriented-programming.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "basic-object-oriented-programming",
+      "importance": "high",
+      "prerequisites": [
+        "python/functions"
+      ],
+      "difficulty": "hard",
+      "difficultyLevel": 4,
+      "estimatedMinutes": 90,
+      "learningPhase": 2,
+      "learningOrder": 24,
+      "tags": [
+        "oop",
+        "classes",
+        "objects",
+        "methods",
+        "attributes"
+      ],
+      "description": "Provide a gentle introduction to OOP concepts: classes, objects, attributes, and methods. Demonstrate creating a simple class with an `__init__` method.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/functions"
+      ],
+      "degree": 1,
+      "weightedDegree": 6,
+      "networkSize": 48
+    },
+    {
+      "id": "python/building-a-simple-project",
+      "title": "Project: Command-Line To-Do List Application",
+      "displayTitle": "Project: Command-Line To-Do List Application",
+      "noteUrl": "/note/python/building-a-simple-project.md",
+      "filePath": "python/building-a-simple-project.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "building-a-simple-project",
+      "importance": "high",
+      "prerequisites": [
+        "python/input-and-output",
+        "python/conditional-statements",
+        "python/loops",
+        "python/lists",
+        "python/dictionaries",
+        "python/functions",
+        "python/file-io",
+        "python/error-handling"
+      ],
+      "difficulty": "hard",
+      "difficultyLevel": 4,
+      "estimatedMinutes": 120,
+      "learningPhase": 2,
+      "learningOrder": 28,
+      "tags": [
+        "project",
+        "application",
+        "review",
+        "practice"
+      ],
+      "description": "Guide students through building a simple command-line to-do list application that can add, view, mark as complete, and save/load tasks from a file. This project should integrate many previously learned concepts.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/conditional-statements",
+        "python/dictionaries",
+        "python/error-handling",
+        "python/file-io",
+        "python/functions",
+        "python/input-and-output",
+        "python/lists",
+        "python/loops"
+      ],
+      "degree": 6,
+      "weightedDegree": 16,
+      "networkSize": 88
+    },
+    {
+      "id": "python/conditional-statements",
+      "title": "Conditional Statements (if, elif, else)",
+      "displayTitle": "Conditional Statements (if, elif, else)",
+      "noteUrl": "/note/python/conditional-statements.md",
+      "filePath": "python/conditional-statements.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "conditional-statements",
+      "importance": "medium",
+      "prerequisites": [
+        "python/operators",
+        "python/input-and-output"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 60,
+      "learningPhase": 1,
+      "learningOrder": 8,
+      "tags": [
+        "control-flow",
+        "conditionals",
+        "if",
+        "else"
+      ],
+      "description": "Introduce `if`, `elif`, and `else` statements. Cover nested conditionals and practical examples like decision-making programs.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/supervised-learning-classification",
+        "python/building-a-simple-project",
+        "python/input-and-output",
+        "python/loops",
+        "python/operators"
+      ],
+      "degree": 4,
+      "weightedDegree": 9,
+      "networkSize": 72
+    },
+    {
+      "id": "python/dictionaries",
+      "title": "Data Structure: Dictionaries",
+      "displayTitle": "Data Structure: Dictionaries",
+      "noteUrl": "/note/python/dictionaries.md",
+      "filePath": "python/dictionaries.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "dictionaries",
+      "importance": "medium",
+      "prerequisites": [
+        "python/lists"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 75,
+      "learningPhase": 1,
+      "learningOrder": 16,
+      "tags": [
+        "data-structures",
+        "dictionaries",
+        "key-value"
+      ],
+      "description": "Introduce dictionaries: creation, accessing values by keys, adding/modifying entries, and common dictionary methods. Explain key-value pairs.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/building-a-simple-project",
+        "python/functions",
+        "python/lists",
+        "python/sets",
+        "python/tuples"
+      ],
+      "degree": 5,
+      "weightedDegree": 21,
+      "networkSize": 80
+    },
+    {
+      "id": "python/error-handling",
+      "title": "Error Handling (try-except)",
+      "displayTitle": "Error Handling (try-except)",
+      "noteUrl": "/note/python/error-handling.md",
+      "filePath": "python/error-handling.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "error-handling",
+      "importance": "medium",
+      "prerequisites": [
+        "python/file-io"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 60,
+      "learningPhase": 1,
+      "learningOrder": 27,
+      "tags": [
+        "error-handling",
+        "exceptions",
+        "try-except"
+      ],
+      "description": "Introduce `try`, `except`, `else`, and `finally` blocks. Explain common types of errors and how to handle them gracefully.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/building-a-simple-project",
+        "python/file-io"
+      ],
+      "degree": 1,
+      "weightedDegree": 2,
+      "networkSize": 48
+    },
+    {
+      "id": "python/file-io",
+      "title": "File Input/Output",
+      "displayTitle": "File Input/Output",
+      "noteUrl": "/note/python/file-io.md",
+      "filePath": "python/file-io.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "file-io",
+      "importance": "medium",
+      "prerequisites": [
+        "python/functions"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 75,
+      "learningPhase": 1,
+      "learningOrder": 22,
+      "tags": [
+        "file-handling",
+        "io",
+        "read",
+        "write"
+      ],
+      "description": "Cover opening, reading from, and writing to text files. Introduce `with open()` statement for safe file handling. Discuss different modes ('r', 'w', 'a').",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/building-a-simple-project",
+        "python/error-handling",
+        "python/functions"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "python/functions",
+      "title": "Functions: Organizing Your Code",
+      "displayTitle": "Functions: Organizing Your Code",
+      "noteUrl": "/note/python/functions.md",
+      "filePath": "python/functions.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "functions",
+      "importance": "medium",
+      "prerequisites": [
+        "python/loops",
+        "python/lists",
+        "python/dictionaries"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 90,
+      "learningPhase": 1,
+      "learningOrder": 19,
+      "tags": [
+        "functions",
+        "code-organization",
+        "reusability"
+      ],
+      "description": "Cover defining functions, parameters, arguments, return values, default arguments, keyword arguments, and basic scope (local vs. global).",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/basic-object-oriented-programming",
+        "python/building-a-simple-project",
+        "python/dictionaries",
+        "python/file-io",
+        "python/input-and-output",
+        "python/lists",
+        "python/loops",
+        "python/modules-and-packages",
+        "python/tuples"
+      ],
+      "degree": 8,
+      "weightedDegree": 24,
+      "networkSize": 104
+    },
+    {
+      "id": "python/input-and-output",
+      "title": "User Input and Output",
+      "displayTitle": "User Input and Output",
+      "noteUrl": "/note/python/input-and-output.md",
+      "filePath": "python/input-and-output.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "input-and-output",
+      "importance": "low",
+      "prerequisites": [
+        "python/python-basics-and-variables"
+      ],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 30,
+      "learningPhase": 0,
+      "learningOrder": 5,
+      "tags": [
+        "input",
+        "output",
+        "print",
+        "console"
+      ],
+      "description": "Focus on the `print()` function (formatting output) and the `input()` function for getting user input. Emphasize type conversion for input.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/building-a-simple-project",
+        "python/conditional-statements",
+        "python/functions",
+        "python/python-basics-and-variables"
+      ],
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
+    },
+    {
+      "id": "python/introduction-to-python",
+      "title": "Introduction to Python and Setup",
+      "displayTitle": "Introduction to Python and Setup",
+      "noteUrl": "/note/python/introduction-to-python.md",
+      "filePath": "python/introduction-to-python.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "introduction-to-python",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 45,
+      "learningPhase": 0,
+      "learningOrder": 1,
+      "tags": [
+        "introduction",
+        "setup",
+        "basics"
+      ],
+      "description": "Explain what Python is, its uses, and guide users through installing Python and a suitable IDE (like VS Code) or using an online interpreter. Cover 'Hello, World!'.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/introduction-to-machine-learning",
+        "python/python-basics-and-variables"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "python/lists",
+      "title": "Data Structure: Lists",
+      "displayTitle": "Data Structure: Lists",
+      "noteUrl": "/note/python/lists.md",
+      "filePath": "python/lists.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "lists",
+      "importance": "medium",
+      "prerequisites": [
+        "python/loops"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningPhase": 1,
+      "learningOrder": 12,
+      "tags": [
+        "data-structures",
+        "lists",
+        "sequences"
+      ],
+      "description": "Introduce lists: creation, accessing elements (indexing, slicing), modifying, adding/removing elements, and common list methods. Emphasize mutability.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/building-a-simple-project",
+        "python/dictionaries",
+        "python/functions",
+        "python/loops",
+        "python/operators",
+        "python/python-basics-and-variables",
+        "python/sets",
+        "python/tuples"
+      ],
+      "degree": 8,
+      "weightedDegree": 33,
+      "networkSize": 104
+    },
+    {
+      "id": "python/loops",
+      "title": "Loops (for and while)",
+      "displayTitle": "Loops (for and while)",
+      "noteUrl": "/note/python/loops.md",
+      "filePath": "python/loops.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "loops",
+      "importance": "medium",
+      "prerequisites": [
+        "python/conditional-statements"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningPhase": 1,
+      "learningOrder": 10,
+      "tags": [
+        "control-flow",
+        "loops",
+        "for",
+        "while"
+      ],
+      "description": "Explain `for` loops (with `range()`) and `while` loops. Cover `break` and `continue` statements. Provide examples for iteration.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/building-a-simple-project",
+        "python/conditional-statements",
+        "python/functions",
+        "python/lists"
+      ],
+      "degree": 4,
+      "weightedDegree": 6,
+      "networkSize": 72
+    },
+    {
+      "id": "python/modules-and-packages",
+      "title": "Modules and Packages: Reusing Code",
+      "displayTitle": "Modules and Packages: Reusing Code",
+      "noteUrl": "/note/python/modules-and-packages.md",
+      "filePath": "python/modules-and-packages.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "modules-and-packages",
+      "importance": "medium",
+      "prerequisites": [
+        "python/functions"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 60,
+      "learningPhase": 1,
+      "learningOrder": 21,
+      "tags": [
+        "modules",
+        "packages",
+        "import",
+        "standard-library"
+      ],
+      "description": "Explain how to import and use modules. Introduce common built-in modules (e.g., `math`, `random`). Briefly touch upon creating simple custom modules.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/functions",
+        "python/virtual-environments-and-pip"
+      ],
+      "degree": 1,
+      "weightedDegree": 10,
+      "networkSize": 48
+    },
+    {
+      "id": "python/operators",
+      "title": "Operators in Python",
+      "displayTitle": "Operators in Python",
+      "noteUrl": "/note/python/operators.md",
+      "filePath": "python/operators.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "operators",
+      "importance": "medium",
+      "prerequisites": [
+        "python/python-basics-and-variables"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 45,
+      "learningPhase": 1,
+      "learningOrder": 6,
+      "tags": [
+        "operators",
+        "arithmetic",
+        "comparison",
+        "logical"
+      ],
+      "description": "Explain arithmetic, assignment, comparison, logical, identity, and membership operators with practical examples.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/conditional-statements",
+        "python/lists",
+        "python/python-basics-and-variables",
+        "python/sets"
+      ],
+      "degree": 3,
+      "weightedDegree": 5,
+      "networkSize": 64
+    },
+    {
+      "id": "python/python-basics-and-variables",
+      "title": "Basic Syntax, Variables, and Data Types",
+      "displayTitle": "Basic Syntax, Variables, and Data Types",
+      "noteUrl": "/note/python/python-basics-and-variables.md",
+      "filePath": "python/python-basics-and-variables.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "python-basics-and-variables",
+      "importance": "low",
+      "prerequisites": [
+        "python/introduction-to-python"
+      ],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningPhase": 0,
+      "learningOrder": 4,
+      "tags": [
+        "syntax",
+        "variables",
+        "data-types",
+        "basics"
+      ],
+      "description": "Cover basic syntax rules, comments, declaring variables, and fundamental data types: integers, floats, strings, and booleans. Explain type() function.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/input-and-output",
+        "python/introduction-to-python",
+        "python/lists",
+        "python/operators"
+      ],
+      "degree": 2,
+      "weightedDegree": 5,
+      "networkSize": 56
+    },
+    {
+      "id": "python/sets",
+      "title": "Data Structure: Sets",
+      "displayTitle": "Data Structure: Sets",
+      "noteUrl": "/note/python/sets.md",
+      "filePath": "python/sets.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "sets",
+      "importance": "medium",
+      "prerequisites": [
+        "python/dictionaries"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 45,
+      "learningPhase": 1,
+      "learningOrder": 18,
+      "tags": [
+        "data-structures",
+        "sets",
+        "unique-elements"
+      ],
+      "description": "Explain sets: creation, adding/removing elements, and set operations (union, intersection, difference). Emphasize uniqueness and unordered nature.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/dictionaries",
+        "python/lists",
+        "python/operators",
+        "python/tuples",
+        "python/virtual-environments-and-pip"
+      ],
+      "degree": 5,
+      "weightedDegree": 10,
+      "networkSize": 80
+    },
+    {
+      "id": "python/tuples",
+      "title": "Data Structure: Tuples",
+      "displayTitle": "Data Structure: Tuples",
+      "noteUrl": "/note/python/tuples.md",
+      "filePath": "python/tuples.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "tuples",
+      "importance": "medium",
+      "prerequisites": [
+        "python/lists"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 45,
+      "learningPhase": 1,
+      "learningOrder": 15,
+      "tags": [
+        "data-structures",
+        "tuples",
+        "sequences"
+      ],
+      "description": "Explain tuples as immutable sequences. Cover creation, accessing elements, and when to use tuples instead of lists.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/dictionaries",
+        "python/functions",
+        "python/lists",
+        "python/sets"
+      ],
+      "degree": 4,
+      "weightedDegree": 19,
+      "networkSize": 72
+    },
+    {
+      "id": "python/virtual-environments-and-pip",
+      "title": "Virtual Environments and Pip",
+      "displayTitle": "Virtual Environments and Pip",
+      "noteUrl": "/note/python/virtual-environments-and-pip.md",
+      "filePath": "python/virtual-environments-and-pip.md",
+      "category": "Python Concepts",
+      "categoryId": "subject-python",
+      "subject": "python",
+      "clusterId": "subject-python",
+      "clusterLabel": "Python",
+      "localSlug": "virtual-environments-and-pip",
+      "importance": "medium",
+      "prerequisites": [
+        "python/modules-and-packages"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 45,
+      "learningPhase": 1,
+      "learningOrder": 26,
+      "tags": [
+        "tools",
+        "dependencies",
+        "pip",
+        "virtualenv"
+      ],
+      "description": "Explain the importance of virtual environments. Guide users through creating and activating a virtual environment. Introduce `pip` for installing external packages.",
+      "keywords": [],
+      "linkedConcepts": [
+        "python/modules-and-packages",
+        "python/sets"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "data-science/data-cleaning-and-preprocessing",
+      "title": "Data Cleaning and Preprocessing Techniques",
+      "displayTitle": "Data Cleaning and Preprocessing Techniques",
+      "noteUrl": "/note/data-science/data-cleaning-and-preprocessing.md",
+      "filePath": "data_science/data-cleaning-and-preprocessing.md",
+      "category": "Data Science Concepts",
+      "categoryId": "subject-data-science",
+      "subject": "data-science",
+      "clusterId": "subject-data-science",
+      "clusterLabel": "Data Science",
+      "localSlug": "data-cleaning-and-preprocessing",
+      "importance": "medium",
+      "prerequisites": [
+        "data-science/introduction-to-data"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 150,
+      "learningPhase": 1,
+      "learningOrder": 7,
+      "tags": [
+        "data-cleaning",
+        "preprocessing",
+        "missing-data",
+        "outliers",
+        "feature-engineering"
+      ],
+      "description": "Address common data quality issues: handling missing values, dealing with outliers, data type conversion, encoding categorical variables (one-hot, label encoding), and feature scaling.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/exploratory-data-analysis",
+        "data-science/introduction-to-data"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "data-science/data-storytelling-and-communication",
+      "title": "Data Storytelling and Communication",
+      "displayTitle": "Data Storytelling and Communication",
+      "noteUrl": "/note/data-science/data-storytelling-and-communication.md",
+      "filePath": "data_science/data-storytelling-and-communication.md",
+      "category": "Data Science Concepts",
+      "categoryId": "subject-data-science",
+      "subject": "data-science",
+      "clusterId": "subject-data-science",
+      "clusterLabel": "Data Science",
+      "localSlug": "data-storytelling-and-communication",
+      "importance": "medium",
+      "prerequisites": [
+        "data-science/exploratory-data-analysis",
+        "data-science/model-evaluation-and-selection"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 90,
+      "learningPhase": 1,
+      "learningOrder": 23,
+      "tags": [
+        "communication",
+        "storytelling",
+        "presentation",
+        "visualization-best-practices"
+      ],
+      "description": "Teach how to effectively communicate data insights. Focus on structuring a data story, choosing appropriate visualizations, and presenting findings clearly to non-technical audiences.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/exploratory-data-analysis",
+        "data-science/model-evaluation-and-selection",
+        "data-science/next-steps-in-data-science"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "data-science/exploratory-data-analysis",
+      "title": "Exploratory Data Analysis (EDA)",
+      "displayTitle": "Exploratory Data Analysis (EDA)",
+      "noteUrl": "/note/data-science/exploratory-data-analysis.md",
+      "filePath": "data_science/exploratory-data-analysis.md",
+      "category": "Data Science Concepts",
+      "categoryId": "subject-data-science",
+      "subject": "data-science",
+      "clusterId": "subject-data-science",
+      "clusterLabel": "Data Science",
+      "localSlug": "exploratory-data-analysis",
+      "importance": "medium",
+      "prerequisites": [
+        "data-science/data-cleaning-and-preprocessing"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 180,
+      "learningPhase": 1,
+      "learningOrder": 9,
+      "tags": [
+        "eda",
+        "visualization",
+        "statistics",
+        "matplotlib",
+        "seaborn"
+      ],
+      "description": "Teach how to summarize data using descriptive statistics and visualize data using Matplotlib and Seaborn. Cover common plots (histograms, scatter plots, box plots, bar charts) to uncover patterns and insights.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/data-cleaning-and-preprocessing",
+        "data-science/data-storytelling-and-communication",
+        "data-science/introduction-to-machine-learning"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "data-science/introduction-to-data",
+      "title": "Understanding Data: Types and Sources",
+      "displayTitle": "Understanding Data: Types and Sources",
+      "noteUrl": "/note/data-science/introduction-to-data.md",
+      "filePath": "data_science/introduction-to-data.md",
+      "category": "Data Science Concepts",
+      "categoryId": "subject-data-science",
+      "subject": "data-science",
+      "clusterId": "subject-data-science",
+      "clusterLabel": "Data Science",
+      "localSlug": "introduction-to-data",
+      "importance": "low",
+      "prerequisites": [
+        "data-science/introduction-to-data-science"
+      ],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningPhase": 0,
+      "learningOrder": 3,
+      "tags": [
+        "data",
+        "concepts",
+        "types"
+      ],
+      "description": "Explain different types of data (numerical, categorical, ordinal, nominal), data sources (databases, APIs, files), and basic data terminology.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/data-cleaning-and-preprocessing",
+        "data-science/introduction-to-data-science"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "data-science/introduction-to-data-science",
+      "title": "Introduction to Data Science",
+      "displayTitle": "Introduction to Data Science",
+      "noteUrl": "/note/data-science/introduction-to-data-science.md",
+      "filePath": "data_science/introduction-to-data-science.md",
+      "category": "Data Science Concepts",
+      "categoryId": "subject-data-science",
+      "subject": "data-science",
+      "clusterId": "subject-data-science",
+      "clusterLabel": "Data Science",
+      "localSlug": "introduction-to-data-science",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningPhase": 0,
+      "learningOrder": 2,
+      "tags": [
+        "introduction",
+        "overview",
+        "career"
+      ],
+      "description": "Define data science, its importance, common applications, and the typical roles within the field. Discuss the data science lifecycle.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/introduction-to-data"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "data-science/introduction-to-machine-learning",
+      "title": "Introduction to Machine Learning",
+      "displayTitle": "Introduction to Machine Learning",
+      "noteUrl": "/note/data-science/introduction-to-machine-learning.md",
+      "filePath": "data_science/introduction-to-machine-learning.md",
+      "category": "Data Science Concepts",
+      "categoryId": "subject-data-science",
+      "subject": "data-science",
+      "clusterId": "subject-data-science",
+      "clusterLabel": "Data Science",
+      "localSlug": "introduction-to-machine-learning",
+      "importance": "medium",
+      "prerequisites": [
+        "data-science/exploratory-data-analysis"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningPhase": 1,
+      "learningOrder": 11,
+      "tags": [
+        "machine-learning",
+        "ml",
+        "concepts",
+        "supervised",
+        "unsupervised"
+      ],
+      "description": "Explain what machine learning is, its types (supervised, unsupervised, reinforcement), common use cases, and the basic ML workflow (data prep, model training, evaluation).",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/exploratory-data-analysis",
+        "data-science/supervised-learning-regression",
+        "data-science/unsupervised-learning-clustering",
+        "python/introduction-to-python"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "data-science/model-evaluation-and-selection",
+      "title": "Advanced Model Evaluation and Selection",
+      "displayTitle": "Advanced Model Evaluation and Selection",
+      "noteUrl": "/note/data-science/model-evaluation-and-selection.md",
+      "filePath": "data_science/model-evaluation-and-selection.md",
+      "category": "Data Science Concepts",
+      "categoryId": "subject-data-science",
+      "subject": "data-science",
+      "clusterId": "subject-data-science",
+      "clusterLabel": "Data Science",
+      "localSlug": "model-evaluation-and-selection",
+      "importance": "high",
+      "prerequisites": [
+        "data-science/supervised-learning-classification",
+        "data-science/unsupervised-learning-clustering"
+      ],
+      "difficulty": "hard",
+      "difficultyLevel": 4,
+      "estimatedMinutes": 120,
+      "learningPhase": 2,
+      "learningOrder": 20,
+      "tags": [
+        "model-evaluation",
+        "cross-validation",
+        "overfitting",
+        "hyperparameter-tuning"
+      ],
+      "description": "Discuss concepts like overfitting, underfitting, bias-variance trade-off. Introduce cross-validation, basic hyperparameter tuning (Grid Search), and feature importance.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/data-storytelling-and-communication",
+        "data-science/supervised-learning-classification",
+        "data-science/unsupervised-learning-clustering"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "data-science/next-steps-in-data-science",
+      "title": "Next Steps in Your Data Science Journey",
+      "displayTitle": "Next Steps in Your Data Science Journey",
+      "noteUrl": "/note/data-science/next-steps-in-data-science.md",
+      "filePath": "data_science/next-steps-in-data-science.md",
+      "category": "Data Science Concepts",
+      "categoryId": "subject-data-science",
+      "subject": "data-science",
+      "clusterId": "subject-data-science",
+      "clusterLabel": "Data Science",
+      "localSlug": "next-steps-in-data-science",
+      "importance": "low",
+      "prerequisites": [
+        "data-science/data-storytelling-and-communication"
+      ],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningPhase": 0,
+      "learningOrder": 25,
+      "tags": [
+        "career",
+        "future-learning",
+        "ethics",
+        "project"
+      ],
+      "description": "Provide guidance on further learning paths (deep learning, big data, specialized domains), ethical considerations in data science, and advice on building a portfolio.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/data-storytelling-and-communication"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "data-science/supervised-learning-classification",
+      "title": "Supervised Learning: Classification Models",
+      "displayTitle": "Supervised Learning: Classification Models",
+      "noteUrl": "/note/data-science/supervised-learning-classification.md",
+      "filePath": "data_science/supervised-learning-classification.md",
+      "category": "Data Science Concepts",
+      "categoryId": "subject-data-science",
+      "subject": "data-science",
+      "clusterId": "subject-data-science",
+      "clusterLabel": "Data Science",
+      "localSlug": "supervised-learning-classification",
+      "importance": "high",
+      "prerequisites": [
+        "data-science/supervised-learning-regression"
+      ],
+      "difficulty": "hard",
+      "difficultyLevel": 4,
+      "estimatedMinutes": 180,
+      "learningPhase": 2,
+      "learningOrder": 17,
+      "tags": [
+        "supervised-learning",
+        "classification",
+        "logistic-regression",
+        "decision-trees",
+        "model-evaluation"
+      ],
+      "description": "Introduce Logistic Regression and Decision Trees for classification. Cover concepts, scikit-learn implementation, and evaluation metrics (accuracy, precision, recall, F1-score, confusion matrix).",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/model-evaluation-and-selection",
+        "data-science/supervised-learning-regression",
+        "python/conditional-statements"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "data-science/supervised-learning-regression",
+      "title": "Supervised Learning: Regression Models",
+      "displayTitle": "Supervised Learning: Regression Models",
+      "noteUrl": "/note/data-science/supervised-learning-regression.md",
+      "filePath": "data_science/supervised-learning-regression.md",
+      "category": "Data Science Concepts",
+      "categoryId": "subject-data-science",
+      "subject": "data-science",
+      "clusterId": "subject-data-science",
+      "clusterLabel": "Data Science",
+      "localSlug": "supervised-learning-regression",
+      "importance": "high",
+      "prerequisites": [
+        "data-science/introduction-to-machine-learning"
+      ],
+      "difficulty": "hard",
+      "difficultyLevel": 4,
+      "estimatedMinutes": 150,
+      "learningPhase": 2,
+      "learningOrder": 14,
+      "tags": [
+        "supervised-learning",
+        "regression",
+        "linear-regression",
+        "model-evaluation"
+      ],
+      "description": "Focus on Linear Regression. Explain the concept, implementation using scikit-learn, and evaluation metrics (MAE, MSE, R-squared). Discuss assumptions and limitations.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/introduction-to-machine-learning",
+        "data-science/supervised-learning-classification"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    },
+    {
+      "id": "data-science/unsupervised-learning-clustering",
+      "title": "Unsupervised Learning: Clustering",
+      "displayTitle": "Unsupervised Learning: Clustering",
+      "noteUrl": "/note/data-science/unsupervised-learning-clustering.md",
+      "filePath": "data_science/unsupervised-learning-clustering.md",
+      "category": "Data Science Concepts",
+      "categoryId": "subject-data-science",
+      "subject": "data-science",
+      "clusterId": "subject-data-science",
+      "clusterLabel": "Data Science",
+      "localSlug": "unsupervised-learning-clustering",
+      "importance": "medium",
+      "prerequisites": [
+        "data-science/introduction-to-machine-learning"
+      ],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 120,
+      "learningPhase": 1,
+      "learningOrder": 13,
+      "tags": [
+        "unsupervised-learning",
+        "clustering",
+        "k-means"
+      ],
+      "description": "Explain the concept of unsupervised learning and introduce K-Means clustering. Cover the algorithm, how to choose K, and basic interpretation of clusters.",
+      "keywords": [],
+      "linkedConcepts": [
+        "data-science/introduction-to-machine-learning",
+        "data-science/model-evaluation-and-selection"
+      ],
+      "degree": 0,
+      "weightedDegree": 0,
+      "networkSize": 40
+    }
+  ],
+  "edges": [
+    {
+      "id": "network-edge-0",
+      "source": "data-science/introduction-to-machine-learning",
+      "target": "python/introduction-to-python",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-1",
+      "source": "data-science/supervised-learning-classification",
+      "target": "python/conditional-statements",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-2",
+      "source": "python/basic-object-oriented-programming",
+      "target": "python/functions",
+      "type": "related",
+      "label": "Related",
+      "strength": 6,
+      "frequency": 6,
+      "weight": 6,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-3",
+      "source": "python/building-a-simple-project",
+      "target": "python/conditional-statements",
+      "type": "related",
+      "label": "Related",
+      "strength": 2,
+      "frequency": 2,
+      "weight": 2,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-4",
+      "source": "python/building-a-simple-project",
+      "target": "python/dictionaries",
+      "type": "related",
+      "label": "Related",
+      "strength": 5,
+      "frequency": 5,
+      "weight": 5,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-5",
+      "source": "python/building-a-simple-project",
+      "target": "python/error-handling",
+      "type": "related",
+      "label": "Related",
+      "strength": 2,
+      "frequency": 2,
+      "weight": 2,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-6",
+      "source": "python/building-a-simple-project",
+      "target": "python/functions",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-7",
+      "source": "python/building-a-simple-project",
+      "target": "python/lists",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-8",
+      "source": "python/building-a-simple-project",
+      "target": "python/loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-9",
+      "source": "python/conditional-statements",
+      "target": "python/loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-10",
+      "source": "python/conditional-statements",
+      "target": "python/operators",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-11",
+      "source": "python/dictionaries",
+      "target": "python/functions",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-12",
+      "source": "python/dictionaries",
+      "target": "python/lists",
+      "type": "related",
+      "label": "Related",
+      "strength": 9,
+      "frequency": 9,
+      "weight": 9,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-13",
+      "source": "python/dictionaries",
+      "target": "python/sets",
+      "type": "related",
+      "label": "Related",
+      "strength": 2,
+      "frequency": 2,
+      "weight": 2,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-14",
+      "source": "python/dictionaries",
+      "target": "python/tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 4,
+      "frequency": 4,
+      "weight": 4,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-15",
+      "source": "python/functions",
+      "target": "python/input-and-output",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-16",
+      "source": "python/functions",
+      "target": "python/lists",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-17",
+      "source": "python/functions",
+      "target": "python/loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-18",
+      "source": "python/functions",
+      "target": "python/modules-and-packages",
+      "type": "related",
+      "label": "Related",
+      "strength": 10,
+      "frequency": 10,
+      "weight": 10,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-19",
+      "source": "python/functions",
+      "target": "python/tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-20",
+      "source": "python/input-and-output",
+      "target": "python/python-basics-and-variables",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-21",
+      "source": "python/lists",
+      "target": "python/loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-22",
+      "source": "python/lists",
+      "target": "python/operators",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-23",
+      "source": "python/lists",
+      "target": "python/python-basics-and-variables",
+      "type": "related",
+      "label": "Related",
+      "strength": 4,
+      "frequency": 4,
+      "weight": 4,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-24",
+      "source": "python/lists",
+      "target": "python/sets",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-25",
+      "source": "python/lists",
+      "target": "python/tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 11,
+      "frequency": 11,
+      "weight": 11,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-26",
+      "source": "python/operators",
+      "target": "python/sets",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-27",
+      "source": "python/sets",
+      "target": "python/tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-28",
+      "source": "python/sets",
+      "target": "python/virtual-environments-and-pip",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    }
+  ],
+  "prerequisiteEdges": [
+    {
+      "id": "edge-0",
+      "source": "data-science/introduction-to-data-science",
+      "target": "data-science/introduction-to-data",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-1",
+      "source": "data-science/introduction-to-data",
+      "target": "data-science/data-cleaning-and-preprocessing",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-2",
+      "source": "data-science/data-cleaning-and-preprocessing",
+      "target": "data-science/exploratory-data-analysis",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-3",
+      "source": "data-science/exploratory-data-analysis",
+      "target": "data-science/introduction-to-machine-learning",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-4",
+      "source": "data-science/introduction-to-machine-learning",
+      "target": "data-science/supervised-learning-regression",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-5",
+      "source": "data-science/supervised-learning-regression",
+      "target": "data-science/supervised-learning-classification",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-6",
+      "source": "data-science/introduction-to-machine-learning",
+      "target": "data-science/unsupervised-learning-clustering",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-7",
+      "source": "data-science/supervised-learning-classification",
+      "target": "data-science/model-evaluation-and-selection",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-8",
+      "source": "data-science/unsupervised-learning-clustering",
+      "target": "data-science/model-evaluation-and-selection",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-9",
+      "source": "data-science/exploratory-data-analysis",
+      "target": "data-science/data-storytelling-and-communication",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-10",
+      "source": "data-science/model-evaluation-and-selection",
+      "target": "data-science/data-storytelling-and-communication",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-11",
+      "source": "data-science/data-storytelling-and-communication",
+      "target": "data-science/next-steps-in-data-science",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-12",
+      "source": "python/introduction-to-python",
+      "target": "python/python-basics-and-variables",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-13",
+      "source": "python/python-basics-and-variables",
+      "target": "python/operators",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-14",
+      "source": "python/python-basics-and-variables",
+      "target": "python/input-and-output",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-15",
+      "source": "python/operators",
+      "target": "python/conditional-statements",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-16",
+      "source": "python/input-and-output",
+      "target": "python/conditional-statements",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-17",
+      "source": "python/conditional-statements",
+      "target": "python/loops",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-18",
+      "source": "python/loops",
+      "target": "python/lists",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-19",
+      "source": "python/lists",
+      "target": "python/tuples",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-20",
+      "source": "python/lists",
+      "target": "python/dictionaries",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-21",
+      "source": "python/dictionaries",
+      "target": "python/sets",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-22",
+      "source": "python/loops",
+      "target": "python/functions",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-23",
+      "source": "python/lists",
+      "target": "python/functions",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-24",
+      "source": "python/dictionaries",
+      "target": "python/functions",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-25",
+      "source": "python/functions",
+      "target": "python/modules-and-packages",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-26",
+      "source": "python/functions",
+      "target": "python/file-io",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-27",
+      "source": "python/file-io",
+      "target": "python/error-handling",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-28",
+      "source": "python/functions",
+      "target": "python/basic-object-oriented-programming",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-29",
+      "source": "python/modules-and-packages",
+      "target": "python/virtual-environments-and-pip",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-30",
+      "source": "python/input-and-output",
+      "target": "python/building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-31",
+      "source": "python/conditional-statements",
+      "target": "python/building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-32",
+      "source": "python/loops",
+      "target": "python/building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-33",
+      "source": "python/lists",
+      "target": "python/building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-34",
+      "source": "python/dictionaries",
+      "target": "python/building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-35",
+      "source": "python/functions",
+      "target": "python/building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-36",
+      "source": "python/file-io",
+      "target": "python/building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    },
+    {
+      "id": "edge-37",
+      "source": "python/error-handling",
+      "target": "python/building-a-simple-project",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "strength": 1,
+      "bidirectional": false
+    }
+  ],
+  "networkEdges": [
+    {
+      "id": "network-edge-0",
+      "source": "data-science/introduction-to-machine-learning",
+      "target": "python/introduction-to-python",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-1",
+      "source": "data-science/supervised-learning-classification",
+      "target": "python/conditional-statements",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-2",
+      "source": "python/basic-object-oriented-programming",
+      "target": "python/functions",
+      "type": "related",
+      "label": "Related",
+      "strength": 6,
+      "frequency": 6,
+      "weight": 6,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-3",
+      "source": "python/building-a-simple-project",
+      "target": "python/conditional-statements",
+      "type": "related",
+      "label": "Related",
+      "strength": 2,
+      "frequency": 2,
+      "weight": 2,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-4",
+      "source": "python/building-a-simple-project",
+      "target": "python/dictionaries",
+      "type": "related",
+      "label": "Related",
+      "strength": 5,
+      "frequency": 5,
+      "weight": 5,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-5",
+      "source": "python/building-a-simple-project",
+      "target": "python/error-handling",
+      "type": "related",
+      "label": "Related",
+      "strength": 2,
+      "frequency": 2,
+      "weight": 2,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-6",
+      "source": "python/building-a-simple-project",
+      "target": "python/functions",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-7",
+      "source": "python/building-a-simple-project",
+      "target": "python/lists",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-8",
+      "source": "python/building-a-simple-project",
+      "target": "python/loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-9",
+      "source": "python/conditional-statements",
+      "target": "python/loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-10",
+      "source": "python/conditional-statements",
+      "target": "python/operators",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-11",
+      "source": "python/dictionaries",
+      "target": "python/functions",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-12",
+      "source": "python/dictionaries",
+      "target": "python/lists",
+      "type": "related",
+      "label": "Related",
+      "strength": 9,
+      "frequency": 9,
+      "weight": 9,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-13",
+      "source": "python/dictionaries",
+      "target": "python/sets",
+      "type": "related",
+      "label": "Related",
+      "strength": 2,
+      "frequency": 2,
+      "weight": 2,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-14",
+      "source": "python/dictionaries",
+      "target": "python/tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 4,
+      "frequency": 4,
+      "weight": 4,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-15",
+      "source": "python/functions",
+      "target": "python/input-and-output",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-16",
+      "source": "python/functions",
+      "target": "python/lists",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-17",
+      "source": "python/functions",
+      "target": "python/loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-18",
+      "source": "python/functions",
+      "target": "python/modules-and-packages",
+      "type": "related",
+      "label": "Related",
+      "strength": 10,
+      "frequency": 10,
+      "weight": 10,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-19",
+      "source": "python/functions",
+      "target": "python/tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-20",
+      "source": "python/input-and-output",
+      "target": "python/python-basics-and-variables",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-21",
+      "source": "python/lists",
+      "target": "python/loops",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-22",
+      "source": "python/lists",
+      "target": "python/operators",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-23",
+      "source": "python/lists",
+      "target": "python/python-basics-and-variables",
+      "type": "related",
+      "label": "Related",
+      "strength": 4,
+      "frequency": 4,
+      "weight": 4,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-24",
+      "source": "python/lists",
+      "target": "python/sets",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-25",
+      "source": "python/lists",
+      "target": "python/tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 11,
+      "frequency": 11,
+      "weight": 11,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-26",
+      "source": "python/operators",
+      "target": "python/sets",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-27",
+      "source": "python/sets",
+      "target": "python/tuples",
+      "type": "related",
+      "label": "Related",
+      "strength": 3,
+      "frequency": 3,
+      "weight": 3,
+      "bidirectional": true,
+      "view": "network"
+    },
+    {
+      "id": "network-edge-28",
+      "source": "python/sets",
+      "target": "python/virtual-environments-and-pip",
+      "type": "related",
+      "label": "Related",
+      "strength": 1,
+      "frequency": 1,
+      "weight": 1,
+      "bidirectional": true,
+      "view": "network"
+    }
+  ],
+  "networkClusters": [
+    {
+      "id": "subject-data-science",
+      "label": "Data Science",
+      "subject": "data-science",
+      "color": "#74D3AE",
+      "nodeIds": [
+        "data-science/introduction-to-data-science",
+        "data-science/introduction-to-data",
+        "data-science/data-cleaning-and-preprocessing",
+        "data-science/exploratory-data-analysis",
+        "data-science/introduction-to-machine-learning",
+        "data-science/supervised-learning-regression",
+        "data-science/supervised-learning-classification",
+        "data-science/unsupervised-learning-clustering",
+        "data-science/model-evaluation-and-selection",
+        "data-science/data-storytelling-and-communication",
+        "data-science/next-steps-in-data-science"
+      ]
+    },
+    {
+      "id": "subject-python",
+      "label": "Python",
+      "subject": "python",
+      "color": "#B18CFF",
+      "nodeIds": [
+        "python/introduction-to-python",
+        "python/python-basics-and-variables",
+        "python/operators",
+        "python/input-and-output",
+        "python/conditional-statements",
+        "python/loops",
+        "python/lists",
+        "python/tuples",
+        "python/dictionaries",
+        "python/sets",
+        "python/functions",
+        "python/modules-and-packages",
+        "python/file-io",
+        "python/error-handling",
+        "python/basic-object-oriented-programming",
+        "python/virtual-environments-and-pip",
+        "python/building-a-simple-project"
+      ]
+    }
+  ],
+  "learningPath": {
+    "ordered": [
+      "python/introduction-to-python",
+      "data-science/introduction-to-data-science",
+      "data-science/introduction-to-data",
+      "python/python-basics-and-variables",
+      "python/input-and-output",
+      "python/operators",
+      "data-science/data-cleaning-and-preprocessing",
+      "python/conditional-statements",
+      "data-science/exploratory-data-analysis",
+      "python/loops",
+      "data-science/introduction-to-machine-learning",
+      "python/lists",
+      "data-science/unsupervised-learning-clustering",
+      "data-science/supervised-learning-regression",
+      "python/tuples",
+      "python/dictionaries",
+      "data-science/supervised-learning-classification",
+      "python/sets",
+      "python/functions",
+      "data-science/model-evaluation-and-selection",
+      "python/modules-and-packages",
+      "python/file-io",
+      "data-science/data-storytelling-and-communication",
+      "python/basic-object-oriented-programming",
+      "data-science/next-steps-in-data-science",
+      "python/virtual-environments-and-pip",
+      "python/error-handling",
+      "python/building-a-simple-project"
+    ],
+    "layers": [
+      [
+        "python/introduction-to-python",
+        "data-science/introduction-to-data-science"
+      ],
+      [
+        "data-science/introduction-to-data",
+        "python/python-basics-and-variables"
+      ],
+      [
+        "python/input-and-output",
+        "python/operators",
+        "data-science/data-cleaning-and-preprocessing"
+      ],
+      [
+        "python/conditional-statements",
+        "data-science/exploratory-data-analysis"
+      ],
+      [
+        "python/loops",
+        "data-science/introduction-to-machine-learning"
+      ],
+      [
+        "python/lists",
+        "data-science/unsupervised-learning-clustering",
+        "data-science/supervised-learning-regression"
+      ],
+      [
+        "python/tuples",
+        "python/dictionaries",
+        "data-science/supervised-learning-classification"
+      ],
+      [
+        "python/sets",
+        "python/functions",
+        "data-science/model-evaluation-and-selection"
+      ],
+      [
+        "python/modules-and-packages",
+        "python/file-io",
+        "data-science/data-storytelling-and-communication",
+        "python/basic-object-oriented-programming"
+      ],
+      [
+        "data-science/next-steps-in-data-science",
+        "python/virtual-environments-and-pip",
+        "python/error-handling"
+      ],
+      [
+        "python/building-a-simple-project"
+      ]
+    ],
+    "roots": [
+      "python/introduction-to-python",
+      "data-science/introduction-to-data-science"
+    ],
+    "hasCycle": false,
+    "cycleNodes": [],
+    "warnings": []
+  },
+  "layouts": {
+    "radial": {
+      "centerX": 500,
+      "centerY": 400,
+      "mainRadius": 300,
+      "subRadius": 150
+    },
+    "hierarchical": {
+      "direction": "TB",
+      "levelSeparation": 150,
+      "nodeSeparation": 100
+    }
+  },
+  "viewConfigs": {
+    "mindmap": {
+      "defaultLayout": "radial",
+      "showLabels": true,
+      "showEdges": true,
+      "nodeSize": {
+        "high": 80,
+        "medium": 60,
+        "low": 40
+      }
+    },
+    "learningPath": {
+      "defaultLayout": "hierarchical",
+      "showPrerequisites": true,
+      "showEstimatedTime": true,
+      "groupByPhase": true
+    },
+    "network": {
+      "defaultLayout": "radial",
+      "edgeMetric": "weight",
+      "edgeWeightField": "weight",
+      "nodeMetric": "degree",
+      "nodeSizeField": "networkSize",
+      "focusSubject": "python",
+      "focusNodeIds": [
+        "python/basic-object-oriented-programming",
+        "python/building-a-simple-project",
+        "python/conditional-statements",
+        "python/dictionaries",
+        "python/error-handling",
+        "python/file-io",
+        "python/functions",
+        "python/input-and-output",
+        "python/introduction-to-python",
+        "python/lists",
+        "python/loops",
+        "python/modules-and-packages",
+        "python/operators",
+        "python/python-basics-and-variables",
+        "python/sets",
+        "python/tuples",
+        "python/virtual-environments-and-pip"
+      ],
+      "clusters": [
+        {
+          "id": "subject-data-science",
+          "label": "Data Science",
+          "subject": "data-science",
+          "color": "#74D3AE",
+          "nodeIds": [
+            "data-science/introduction-to-data-science",
+            "data-science/introduction-to-data",
+            "data-science/data-cleaning-and-preprocessing",
+            "data-science/exploratory-data-analysis",
+            "data-science/introduction-to-machine-learning",
+            "data-science/supervised-learning-regression",
+            "data-science/supervised-learning-classification",
+            "data-science/unsupervised-learning-clustering",
+            "data-science/model-evaluation-and-selection",
+            "data-science/data-storytelling-and-communication",
+            "data-science/next-steps-in-data-science"
+          ]
+        },
+        {
+          "id": "subject-python",
+          "label": "Python",
+          "subject": "python",
+          "color": "#B18CFF",
+          "nodeIds": [
+            "python/introduction-to-python",
+            "python/python-basics-and-variables",
+            "python/operators",
+            "python/input-and-output",
+            "python/conditional-statements",
+            "python/loops",
+            "python/lists",
+            "python/tuples",
+            "python/dictionaries",
+            "python/sets",
+            "python/functions",
+            "python/modules-and-packages",
+            "python/file-io",
+            "python/error-handling",
+            "python/basic-object-oriented-programming",
+            "python/virtual-environments-and-pip",
+            "python/building-a-simple-project"
+          ]
+        }
+      ]
+    }
+  }
+}

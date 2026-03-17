@@ -40,5 +40,4 @@ Follow a prerequisite-aware topic progression with branching layers.
 - Modules and Packages
 - Error Handling
 - Basic Object-Oriented Programming
-- Virtual Environments and Pip
 - Building a Simple Project

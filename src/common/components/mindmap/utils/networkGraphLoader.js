@@ -28,7 +28,18 @@ export function convertToNetworkFormat(graphData, subjectId) {
 
   const concepts = graphData.nodes ?? [];
   const categories = graphData.categories ?? [];
-  const rawEdges = graphData.edges ?? [];
+  const rawEdges =
+    (Array.isArray(graphData.networkEdges) && graphData.networkEdges.length > 0
+      ? graphData.networkEdges
+      : graphData.edges) ?? [];
+  const clusters =
+    graphData.networkClusters ??
+    graphData.viewConfigs?.network?.clusters ??
+    [];
+  const nodeSizeField = graphData.viewConfigs?.network?.nodeSizeField ?? "networkSize";
+  const focusNodeIds = graphData.viewConfigs?.network?.focusNodeIds ?? [];
+  const focusSubject =
+    graphData.meta?.focusSubject ?? graphData.viewConfigs?.network?.focusSubject ?? null;
 
   // Build category color map for quick lookup
   const categoryColorMap = new Map();
@@ -39,22 +50,27 @@ export function convertToNetworkFormat(graphData, subjectId) {
       categoryColorMap.set(normalizeCategoryId(cat.name), cat.color);
     }
   });
+  clusters.forEach((cluster) => {
+    if (cluster?.id && cluster?.color) {
+      categoryColorMap.set(cluster.id, cluster.color);
+    }
+  });
 
   // Build edges array - all concept-to-concept edges
   const edges = [];
-  const edgeSet = new Set(); // Prevent duplicates
+  const edgeSet = new Set(); // Prevent duplicates only for reciprocal duplicates
   
   rawEdges.forEach((edge) => {
     const sourceId = edge.source;
     const targetId = edge.target;
     const edgeKey = `${sourceId}-${targetId}`;
     const reverseKey = `${targetId}-${sourceId}`;
-    
-    // Skip if already added (handle bidirectional edges)
-    if (edgeSet.has(edgeKey) || edgeSet.has(reverseKey)) {
+    const isBidirectional = edge.bidirectional !== false;
+
+    if (edgeSet.has(edgeKey) || (isBidirectional && edgeSet.has(reverseKey))) {
       return;
     }
-    
+
     edgeSet.add(edgeKey);
     
     edges.push({
@@ -72,9 +88,16 @@ export function convertToNetworkFormat(graphData, subjectId) {
 
   // Build nodes array
   const nodes = concepts.map((concept) => {
-    const categoryId = concept.categoryId ?? normalizeCategoryId(concept.category);
+    const categoryId =
+      concept.clusterId ??
+      concept.categoryId ??
+      normalizeCategoryId(concept.category);
     const color = categoryColorMap.get(categoryId) ?? "#95A5A6";
     const referenceCount = referenceCounts.get(concept.id) ?? 0;
+    const explicitSize =
+      typeof concept[nodeSizeField] === "number" && Number.isFinite(concept[nodeSizeField])
+        ? concept[nodeSizeField]
+        : null;
     const size = calculateNodeSize(
       referenceCount,
       maxReferences,
@@ -89,11 +112,14 @@ export function convertToNetworkFormat(graphData, subjectId) {
       data: {
         label: concept.displayTitle ?? concept.title,
         color,
-        size,
+        size: explicitSize ?? size,
         referenceCount,
         importance: concept.importance ?? "medium",
         noteUrl: concept.noteUrl,
         categoryId,
+        clusterId: concept.clusterId ?? categoryId,
+        clusterLabel: concept.clusterLabel ?? concept.subject ?? concept.category ?? "",
+        subject: concept.subject ?? subjectId,
         // Visual states - will be updated by hover/click
         isHighlighted: false,
         isDimmed: false,
@@ -112,6 +138,9 @@ export function convertToNetworkFormat(graphData, subjectId) {
       nodeCount: nodes.length,
       edgeCount: edges.length,
       maxReferences,
+      focusSubject,
+      focusNodeIds,
+      clusters,
     },
   };
 }
@@ -131,7 +160,7 @@ export function convertEdgesToReactFlow(edges, config = DEFAULT_NETWORK_LAYOUT_C
     type: "straight", // Straight lines for network view
     animated: false,
     style: {
-      stroke: "#666",
+      stroke: "#9AA4B2",
       strokeWidth: config.edge.strokeWidth,
       opacity: config.edge.strokeOpacity,
     },

@@ -27,6 +27,29 @@ export async function loadGraphData(subjectId) {
 }
 
 /**
+ * Load network graph data from subject-specific network JSON file.
+ * Network view now reads a dedicated file because it may contain
+ * cross-subject nodes and cluster metadata.
+ *
+ * @param {string} subjectId - The subject identifier (e.g., "data-science")
+ * @returns {Promise<Object|null>} Network graph data or null on error
+ */
+export async function loadNetworkGraphData(subjectId) {
+  try {
+    const response = await fetch(
+      `${import.meta.env.BASE_URL}graphs/${subjectId}-network-graph.json`
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to load network graph: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error loading network graph data:", error);
+    return null;
+  }
+}
+
+/**
  * Convert graph data to React Flow format for orthogonal mindmap view
  * 
  * Creates a three-level hierarchy:

@@ -19,7 +19,11 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 
 import { CenterNode, CategoryNode, ConceptNode } from "./nodes";
-import { loadGraphData, convertToHierarchicalFormat } from "./utils/graphLoader";
+import {
+  loadGraphData,
+  loadNetworkGraphData,
+  convertToHierarchicalFormat,
+} from "./utils/graphLoader";
 import { calculateOrthogonalMindmapLayout, DEFAULT_MINDMAP_LAYOUT_CONFIG } from "./utils/layoutUtils";
 import MindmapToolbar, { MINDMAP_TYPES } from "./MindmapToolbar";
 import RadialMindmapView from "./RadialMindmapView";
@@ -56,6 +60,7 @@ const MindmapView = ({ subjectId }) => {
   // Store measured node dimensions and graph data for 2-pass layout
   const [nodeDimensions, setNodeDimensions] = useState(null);
   const [graphData, setGraphData] = useState(null);
+  const [networkGraphData, setNetworkGraphData] = useState(null);
   const [needsRelayout, setNeedsRelayout] = useState(false);
   
   // Mindmap view type state
@@ -72,7 +77,10 @@ const MindmapView = ({ subjectId }) => {
     async function loadGraph() {
       try {
         setLoading(true);
-        const data = await loadGraphData(subjectId);
+        const [data, networkData] = await Promise.all([
+          loadGraphData(subjectId),
+          loadNetworkGraphData(subjectId),
+        ]);
 
         if (!data) {
           setError("Failed to load knowledge graph");
@@ -80,6 +88,8 @@ const MindmapView = ({ subjectId }) => {
         }
 
         setGraphData(data);
+        // Fallback to subject graph if dedicated network graph is unavailable.
+        setNetworkGraphData(networkData ?? data);
       } catch (err) {
         console.error("Error loading graph:", err);
         setError("An error occurred while loading the graph");
@@ -227,7 +237,7 @@ const MindmapView = ({ subjectId }) => {
       return (
         <div className="mindmap-view__canvas">
           <NetworkMindmapView
-            graphData={graphData}
+            graphData={networkGraphData}
             subjectId={subjectId}
             onOpenNote={handleOpenNote}
           />

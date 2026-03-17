@@ -2,327 +2,248 @@
 
 ## Learning Objectives
 By the end of this lesson, you will be able to:
-- Design and structure a simple command-line application.
-- Integrate multiple Python concepts like functions, lists, dictionaries, and loops into a single project.
-- Implement basic file input/output to save and load application data.
-- Handle common user input and file operation errors gracefully to improve user experience.
-- Build a functional To-Do list application that can add, view, mark as complete, delete, save, and load tasks.
+- Design a simple data structure to represent tasks in a to-do list application.
+- Implement core functionalities like adding, viewing, and marking tasks as complete.
+- Utilize file I/O to save and load application data, ensuring persistence.
+- Structure a command-line application using a main loop and [functions](/note/python/functions.md) for different operations.
+- Integrate previously learned Python concepts such as [lists](../python/lists.md), [dictionaries](/note/python/dictionaries.md), loops, conditionals, [functions](../python/functions.md), and [error handling](/note/python/error-handling.md) into a cohesive project.
 
 ## Introduction
-You've come a long way, learning about individual Python concepts: how to store data in lists and dictionaries, make decisions with `if` statements, repeat actions with `loops`, organize code with `functions`, interact with files, and handle errors. That's a fantastic foundation!
+You've come a long way! So far, you've mastered many individual Python concepts: how to get input from a user, make decisions with [conditional statements](/note/python/conditional-statements.md), repeat actions using loops, store collections of data in [lists](../python/lists.md) and [dictionaries](/note/python/dictionaries.md), organize your code with [functions](../python/functions.md), and even read from and write to files. That's a powerful toolkit!
 
-But how do all these powerful pieces fit together to create something truly useful? That's exactly what we're going to explore in this project! We'll build a simple yet complete **Command-Line To-Do List Application**. This isn't just about making a to-do list; it's about seeing how all your hard-earned knowledge comes together to create a real, interactive program. It's a chance to solidify your understanding and feel the power of what you can build with Python.
-
-Let's get started and turn those individual concepts into a working application!
+But how do all these individual pieces fit together to build something truly useful? This lesson is your chance to connect the dots and bring everything you've learned into a practical application. We're going to build a functional, command-line to-do list application. This isn't just about writing code; it's about thinking like a developer – breaking down a larger problem into smaller, manageable parts, and seeing how all those concepts become powerful tools in your hands. By the end, you'll have a working application that can help you keep track of your tasks, and you'll have a much clearer understanding of how real-world programs are constructed from the ground up.
 
 ## Concept Progression
 
-### 1. Understanding the Core Features and Data Structure
+### Representing a Task: The Building Block
+Every to-do list needs to store individual tasks. Before we write any code, let's think about what essential information each task needs. At a minimum, we need to know *what* the task is (its description) and whether it's *done* or not.
 
-Before we write a single line of code, let's put on our user hats and think about what a To-Do list application *needs* to do. Imagine you're using one – what actions would you expect?
+How can we represent this information in Python? A simple string is great for the description, but to also store its completion status, a [dictionaries](../python/dictionaries.md) is perfect! Each task can be a dictionary with clear keys like `"description"` and `"completed"`.
 
-1.  **Add a task:** You need to be able to type in a new task.
-2.  **View tasks:** You want to see all your tasks, perhaps with their status (done or not done).
-3.  **Mark a task as complete:** Once you finish something, you want to check it off.
-4.  **Delete a task:** Sometimes tasks become irrelevant or were added by mistake.
-5.  **Save and Load tasks:** Crucially, you don't want to lose your tasks every time you close the application!
-
-Now, let's translate these features into how we'll store the data in our Python program. Each task isn't just a piece of text; it also has a "completed" status. This sounds like a perfect job for a **dictionary**! We can represent each task as a dictionary with keys like `"description"` (for the task text) and `"completed"` (a boolean, `True` or `False`).
-
-Since we'll have *multiple* tasks, we'll store all these individual task dictionaries inside a **list**. This list will be the central data structure for our entire application.
-
-Here's what a list of tasks might look like in our program:
-
+Let's imagine how a single task would look:
 ```python
-tasks = [
-    {"description": "Learn Python basics", "completed": True},
-    {"description": "Build a To-Do app", "completed": False},
-    {"description": "Buy groceries", "completed": False}
-]
+task_example = {
+    "description": "Buy groceries",
+    "completed": False
+}
 ```
-This structure allows us to easily add new tasks to the list, access specific tasks by their index, and update their `completed` status.
+Here, `"Buy groceries"` is the task description, and `False` indicates it's not yet completed. When the task is finished, we can simply change the value associated with the `"completed"` key to `True`.
 
-### 2. Setting Up the Main Application Loop
-
-Our To-Do list will be a command-line application, meaning users will interact with it by typing commands into the terminal. This requires a continuous loop that:
-1.  Displays a menu of available options (add, view, mark complete, etc.).
-2.  Asks the user for their choice.
-3.  Performs an action based on that choice.
-4.  Repeats these steps until the user explicitly decides to quit.
-
-This continuous cycle is often called the "main loop" of an application. We'll use a `while True` loop, which will keep running indefinitely until we explicitly `break` out of it (when the user chooses the "Exit" option).
-
-Let's define a function to display our menu and another to manage the main application flow:
+Now, how do we store *multiple* tasks? If each task is a dictionary, then a [lists](../python/lists.md) is the natural choice to hold a collection of these task [dictionaries](/note/python/dictionaries.md). This `tasks` list will be the central data structure for our entire application.
 
 ```python
-def main_menu():
-    """Displays the main menu options and gets user input."""
-    print("\n--- To-Do List Application ---")
-    print("1. Add Task")
-    print("2. View Tasks")
-    print("3. Mark Task as Complete")
-    print("4. Delete Task")
-    print("5. Save Tasks")
-    print("6. Load Tasks")
-    print("7. Exit")
-    return input("Enter your choice: ")
+# Our main list to hold all tasks
+tasks = []
 
-# This will be our main application logic function
-def run_app():
-    tasks = [] # Initialize an empty list to hold our task dictionaries
-    
-    while True: # The main application loop
-        choice = main_menu() # Get the user's choice
-        
-        if choice == '1':
-            print("You chose to Add Task")
-            # We'll call an add_task function here later
-        elif choice == '2':
-            print("You chose to View Tasks")
-            # We'll call a view_tasks function here later
-        # ... other choices will go here ...
-        elif choice == '7':
-            print("Exiting To-Do List. Goodbye!")
-            break # This statement breaks out of the while loop, ending the application
-        else:
-            print("Invalid choice. Please try again.")
+# Let's add a couple of tasks to see how this structure works
+tasks.append({"description": "Learn Python", "completed": False})
+tasks.append({"description": "Walk the dog", "completed": True})
+tasks.append({"description": "Finish project", "completed": False})
 
-# To run the application, we'd call:
-# run_app()
+print(tasks)
+# Expected output:
+# [{'description': 'Learn Python', 'completed': False},
+#  {'description': 'Walk the dog', 'completed': True},
+#  {'description': 'Finish project', 'completed': False}]
 ```
+This `tasks` list will be the heart of our application, holding all the data.
 
-[IMAGE_PLACEHOLDER: A flowchart illustrating the main application loop. Start node "Start Application". Decision node "Display Menu & Get Choice". Branches for each choice (1-7). Choices 1-6 lead to "Perform Action (e.g., Add Task)". Choice 7 leads to "Exit Application" and "End". An arrow from "Perform Action" loops back to "Display Menu & Get Choice".]
+[IMAGE_PLACEHOLDER: A simple diagram showing a Python list. Each element of the list is a dictionary. Each dictionary represents a task with two key-value pairs: "description": "string" and "completed": boolean. Arrows point from the list indices to the respective dictionaries. The pedagogical intent is to visually represent the data structure for tasks.]
 
-This `run_app` function provides the skeleton for our application. Next, we'll flesh out the actual operations for each menu choice.
+### Adding New Tasks
+The first essential functionality for any to-do list is the ability to add new tasks. We need to ask the user for the task description and then create a new task dictionary, adding it to our `tasks` list.
 
-### 3. Implementing Core Task Management Functions
-
-Now that we have our data structure and main loop, let's fill in the actions for adding, viewing, marking complete, and deleting tasks. We'll create separate **functions** for each of these operations. This keeps our code organized, readable, and reusable, making it easier to manage and debug.
-
-#### Adding a Task (`add_task`)
-
-The `add_task` function will take our `tasks` list and a `description` string as input. It will create a new task dictionary (setting `completed` to `False` by default) and append it to our `tasks` list.
+We'll use the `input()` function to get the description from the user. By default, any new task is always incomplete, so its `"completed"` status will be `False`. To keep our code organized and reusable, we'll encapsulate this logic within a [functions](../python/functions.md).
 
 ```python
-def add_task(tasks, description):
-    """Adds a new task to the tasks list."""
-    task = {"description": description, "completed": False}
-    tasks.append(task)
+def add_task(task_list):
+    """Prompts the user for a task description and adds a new task to the list."""
+    description = input("Enter the task description: ")
+    new_task = {"description": description, "completed": False}
+    task_list.append(new_task)
     print(f"Task '{description}' added.")
 
-# Example of how it would be used inside run_app (if choice == '1'):
-# description = input("Enter task description: ")
-# if description: # Basic validation: ensure description is not empty
-#     add_task(tasks, description)
-# else:
-#     print("Task description cannot be empty.")
+# Example usage (you would call this from your main program):
+# tasks = [] # Assuming 'tasks' list is already defined and possibly loaded
+# add_task(tasks)
+# print(tasks) # After adding, you'd see the new task in the list
 ```
+Notice how we pass `task_list` as an argument to the function. This makes our function clear about what data it operates on and keeps it flexible.
 
-#### Viewing Tasks (`view_tasks`)
+### Viewing All Tasks
+Once tasks are added, the next logical step is to see them! This involves iterating through our `tasks` list and printing each one in a user-friendly format. We'll use a [loops](../python/loops.md) for this, as it's perfect for processing each item in a list.
 
-The `view_tasks` function will iterate through the `tasks` list and print each task with its status. We'll use `enumerate` to get both the index and the task itself. The index is crucial because users will refer to tasks by their number when marking them complete or deleting them.
+It's also helpful to clearly show whether a task is completed or not. We can use a checkmark `[x]` for completed tasks and an empty box `[ ]` for incomplete ones. Additionally, numbering the tasks makes it easy for users to refer to them later (e.g., "mark task 3 as complete").
 
 ```python
-def view_tasks(tasks):
-    """Displays all tasks with their status."""
-    if not tasks: # Check if the list is empty
-        print("No tasks in your list.")
+def view_tasks(task_list):
+    """Prints all tasks in the list in a formatted way."""
+    if not task_list: # Check if the list is empty before trying to display
+        print("No tasks in the list.")
         return # Exit the function if there are no tasks
 
-    print("\n--- Your Tasks ---")
-    for i, task in enumerate(tasks):
-        # Use a checkmark for completed tasks, a space otherwise
-        status = "✓" if task["completed"] else " " 
-        # Display task number (i+1 because enumerate is 0-indexed)
-        print(f"{i + 1}. [{status}] {task['description']}")
-    print("------------------")
+    print("\n--- Your To-Do List ---")
+    for i, task in enumerate(task_list): # enumerate gives us both the index (i) and the item (task)
+        # This is a conditional expression: if task["completed"] is True, status is "[x]", otherwise "[ ]"
+        status = "[x]" if task["completed"] else "[ ]"
+        print(f"{i + 1}. {status} {task['description']}") # We add 1 to 'i' for user-friendly 1-based numbering
+    print("-----------------------\n")
 
-# Example of how it would be used inside run_app (if choice == '2'):
+# Example usage:
+# tasks = [{"description": "Learn Python", "completed": False},
+#          {"description": "Walk the dog", "completed": True}]
 # view_tasks(tasks)
+# Expected output:
+# --- Your To-Do List ---
+# 1. [ ] Learn Python
+# 2. [x] Walk the dog
+# -----------------------
 ```
+Here, `enumerate` is incredibly useful for getting both the index and the task itself during iteration. We add `1` to `i` because users typically prefer 1-based indexing for [lists](/note/python/lists.md). The `status = "[x]" if task["completed"] else "[ ]"` is a concise [conditional-statements](../python/conditional-statements.md) that picks the correct symbol based on the task's completion status.
 
-#### Marking a Task as Complete (`mark_task_complete`)
+### Marking Tasks as Complete
+A core feature of any to-do list is the ability to mark tasks as done. This requires the user to tell us *which* task they want to mark. Since we numbered our tasks when viewing them, we can ask the user for the task number.
 
-This function needs the `tasks` list and the `index` of the task to mark. Remember that users will input 1-based numbers, but Python lists are 0-based, so we'll need to adjust the index. We also need to validate the input to ensure it's a valid task number.
+Once we have the number, we need to convert it to a list index (remembering that user input is usually 1-based, but Python list indices are 0-based). Then, we access the specific task dictionary in our list and change its `"completed"` value to `True`.
+
+What if the user enters something that isn't a number, or a number that doesn't correspond to an existing task? This is where [error-handling](../python/error-handling.md) becomes crucial. We should use a `try-except` block to catch a `ValueError` if they don't enter a valid integer, and we must validate the index to prevent an `IndexError` (trying to access a list element that doesn't exist).
 
 ```python
-def mark_task_complete(tasks, task_index):
-    """Marks a specific task as complete."""
-    # Adjust index for 0-based list (user input 1 becomes list index 0)
-    actual_index = task_index - 1 
-    
-    if 0 <= actual_index < len(tasks): # Check if the index is valid
-        tasks[actual_index]["completed"] = True
-        print(f"Task '{tasks[actual_index]['description']}' marked as complete.")
-    else:
-        print("Invalid task number. Please choose a number from the list.")
+def complete_task(task_list):
+    """Marks a specified task as complete, handling user input and errors."""
+    view_tasks(task_list) # Show tasks first so the user knows which to pick
+    if not task_list: # If there are no tasks, nothing to complete
+        return
 
-# Example of how it would be used inside run_app (if choice == '3'):
-# view_tasks(tasks) # Show tasks first so user knows which numbers to pick
-# try:
-#     task_num = int(input("Enter the number of the task to mark complete: "))
-#     mark_task_complete(tasks, task_num)
-# except ValueError: # Catch error if user types non-numeric input
-#     print("Invalid input. Please enter a number.")
-```
-
-#### Deleting a Task (`delete_task`)
-
-Similar to marking a task, this function needs the `tasks` list and the `index` of the task to delete. We'll use the `.pop()` method, which removes an item at a given index and returns it, allowing us to print a confirmation message.
-
-```python
-def delete_task(tasks, task_index):
-    """Deletes a specific task from the tasks list."""
-    actual_index = task_index - 1 # Adjust for 0-based indexing
-    
-    if 0 <= actual_index < len(tasks): # Check if the index is valid
-        removed_task = tasks.pop(actual_index) # .pop() removes and returns the item
-        print(f"Task '{removed_task['description']}' deleted.")
-    else:
-        print("Invalid task number. Please choose a number from the list.")
-
-# Example of how it would be used inside run_app (if choice == '4'):
-# view_tasks(tasks) # Show tasks first
-# try:
-#     task_num = int(input("Enter the number of the task to delete: "))
-#     delete_task(tasks, task_num)
-# except ValueError:
-#     print("Invalid input. Please enter a number.")
-```
-
-### 4. Making it Persistent: Saving and Loading Tasks (File I/O)
-
-Our application is functional, but it has a major flaw: if you close it, all your tasks disappear! This is where **file I/O** (Input/Output) comes in. We need a way to save our `tasks` list to a file and load it back when the application starts.
-
-For saving complex Python data structures like lists of dictionaries, Python's built-in `json` module is perfect. It converts Python objects into a standardized text format called JSON (JavaScript Object Notation), which can be easily written to and read from files. JSON is also human-readable, making it easy to inspect your saved data.
-
-First, remember to `import json` at the very top of your Python file to use this module.
-
-#### Saving Tasks (`save_tasks`)
-
-The `save_tasks` function will take the `tasks` list and a `filename`. It will open the file in write mode (`'w'`) and use `json.dump` to write the list to the file. We'll also add `indent=4` to make the JSON file nicely formatted and easy to read.
-
-```python
-import json # Don't forget to import this at the top of your file!
-
-def save_tasks(tasks, filename="tasks.json"):
-    """Saves the current tasks list to a JSON file."""
     try:
-        with open(filename, 'w') as f: # Open file in write mode
-            json.dump(tasks, f, indent=4) # Write tasks as JSON, with 4-space indentation
-        print(f"Tasks saved to {filename}")
-    except OSError as e: # Catching OSError for file system errors like permission denied
-        print(f"Error: Could not save tasks to {filename}. Reason: {e}")
+        task_num = int(input("Enter the number of the task to mark as complete: "))
+        # Adjust for 0-based indexing: user input 1 corresponds to index 0
+        task_index = task_num - 1
 
-# Example usage (inside run_app, if choice == '5' or before exiting):
-# save_tasks(tasks)
+        # Validate the index to ensure it's within the bounds of our list
+        if 0 <= task_index < len(task_list):
+            task_list[task_index]["completed"] = True
+            print(f"Task '{task_list[task_index]['description']}' marked as complete.")
+        else:
+            print("Invalid task number. Please enter a number from the list.")
+    except ValueError:
+        print("Invalid input. Please enter a whole number.")
+    # The 'if 0 <= task_index < len(task_list)' condition explicitly handles out-of-range indices,
+    # preventing an IndexError from being raised in this specific logic.
+    # If that check were absent, an IndexError would be caught here.
+
+# Example usage:
+# tasks = [{"description": "Learn Python", "completed": False}]
+# complete_task(tasks) # User enters 1
+# print(tasks) # Output: [{'description': 'Learn Python', 'completed': True}]
 ```
+This function demonstrates robust handling of user input, a crucial aspect of building user-friendly and reliable applications.
 
-#### Loading Tasks (`load_tasks`)
+### Saving and Loading Tasks: Making it Persistent
+Imagine adding all your important tasks, closing the program, and then reopening it only to find everything gone! That's not very useful. We need a way to save our `tasks` list to a file and load it back when the program starts. This is where [file-io](../python/file-io.md) comes in.
 
-The `load_tasks` function will take a `filename`. It will try to open the file in read mode (`'r'`) and use `json.load` to read the data back into a list. We need to handle several potential issues:
-*   What if the file doesn't exist yet (e.g., the first time running the app)?
-*   What if the file exists but is corrupted and doesn't contain valid JSON?
-*   What if there are other file system errors?
+Since our tasks are stored as a list of [dictionaries](/note/python/dictionaries.md), the `json` module is perfect for this. JSON (JavaScript Object Notation) is a lightweight data-interchange format that Python's [dictionaries](../python/dictionaries.md) and [lists](/note/python/lists.md) map to very well, and it's also human-readable.
+
+**Saving Tasks:**
+We'll open a file in write mode (`'w'`) and use `json.dump()` to write our `tasks` list to it.
 
 ```python
-import json # Ensure this is imported at the top of your file
+import json # Don't forget to import the json module at the top of your file!
+
+def save_tasks(task_list, filename="tasks.json"):
+    """Saves the current list of tasks to a JSON file."""
+    try:
+        with open(filename, 'w') as f: # Open the file in write mode
+            json.dump(task_list, f, indent=4) # 'indent=4' makes the JSON file nicely formatted and human-readable
+        print(f"Tasks saved to {filename}")
+    except IOError: # Catches general I/O errors, including permission issues or disk full
+        print(f"Error: Could not save tasks to {filename}. Check file permissions or disk space.")
+
+# Example usage:
+# tasks = [{"description": "Learn Python", "completed": False}]
+# save_tasks(tasks) # This will create or overwrite 'tasks.json'
+```
+The `with open(...) as f:` syntax is important because it ensures the file is automatically closed, even if errors occur during the write operation.
+
+**Loading Tasks:**
+When the program starts, we want to load any previously saved tasks. We'll open the file in read mode (`'r'`) and use `json.load()` to read the data back into our `tasks` list.
+
+What if the file doesn't exist yet (e.g., the very first time the program runs)? We need to handle a `FileNotFoundError`. In this case, we'll just start with an empty list of tasks. We also need to consider if the file exists but contains malformed JSON, which would raise a `json.JSONDecodeError`.
+
+```python
+import json
 
 def load_tasks(filename="tasks.json"):
     """Loads tasks from a JSON file. Returns an empty list if the file doesn't exist or is corrupted."""
     try:
-        with open(filename, 'r') as f: # Open file in read mode
-            tasks = json.load(f) # Load JSON data from the file
+        with open(filename, 'r') as f: # Open the file in read mode
+            task_list = json.load(f) # Load the data from the file
         print(f"Tasks loaded from {filename}")
-        return tasks
+        return task_list
     except FileNotFoundError:
-        print(f"No task file found ({filename}). Starting with an empty list.")
+        print(f"No task file '{filename}' found. Starting with an empty list.")
         return [] # Return an empty list if the file doesn't exist
     except json.JSONDecodeError:
-        print(f"Error: Could not read tasks from {filename}. File might be corrupted.")
-        return [] # Return empty list if file is corrupted
-    except OSError as e: # Catching OSError for other file system errors
-        print(f"Error: Could not load tasks from {filename}. Reason: {e}")
+        print(f"Error: Could not decode tasks from '{filename}'. The file might be corrupted. Starting with an empty list.")
+        return []
+    except IOError: # Catches other potential I/O errors during read (e.g., permission issues)
+        print(f"Error: Could not read tasks from '{filename}'. Starting with an empty list.")
         return []
 
-# Example usage (at the very beginning of run_app):
-# tasks = load_tasks()
+# Example usage:
+# tasks = load_tasks() # This will be called at the very start of our program
+# print(tasks) # Will show loaded tasks or an empty list
 ```
+This `load_tasks` function is crucial for making our application's data persistent across different sessions, ensuring your to-do list isn't lost when you close the program.
 
-Now, let's integrate all these functions into our `run_app` function. We'll load tasks once at the start of the application, offer a manual save option, and also save automatically when the user chooses to exit.
+### Building the Main Application Loop and User Interface
+Now that we have individual [functions](/note/python/functions.md) for adding, viewing, marking, saving, and loading tasks, we need to tie them all together into a user-friendly command-line interface. This is typically done with a `while` loop that continuously displays a menu of options and responds to user input.
+
+This `while` loop will be our main program loop. Inside it, we'll use [conditional-statements](../python/conditional-statements.md) to call the appropriate function based on the user's choice.
 
 ```python
-# Make sure all your functions (main_menu, add_task, view_tasks, 
-# mark_task_complete, delete_task, save_tasks, load_tasks) are defined above this.
+def main():
+    """The main function that runs the To-Do List application."""
+    tasks = load_tasks() # Load tasks when the program starts, before entering the main loop
 
-def run_app():
-    tasks = load_tasks() # Load tasks when the app starts
-    
-    while True:
-        choice = main_menu()
-        
+    while True: # This loop will run indefinitely until the user chooses to exit
+        print("\n--- To-Do List Menu ---")
+        print("1. Add a new task")
+        print("2. View all tasks")
+        print("3. Mark a task as complete")
+        print("4. Save tasks and Exit")
+        print("-----------------------")
+
+        choice = input("Enter your choice (1-4): ")
+
         if choice == '1':
-            description = input("Enter task description: ")
-            if description: # Ensure description is not empty
-                add_task(tasks, description)
-            else:
-                print("Task description cannot be empty.")
+            add_task(tasks)
         elif choice == '2':
             view_tasks(tasks)
         elif choice == '3':
-            view_tasks(tasks) # Show tasks first so user can pick
-            try:
-                task_num = int(input("Enter the number of the task to mark complete: "))
-                mark_task_complete(tasks, task_num)
-            except ValueError:
-                print("Invalid input. Please enter a number.")
+            complete_task(tasks)
         elif choice == '4':
-            view_tasks(tasks) # Show tasks first
-            try:
-                task_num = int(input("Enter the number of the task to delete: "))
-                delete_task(tasks, task_num)
-            except ValueError:
-                print("Invalid input. Please enter a number.")
-        elif choice == '5':
-            save_tasks(tasks) # Manually save tasks
-        elif choice == '6':
-            # Loading again will overwrite current tasks if not saved!
-            # For a simple app, we might just reload. For more complex apps,
-            # you might ask the user if they want to discard unsaved changes.
-            tasks = load_tasks() 
-        elif choice == '7':
-            save_tasks(tasks) # Save tasks automatically before exiting
-            print("Exiting To-Do List. Goodbye!")
-            break # Exit the main loop
+            save_tasks(tasks) # Always save tasks before exiting
+            print("Exiting To-Do List application. Goodbye!")
+            break # Exit the while loop, ending the program
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice. Please enter a number between 1 and 4.")
 
-# This ensures run_app() is called only when the script is executed directly
+# This ensures main() runs only when the script is executed directly,
+# not when it's imported as a module into another script.
 if __name__ == "__main__":
-    run_app()
+    main()
 ```
+This `main()` function orchestrates the entire application, providing the user with a continuous interaction loop. The `if __name__ == "__main__":` block is a standard Python idiom that ensures `main()` is called only when the script is run directly, not when it's imported as a module into another script.
 
-### 5. Handling Errors Gracefully (Error Handling)
-
-You might have noticed `try-except` blocks appearing throughout our code, especially when dealing with user input (`int(input(...))`) and file operations. This is **error handling**, and it's absolutely crucial for making your application robust and user-friendly.
-
-Instead of letting your program crash when something unexpected happens, `try-except` blocks allow you to "catch" errors and respond to them gracefully. Here's a summary of the common errors we've handled:
-
-*   **`ValueError`**: This occurs when we try to convert user input to an integer (`int()`), but the user types something that isn't a valid number (like "hello" or an empty string). Our `try-except ValueError` blocks catch this, print a helpful message, and prevent the program from crashing.
-*   **`FileNotFoundError`**: When `load_tasks` tries to open a file that doesn't exist (e.g., the first time the application is run), Python raises a `FileNotFoundError`. We catch this to gracefully start with an empty task list instead of crashing.
-*   **`json.JSONDecodeError`**: If the `tasks.json` file exists but contains malformed JSON (e.g., someone manually edited it incorrectly), `json.load` will raise this error. We catch it to prevent a crash and start fresh with an empty list.
-*   **`OSError`**: This is a base class for various operating system-related errors, including `FileNotFoundError`, `PermissionError`, and others that might occur during file operations (e.g., disk full, invalid path). By catching `OSError`, we can handle a broader range of file-related issues gracefully, providing informative messages to the user.
-
-By anticipating these common problems and providing specific `except` blocks, we make our application much more reliable and pleasant to use, guiding the user rather than frustrating them with crashes.
+[IMAGE_PLACEHOLDER: A flowchart illustrating the main application loop. Start node -> "Load Tasks" -> "Display Menu" -> "Get User Choice". From "Get User Choice", branches lead to "Add Task", "View Tasks", "Mark Task Complete", "Save & Exit", and "Invalid Choice". "Add Task", "View Tasks", and "Mark Task Complete" all loop back to "Display Menu". "Save & Exit" leads to an End node. "Invalid Choice" also loops back to "Display Menu". The pedagogical intent is to show the flow of control in the application.]
 
 ## Wrap-Up
+Congratulations! You've just built a complete, functional command-line to-do list application from scratch. This project was a fantastic opportunity to bring together and reinforce many fundamental Python concepts:
+-   **[Data Structures](/note/python/dictionaries.md):** Effectively using [lists](/note/python/lists.md) and [dictionaries](../python/dictionaries.md) to organize complex, related data.
+-   **[Functions](/note/python/functions.md):** Breaking down your program into reusable, manageable pieces, making your code cleaner and easier to understand.
+-   **Input/Output:** Interacting with the user to get commands and data, and reading/writing files to ensure data persistence.
+-   **[Control Flow](/note/python/conditional-statements.md):** Using [loops](/note/python/loops.md) and conditionals to manage the program's logic and respond to user choices.
+-   **[Error Handling](/note/python/error-handling.md):** Making your program robust and user-friendly by anticipating and gracefully handling unexpected user input or file issues.
 
-Congratulations! You've just built a complete, albeit simple, command-line To-Do List application. This project brought together almost everything you've learned so far:
-*   **Lists and Dictionaries** for structured data storage.
-*   **Functions** for organizing your code into logical, reusable blocks.
-*   **Loops** for the main application flow, keeping it interactive.
-*   **Conditional Statements** (`if/elif/else`) for handling user choices and logic.
-*   **File I/O** (using the `json` module) for making your data persistent across sessions.
-*   **Error Handling** (`try-except`) for making your application robust and user-friendly.
-
-This is a huge step in your programming journey! You've moved from understanding individual concepts to seeing how they interoperate seamlessly to create a functional program. This project serves as a fantastic foundation. You could expand it by adding features like task priorities, due dates, searching, or even a graphical user interface (GUI) later on! Keep experimenting and building!
+This project is a fantastic foundation. You could extend it further by adding features like deleting tasks, editing task descriptions, filtering tasks (e.g., show only incomplete tasks), or even prioritizing tasks. The skills you've practiced here are essential for building any larger application, and you're now well-equipped to tackle more complex programming challenges!
