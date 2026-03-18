@@ -26,20 +26,25 @@ import {
 export function convertToNetworkFormat(graphData, subjectId) {
   if (!graphData) return { nodes: [], edges: [], metadata: {} };
 
+  const networkViewConfig = graphData.viewConfigs?.network ?? {};
   const concepts = graphData.nodes ?? [];
   const categories = graphData.categories ?? [];
   const rawEdges =
     (Array.isArray(graphData.networkEdges) && graphData.networkEdges.length > 0
       ? graphData.networkEdges
       : graphData.edges) ?? [];
+  const rawHierarchyEdges = graphData.conceptHierarchyEdges ?? [];
   const clusters =
     graphData.networkClusters ??
-    graphData.viewConfigs?.network?.clusters ??
+    networkViewConfig.clusters ??
     [];
-  const nodeSizeField = graphData.viewConfigs?.network?.nodeSizeField ?? "networkSize";
-  const focusNodeIds = graphData.viewConfigs?.network?.focusNodeIds ?? [];
+  const nodeSizeField = networkViewConfig.nodeSizeField ?? "networkSize";
+  const conceptLevelField = networkViewConfig.conceptLevelField ?? "conceptLevel";
+  const parentConceptField = networkViewConfig.parentConceptField ?? "parentConceptId";
+  const hierarchyEdgeType = networkViewConfig.hierarchyEdgeType ?? "concept_hierarchy";
+  const focusNodeIds = networkViewConfig.focusNodeIds ?? [];
   const focusSubject =
-    graphData.meta?.focusSubject ?? graphData.viewConfigs?.network?.focusSubject ?? null;
+    graphData.meta?.focusSubject ?? networkViewConfig.focusSubject ?? null;
 
   // Build category color map for quick lookup
   const categoryColorMap = new Map();
@@ -56,34 +61,63 @@ export function convertToNetworkFormat(graphData, subjectId) {
     }
   });
 
-  // Build edges array - all concept-to-concept edges
-  const edges = [];
-  const edgeSet = new Set(); // Prevent duplicates only for reciprocal duplicates
-  
-  rawEdges.forEach((edge) => {
+  const relatedEdges = [];
+  const relatedEdgeSet = new Set(); // Prevent duplicates only for reciprocal duplicates
+  const nonHierarchyRawEdges = rawEdges.filter(
+    (edge) => edge?.source && edge?.target && edge.type !== hierarchyEdgeType
+  );
+  nonHierarchyRawEdges.forEach((edge) => {
     const sourceId = edge.source;
     const targetId = edge.target;
     const edgeKey = `${sourceId}-${targetId}`;
     const reverseKey = `${targetId}-${sourceId}`;
     const isBidirectional = edge.bidirectional !== false;
 
-    if (edgeSet.has(edgeKey) || (isBidirectional && edgeSet.has(reverseKey))) {
+    if (relatedEdgeSet.has(edgeKey) || (isBidirectional && relatedEdgeSet.has(reverseKey))) {
       return;
     }
 
-    edgeSet.add(edgeKey);
-    
-    edges.push({
+    relatedEdgeSet.add(edgeKey);
+    relatedEdges.push({
       id: `e-network-${subjectId}-${sourceId}-${targetId}`,
       source: sourceId,
       target: targetId,
       type: edge.type, // 'prerequisite' or 'related'
       strength: edge.strength ?? 0.5,
+      frequency: edge.frequency ?? 1,
+      weight: edge.weight ?? edge.strength ?? 0.5,
+      edgeKind: "related",
     });
   });
 
+  // Build hierarchy edges (source = parent, target = sub concept)
+  const hierarchyEdgeSources =
+    Array.isArray(rawHierarchyEdges) && rawHierarchyEdges.length > 0
+      ? rawHierarchyEdges
+      : rawEdges.filter((edge) => edge?.type === hierarchyEdgeType);
+  const hierarchyEdges = [];
+  const hierarchyEdgeSet = new Set();
+  hierarchyEdgeSources.forEach((edge) => {
+    if (!edge?.source || !edge?.target) return;
+    const key = `${edge.source}-${edge.target}`;
+    if (hierarchyEdgeSet.has(key)) return;
+    hierarchyEdgeSet.add(key);
+    hierarchyEdges.push({
+      id: edge.id ?? `e-hierarchy-${subjectId}-${edge.source}-${edge.target}`,
+      source: edge.source,
+      target: edge.target,
+      type: hierarchyEdgeType,
+      strength: edge.strength ?? 1,
+      frequency: edge.frequency ?? 1,
+      weight: edge.weight ?? 1,
+      edgeKind: "hierarchy",
+    });
+  });
+
+  const edges = [...relatedEdges, ...hierarchyEdges];
+
   // Count references for node sizing
-  const referenceCounts = countNodeReferences(concepts, edges);
+  const referenceCounts = countNodeReferences(concepts, relatedEdges);
   const maxReferences = Math.max(...referenceCounts.values(), 1);
 
   // Build nodes array
@@ -120,10 +154,11 @@ export function convertToNetworkFormat(graphData, subjectId) {
         clusterId: concept.clusterId ?? categoryId,
         clusterLabel: concept.clusterLabel ?? concept.subject ?? concept.category ?? "",
         subject: concept.subject ?? subjectId,
+        conceptLevel: concept[conceptLevelField] ?? concept.conceptLevel ?? null,
+        parentConceptId: concept[parentConceptField] ?? concept.parentConceptId ?? null,
         // Visual states - will be updated by hover/click
         isHighlighted: false,
         isDimmed: false,
-        showLabel: referenceCount >= maxReferences * 0.5, // Show label for important nodes
       },
       draggable: true, // Network nodes are draggable
     };
@@ -141,6 +176,11 @@ export function convertToNetworkFormat(graphData, subjectId) {
       focusSubject,
       focusNodeIds,
       clusters,
+      parentSubLayout: networkViewConfig.parentSubLayout ?? null,
+      hasHierarchyData:
+        hierarchyEdges.length > 0 ||
+        concepts.some((concept) => Boolean(concept[parentConceptField] ?? concept.parentConceptId)),
+      hierarchyEdgeType,
     },
   };
 }
@@ -153,21 +193,48 @@ export function convertToNetworkFormat(graphData, subjectId) {
  * @returns {Array} React Flow formatted edges
  */
 export function convertEdgesToReactFlow(edges, config = DEFAULT_NETWORK_LAYOUT_CONFIG) {
-  return edges.map((edge) => ({
-    id: edge.id,
-    source: edge.source,
-    target: edge.target,
-    type: "straight", // Straight lines for network view
-    animated: false,
-    style: {
-      stroke: "#9AA4B2",
-      strokeWidth: config.edge.strokeWidth,
-      opacity: config.edge.strokeOpacity,
-    },
-    data: {
-      type: edge.type,
-      strength: edge.strength,
-    },
-  }));
+  const relatedEdges = edges.filter((edge) => edge.edgeKind !== "hierarchy");
+  const strengths = relatedEdges
+    .map((edge) => Number(edge.strength))
+    .filter((value) => Number.isFinite(value));
+  const minStrength = strengths.length > 0 ? Math.min(...strengths) : 0;
+  const maxStrength = strengths.length > 0 ? Math.max(...strengths) : 1;
+  const minWidth = config.edge.strokeWidth * 0.7;
+  const maxWidth = config.edge.strokeWidth * 2.2;
+
+  const mapStrengthToWidth = (strength) => {
+    const numericStrength = Number(strength);
+    if (!Number.isFinite(numericStrength) || maxStrength <= minStrength) {
+      return config.edge.strokeWidth;
+    }
+    const ratio = (numericStrength - minStrength) / (maxStrength - minStrength);
+    return minWidth + ratio * (maxWidth - minWidth);
+  };
+
+  return edges.map((edge) => {
+    const isHierarchyEdge = edge.edgeKind === "hierarchy" || edge.type === "concept_hierarchy";
+    const baseStrokeWidth = mapStrengthToWidth(edge.strength);
+    return {
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      type: "straight", // Straight lines for network view
+      animated: false,
+      style: {
+        stroke: isHierarchyEdge ? "#7A7A8C" : "#9AA4B2",
+        strokeWidth: isHierarchyEdge ? Math.max(1.4, config.edge.strokeWidth * 0.75) : baseStrokeWidth,
+        opacity: isHierarchyEdge ? Math.min(0.88, config.edge.strokeOpacity + 0.08) : config.edge.strokeOpacity,
+        strokeDasharray: isHierarchyEdge ? "6 3" : "none",
+      },
+      data: {
+        type: edge.type,
+        edgeKind: edge.edgeKind ?? "related",
+        strength: edge.strength,
+        baseStrokeWidth: isHierarchyEdge
+          ? Math.max(1.4, config.edge.strokeWidth * 0.75)
+          : baseStrokeWidth,
+      },
+    };
+  });
 }
 

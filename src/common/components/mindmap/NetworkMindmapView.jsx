@@ -34,7 +34,14 @@ const nodeTypes = {
   networkNode: NetworkNode,
 };
 
-function buildInitialPositions(networkNodes, clusters, width, height, focusSubject) {
+function buildInitialPositions(
+  networkNodes,
+  clusters,
+  width,
+  height,
+  focusSubject,
+  hierarchyConfig = null
+) {
   const centerX = width / 2;
   const centerY = height / 2;
   const safeClusters = Array.isArray(clusters) ? clusters : [];
@@ -59,7 +66,7 @@ function buildInitialPositions(networkNodes, clusters, width, height, focusSubje
     });
   });
 
-  return networkNodes.map((node, index) => {
+  const positionedNodes = networkNodes.map((node, index) => {
     const clusterId = node.data?.clusterId ?? node.data?.categoryId;
     const clusterCenter = clusterCenters.get(clusterId) ?? {
       x: centerX + Math.cos(index) * 40,
@@ -72,6 +79,40 @@ function buildInitialPositions(networkNodes, clusters, width, height, focusSubje
       y: clusterCenter.y + (Math.random() - 0.5) * spread,
     };
   });
+
+  if (!hierarchyConfig?.enabled) {
+    return positionedNodes;
+  }
+
+  const nodeById = new Map(positionedNodes.map((node) => [node.id, node]));
+  const parentToChildren = new Map();
+  const childRole = hierarchyConfig?.childRole ?? "sub";
+  positionedNodes.forEach((node) => {
+    const parentId = node.data?.parentConceptId;
+    if (!parentId || !nodeById.has(parentId)) return;
+    const conceptLevel = node.data?.conceptLevel;
+    if (conceptLevel && childRole && conceptLevel !== childRole) return;
+    if (!parentToChildren.has(parentId)) {
+      parentToChildren.set(parentId, []);
+    }
+    parentToChildren.get(parentId).push(node.id);
+  });
+
+  const orbitRadius = Math.max(Number(hierarchyConfig?.orbitRadius) || 140, 170);
+  parentToChildren.forEach((childIds, parentId) => {
+    const parentNode = nodeById.get(parentId);
+    if (!parentNode || childIds.length === 0) return;
+    childIds.forEach((childId, index) => {
+      const childNode = nodeById.get(childId);
+      if (!childNode) return;
+      const angle = (Math.PI * 2 * index) / Math.max(childIds.length, 1);
+      const jitter = (Math.random() - 0.5) * Math.min(24, orbitRadius * 0.25);
+      childNode.x = parentNode.x + Math.cos(angle) * orbitRadius + jitter;
+      childNode.y = parentNode.y + Math.sin(angle) * orbitRadius + jitter;
+    });
+  });
+
+  return positionedNodes;
 }
 
 function extractFocusNodeIds(networkData) {
@@ -126,6 +167,15 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
     if (!networkData || !containerRef.current) return;
 
     const { nodes: networkNodes, edges: networkEdges, metadata } = networkData;
+    const hierarchyLayoutConfig = metadata?.parentSubLayout ?? null;
+    const hierarchyLayoutEnabled =
+      Boolean(hierarchyLayoutConfig?.enabled) && Boolean(metadata?.hasHierarchyData);
+    const hierarchyEdges = networkEdges.filter(
+      (edge) => edge.edgeKind === "hierarchy" || edge.type === metadata?.hierarchyEdgeType
+    );
+    const relatedEdges = networkEdges.filter(
+      (edge) => edge.edgeKind !== "hierarchy" && edge.type !== metadata?.hierarchyEdgeType
+    );
     const initialFocusSubject = metadata?.focusSubject ?? null;
     setActiveClusterSubject(initialFocusSubject);
     activeClusterSubjectRef.current = initialFocusSubject;
@@ -141,28 +191,63 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
       metadata?.clusters,
       width,
       height,
-      metadata?.focusSubject
+      metadata?.focusSubject,
+      hierarchyLayoutConfig
     );
 
     // Create simulation links
-    const simLinks = networkEdges.map((edge) => ({
+    const forceEdges = hierarchyLayoutEnabled
+      ? (relatedEdges.length > 0 ? relatedEdges : networkEdges)
+      : networkEdges;
+    const relatedStrengthValues = forceEdges
+      .map((edge) => Number(edge.strength))
+      .filter((value) => Number.isFinite(value));
+    const maxRelatedStrength =
+      relatedStrengthValues.length > 0 ? Math.max(...relatedStrengthValues) : 1;
+    const simLinks = forceEdges.map((edge) => ({
       source: edge.source,
       target: edge.target,
       strength: edge.strength,
+    }));
+    const hierarchyOrbitRadius = Math.max(
+      Number(hierarchyLayoutConfig?.orbitRadius) || 140,
+      170
+    );
+    const hierarchyLinks = hierarchyEdges.map((edge) => ({
+      source: edge.source,
+      target: edge.target,
     }));
 
     const config = DEFAULT_NETWORK_LAYOUT_CONFIG.simulation;
 
     // Create D3 force simulation
-    const simulation = d3
+    let simulation = d3
       .forceSimulation(simNodes)
       .force(
         "link",
         d3
           .forceLink(simLinks)
           .id((d) => d.id)
-          .distance(config.linkDistance)
-          .strength(config.linkStrength)
+          .distance((link) => {
+            const rawStrength = Number(link.strength);
+            const normalizedStrength = Number.isFinite(rawStrength) && maxRelatedStrength > 0
+              ? rawStrength / maxRelatedStrength
+              : 0.5;
+            const sourceSize = Number(link.source?.data?.size) || 0;
+            const targetSize = Number(link.target?.data?.size) || 0;
+            const sizePadding = ((sourceSize + targetSize) / 2) * 0.5;
+            const baseDistance =
+              config.linkDistance * (1.72 - Math.min(0.72, normalizedStrength * 0.62));
+            return baseDistance + sizePadding;
+          })
+          .strength((link) => {
+            const rawStrength = Number(link.strength);
+            if (!Number.isFinite(rawStrength) || maxRelatedStrength <= 0) {
+              return config.linkStrength;
+            }
+            const normalizedStrength = rawStrength / maxRelatedStrength;
+            return Math.min(1, config.linkStrength * (0.35 + normalizedStrength));
+          })
       )
       .force(
         "charge",
@@ -184,6 +269,17 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
       )
       .alphaDecay(config.alphaDecay)
       .velocityDecay(config.velocityDecay);
+
+    if (hierarchyLayoutEnabled && hierarchyLinks.length > 0) {
+      simulation = simulation.force(
+        "hierarchy-link",
+        d3
+          .forceLink(hierarchyLinks)
+          .id((d) => d.id)
+          .distance(hierarchyOrbitRadius)
+          .strength(0.9)
+      );
+    }
 
     simulationRef.current = simulation;
 
@@ -314,7 +410,6 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
             data: {
               ...node.data,
               isDimmed: !inCluster,
-              showLabel: inCluster || node.data.showLabel,
             },
           };
         })
@@ -324,6 +419,8 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
         prevEdges.map((edge) => {
           const inCluster =
             nodeIdSet.has(edge.source) && nodeIdSet.has(edge.target);
+          const baseStrokeWidth =
+            edge.data?.baseStrokeWidth ?? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth;
           return {
             ...edge,
             style: {
@@ -331,9 +428,7 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
               opacity: inCluster
                 ? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.highlightOpacity
                 : DEFAULT_NETWORK_LAYOUT_CONFIG.edge.dimmedOpacity,
-              strokeWidth: inCluster
-                ? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth + 0.8
-                : DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth,
+              strokeWidth: inCluster ? baseStrokeWidth * 1.18 : baseStrokeWidth * 0.72,
             },
           };
         })
@@ -410,7 +505,6 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
                   ...n.data,
                   isHighlighted: n.id === node.id,
                   isDimmed: !connectedNodes.has(n.id),
-                  showLabel: connectedNodes.has(n.id),
                 },
               }),
         }))
@@ -426,8 +520,8 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
               ? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.highlightOpacity
               : DEFAULT_NETWORK_LAYOUT_CONFIG.edge.dimmedOpacity,
             strokeWidth: connectedEdges.has(e.id)
-                ? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth + 0.5
-                : DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth * 0.5,
+              ? (e.data?.baseStrokeWidth ?? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth) * 1.25
+              : (e.data?.baseStrokeWidth ?? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth) * 0.52,
           },
         }))
       );
@@ -449,8 +543,6 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
                   ...n.data,
                   isHighlighted: false,
                   isDimmed: false,
-                  showLabel:
-                    n.data.referenceCount >= networkData.metadata.maxReferences * 0.5,
                 },
               }),
       }))
@@ -463,7 +555,8 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
         style: {
           ...e.style,
           opacity: DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeOpacity,
-          strokeWidth: DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth,
+          strokeWidth:
+            e.data?.baseStrokeWidth ?? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth,
         },
       }))
     );
