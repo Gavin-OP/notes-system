@@ -13,6 +13,7 @@ import { normalizeCategoryId } from "./normalize";
 export function graphToRadialTree(graphData, subjectId) {
   const categories = graphData?.categories ?? [];
   const concepts = graphData?.nodes ?? [];
+  const conceptById = new Map(concepts.map((concept) => [concept.id, concept]));
 
   // Build category children, sorted by order
   const categoryChildren = categories
@@ -20,17 +21,35 @@ export function graphToRadialTree(graphData, subjectId) {
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .map((cat) => {
       const catId = cat.id;
-      
-      // Find concepts belonging to this category
-      const kids = concepts
-        .filter((n) => {
-          // Match by category ID or normalized category name
-          const conceptCatId = n.categoryId ?? normalizeCategoryId(n.category);
-          return conceptCatId === catId;
-        })
+
+      // Prefer explicit category membership from backend payload.
+      const categoryItemIds = Array.isArray(cat.nodeItems)
+        ? cat.nodeItems.map((item) => item.id).filter(Boolean)
+        : Array.isArray(cat.nodes)
+        ? cat.nodes.filter(Boolean)
+        : [];
+
+      const categoryConcepts = categoryItemIds.length
+        ? categoryItemIds
+            .map((id) => {
+              const concept = conceptById.get(id);
+              if (!concept) return null;
+              const nodeItem = cat.nodeItems?.find((item) => item.id === id);
+              return {
+                ...concept,
+                displayName: concept.displayName ?? nodeItem?.displayName,
+              };
+            })
+            .filter(Boolean)
+        : concepts.filter((n) => {
+            const conceptCatId = n.categoryId ?? normalizeCategoryId(n.category);
+            return conceptCatId === catId;
+          });
+
+      const kids = categoryConcepts
         .sort((a, b) => (a.learningOrder ?? 0) - (b.learningOrder ?? 0))
         .map((n) => ({
-          name: n.displayTitle ?? n.title,
+          name: n.displayName ?? n.displayTitle ?? n.title ?? n.name,
           noteUrl: n.noteUrl,
           importance: n.importance ?? "medium",
           itemStyle: { borderColor: cat.color },

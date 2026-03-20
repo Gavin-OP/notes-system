@@ -9,6 +9,7 @@ import {
   FolderOutlined,
   FileTextOutlined,
   InfoCircleOutlined,
+  ReadOutlined,
 } from "@ant-design/icons";
 
 import NoteHeader from "../components/NoteHeader";
@@ -25,6 +26,8 @@ const { Header, Sider, Content } = Layout;
 // convert icon type to icon
 const getIcon = (iconType) => {
   switch (iconType) {
+    case "index":
+      return <ReadOutlined />;
     case "info":
       return <InfoCircleOutlined />;
     case "folder":

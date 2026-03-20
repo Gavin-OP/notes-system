@@ -77,6 +77,7 @@ export function calculateOrthogonalMindmapLayout(categories, nodes, config = {})
 
   // Sort categories by order
   const sortedCategories = [...categories].sort((a, b) => a.order - b.order);
+  const nodeById = new Map(nodes.map((node) => [node.id, node]));
 
   // STEP 1: Split categories into left and right sides
   const halfCount = Math.ceil(sortedCategories.length / 2);
@@ -85,10 +86,28 @@ export function calculateOrthogonalMindmapLayout(categories, nodes, config = {})
 
   // STEP 2: Calculate branch info for each category
   const calculateBranchInfo = (category) => {
-    const categoryNodesList = nodes.filter((node) => {
-      const nodeCategoryId = normalizeCategoryId(node.category);
-      return nodeCategoryId === category.id;
-    });
+    const categoryItemIds = Array.isArray(category.nodeItems)
+      ? category.nodeItems.map((item) => item.id).filter(Boolean)
+      : Array.isArray(category.nodes)
+      ? category.nodes.filter(Boolean)
+      : [];
+
+    const categoryNodesList = categoryItemIds.length
+      ? categoryItemIds
+          .map((id) => {
+            const rawNode = nodeById.get(id);
+            if (!rawNode) return null;
+            const nodeItem = category.nodeItems?.find((item) => item.id === id);
+            return {
+              ...rawNode,
+              displayName: rawNode.displayName ?? nodeItem?.displayName,
+            };
+          })
+          .filter(Boolean)
+      : nodes.filter((node) => {
+          const nodeCategoryId = node.categoryId ?? normalizeCategoryId(node.category);
+          return nodeCategoryId === category.id;
+        });
 
     // Calculate total height needed for concept list
     let totalConceptHeight = 0;

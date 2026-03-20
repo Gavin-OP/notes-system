@@ -5,6 +5,31 @@
 
 import { normalizeCategoryId } from "./normalize";
 
+async function tryFetchJson(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+    return await response.json();
+  } catch (error) {
+    return null;
+  }
+}
+
+async function fetchSubjectGraphFromApi(subjectId) {
+  const configuredApiBase = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+  const candidatePaths = [
+    configuredApiBase ? `${configuredApiBase}/api/subjects/${subjectId}/graph` : null,
+    `${import.meta.env.BASE_URL}api/subjects/${subjectId}/graph`,
+    `/api/subjects/${subjectId}/graph`,
+  ].filter(Boolean);
+
+  for (const path of candidatePaths) {
+    const data = await tryFetchJson(path);
+    if (data) return data;
+  }
+  return null;
+}
+
 /**
  * Load graph data from JSON file
  * @param {string} subjectId - The subject identifier (e.g., "data-science", "statistics")
@@ -12,14 +37,15 @@ import { normalizeCategoryId } from "./normalize";
  */
 export async function loadGraphData(subjectId) {
   try {
-    const response = await fetch(
+    const staticData = await tryFetchJson(
       `${import.meta.env.BASE_URL}graphs/${subjectId}-graph.json`
     );
-    if (!response.ok) {
-      throw new Error(`Failed to load graph: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
+    if (staticData) return staticData;
+
+    const apiData = await fetchSubjectGraphFromApi(subjectId);
+    if (apiData) return apiData;
+
+    throw new Error("Failed to load graph data from API and static fallback");
   } catch (error) {
     console.error("Error loading graph data:", error);
     return null;
@@ -36,13 +62,20 @@ export async function loadGraphData(subjectId) {
  */
 export async function loadNetworkGraphData(subjectId) {
   try {
-    const response = await fetch(
+    const dedicatedNetworkData = await tryFetchJson(
       `${import.meta.env.BASE_URL}graphs/${subjectId}-network-graph.json`
     );
-    if (!response.ok) {
-      throw new Error(`Failed to load network graph: ${response.statusText}`);
-    }
-    return await response.json();
+    if (dedicatedNetworkData) return dedicatedNetworkData;
+
+    const apiData = await fetchSubjectGraphFromApi(subjectId);
+    if (apiData) return apiData;
+
+    const staticData = await tryFetchJson(
+      `${import.meta.env.BASE_URL}graphs/${subjectId}-graph.json`
+    );
+    if (staticData) return staticData;
+
+    throw new Error("Failed to load network graph data from API and static fallback");
   } catch (error) {
     console.error("Error loading network graph data:", error);
     return null;
@@ -140,7 +173,7 @@ export function convertToHierarchicalFormat(graphData, layoutResult) {
       type: "conceptNode",
       position: concept.position,
       data: {
-        label: concept.title,
+        label: concept.displayName ?? concept.displayTitle ?? concept.title ?? concept.name,
         color: concept.categoryColor,
         importance: concept.importance,
         noteUrl: concept.noteUrl,
