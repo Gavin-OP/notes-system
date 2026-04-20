@@ -8,7 +8,16 @@ import HomePage from "../pages/HomePage";
 import SubjectEntry from "../pages/NotePage/SubjectEntry";
 import SubjectMindmap from "../pages/NotePage/SubjectEntry/SubjectMindmap";
 import SubjectLearningPath from "../pages/NotePage/SubjectEntry/SubjectLearningPath";
+import { AdminAuthRoot } from "../admin/auth/AdminAuthProvider";
+import AdminRouteGuard from "../admin/auth/AdminRouteGuard";
+import AdminLayout from "../admin/layout/AdminLayout";
+import AdminLoginPage from "../admin/pages/AdminLoginPage";
+import AdminDashboardPage from "../admin/pages/AdminDashboardPage";
+import AdminContentPage from "../admin/pages/AdminContentPage";
+import AdminSubjectDetailPage from "../admin/pages/AdminSubjectDetailPage";
+import AdminSystemStatusPage from "../admin/pages/AdminSystemStatusPage";
 import { isLocalhost } from "../utils/analyticsUtils";
+import "../admin/styles/admin.css";
 
 // page view tracking
 function usePageTracking() {
@@ -43,6 +52,20 @@ function RoutesWithTracking() {
       {/* Note content routes */}
       <Route path="note/*" element={<NoteLayout />}>
         <Route path="*" element={<NotePage />} />
+      </Route>
+
+      {/* Admin routes */}
+      <Route path="admin" element={<AdminAuthRoot />}>
+        <Route path="login" element={<AdminLoginPage />} />
+        <Route element={<AdminRouteGuard />}>
+          <Route element={<AdminLayout />}>
+            <Route index element={<AdminDashboardPage />} />
+            <Route path="content" element={<AdminContentPage />} />
+            <Route path="content/:subjectSlug" element={<AdminSubjectDetailPage />} />
+            <Route path="system" element={<AdminSystemStatusPage />} />
+          </Route>
+        </Route>
+        <Route path="*" element={<Navigate to="/admin" replace />} />
       </Route>
 
       {/* Home and fallback */}
