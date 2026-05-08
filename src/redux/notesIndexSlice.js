@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { replaceSubjectFolderWithGraphNotes } from "../utils/notesIndexUtils";
+import { normalizeUrl, replaceSubjectFolderWithGraphNotes } from "../utils/notesIndexUtils";
 
 function applySubjectOverrides(baseNotesIndex, subjectOverrides) {
   if (!Array.isArray(baseNotesIndex)) return [];
@@ -10,6 +10,96 @@ function applySubjectOverrides(baseNotesIndex, subjectOverrides) {
   return Object.entries(subjectOverrides).reduce((currentData, [subjectId, graphNotesIndex]) => {
     return replaceSubjectFolderWithGraphNotes(currentData, subjectId, graphNotesIndex);
   }, baseNotesIndex);
+}
+
+function collectFileNoteUrls(items, urls = new Set()) {
+  if (!Array.isArray(items)) return urls;
+  items.forEach((item) => {
+    if (!item || typeof item !== "object") return;
+    if (item.type === "file" && typeof item.url === "string") {
+      urls.add(normalizeUrl(item.url));
+    }
+    if (Array.isArray(item.children) && item.children.length > 0) {
+      collectFileNoteUrls(item.children, urls);
+    }
+  });
+  return urls;
+}
+
+function noteUrlToAssetPath(noteUrl) {
+  if (typeof noteUrl !== "string" || !noteUrl.startsWith("/note/")) return null;
+  let relativePath = noteUrl.replace(/^\/note\//, "");
+  if (!relativePath) return null;
+  if (relativePath.endsWith("/index")) {
+    relativePath = relativePath.replace(/\/index$/, "/_index.md");
+  } else if (!relativePath.endsWith(".md")) {
+    relativePath = `${relativePath}.md`;
+  }
+  return `${import.meta.env.BASE_URL}notes/${relativePath}`;
+}
+
+async function validateNoteUrl(noteUrl) {
+  const assetPath = noteUrlToAssetPath(noteUrl);
+  if (!assetPath) return false;
+  try {
+    const response = await fetch(assetPath, { cache: "no-store" });
+    if (!response.ok) return false;
+    const contentType = (response.headers.get("content-type") || "").toLowerCase();
+    // Vite dev fallback can return index.html with 200; treat it as missing note.
+    if (contentType.includes("text/html")) {
+      const text = await response.text();
+      const looksLikeAppShell =
+        /<title>\s*notes-system\s*<\/title>/i.test(text) ||
+        /@vite\/client/i.test(text);
+      if (looksLikeAppShell) return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function buildValidNoteUrlSet(items) {
+  const fileUrls = [...collectFileNoteUrls(items)];
+  const results = await Promise.all(
+    fileUrls.map(async (noteUrl) => ({
+      noteUrl,
+      valid: await validateNoteUrl(noteUrl),
+    })),
+  );
+  return new Set(
+    results
+      .filter((entry) => entry.valid)
+      .map((entry) => normalizeUrl(entry.noteUrl)),
+  );
+}
+
+function pruneNotesIndexByValidUrls(items, validUrls) {
+  if (!Array.isArray(items)) return [];
+  return items
+    .map((item) => {
+      if (!item || typeof item !== "object") return null;
+      if (item.type === "file") {
+        return validUrls.has(normalizeUrl(item.url)) ? item : null;
+      }
+      if (Array.isArray(item.children)) {
+        const nextChildren = pruneNotesIndexByValidUrls(item.children, validUrls);
+        if (item.type === "folder" && nextChildren.length === 0) {
+          return null;
+        }
+        return {
+          ...item,
+          children: nextChildren,
+        };
+      }
+      return item;
+    })
+    .filter(Boolean);
+}
+
+async function sanitizeNotesIndex(items) {
+  const validUrls = await buildValidNoteUrlSet(items);
+  return pruneNotesIndexByValidUrls(items, validUrls);
 }
 
 function collectSubjectIdsFromNotesIndex(items, subjectIds = new Set()) {
@@ -83,9 +173,12 @@ export const fetchNotesIndex = createAsyncThunk(
       })
     );
 
+    const dataWithOverrides = applySubjectOverrides(baseNotesIndex, subjectNotesOverrides);
+    const sanitizedData = await sanitizeNotesIndex(dataWithOverrides);
+
     return {
       defaultData: baseNotesIndex,
-      data: applySubjectOverrides(baseNotesIndex, subjectNotesOverrides),
+      data: sanitizedData,
       subjectNotesOverrides,
     };
   }
@@ -103,9 +196,31 @@ export const fetchSubjectNotesIndexFromGraph = createAsyncThunk(
       throw new Error("Failed to fetch subject graph for notes index");
     }
 
+    const rawGraphNotesIndex = Array.isArray(graphData?.notesIndex) ? graphData.notesIndex : [];
+    const uniqueNoteUrls = new Set();
+    rawGraphNotesIndex.forEach((entry) => {
+      const noteUrl = normalizeUrl(String(entry?.noteUrl || "").split("#")[0]);
+      if (typeof noteUrl === "string" && noteUrl.startsWith("/note/")) {
+        uniqueNoteUrls.add(noteUrl);
+      }
+    });
+    const validationResults = await Promise.all(
+      [...uniqueNoteUrls].map(async (noteUrl) => ({
+        noteUrl,
+        valid: await validateNoteUrl(noteUrl),
+      })),
+    );
+    const validNoteUrls = new Set(
+      validationResults.filter((entry) => entry.valid).map((entry) => entry.noteUrl),
+    );
+    const sanitizedGraphNotesIndex = rawGraphNotesIndex.filter((entry) => {
+      const noteUrl = normalizeUrl(String(entry?.noteUrl || "").split("#")[0]);
+      return validNoteUrls.has(noteUrl);
+    });
+
     return {
       subjectId,
-      graphNotesIndex: graphData?.notesIndex ?? [],
+      graphNotesIndex: sanitizedGraphNotesIndex,
     };
   }
 );

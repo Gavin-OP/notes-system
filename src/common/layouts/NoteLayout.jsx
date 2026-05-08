@@ -1,8 +1,22 @@
-import { useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 
-import { Layout, Menu, Breadcrumb, Button, theme, Row, Col } from "antd";
+import {
+  Layout,
+  Menu,
+  Breadcrumb,
+  Button,
+  theme,
+  Row,
+  Col,
+  Segmented,
+  Modal,
+  Checkbox,
+  Space,
+  Typography,
+  message,
+} from "antd";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -10,18 +24,27 @@ import {
   FileTextOutlined,
   InfoCircleOutlined,
   ReadOutlined,
+  LeftOutlined,
+  RightOutlined,
 } from "@ant-design/icons";
 
 import NoteHeader from "../components/NoteHeader";
 import OutlineSider from "../components/OutlineSider";
 import FloatingOutlineButton from "../components/FloatingOutlineButton";
+import AssistantWorkspace from "../components/assistant/AssistantWorkspace";
 
 import { buildMenuItems } from "../../utils/notesIndexUtils";
 import { setTheme, setLanguage } from "../../redux/preferenceSlice";
+import {
+  requestAssistantQa,
+  requestAssistantQuiz,
+  requestAssistantQuizEvaluate,
+} from "../api/assistant";
 
 import "./NoteLayout.css";
 
 const { Header, Sider, Content } = Layout;
+const { Text } = Typography;
 
 // convert icon type to icon
 const getIcon = (iconType) => {
@@ -48,6 +71,172 @@ const addIconsToMenuItems = (items) => {
   }));
 };
 
+function flattenMenuLeafItems(items, list = []) {
+  items.forEach((item) => {
+    if (Array.isArray(item.children) && item.children.length > 0) {
+      flattenMenuLeafItems(item.children, list);
+    } else if (typeof item.key === "string") {
+      list.push({
+        path: item.key,
+        label: typeof item.label === "string" ? item.label : item.key.split("/").pop() || item.key,
+      });
+    }
+  });
+  return list;
+}
+
+function normalizeMenuKey(key) {
+  return String(key || "").replace(/\/+$/, "");
+}
+
+function findBreadcrumbLabels(items, targetKey, trail = []) {
+  const normalizedTarget = normalizeMenuKey(targetKey);
+  for (const item of items) {
+    const currentTrail = [...trail, String(item.label || "")];
+    if (normalizeMenuKey(item.key) === normalizedTarget) {
+      return currentTrail;
+    }
+    if (Array.isArray(item.children) && item.children.length > 0) {
+      const found = findBreadcrumbLabels(item.children, targetKey, currentTrail);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+function decorateMenuItemsWithProgress(items, options, inSubjectFolder = false) {
+  const { currentNoteUrl, visitedNoteUrls } = options;
+  const eligibleFileItems = inSubjectFolder
+    ? items.filter((item) => item.iconType === "file")
+    : [];
+
+  return items.map((item) => {
+    const isFolder = item.iconType === "folder";
+    const isFile = item.iconType === "file";
+    const nextInSubjectFolder = inSubjectFolder || isFolder;
+    const nextChildren = item.children
+      ? decorateMenuItemsWithProgress(item.children, options, nextInSubjectFolder)
+      : undefined;
+
+    if (inSubjectFolder && isFile) {
+      const normalizedKey = normalizeMenuKey(item.key);
+      const status = normalizedKey === currentNoteUrl
+        ? "current"
+        : visitedNoteUrls.has(normalizedKey)
+          ? "done"
+          : "todo";
+
+      const noteIndex = eligibleFileItems.findIndex(
+        (candidate) => normalizeMenuKey(candidate.key) === normalizedKey,
+      );
+      const prevItem = noteIndex > 0 ? eligibleFileItems[noteIndex - 1] : null;
+      const nextItem =
+        noteIndex >= 0 && noteIndex < eligibleFileItems.length - 1
+          ? eligibleFileItems[noteIndex + 1]
+          : null;
+      const prevStatus = prevItem
+        ? normalizeMenuKey(prevItem.key) === currentNoteUrl
+          ? "current"
+          : visitedNoteUrls.has(normalizeMenuKey(prevItem.key))
+            ? "done"
+            : "todo"
+        : null;
+      const nextStatus = nextItem
+        ? normalizeMenuKey(nextItem.key) === currentNoteUrl
+          ? "current"
+          : visitedNoteUrls.has(normalizeMenuKey(nextItem.key))
+            ? "done"
+            : "todo"
+        : null;
+      const topLineColor = prevStatus && prevStatus !== "todo" && status !== "todo" ? "#1677ff" : "#d9d9d9";
+      const bottomLineColor =
+        nextStatus && status === "done" && nextStatus !== "todo" ? "#1677ff" : "#d9d9d9";
+      const isFirst = noteIndex === 0;
+      const isLast = noteIndex === eligibleFileItems.length - 1;
+
+      return {
+        ...item,
+        icon: undefined,
+        children: nextChildren,
+        label: (
+          <div className={`note-layout__menu-note-label note-layout__menu-note-label--${status}`}>
+            <span
+              className={`note-layout__menu-note-marker-wrap ${isFirst ? "is-first" : ""} ${isLast ? "is-last" : ""}`}
+              style={{
+                "--line-top-color": topLineColor,
+                "--line-bottom-color": bottomLineColor,
+              }}
+            >
+              <span className="note-layout__menu-note-marker" />
+            </span>
+            <span className="note-layout__menu-note-text">{item.label}</span>
+          </div>
+        ),
+      };
+    }
+
+    return {
+      ...item,
+      children: nextChildren,
+    };
+  });
+}
+
+function resolveQaAnswerText(payload) {
+  if (!payload) return "";
+  if (typeof payload === "string") return payload;
+  if (typeof payload.answer_markdown === "string") return payload.answer_markdown;
+  if (typeof payload.markdown === "string") return payload.markdown;
+  if (typeof payload.answer === "string") return payload.answer;
+  if (typeof payload.response === "string") return payload.response;
+  if (typeof payload.message === "string") return payload.message;
+  if (typeof payload.content === "string") return payload.content;
+  if (typeof payload.text === "string") return payload.text;
+  if (payload.data && typeof payload.data === "object") return resolveQaAnswerText(payload.data);
+  return JSON.stringify(payload);
+}
+
+function resolveQuizQuestions(payload) {
+  const candidate =
+    payload?.questions ||
+    payload?.quiz ||
+    payload?.items ||
+    payload?.data?.questions ||
+    payload?.data?.items ||
+    [];
+
+  if (!Array.isArray(candidate)) return [];
+  return candidate.map((item, idx) => {
+    if (typeof item === "string") {
+      return {
+        id: `quiz-${idx + 1}`,
+        type: "short_answer",
+        text: item,
+        options: [],
+        rawQuestion: item,
+      };
+    }
+    const type = item?.question_type || item?.type || "short_answer";
+    return {
+      id: item?.id || `quiz-${idx + 1}`,
+      type,
+      text: item?.text || item?.question || item?.prompt || "",
+      options: Array.isArray(item?.options) ? item.options : [],
+      rawQuestion: item,
+    };
+  });
+}
+
+function normalizeQuizEvaluation(payload) {
+  const source = payload?.data && typeof payload.data === "object" ? payload.data : payload;
+  return {
+    is_correct: Boolean(source?.is_correct),
+    score: typeof source?.score === "number" ? source.score : source?.score ?? null,
+    feedback: source?.feedback || "",
+    suggested_answer: source?.suggested_answer || "",
+  };
+}
+
 const NoteLayout = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -63,12 +252,39 @@ const NoteLayout = () => {
   const notesIndex = useSelector((state) => state.notesIndex.data) || [];
   const currentMeta = useSelector((state) => state.currentNote.meta);
   const outline = useSelector((state) => state.currentNote.outline);
+  const currentNoteContent = useSelector((state) => state.currentNote.content);
 
   // local state
   const [collapsed, setCollapsed] = useState(isMobile);
   const [showMenu, setShowMenu] = useState(true);
-  const [outlineCollapsed, setOutlineCollapsed] = useState(false);
   const [showFloatingButton, setShowFloatingButton] = useState(true);
+  const [assistantMode, setAssistantMode] = useState("dock");
+  const [assistantDockTab, setAssistantDockTab] = useState("outline");
+  const [assistantTool, setAssistantTool] = useState("qa");
+  const [assistantCollapsed, setAssistantCollapsed] = useState(false);
+  const [assistantDockWidth, setAssistantDockWidth] = useState(420);
+  const [assistantModalOpen, setAssistantModalOpen] = useState(false);
+  const [referencePickerOpen, setReferencePickerOpen] = useState(false);
+  const [selectedReferencePaths, setSelectedReferencePaths] = useState([]);
+  const [qaInput, setQaInput] = useState("");
+  const [qaMessages, setQaMessages] = useState([]);
+  const [qaImageFiles, setQaImageFiles] = useState([]);
+  const [qaAttachmentFiles, setQaAttachmentFiles] = useState([]);
+  const [qaPending, setQaPending] = useState(false);
+  const [qaError, setQaError] = useState("");
+  const [scratchHtml, setScratchHtml] = useState("");
+  const [scratchSavedHint, setScratchSavedHint] = useState("");
+  const [quizObjective, setQuizObjective] = useState("check");
+  const [quizDifficulty, setQuizDifficulty] = useState("medium");
+  const [quizQuestionTypes, setQuizQuestionTypes] = useState(["mcq"]);
+  const [quizInstruction, setQuizInstruction] = useState("");
+  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [quizAnswers, setQuizAnswers] = useState({});
+  const [quizEvaluations, setQuizEvaluations] = useState({});
+  const [quizEvaluationPendingMap, setQuizEvaluationPendingMap] = useState({});
+  const [quizPending, setQuizPending] = useState(false);
+  const [quizError, setQuizError] = useState("");
+  const [visitedNoteUrls, setVisitedNoteUrls] = useState(new Set());
   const [narrationState, setNarrationState] = useState("idle");
   const [narrationAudioUrls, setNarrationAudioUrls] = useState([]);
   const [currentNarrationChunkIndex, setCurrentNarrationChunkIndex] = useState(0);
@@ -76,6 +292,11 @@ const NoteLayout = () => {
   const narrationAudioRef = useRef(null);
   const narrationAudioUrlsRef = useRef([]);
   const narrationChunkIndexRef = useRef(0);
+  const resizeStateRef = useRef({
+    active: false,
+    startX: 0,
+    startWidth: 420,
+  });
 
   // track previous isMobile value
   const prevIsMobileRef = useRef(isMobile);
@@ -120,25 +341,18 @@ const NoteLayout = () => {
   }, [isMobile]);
 
   // menu contents & icons
-  const menuItems = addIconsToMenuItems(buildMenuItems(notesIndex));
+  const plainMenuItems = useMemo(() => buildMenuItems(notesIndex), [notesIndex]);
+  const iconMenuItems = useMemo(() => addIconsToMenuItems(plainMenuItems), [plainMenuItems]);
 
-  // breadcrumb
-  const breadcrumbItems = currentMeta
-    ? [
-        ...(currentMeta.directory && currentMeta.directory !== "."
-          ? currentMeta.directory
-              .split("/")
-              .filter(Boolean)
-              .map((dir, idx) => ({
-                title: dir,
-                key: idx,
-              }))
-          : []),
-        ...(currentMeta.type === "file" && currentMeta.name
-          ? [{ title: currentMeta.name, key: "name" }]
-          : []),
-      ]
-    : [];
+  // breadcrumb (reuse menu labels so display is consistent)
+  const breadcrumbItems = useMemo(() => {
+    if (!currentMeta?.url) return [];
+    const labels = findBreadcrumbLabels(plainMenuItems, currentMeta.url) || [];
+    return labels.map((label, idx) => ({
+      title: label,
+      key: `${idx}-${label}`,
+    }));
+  }, [currentMeta?.url, plainMenuItems]);
 
   // event handlers
   const handleThemeChange = (checked) =>
@@ -146,7 +360,54 @@ const NoteLayout = () => {
   const handleLanguageChange = (value) => dispatch(setLanguage(value));
   const handleSearch = (value) => {};
   const handleNoteSelect = (path) => navigate(path);
-  const handleOutlineCollapse = () => setOutlineCollapsed(!outlineCollapsed);
+
+  const noteName = useMemo(() => {
+    if (currentMeta?.name) return currentMeta.name;
+    return "Current note";
+  }, [currentMeta]);
+
+  const menuLeafItems = useMemo(() => flattenMenuLeafItems(plainMenuItems), [plainMenuItems]);
+  const selectedReferenceItems = useMemo(() => {
+    const selected = new Set(selectedReferencePaths);
+    return menuLeafItems.filter((item) => selected.has(item.path));
+  }, [menuLeafItems, selectedReferencePaths]);
+
+  useEffect(() => {
+    try {
+      const rawValue = window.localStorage.getItem("notesSystem.visitedNoteUrls");
+      const parsed = rawValue ? JSON.parse(rawValue) : [];
+      if (Array.isArray(parsed)) {
+        setVisitedNoteUrls(new Set(parsed.map((item) => normalizeMenuKey(item))));
+      }
+    } catch {
+      setVisitedNoteUrls(new Set());
+    }
+  }, []);
+
+  useEffect(() => {
+    const currentUrl = normalizeMenuKey(currentMeta?.url || "");
+    if (!currentUrl) return;
+    setVisitedNoteUrls((prev) => {
+      if (prev.has(currentUrl)) return prev;
+      const next = new Set(prev);
+      next.add(currentUrl);
+      try {
+        window.localStorage.setItem("notesSystem.visitedNoteUrls", JSON.stringify([...next]));
+      } catch {
+        // ignore storage failures
+      }
+      return next;
+    });
+  }, [currentMeta?.url]);
+
+  const menuItems = useMemo(
+    () =>
+      decorateMenuItemsWithProgress(iconMenuItems, {
+        currentNoteUrl: normalizeMenuKey(currentMeta?.url || ""),
+        visitedNoteUrls,
+      }),
+    [currentMeta?.url, iconMenuItems, visitedNoteUrls],
+  );
 
   useEffect(() => {
     narrationAudioUrlsRef.current = narrationAudioUrls;
@@ -266,6 +527,227 @@ const NoteLayout = () => {
     }
   };
 
+  useEffect(() => {
+    if (assistantMode !== "typeless") return undefined;
+    const onKeyDown = (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setAssistantModalOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [assistantMode]);
+
+  useEffect(() => {
+    const onMouseMove = (event) => {
+      if (!resizeStateRef.current.active) return;
+      const delta = event.clientX - resizeStateRef.current.startX;
+      const nextWidth = Math.min(700, Math.max(320, resizeStateRef.current.startWidth - delta));
+      setAssistantDockWidth(nextWidth);
+    };
+    const onMouseUp = () => {
+      resizeStateRef.current.active = false;
+    };
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, []);
+
+  const startDockResize = (event) => {
+    resizeStateRef.current = {
+      active: true,
+      startX: event.clientX,
+      startWidth: assistantDockWidth,
+    };
+  };
+
+  const assistantContextPayload = useMemo(
+    () => ({
+      currentNote: {
+        title: noteName,
+        url: currentMeta?.url || "",
+        content: currentNoteContent || "",
+      },
+      references: selectedReferenceItems.map((item) => ({
+        url: item.path,
+        title: item.label,
+        content: item.path === currentMeta?.url ? currentNoteContent || "" : undefined,
+      })),
+    }),
+    [currentMeta?.url, currentNoteContent, noteName, selectedReferenceItems],
+  );
+
+  const handleSendQa = async () => {
+    const trimmedQuestion = qaInput.trim();
+    if (!trimmedQuestion || qaPending) return;
+
+    setQaError("");
+    const userMessage = {
+      id: `qa-user-${Date.now()}`,
+      role: "user",
+      text: trimmedQuestion,
+    };
+    const nextMessages = [...qaMessages, userMessage];
+    setQaMessages(nextMessages);
+    setQaInput("");
+    setQaPending(true);
+
+    try {
+      const payload = {
+        question: trimmedQuestion,
+        history: nextMessages.slice(-12).map((item) => ({ role: item.role, content: item.text })),
+        ...assistantContextPayload,
+      };
+      const response = await requestAssistantQa(payload, {
+        images: qaImageFiles,
+        attachments: qaAttachmentFiles,
+      });
+      const answerText = resolveQaAnswerText(response) || "No response content.";
+      setQaMessages((prev) => [
+        ...prev,
+        {
+          id: `qa-assistant-${Date.now()}`,
+          role: "assistant",
+          text: answerText,
+        },
+      ]);
+      setQaImageFiles([]);
+      setQaAttachmentFiles([]);
+    } catch (error) {
+      const errorText = error instanceof Error ? error.message : "Q&A request failed.";
+      setQaError(errorText);
+      message.error(errorText);
+    } finally {
+      setQaPending(false);
+    }
+  };
+
+  const handleGenerateQuiz = async () => {
+    if (!quizObjective || !quizDifficulty || quizPending || quizQuestionTypes.length === 0) return;
+    setQuizError("");
+    setQuizPending(true);
+    try {
+      const payload = {
+        objective: quizObjective,
+        difficulty: quizDifficulty,
+        questionTypes: quizQuestionTypes,
+        customInstruction: quizInstruction || "",
+        ...assistantContextPayload,
+      };
+      const response = await requestAssistantQuiz(payload);
+      const normalizedQuestions = resolveQuizQuestions(response);
+      if (normalizedQuestions.length === 0) {
+        throw new Error("Quiz API returned no questions.");
+      }
+      setQuizQuestions(normalizedQuestions);
+      setQuizAnswers({});
+      setQuizEvaluations({});
+      setQuizEvaluationPendingMap({});
+    } catch (error) {
+      const errorText = error instanceof Error ? error.message : "Quiz request failed.";
+      setQuizError(errorText);
+      message.error(errorText);
+    } finally {
+      setQuizPending(false);
+    }
+  };
+
+  const handleQuizAnswerChange = (questionId, value) => {
+    setQuizAnswers((prev) => ({ ...prev, [questionId]: value }));
+  };
+
+  const handleQuizEvaluateQuestion = async (question) => {
+    const answer = quizAnswers[question.id];
+    if (!answer || !String(answer).trim()) {
+      message.warning("Please provide an answer before evaluation.");
+      return;
+    }
+
+    setQuizEvaluationPendingMap((prev) => ({ ...prev, [question.id]: true }));
+    try {
+      const payload = {
+        ...assistantContextPayload,
+        question: question.rawQuestion ?? question,
+        userAnswer: answer,
+      };
+      const response = await requestAssistantQuizEvaluate(payload);
+      setQuizEvaluations((prev) => ({
+        ...prev,
+        [question.id]: normalizeQuizEvaluation(response),
+      }));
+    } catch (error) {
+      const errorText = error instanceof Error ? error.message : "Quiz evaluation failed.";
+      message.error(errorText);
+    } finally {
+      setQuizEvaluationPendingMap((prev) => ({ ...prev, [question.id]: false }));
+    }
+  };
+
+  const handleScratchSave = () => {
+    setScratchSavedHint("Saved locally just now.");
+    window.setTimeout(() => setScratchSavedHint(""), 1500);
+  };
+
+  const removeSelectedQaFile = (list, fileName) => list.filter((file) => file.name !== fileName);
+
+  const renderAssistantWorkspace = (hideToolTabs = false) => (
+    <AssistantWorkspace
+      noteName={noteName}
+      activeTool={assistantTool}
+      onToolChange={setAssistantTool}
+      qaInput={qaInput}
+      onQaInputChange={setQaInput}
+      qaMessages={qaMessages}
+      onSendQa={handleSendQa}
+      onOpenReferencePicker={() => setReferencePickerOpen(true)}
+      onPickImages={(files) => setQaImageFiles((prev) => [...prev, ...files])}
+      onPickAttachments={(files) => setQaAttachmentFiles((prev) => [...prev, ...files])}
+      qaReferenceCount={selectedReferenceItems.length}
+      qaImageCount={qaImageFiles.length}
+      qaAttachmentCount={qaAttachmentFiles.length}
+      qaReferenceNames={selectedReferenceItems.map((item) => item.label)}
+      qaImageNames={qaImageFiles.map((file) => file.name)}
+      qaAttachmentNames={qaAttachmentFiles.map((file) => file.name)}
+      onRemoveQaReference={(name) =>
+        setSelectedReferencePaths((prev) =>
+          prev.filter((path) => selectedReferenceItems.find((item) => item.path === path)?.label !== name),
+        )
+      }
+      onRemoveQaImage={(name) => setQaImageFiles((prev) => removeSelectedQaFile(prev, name))}
+      onRemoveQaAttachment={(name) =>
+        setQaAttachmentFiles((prev) => removeSelectedQaFile(prev, name))
+      }
+      qaPending={qaPending}
+      qaError={qaError}
+      scratchText={scratchHtml}
+      onScratchHtmlChange={setScratchHtml}
+      onScratchSave={handleScratchSave}
+      scratchSavedHint={scratchSavedHint}
+      quizPrompt={quizInstruction}
+      onQuizPromptChange={setQuizInstruction}
+      quizGoal={quizObjective}
+      quizLevel={quizDifficulty}
+      quizQuestionTypes={quizQuestionTypes}
+      quizQuestions={quizQuestions}
+      quizAnswers={quizAnswers}
+      quizEvaluations={quizEvaluations}
+      quizEvaluationPendingMap={quizEvaluationPendingMap}
+      onQuizGoalChange={setQuizObjective}
+      onQuizLevelChange={setQuizDifficulty}
+      onQuizQuestionTypesChange={setQuizQuestionTypes}
+      onQuizAnswerChange={handleQuizAnswerChange}
+      onQuizGenerate={handleGenerateQuiz}
+      onQuizEvaluateQuestion={handleQuizEvaluateQuestion}
+      quizPending={quizPending}
+      quizError={quizError}
+      hideToolTabs={hideToolTabs}
+    />
+  );
+
   return (
     <Layout
       className="note-layout"
@@ -280,20 +762,21 @@ const NoteLayout = () => {
       <Header
         className={`note-layout__header ${isMobile ? "note-layout__header--mobile" : ""}`}
       >
-        {/* menu collapse button */}
         <Row align="middle" className="note-layout__header-row">
-          <Col>
-            <Button
-              type="text"
-              className={`note-layout__menu-button ${isMobile ? "note-layout__menu-button--mobile" : ""}`}
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => {
-                if (!collapsed) setShowMenu(false);
-                else setShowMenu(true);
-                setCollapsed(!collapsed);
-              }}
-            />
-          </Col>
+          {isMobile ? (
+            <Col>
+              <Button
+                type="text"
+                className={`note-layout__menu-button ${isMobile ? "note-layout__menu-button--mobile" : ""}`}
+                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                onClick={() => {
+                  if (!collapsed) setShowMenu(false);
+                  else setShowMenu(true);
+                  setCollapsed(!collapsed);
+                }}
+              />
+            </Col>
+          ) : null}
 
           {/* space between */}
           <Col flex="auto" />
@@ -333,53 +816,173 @@ const NoteLayout = () => {
           trigger={null}
         >
           {showMenu && (
-            <Menu
-              mode="inline"
-              className={`note-layout__menu ${isMobile ? "note-layout__menu--mobile" : ""}`}
-              items={menuItems}
-              onClick={({ key }) => {
-                handleNoteSelect(key);
-                // auto-close menu on mobile after selection
-                if (isMobile) {
-                  setCollapsed(true);
-                }
-              }}
-            />
+            <div className="note-layout__sider-menu-shell">
+              {!isMobile ? (
+                <div className="note-layout__sider-header">
+                  <span className="note-layout__sider-title">Notes</span>
+                  <button
+                    type="button"
+                    className="note-layout__sider-collapse-btn"
+                    onClick={() => {
+                      setShowMenu(false);
+                      setCollapsed(true);
+                    }}
+                    aria-label="Collapse sidebar"
+                    title="Collapse sidebar"
+                  >
+                    <MenuFoldOutlined />
+                  </button>
+                </div>
+              ) : null}
+              <Menu
+                mode="inline"
+                className={`note-layout__menu ${isMobile ? "note-layout__menu--mobile" : ""}`}
+                items={menuItems}
+                onClick={({ key }) => {
+                  handleNoteSelect(key);
+                  // auto-close menu on mobile after selection
+                  if (isMobile) {
+                    setCollapsed(true);
+                  }
+                }}
+              />
+            </div>
           )}
         </Sider>
+        {!isMobile && collapsed ? (
+          <button
+            type="button"
+            className="note-layout__left-sider-collapsed-trigger"
+            onClick={() => {
+              setShowMenu(true);
+              setCollapsed(false);
+            }}
+            aria-label="Expand sidebar"
+            title="Expand sidebar"
+          >
+            <MenuUnfoldOutlined />
+          </button>
+        ) : null}
 
         <Layout
           className={`note-layout__content-wrapper ${isMobile ? "note-layout__content-wrapper--mobile" : ""}`}
         >
-          {/* breadcrumb and markdown renderer */}
-          <Breadcrumb
-            items={breadcrumbItems}
-            className={`note-layout__breadcrumb ${isMobile ? "note-layout__breadcrumb--mobile" : ""}`}
-          />
-          <Layout>
+          <div
+            className={`note-layout__content-shell ${!isMobile && assistantMode === "dock" ? "note-layout__content-shell--with-assistant" : ""}`}
+          >
             <Content
               className={`note-layout__content ${isMobile ? "note-layout__content--mobile" : ""}`}
             >
+              <div className="note-layout__assistant-mode">
+                <Text type="secondary">Assistant Mode</Text>
+                <Segmented
+                  size="small"
+                  value={assistantMode}
+                  onChange={setAssistantMode}
+                  options={[
+                    { label: "Option 1: Right Dock", value: "dock" },
+                    { label: "Option 2: Typeless", value: "typeless" },
+                  ]}
+                />
+                {assistantMode === "typeless" ? (
+                  <Button size="small" onClick={() => setAssistantModalOpen(true)}>
+                    Open (Cmd/Ctrl + K)
+                  </Button>
+                ) : null}
+              </div>
+              <Breadcrumb
+                items={breadcrumbItems}
+                className={`note-layout__breadcrumb ${isMobile ? "note-layout__breadcrumb--mobile" : ""}`}
+              />
               <Outlet />
             </Content>
-            {/* hide outline sider on mobile */}
-            {!isMobile && (
-              <Sider
-                width={350}
-                collapsedWidth={48}
-                className={`note-layout__outline-sider ${outlineCollapsed ? "note-layout__outline-sider--collapsed" : ""}`}
-                collapsible
-                collapsed={outlineCollapsed}
-                trigger={null}
-              >
-                <OutlineSider
-                  outline={outline}
-                  collapsed={outlineCollapsed}
-                  onCollapse={handleOutlineCollapse}
-                />
-              </Sider>
-            )}
-          </Layout>
+            {!isMobile && assistantMode === "dock" ? (
+              <>
+                {assistantCollapsed ? (
+                  <button
+                    type="button"
+                    className="note-layout__assistant-collapsed-trigger"
+                    onClick={() => setAssistantCollapsed(false)}
+                    aria-label="Expand assistant panel"
+                    title="Expand assistant panel"
+                  >
+                    <LeftOutlined />
+                  </button>
+                ) : (
+                  <>
+                    <div
+                      className="note-layout__assistant-resizer"
+                      onMouseDown={startDockResize}
+                      role="separator"
+                      aria-label="Resize assistant panel"
+                    />
+                    <aside
+                      className="note-layout__assistant-dock"
+                      style={{ width: `${assistantDockWidth}px` }}
+                    >
+                      <div className="note-layout__assistant-dock-header">
+                        <Button
+                          size="small"
+                          type="text"
+                          className="note-layout__assistant-collapse-btn"
+                          icon={<RightOutlined />}
+                          onClick={() => setAssistantCollapsed(true)}
+                          aria-label="Collapse assistant panel"
+                          title="Collapse assistant panel"
+                        />
+                        <Space size={6} wrap>
+                          <Button
+                            size="small"
+                            type={assistantDockTab === "outline" ? "primary" : "default"}
+                            onClick={() => setAssistantDockTab("outline")}
+                          >
+                            Outline
+                          </Button>
+                          <Button
+                            size="small"
+                            type={assistantDockTab === "qa" ? "primary" : "default"}
+                            onClick={() => {
+                              setAssistantDockTab("qa");
+                              setAssistantTool("qa");
+                            }}
+                          >
+                            Q&A
+                          </Button>
+                          <Button
+                            size="small"
+                            type={assistantDockTab === "notes" ? "primary" : "default"}
+                            onClick={() => {
+                              setAssistantDockTab("notes");
+                              setAssistantTool("notes");
+                            }}
+                          >
+                            Notes
+                          </Button>
+                          <Button
+                            size="small"
+                            type={assistantDockTab === "quiz" ? "primary" : "default"}
+                            onClick={() => {
+                              setAssistantDockTab("quiz");
+                              setAssistantTool("quiz");
+                            }}
+                          >
+                            Quiz
+                          </Button>
+                        </Space>
+                      </div>
+                      <div className="note-layout__assistant-dock-body">
+                        {assistantDockTab === "outline" ? (
+                          <OutlineSider outline={outline} collapsed={false} hideHeader />
+                        ) : (
+                          renderAssistantWorkspace(true)
+                        )}
+                      </div>
+                    </aside>
+                  </>
+                )}
+              </>
+            ) : null}
+          </div>
         </Layout>
       </Layout>
 
@@ -392,6 +995,37 @@ const NoteLayout = () => {
         src={narrationAudioUrls[currentNarrationChunkIndex] ?? ""}
         preload="none"
       />
+      <Modal
+        title="Reference notes"
+        open={referencePickerOpen}
+        onOk={() => setReferencePickerOpen(false)}
+        onCancel={() => setReferencePickerOpen(false)}
+        okText="Done"
+      >
+        <Checkbox.Group
+          value={selectedReferencePaths}
+          onChange={(values) => setSelectedReferencePaths(values)}
+          style={{ width: "100%" }}
+        >
+          <div className="note-layout__reference-list">
+            {menuLeafItems.map((item) => (
+              <Checkbox key={item.path} value={item.path}>
+                {item.label}
+              </Checkbox>
+            ))}
+          </div>
+        </Checkbox.Group>
+      </Modal>
+      <Modal
+        title="Assistant"
+        open={assistantModalOpen}
+        onCancel={() => setAssistantModalOpen(false)}
+        footer={null}
+        width={920}
+        className="note-layout__assistant-modal"
+      >
+        {renderAssistantWorkspace(false)}
+      </Modal>
     </Layout>
   );
 };

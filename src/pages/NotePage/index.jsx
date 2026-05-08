@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setCurrentNoteMeta,
   setCurrentNoteOutline,
+  setCurrentNoteContent,
 } from "../../redux/currentNoteSlice";
 import { useParams, useLocation } from "react-router-dom";
 import {
@@ -96,6 +97,10 @@ function NotePage() {
   useEffect(() => {
     dispatch(setCurrentNoteOutline(outline));
   }, [noteContent, outline, dispatch]);
+
+  useEffect(() => {
+    dispatch(setCurrentNoteContent(noteContent));
+  }, [noteContent, dispatch]);
 
   useEffect(() => {
     if (!noteContent) return;

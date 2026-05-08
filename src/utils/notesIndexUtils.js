@@ -63,6 +63,24 @@ function getIconType(item) {
   }
 }
 
+function toReadableTitle(rawValue) {
+  const source = String(rawValue || "")
+    .replace(/\.md$/i, "")
+    .replace(/[-_]+/g, " ")
+    .trim();
+  if (!source) return "Untitled";
+  return source.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function normalizeDisplayTitle(rawValue, fallbackValue) {
+  const candidate = String(rawValue || "").trim();
+  if (!candidate) {
+    return toReadableTitle(fallbackValue);
+  }
+  const slugLike = /[-_]/.test(candidate) || /^[a-z0-9\s]+$/.test(candidate);
+  return slugLike ? toReadableTitle(candidate) : candidate;
+}
+
 function buildMenuItems(data) {
   if (!data) return [];
   return data
@@ -80,8 +98,8 @@ function buildMenuItems(data) {
       const iconType = getIconType(item);
       const label =
         item.type === "file"
-          ? (item.title || "Untitled Note")
-          : (item.title || item.name);
+          ? normalizeDisplayTitle(item.title || item.name, item.name)
+          : normalizeDisplayTitle(item.title || item.name, item.name);
 
       if (item.type === "folder" && item.children && item.children.length > 0) {
         return {
