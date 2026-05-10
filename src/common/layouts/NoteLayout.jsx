@@ -40,6 +40,7 @@ import {
   requestAssistantQuiz,
   requestAssistantQuizEvaluate,
 } from "../api/assistant";
+import { completeMyNote, getMyProfile, uncompleteMyNote } from "../api/user";
 
 import "./NoteLayout.css";
 
@@ -89,6 +90,23 @@ function normalizeMenuKey(key) {
   return String(key || "").replace(/\/+$/, "");
 }
 
+function normalizeCompletedNoteUrlsFromProfile(profilePayload) {
+  const profile = profilePayload && typeof profilePayload === "object" ? profilePayload : {};
+  const completedFromUrls = Array.isArray(profile.completed_note_urls)
+    ? profile.completed_note_urls
+    : Array.isArray(profile.completedNoteUrls)
+      ? profile.completedNoteUrls
+      : [];
+  const completedFromObjects = Array.isArray(profile.completed_notes)
+    ? profile.completed_notes.map((item) => item?.note_url)
+    : Array.isArray(profile.completedNotes)
+      ? profile.completedNotes.map((item) => item?.noteUrl)
+      : [];
+  return [...completedFromUrls, ...completedFromObjects]
+    .map((item) => normalizeMenuKey(item || ""))
+    .filter(Boolean);
+}
+
 function findBreadcrumbLabels(items, targetKey, trail = []) {
   const normalizedTarget = normalizeMenuKey(targetKey);
   for (const item of items) {
@@ -105,7 +123,7 @@ function findBreadcrumbLabels(items, targetKey, trail = []) {
 }
 
 function decorateMenuItemsWithProgress(items, options, inSubjectFolder = false) {
-  const { currentNoteUrl, visitedNoteUrls } = options;
+  const { currentNoteUrl, completedNoteUrls } = options;
   const eligibleFileItems = inSubjectFolder
     ? items.filter((item) => item.iconType === "file")
     : [];
@@ -120,10 +138,10 @@ function decorateMenuItemsWithProgress(items, options, inSubjectFolder = false) 
 
     if (inSubjectFolder && isFile) {
       const normalizedKey = normalizeMenuKey(item.key);
-      const status = normalizedKey === currentNoteUrl
-        ? "current"
-        : visitedNoteUrls.has(normalizedKey)
-          ? "done"
+      const status = completedNoteUrls.has(normalizedKey)
+        ? "done"
+        : normalizedKey === currentNoteUrl
+          ? "current"
           : "todo";
 
       const noteIndex = eligibleFileItems.findIndex(
@@ -135,18 +153,18 @@ function decorateMenuItemsWithProgress(items, options, inSubjectFolder = false) 
           ? eligibleFileItems[noteIndex + 1]
           : null;
       const prevStatus = prevItem
-        ? normalizeMenuKey(prevItem.key) === currentNoteUrl
-          ? "current"
-          : visitedNoteUrls.has(normalizeMenuKey(prevItem.key))
+        ? completedNoteUrls.has(normalizeMenuKey(prevItem.key))
             ? "done"
-            : "todo"
+            : normalizeMenuKey(prevItem.key) === currentNoteUrl
+              ? "current"
+              : "todo"
         : null;
       const nextStatus = nextItem
-        ? normalizeMenuKey(nextItem.key) === currentNoteUrl
-          ? "current"
-          : visitedNoteUrls.has(normalizeMenuKey(nextItem.key))
+        ? completedNoteUrls.has(normalizeMenuKey(nextItem.key))
             ? "done"
-            : "todo"
+            : normalizeMenuKey(nextItem.key) === currentNoteUrl
+              ? "current"
+              : "todo"
         : null;
       const topLineColor = prevStatus && prevStatus !== "todo" && status !== "todo" ? "#1677ff" : "#d9d9d9";
       const bottomLineColor =
@@ -284,7 +302,8 @@ const NoteLayout = () => {
   const [quizEvaluationPendingMap, setQuizEvaluationPendingMap] = useState({});
   const [quizPending, setQuizPending] = useState(false);
   const [quizError, setQuizError] = useState("");
-  const [visitedNoteUrls, setVisitedNoteUrls] = useState(new Set());
+  const [completedNoteUrls, setCompletedNoteUrls] = useState(new Set());
+  const [completeNotePending, setCompleteNotePending] = useState(false);
   const [narrationState, setNarrationState] = useState("idle");
   const [narrationAudioUrls, setNarrationAudioUrls] = useState([]);
   const [currentNarrationChunkIndex, setCurrentNarrationChunkIndex] = useState(0);
@@ -365,6 +384,13 @@ const NoteLayout = () => {
     if (currentMeta?.name) return currentMeta.name;
     return "Current note";
   }, [currentMeta]);
+  const currentNoteUrlNormalized = useMemo(
+    () => normalizeMenuKey(currentMeta?.url || ""),
+    [currentMeta?.url],
+  );
+  const isCurrentNoteCompleted = currentNoteUrlNormalized
+    ? completedNoteUrls.has(currentNoteUrlNormalized)
+    : false;
 
   const menuLeafItems = useMemo(() => flattenMenuLeafItems(plainMenuItems), [plainMenuItems]);
   const selectedReferenceItems = useMemo(() => {
@@ -373,40 +399,70 @@ const NoteLayout = () => {
   }, [menuLeafItems, selectedReferencePaths]);
 
   useEffect(() => {
-    try {
-      const rawValue = window.localStorage.getItem("notesSystem.visitedNoteUrls");
-      const parsed = rawValue ? JSON.parse(rawValue) : [];
-      if (Array.isArray(parsed)) {
-        setVisitedNoteUrls(new Set(parsed.map((item) => normalizeMenuKey(item))));
+    let mounted = true;
+    async function loadCompletedNotes() {
+      try {
+        const profilePayload = await getMyProfile();
+        if (!mounted) return;
+        setCompletedNoteUrls(new Set(normalizeCompletedNoteUrlsFromProfile(profilePayload)));
+      } catch {
+        if (!mounted) return;
+        setCompletedNoteUrls(new Set());
       }
-    } catch {
-      setVisitedNoteUrls(new Set());
     }
+    loadCompletedNotes();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  useEffect(() => {
-    const currentUrl = normalizeMenuKey(currentMeta?.url || "");
-    if (!currentUrl) return;
-    setVisitedNoteUrls((prev) => {
-      if (prev.has(currentUrl)) return prev;
-      const next = new Set(prev);
-      next.add(currentUrl);
-      try {
-        window.localStorage.setItem("notesSystem.visitedNoteUrls", JSON.stringify([...next]));
-      } catch {
-        // ignore storage failures
+  const handleToggleCurrentNoteCompletion = async () => {
+    const currentUrl = currentNoteUrlNormalized;
+    if (!currentUrl || completeNotePending) return;
+    const currentlyCompleted = completedNoteUrls.has(currentUrl);
+
+    setCompleteNotePending(true);
+    try {
+      if (currentlyCompleted) {
+        await uncompleteMyNote({ noteUrl: currentUrl });
+        setCompletedNoteUrls((prev) => {
+          const next = new Set(prev);
+          next.delete(currentUrl);
+          return next;
+        });
+        message.success("Removed completion mark for this note.");
+      } else {
+        await completeMyNote({
+          noteUrl: currentUrl,
+          noteTitle: noteName,
+          subject: currentMeta?.subjectName || "",
+        });
+        setCompletedNoteUrls((prev) => {
+          const next = new Set(prev);
+          next.add(currentUrl);
+          return next;
+        });
+        message.success("Marked this note as completed.");
       }
-      return next;
-    });
-  }, [currentMeta?.url]);
+    } catch (error) {
+      const errorText = error instanceof Error
+        ? error.message
+        : currentlyCompleted
+          ? "Failed to remove completion mark."
+          : "Failed to mark note as completed.";
+      message.error(errorText);
+    } finally {
+      setCompleteNotePending(false);
+    }
+  };
 
   const menuItems = useMemo(
     () =>
       decorateMenuItemsWithProgress(iconMenuItems, {
-        currentNoteUrl: normalizeMenuKey(currentMeta?.url || ""),
-        visitedNoteUrls,
+        currentNoteUrl: currentNoteUrlNormalized,
+        completedNoteUrls,
       }),
-    [currentMeta?.url, iconMenuItems, visitedNoteUrls],
+    [completedNoteUrls, currentNoteUrlNormalized, iconMenuItems],
   );
 
   useEffect(() => {
@@ -894,7 +950,13 @@ const NoteLayout = () => {
                 items={breadcrumbItems}
                 className={`note-layout__breadcrumb ${isMobile ? "note-layout__breadcrumb--mobile" : ""}`}
               />
-              <Outlet />
+              <Outlet
+                context={{
+                  isCurrentNoteCompleted,
+                  completeCurrentNotePending: completeNotePending,
+                  onToggleCurrentNoteCompletion: handleToggleCurrentNoteCompletion,
+                }}
+              />
             </Content>
             {!isMobile && assistantMode === "dock" ? (
               <>

@@ -17,19 +17,42 @@ function isIndexNoteItem(item) {
   return slug === "index" || name === "_index.md" || url.endsWith("/index");
 }
 
+function isDisclaimerNoteItem(item) {
+  if (!item || item.type !== "file") return false;
+  const pathOnly = normalizeUrl(String(item.url || "").split("#")[0] || "").toLowerCase();
+  const name = String(item.name || "").toLowerCase();
+  return (
+    name === "disclaimer.md" ||
+    pathOnly === "/note/disclaimer.md" ||
+    pathOnly.endsWith("/disclaimer.md")
+  );
+}
+
 function normalizeNoteRoute(noteUrl) {
   if (typeof noteUrl !== "string" || noteUrl.trim() === "") return null;
   const trimmed = noteUrl.trim();
   const [rawPath, rawHash = ""] = trimmed.split("#");
-  let path = rawPath;
+  let path = rawPath.trim();
   if (!path.startsWith("/")) {
     path = `/${path}`;
+  }
+  path = normalizeUrl(path);
+  if (path === "/note") {
+    return null;
   }
   if (!path.startsWith("/note/")) {
     path = `/note${path}`;
   }
   const hash = rawHash ? `#${rawHash}` : "";
   return `${path}${hash}`;
+}
+
+/** True when route points at a concrete note path (not bare `/note`). */
+function isConcreteNoteRoute(noteUrl) {
+  const normalized = normalizeNoteRoute(noteUrl);
+  if (!normalized) return false;
+  const pathOnly = normalizeUrl(normalized.split("#")[0] || "");
+  return /^\/note\/.+/.test(pathOnly);
 }
 
 function findMeta(data, key) {
@@ -86,6 +109,9 @@ function buildMenuItems(data) {
   return data
     .filter((item) => item.display !== false)
     .sort((a, b) => {
+      const aDisc = isDisclaimerNoteItem(a);
+      const bDisc = isDisclaimerNoteItem(b);
+      if (aDisc !== bDisc) return aDisc ? -1 : 1;
       const aIsIndex = isIndexNoteItem(a);
       const bIsIndex = isIndexNoteItem(b);
       if (aIsIndex !== bIsIndex) return aIsIndex ? -1 : 1;
@@ -332,6 +358,7 @@ function mergeGraphNotesIntoNotesIndex(baseNotesIndex = [], graphNotesIndex = []
 export {
   normalizeUrl,
   normalizeNoteRoute,
+  isConcreteNoteRoute,
   findMeta,
   buildMenuItems,
   buildNotesIndexFromGraphNotes,

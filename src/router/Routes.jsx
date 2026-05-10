@@ -8,6 +8,8 @@ import HomePage from "../pages/HomePage";
 import SubjectEntry from "../pages/NotePage/SubjectEntry";
 import SubjectMindmap from "../pages/NotePage/SubjectEntry/SubjectMindmap";
 import SubjectLearningPath from "../pages/NotePage/SubjectEntry/SubjectLearningPath";
+import UserLoginPage from "../pages/UserLoginPage";
+import UserProfilePage from "../pages/UserProfilePage";
 import { AdminAuthRoot } from "../admin/auth/AdminAuthProvider";
 import AdminRouteGuard from "../admin/auth/AdminRouteGuard";
 import AdminLayout from "../admin/layout/AdminLayout";
@@ -67,6 +69,11 @@ function RoutesWithTracking() {
         </Route>
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Route>
+
+      {/* User routes (UI only) */}
+      <Route path="user/login" element={<UserLoginPage />} />
+      <Route path="user/profile" element={<UserProfilePage />} />
+      <Route path="user" element={<Navigate to="/user/login" replace />} />
 
       {/* Home and fallback */}
       <Route path="home" element={<HomePage />} />

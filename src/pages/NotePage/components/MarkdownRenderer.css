@@ -4,6 +4,82 @@
   position: relative;
 }
 
+.markdown-heading-with-link__content {
+  display: inline;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* H1: one row — copy icon | title (auto-shrinking) | completion button */
+.markdown-heading-with-link--h1.markdown-heading-with-link {
+  display: block;
+}
+
+.markdown-h1-toolbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Absolutely positioned — no flex-gap before title, keeps H1 text flush-left with breadcrumbs/body */
+.markdown-h1-toolbar__copy-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  overflow: visible;
+  z-index: 1;
+}
+
+.markdown-h1-toolbar__copy-wrap .copy-link-icon {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.markdown-h1-toolbar__title {
+  flex: 1 1 0%;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.markdown-heading-with-link--h1 .markdown-complete-btn {
+  float: none;
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.markdown-complete-btn {
+  white-space: nowrap;
+  border: 1px solid #1677ff;
+  background: #1677ff;
+  color: #fff;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 13px;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.markdown-complete-btn:hover:not(:disabled) {
+  background: #4096ff;
+  border-color: #4096ff;
+}
+
+.markdown-complete-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.markdown-complete-btn.is-completed {
+  background: #52c41a;
+  border-color: #52c41a;
+}
+
 .markdown-table {
   width: 100%;
   border-collapse: collapse;
@@ -60,5 +136,15 @@
   .markdown-body img {
     margin: 8px auto;
   }
+}
+
+[data-theme="dark"] .markdown-complete-btn {
+  background: #1668dc;
+  border-color: #1668dc;
+}
+
+[data-theme="dark"] .markdown-complete-btn.is-completed {
+  background: #49aa19;
+  border-color: #49aa19;
 }
 

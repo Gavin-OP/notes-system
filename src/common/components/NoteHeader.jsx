@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Dropdown, AutoComplete, Space, Tooltip } from "antd";
+import { useNavigate } from "react-router-dom";
+import { AutoComplete, Dropdown, Space, Tooltip } from "antd";
 import {
   SearchOutlined,
   GlobalOutlined,
@@ -9,6 +10,7 @@ import {
   AudioOutlined,
   PauseCircleOutlined,
   LoadingOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 
 import "./NoteHeader.css";
@@ -23,6 +25,7 @@ function NoteHeader({
   isNarrationPlaying = false,
   onToggleNarration,
 }) {
+  const navigate = useNavigate();
   // redux
   const isMobile = useSelector((state) => state.preference.isMobile);
 
@@ -144,6 +147,10 @@ function NoteHeader({
             )}
           </span>
         </Tooltip>
+        <UserOutlined
+          className="note-header__icon note-header__icon--clickable"
+          onClick={() => navigate("/user/profile")}
+        />
         <span className="note-header__sr-only" aria-live="polite">
           {narrationLabel}
         </span>

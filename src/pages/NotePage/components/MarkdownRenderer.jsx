@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
 import ReactMarkdown from "react-markdown";
@@ -26,19 +26,160 @@ const themeCssMap = {
   dark: `${import.meta.env.BASE_URL}theme/d42ker-github.css`,
 };
 
-const HeadingWithCopy = ({ level, children, ...props }) => {
+function useH1TitleFit(deps) {
+  const toolbarRef = useRef(null);
+  const titleRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const toolbar = toolbarRef.current;
+    const titleEl = titleRef.current;
+    if (!toolbar || !titleEl) return undefined;
+
+    const measure = () => {
+      titleEl.style.fontSize = "";
+      titleEl.style.overflow = "";
+      titleEl.style.textOverflow = "";
+      titleEl.style.whiteSpace = "nowrap";
+
+      const maxPx = parseFloat(window.getComputedStyle(titleEl).fontSize) || 32;
+      const minPx = 11;
+
+      const fitsAt = (px) => {
+        titleEl.style.fontSize = `${px}px`;
+        return titleEl.scrollWidth <= titleEl.clientWidth + 0.5;
+      };
+
+      if (fitsAt(maxPx)) return;
+
+      let low = minPx;
+      let high = maxPx;
+      for (let i = 0; i < 24; i += 1) {
+        const mid = (low + high) / 2;
+        if (fitsAt(mid)) low = mid;
+        else high = mid;
+      }
+
+      titleEl.style.fontSize = `${Math.max(low, minPx)}px`;
+
+      if (titleEl.scrollWidth > titleEl.clientWidth + 0.5) {
+        titleEl.style.fontSize = `${minPx}px`;
+        titleEl.style.overflow = "hidden";
+        titleEl.style.textOverflow = "ellipsis";
+      }
+    };
+
+    const observer = new ResizeObserver(() => measure());
+    observer.observe(toolbar);
+    measure();
+
+    return () => observer.disconnect();
+  }, deps);
+
+  return [toolbarRef, titleRef];
+}
+
+function HeadingCopyH1({
+  children,
+  id,
+  theme,
+  onMarkComplete,
+  completionPending,
+  isCompleted,
+  ...domProps
+}) {
+  const [toolbarRef, titleRef] = useH1TitleFit([
+    children,
+    id,
+    completionPending,
+    isCompleted,
+    typeof onMarkComplete === "function",
+  ]);
+
+  const completionBtn =
+    typeof onMarkComplete === "function" ? (
+      <button
+        type="button"
+        className={`markdown-complete-btn ${isCompleted ? "is-completed" : ""}`}
+        onClick={onMarkComplete}
+        disabled={completionPending}
+      >
+        {completionPending
+          ? "Updating..."
+          : isCompleted
+            ? "Completed"
+            : "Mark as completed"}
+      </button>
+    ) : null;
+
+  const { className: domClassName, id: markdownIdProp, ...restDomAttrs } =
+    domProps;
+  const headingId = id ?? markdownIdProp;
+  const mergedClass = ["markdown-heading-with-link", "markdown-heading-with-link--h1", domClassName]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <h1 {...restDomAttrs} id={headingId} className={mergedClass}>
+      <div ref={toolbarRef} className="markdown-h1-toolbar">
+        {headingId ? (
+          <span className="markdown-h1-toolbar__copy-wrap">
+            <CopyLinkIcon id={headingId} theme={theme} />
+          </span>
+        ) : null}
+        <span ref={titleRef} className="markdown-h1-toolbar__title">
+          {children}
+        </span>
+        {completionBtn}
+      </div>
+    </h1>
+  );
+}
+
+const HeadingWithCopy = ({
+  level,
+  children,
+  onMarkComplete,
+  completionPending = false,
+  isCompleted = false,
+  ...props
+}) => {
   const id = props.node?.data?.id || props.id;
   const Tag = `h${level}`;
   const theme = props.theme || "light";
+
+  const { node: _nodeIgnored, ...restMarkdownProps } = props;
+
+  if (level === 1) {
+    return (
+      <HeadingCopyH1
+        {...restMarkdownProps}
+        id={id}
+        theme={theme}
+        onMarkComplete={onMarkComplete}
+        completionPending={completionPending}
+        isCompleted={isCompleted}
+      >
+        {children}
+      </HeadingCopyH1>
+    );
+  }
+
   return (
-    <Tag id={id} className="markdown-heading-with-link">
+    <Tag id={id} className="markdown-heading-with-link" {...restMarkdownProps}>
       {id && <CopyLinkIcon id={id} theme={theme} />}
-      {children}
+      <span className="markdown-heading-with-link__content">{children}</span>
     </Tag>
   );
 };
 
-const MarkdownRenderer = ({ content, theme }) => {
+
+const MarkdownRenderer = ({
+  content,
+  theme,
+  onMarkComplete,
+  completionPending = false,
+  isCompleted = false,
+}) => {
   const noteDirectory = useSelector(
     (state) => state.currentNote.meta?.directory,
   );
@@ -198,7 +339,15 @@ const MarkdownRenderer = ({ content, theme }) => {
   }, [theme]);
 
   const components = {
-    h1: (props) => <HeadingWithCopy level={1} {...props} />,
+    h1: (props) => (
+      <HeadingWithCopy
+        level={1}
+        onMarkComplete={onMarkComplete}
+        completionPending={completionPending}
+        isCompleted={isCompleted}
+        {...props}
+      />
+    ),
     h2: (props) => <HeadingWithCopy level={2} {...props} />,
     h3: (props) => <HeadingWithCopy level={3} {...props} />,
     h4: (props) => <HeadingWithCopy level={4} {...props} />,

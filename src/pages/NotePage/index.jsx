@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  clearCurrentNoteMeta,
   setCurrentNoteMeta,
   setCurrentNoteOutline,
   setCurrentNoteContent,
 } from "../../redux/currentNoteSlice";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useOutletContext, useNavigate } from "react-router-dom";
 import {
   fetchSubjectNotesIndexFromGraph,
   restoreDefaultNotesIndex,
@@ -14,6 +15,7 @@ import {
 import MarkdownRenderer from "./components/MarkdownRenderer";
 import { findMeta } from "../../utils/notesIndexUtils";
 import { getOutline } from "../../utils/markdownUtils";
+import "./NotePage.css";
 
 function removeYamlFrontMatter(text) {
   // 匹配以 --- 开头和结尾的 YAML front matter
@@ -28,15 +30,45 @@ function normalizeAnchorToken(value) {
     .replace(/^-+|-+$/g, "");
 }
 
+function resolveNoteFilePath(meta, rawNoteUrl) {
+  if (meta && meta.directory !== undefined && meta.name) {
+    return meta.directory === "." ? `${meta.name}` : `${meta.directory}/${meta.name}`;
+  }
+
+  const normalizedUrl = String(rawNoteUrl || "")
+    .split("#")[0]
+    .replace(/^\/+/, "")
+    .replace(/^note\//, "");
+  if (!normalizedUrl) return "";
+
+  if (normalizedUrl.endsWith("/index")) {
+    return normalizedUrl.replace(/\/index$/, "/_index.md");
+  }
+  if (normalizedUrl.toLowerCase().endsWith(".md")) {
+    return normalizedUrl;
+  }
+  return `${normalizedUrl}.md`;
+}
+
 function NotePage() {
   // navigation
   const { "*": note_url } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const noteSlugTrimmed = typeof note_url === "string" ? note_url.trim() : "";
 
   // redux
   const dispatch = useDispatch();
   const notesIndex = useSelector((state) => state.notesIndex.data);
   const theme = useSelector((state) => state.preference.theme);
+  const outletContext = useOutletContext() || {};
+  const isCurrentNoteCompleted = Boolean(outletContext.isCurrentNoteCompleted);
+  const completeCurrentNotePending = Boolean(outletContext.completeCurrentNotePending);
+  const onToggleCurrentNoteCompletion =
+    typeof outletContext.onToggleCurrentNoteCompletion === "function"
+      ? outletContext.onToggleCurrentNoteCompletion
+      : null;
 
   // state
   const [noteContent, setNoteContent] = useState("");
@@ -44,11 +76,25 @@ function NotePage() {
   const outline = useMemo(() => getOutline(noteContent), [noteContent]);
 
   const currentSubjectId = useMemo(() => {
-    if (!note_url) return null;
-    const [pathPart] = note_url.split("#");
+    if (!noteSlugTrimmed) return null;
+    const [pathPart] = noteSlugTrimmed.split("#");
     const parts = pathPart.split("/").filter(Boolean);
     return parts.length > 0 ? parts[0] : null;
-  }, [note_url]);
+  }, [noteSlugTrimmed]);
+
+  useEffect(() => {
+    if (noteSlugTrimmed) return;
+    dispatch(clearCurrentNoteMeta());
+    setNoteContent("");
+    dispatch(setCurrentNoteOutline([]));
+    dispatch(setCurrentNoteContent(""));
+  }, [noteSlugTrimmed, dispatch]);
+
+  useEffect(() => {
+    if (noteSlugTrimmed) return;
+    if (!Array.isArray(notesIndex) || notesIndex.length === 0) return;
+    navigate("/note/disclaimer.md", { replace: true });
+  }, [noteSlugTrimmed, notesIndex, navigate]);
 
   useEffect(() => {
     if (currentSubjectId) {
@@ -59,40 +105,37 @@ function NotePage() {
   }, [currentSubjectId, dispatch]);
 
   useEffect(() => {
-    if (notesIndex && note_url) {
+    if (notesIndex && noteSlugTrimmed) {
       setNoteContent("");
-      const url = `/note/${note_url}`;
+      const url = `/note/${noteSlugTrimmed}`;
       const meta = findMeta(notesIndex, url);
       dispatch(setCurrentNoteMeta(meta));
 
       async function fetchNote() {
-        if (meta && meta.directory !== undefined && meta.name) {
-          let filePath =
-            meta.directory === "."
-              ? `${meta.name}`
-              : `${meta.directory}/${meta.name}`;
-
-          try {
-            const res = await fetch(
-              `${import.meta.env.BASE_URL}notes/${filePath}`,
-            );
-            if (res.ok) {
-              const rawText = await res.text();
-              setNoteContent(removeYamlFrontMatter(rawText));
-            } else {
-              setNoteContent("Note file not found.");
-            }
-          } catch (e) {
-            setNoteContent("Error loading note content.");
-            console.log(e);
-          }
-        } else {
+        const filePath = resolveNoteFilePath(meta, noteSlugTrimmed);
+        if (!filePath) {
           setNoteContent("");
+          return;
+        }
+
+        try {
+          const res = await fetch(
+            `${import.meta.env.BASE_URL}notes/${filePath}`,
+          );
+          if (res.ok) {
+            const rawText = await res.text();
+            setNoteContent(removeYamlFrontMatter(rawText));
+          } else {
+            setNoteContent("Note file not found.");
+          }
+        } catch (e) {
+          setNoteContent("Error loading note content.");
+          console.log(e);
         }
       }
       fetchNote();
     }
-  }, [notesIndex, note_url, dispatch]);
+  }, [notesIndex, noteSlugTrimmed, dispatch]);
 
   useEffect(() => {
     dispatch(setCurrentNoteOutline(outline));
@@ -185,9 +228,17 @@ function NotePage() {
 
   return (
     <>
-      <div>
+      <div className="note-page">
         {noteContent && (
-          <MarkdownRenderer content={noteContent} theme={theme} />
+          <>
+            <MarkdownRenderer
+              content={noteContent}
+              theme={theme}
+              isCompleted={isCurrentNoteCompleted}
+              completionPending={completeCurrentNotePending}
+              onMarkComplete={onToggleCurrentNoteCompletion}
+            />
+          </>
         )}
       </div>
     </>
