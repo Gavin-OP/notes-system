@@ -111,6 +111,23 @@ export function getMyProfile() {
   return userApiRequest("/api/v1/users/me/profile");
 }
 
+export function getMyGuideState() {
+  return userApiRequest("/api/v1/users/me/guides");
+}
+
+export function updateMyGuideState(payload) {
+  return userApiRequest("/api/v1/users/me/guides", {
+    method: "PATCH",
+    body: JSON.stringify({
+      guide_key: payload?.guideKey ?? "",
+      seen: payload?.seen,
+      completed: payload?.completed,
+      current_step:
+        typeof payload?.currentStep === "number" ? payload.currentStep : undefined,
+    }),
+  });
+}
+
 export function completeMyNote(payload) {
   return userApiRequest("/api/v1/users/me/notes/complete", {
     method: "POST",

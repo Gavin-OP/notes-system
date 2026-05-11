@@ -32,6 +32,7 @@ import NoteHeader from "../components/NoteHeader";
 import OutlineSider from "../components/OutlineSider";
 import FloatingOutlineButton from "../components/FloatingOutlineButton";
 import AssistantWorkspace from "../components/assistant/AssistantWorkspace";
+import AppFeatureTour from "../components/guide/AppFeatureTour";
 
 import { buildMenuItems } from "../../utils/notesIndexUtils";
 import { setTheme, setLanguage } from "../../redux/preferenceSlice";
@@ -311,6 +312,12 @@ const NoteLayout = () => {
   const narrationAudioRef = useRef(null);
   const narrationAudioUrlsRef = useRef([]);
   const narrationChunkIndexRef = useRef(0);
+  const noteAreaRef = useRef(null);
+  const directoryAreaRef = useRef(null);
+  const outlineTabRef = useRef(null);
+  const assistantAreaRef = useRef(null);
+  const narrationGuideRef = useRef(null);
+  const profileGuideRef = useRef(null);
   const resizeStateRef = useRef({
     active: false,
     startX: 0,
@@ -804,6 +811,51 @@ const NoteLayout = () => {
     />
   );
 
+  const noteGuideSteps = [
+    {
+      title: "Notes Area",
+      description:
+        "This is your main reading canvas. Focus here to absorb concepts and mark progress as you learn.",
+      target: () => noteAreaRef.current,
+      placement: "right",
+    },
+    {
+      title: "Directory Area",
+      description:
+        "Use this sidebar like your learning map: switch subjects and jump to the next note in one click.",
+      target: () => directoryAreaRef.current,
+      placement: "right",
+    },
+    {
+      title: "Current Note Outline",
+      description:
+        "Need a quick structure check? Open Outline to scan sections before deep reading.",
+      target: () => outlineTabRef.current,
+      placement: "left",
+    },
+    {
+      title: "AI Assistant Workspace",
+      description:
+        "Your AI learning companion lives here: ask Q&A, jot ideas in Scratchpad, and test yourself with Quiz.",
+      target: () => assistantAreaRef.current,
+      placement: "left",
+    },
+    {
+      title: "Play Note Narration",
+      description:
+        "Prefer audio learning? Play narration to review the note hands-free while keeping your place.",
+      target: () => narrationGuideRef.current,
+      placement: "bottom",
+    },
+    {
+      title: "User Profile",
+      description:
+        "Track your growth in User Profile. You are all set now, start your learning journey and enjoy the momentum!",
+      target: () => profileGuideRef.current,
+      placement: "bottom",
+    },
+  ];
+
   return (
     <Layout
       className="note-layout"
@@ -848,6 +900,9 @@ const NoteLayout = () => {
               narrationState={narrationState}
               isNarrationPlaying={isNarrationPlaying}
               onToggleNarration={handleToggleNarration}
+              narrationGuideRef={narrationGuideRef}
+              profileGuideRef={profileGuideRef}
+              notesGuideSteps={noteGuideSteps}
             />
           </Col>
         </Row>
@@ -872,7 +927,7 @@ const NoteLayout = () => {
           trigger={null}
         >
           {showMenu && (
-            <div className="note-layout__sider-menu-shell">
+            <div className="note-layout__sider-menu-shell" ref={directoryAreaRef}>
               {!isMobile ? (
                 <div className="note-layout__sider-header">
                   <span className="note-layout__sider-title">Notes</span>
@@ -928,6 +983,7 @@ const NoteLayout = () => {
           >
             <Content
               className={`note-layout__content ${isMobile ? "note-layout__content--mobile" : ""}`}
+              ref={noteAreaRef}
             >
               <div className="note-layout__assistant-mode">
                 <Text type="secondary">Assistant Mode</Text>
@@ -997,6 +1053,7 @@ const NoteLayout = () => {
                             size="small"
                             type={assistantDockTab === "outline" ? "primary" : "default"}
                             onClick={() => setAssistantDockTab("outline")}
+                            ref={outlineTabRef}
                           >
                             Outline
                           </Button>
@@ -1032,7 +1089,7 @@ const NoteLayout = () => {
                           </Button>
                         </Space>
                       </div>
-                      <div className="note-layout__assistant-dock-body">
+                      <div className="note-layout__assistant-dock-body" ref={assistantAreaRef}>
                         {assistantDockTab === "outline" ? (
                           <OutlineSider outline={outline} collapsed={false} hideHeader />
                         ) : (

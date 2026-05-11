@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -33,6 +33,7 @@ import {
 } from "@ant-design/icons";
 import { getCurrentUser, getMyProfile, getUserProgress, logoutUser } from "../common/api/user";
 import { isConcreteNoteRoute, normalizeNoteRoute } from "../utils/notesIndexUtils";
+import AppFeatureTour from "../common/components/guide/AppFeatureTour";
 
 import "./UserProfilePage.css";
 
@@ -232,6 +233,10 @@ function UserProfilePage() {
   const [fallbackProgress, setFallbackProgress] = useState(null);
   const [previewMode, setPreviewMode] = useState(false);
   const [previewNotice, setPreviewNotice] = useState("");
+  const profileStatsRef = useRef(null);
+  const profileLearningRef = useRef(null);
+  const profileCompletedRef = useRef(null);
+  const profileRecordsRef = useRef(null);
 
   useEffect(() => {
     let mounted = true;
@@ -430,6 +435,37 @@ function UserProfilePage() {
     }
   };
 
+  const profileGuideSteps = [
+    {
+      title: "Overview Metrics",
+      description:
+        "Get a quick pulse of your progress: completed lessons, streak, assistant sessions, and saved notes.",
+      target: () => profileStatsRef.current,
+      placement: "bottom",
+    },
+    {
+      title: "Learning Progress",
+      description:
+        "Review subject-by-subject progress and see exactly where to continue next.",
+      target: () => profileLearningRef.current,
+      placement: "right",
+    },
+    {
+      title: "Completed Notes",
+      description:
+        "Celebrate wins here: every finished note is recorded with completion time.",
+      target: () => profileCompletedRef.current,
+      placement: "right",
+    },
+    {
+      title: "Knowledge Records",
+      description:
+        "Revisit recent AI conversations and personal notes anytime. Ready to keep building? Jump back into your next lesson now!",
+      target: () => profileRecordsRef.current,
+      placement: "left",
+    },
+  ];
+
   if (loading) {
     return (
       <div className="user-profile-page user-profile-page--state">
@@ -459,7 +495,8 @@ function UserProfilePage() {
   return (
     <div className="user-profile-page">
       <div className="user-profile-page__container">
-        <Card className="user-profile-page__hero">
+        <div>
+          <Card className="user-profile-page__hero">
           <Space align="start" size={16}>
             <Avatar size={72} icon={<UserOutlined />} />
             <div>
@@ -492,12 +529,21 @@ function UserProfilePage() {
                 <Button icon={<LogoutOutlined />} onClick={handleLogout} disabled={previewMode}>
                   Logout
                 </Button>
+                <AppFeatureTour
+                  guideKey="profile_page"
+                  steps={profileGuideSteps}
+                  startLabel="Guide"
+                  iconOnly
+                  buttonAriaLabel="Open profile guide"
+                />
               </Space>
             </div>
           </Space>
-        </Card>
+          </Card>
+        </div>
 
-        <Row gutter={[16, 16]}>
+        <div ref={profileStatsRef}>
+          <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} lg={6}>
             <Card>
               <Statistic title="Completed Lessons" value={overview.completedLessons} prefix={<CheckCircleOutlined />} />
@@ -518,11 +564,13 @@ function UserProfilePage() {
               <Statistic title="Saved Notes" value={overview.notesSaved} prefix={<EditOutlined />} />
             </Card>
           </Col>
-        </Row>
+          </Row>
+        </div>
 
         <Row gutter={[16, 16]} className="user-profile-page__main-grid">
           <Col xs={24} lg={14}>
-            <Card title="Learning Progress" extra={<Button type="link">View all</Button>}>
+            <div ref={profileLearningRef}>
+              <Card title="Learning Progress" extra={<Button type="link">View all</Button>}>
               {learningTracks.length > 0 ? (
                 <Space direction="vertical" className="user-profile-page__block" size={16}>
                   {learningTracks.map((track) => (
@@ -542,7 +590,8 @@ function UserProfilePage() {
               ) : (
                 <Empty description="No learning progress yet." />
               )}
-            </Card>
+              </Card>
+            </div>
 
             <Card title="Learning History Timeline" className="user-profile-page__section">
               {timelineItems.length > 0 ? (
@@ -554,7 +603,8 @@ function UserProfilePage() {
               <Button block>Export learning report</Button>
             </Card>
 
-            <Card title="Completed Notes" className="user-profile-page__section">
+            <div ref={profileCompletedRef}>
+              <Card title="Completed Notes" className="user-profile-page__section">
               {decoratedCompletedNotes.length > 0 ? (
                 <List
                   dataSource={decoratedCompletedNotes}
@@ -575,19 +625,21 @@ function UserProfilePage() {
               ) : (
                 <Empty description="No completed notes yet." />
               )}
-            </Card>
+              </Card>
+            </div>
           </Col>
 
           <Col xs={24} lg={10}>
-            <Card
-              title="Knowledge Records"
-              className="user-profile-page__section"
-              extra={
+            <div ref={profileRecordsRef}>
+              <Card
+                title="Knowledge Records"
+                className="user-profile-page__section"
+                extra={
                 <Button type="link" onClick={() => setConversationWorkspaceOpen(true)}>
                   Open conversation workspace
                 </Button>
               }
-            >
+              >
               <Tabs
                 items={[
                   {
@@ -659,7 +711,8 @@ function UserProfilePage() {
                   },
                 ]}
               />
-            </Card>
+              </Card>
+            </div>
           </Col>
         </Row>
       </div>

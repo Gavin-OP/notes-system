@@ -238,6 +238,20 @@ function NotePage() {
               completionPending={completeCurrentNotePending}
               onMarkComplete={onToggleCurrentNoteCompletion}
             />
+            <div className="note-page__complete-footer">
+              <button
+                type="button"
+                className={`note-page__complete-btn ${isCurrentNoteCompleted ? "is-completed" : ""}`}
+                onClick={() => onToggleCurrentNoteCompletion?.()}
+                disabled={completeCurrentNotePending || !onToggleCurrentNoteCompletion}
+              >
+                {completeCurrentNotePending
+                  ? "Updating..."
+                  : isCurrentNoteCompleted
+                    ? "Completed"
+                    : "Mark as completed"}
+              </button>
+            </div>
           </>
         )}
       </div>

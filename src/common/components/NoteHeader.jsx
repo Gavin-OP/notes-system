@@ -12,6 +12,7 @@ import {
   LoadingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import AppFeatureTour from "./guide/AppFeatureTour";
 
 import "./NoteHeader.css";
 
@@ -24,6 +25,9 @@ function NoteHeader({
   narrationState = "idle",
   isNarrationPlaying = false,
   onToggleNarration,
+  narrationGuideRef = null,
+  profileGuideRef = null,
+  notesGuideSteps = [],
 }) {
   const navigate = useNavigate();
   // redux
@@ -125,32 +129,45 @@ function NoteHeader({
           />
         )}
 
-        <Tooltip title={narrationLabel}>
-          <span
-            role="button"
-            tabIndex={narrationDisabled ? -1 : 0}
-            aria-label={narrationLabel}
-            onClick={() => {
-              if (!narrationDisabled) onToggleNarration?.();
-            }}
-            onKeyDown={handleNarrationKeyDown}
-            className={`note-header__icon note-header__icon--clickable ${
-              narrationDisabled ? "note-header__icon--disabled" : ""
-            }`}
-          >
-            {narrationState === "loading" ? (
-              <LoadingOutlined />
-            ) : isNarrationPlaying ? (
-              <PauseCircleOutlined />
-            ) : (
-              <AudioOutlined />
-            )}
-          </span>
-        </Tooltip>
-        <UserOutlined
-          className="note-header__icon note-header__icon--clickable"
-          onClick={() => navigate("/user/profile")}
-        />
+        <span ref={narrationGuideRef}>
+          <Tooltip title={narrationLabel}>
+            <span
+              role="button"
+              tabIndex={narrationDisabled ? -1 : 0}
+              aria-label={narrationLabel}
+              onClick={() => {
+                if (!narrationDisabled) onToggleNarration?.();
+              }}
+              onKeyDown={handleNarrationKeyDown}
+              className={`note-header__icon note-header__icon--clickable ${
+                narrationDisabled ? "note-header__icon--disabled" : ""
+              }`}
+            >
+              {narrationState === "loading" ? (
+                <LoadingOutlined />
+              ) : isNarrationPlaying ? (
+                <PauseCircleOutlined />
+              ) : (
+                <AudioOutlined />
+              )}
+            </span>
+          </Tooltip>
+        </span>
+        {Array.isArray(notesGuideSteps) && notesGuideSteps.length > 0 ? (
+          <AppFeatureTour
+            guideKey="notes_page"
+            steps={notesGuideSteps}
+            iconOnly
+            buttonAriaLabel="Open notes guide"
+            triggerClassName="note-header__guide-trigger"
+          />
+        ) : null}
+        <span ref={profileGuideRef}>
+          <UserOutlined
+            className="note-header__icon note-header__icon--clickable"
+            onClick={() => navigate("/user/profile")}
+          />
+        </span>
         <span className="note-header__sr-only" aria-live="polite">
           {narrationLabel}
         </span>

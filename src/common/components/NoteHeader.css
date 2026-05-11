@@ -49,6 +49,26 @@
   border-radius: 4px;
 }
 
+.note-header__guide-trigger.ant-btn {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  height: auto;
+  line-height: 1;
+  color: #888;
+}
+
+.note-header__guide-trigger.ant-btn .anticon {
+  font-size: 18px;
+}
+
+.note-header__guide-trigger.ant-btn:hover,
+.note-header__guide-trigger.ant-btn:focus-visible {
+  color: #1890ff;
+  transform: scale(1.1);
+}
+
 .note-header__sr-only {
   position: absolute;
   width: 1px;
