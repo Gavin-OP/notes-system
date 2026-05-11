@@ -169,12 +169,36 @@ async function fetchSubjectGraphData(subjectId) {
   return await tryFetchJson(staticPath);
 }
 
+async function fetchNotesIndexJson() {
+  const configuredBase = import.meta.env.BASE_URL || "/";
+  const normalizedBase = configuredBase.endsWith("/") ? configuredBase : `${configuredBase}/`;
+  const candidatePaths = Array.from(
+    new Set([
+      `${normalizedBase}notes-index.json`,
+      "/notes-system/notes-index.json",
+      "/notes-index.json",
+      "notes-index.json",
+    ])
+  );
+
+  for (const path of candidatePaths) {
+    try {
+      const response = await fetch(path, { cache: "no-store" });
+      if (!response.ok) continue;
+      const payload = await response.json();
+      if (Array.isArray(payload)) return payload;
+    } catch {
+      // try next candidate
+    }
+  }
+
+  throw new Error("Failed to fetch notes index");
+}
+
 export const fetchNotesIndex = createAsyncThunk(
   "notesIndex/fetchNotesIndex",
   async () => {
-    const response = await fetch(`${import.meta.env.BASE_URL}notes-index.json`);
-    if (!response.ok) throw new Error("Failed to fetch notes index");
-    const baseNotesIndex = await response.json();
+    const baseNotesIndex = await fetchNotesIndexJson();
 
     const subjectIds = Array.from(collectSubjectIdsFromNotesIndex(baseNotesIndex)).sort();
     const subjectNotesOverrides = {};

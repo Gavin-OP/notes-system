@@ -83,8 +83,17 @@ function RoutesWithTracking() {
 }
 
 export default function AppRoutes() {
+  const configuredBase = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+  const runtimeBasename =
+    typeof window !== "undefined" &&
+    configuredBase &&
+    configuredBase !== "/" &&
+    window.location.pathname.startsWith(configuredBase)
+      ? configuredBase
+      : "";
+
   return (
-    <BrowserRouter basename="/notes-system">
+    <BrowserRouter basename={runtimeBasename}>
       <RoutesWithTracking />
     </BrowserRouter>
   );
