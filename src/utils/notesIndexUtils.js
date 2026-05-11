@@ -28,6 +28,15 @@ function isDisclaimerNoteItem(item) {
   );
 }
 
+/** Static assets under `public/notes/image/` — not navigable “subjects”. */
+function shouldHideFromSidebarMenu(item) {
+  if (!item || typeof item !== "object") return false;
+  if (item.type === "image") return true;
+  const url = normalizeUrl(String(item.url || "").split("#")[0] || "");
+  if (url === "/note/image") return true;
+  return false;
+}
+
 function normalizeNoteRoute(noteUrl) {
   if (typeof noteUrl !== "string" || noteUrl.trim() === "") return null;
   const trimmed = noteUrl.trim();
@@ -108,6 +117,7 @@ function buildMenuItems(data) {
   if (!data) return [];
   return data
     .filter((item) => item.display !== false)
+    .filter((item) => !shouldHideFromSidebarMenu(item))
     .sort((a, b) => {
       const aDisc = isDisclaimerNoteItem(a);
       const bDisc = isDisclaimerNoteItem(b);
@@ -128,11 +138,13 @@ function buildMenuItems(data) {
           : normalizeDisplayTitle(item.title || item.name, item.name);
 
       if (item.type === "folder" && item.children && item.children.length > 0) {
+        const children = buildMenuItems(item.children);
+        if (children.length === 0) return null;
         return {
           key: item.url,
           label,
           iconType: iconType,
-          children: buildMenuItems(item.children),
+          children,
         };
       }
       return {
@@ -140,7 +152,8 @@ function buildMenuItems(data) {
         label,
         iconType: iconType,
       };
-    });
+    })
+    .filter(Boolean);
 }
 
 function buildNotesIndexFromGraphNotes(graphNotesIndex = []) {

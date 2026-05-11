@@ -85,6 +85,11 @@
   border-collapse: collapse;
 }
 
+.markdown-body {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3,
@@ -92,6 +97,29 @@
 .markdown-body h5,
 .markdown-body h6 {
   margin-top: 1rem !important;
+}
+
+.markdown-body img {
+  display: block !important;
+  box-sizing: border-box !important;
+  max-width: min(100%, calc(100vw - 48px)) !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 8px auto !important;
+}
+
+.markdown-body p:has(> img:only-child),
+.markdown-body p:has(> a:only-child > img:only-child),
+.markdown-body p:has(> .markdown-image-crop-shell:only-child),
+.markdown-body p:has(> a:only-child > .markdown-image-crop-shell:only-child) {
+  margin: 0.45rem 0 !important;
+}
+
+.markdown-image-crop-shell {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible;
 }
 
 /* Remove padding-bottom from h1 and h2 to match light mode style */
@@ -105,6 +133,7 @@
   /* Ensure markdown content is readable on mobile */
   .markdown-body {
     font-size: 14px;
+    min-width: 0;
   }
 
   .markdown-body h1 {

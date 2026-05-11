@@ -2,205 +2,289 @@
 # Advanced Data Visualization
 
 ## Learning Objectives
-By the end of this lesson, you will be able to:
-- Customize Matplotlib plots using its object-oriented interface for fine-grained control.
-- Utilize Seaborn to create aesthetically pleasing and statistically informative visualizations with less code.
-- Generate advanced plot types such as enhanced histograms, scatterplots, boxplots, and heatmaps.
-- Understand how to combine multiple plots into a single figure to create comprehensive visual narratives.
-- Appreciate the role of advanced visualizations in building effective data dashboards.
+- Understand the importance of advanced visualization techniques for effective data storytelling.
+- Master the use of Matplotlib for creating highly customized and complex plots.
+- Learn to leverage Seaborn for generating aesthetically pleasing and statistically informative graphics with ease.
+- Create and interpret various advanced plot types, including histograms, scatter plots, boxplots, and heatmaps, to uncover deeper insights.
+- Combine multiple visualizations into cohesive and informative data dashboards.
 
 ## Introduction
-In your journey through data science, you've already learned the importance of [exploratory data analysis](../data-science/exploratory-data-analysis.md#concept-exploratory-data-analysis) and how basic plots can reveal initial insights. But what happens when your data becomes more complex, or when you need to communicate intricate patterns to a diverse audience? This is where **advanced [data visualization](../data-science/exploratory-data-analysis.md#concept-data-visualization)** comes in.
+You've already explored the basics of [data visualization](../data-science/exploratory-data-analysis.md#concept-data-visualization), understanding how simple charts like bar graphs and line plots can help us get a first glance at our data. But what happens when your data is more complex, or when you need to tell a more nuanced story that simple charts can't capture? This is where **advanced data visualization** comes in.
 
-Beyond simple bar charts and line graphs, advanced techniques allow you to uncover deeper relationships, compare distributions across multiple categories, and present a compelling story with your [data](../data-science/data-fundamentals-and-types.md#concept-data). We'll move beyond the basics of plotting to explore powerful Python libraries like Matplotlib and Seaborn, enabling you to create sophisticated, informative, and visually appealing graphics that truly make your data speak.
+Advanced visualization moves beyond simple summaries to help you uncover hidden patterns, relationships, and [outliers](../data-science/data-cleaning-preprocessing.md#concept-outliers) that might be invisible in basic charts. It's about transforming raw data into compelling visual narratives that can drive understanding and inform decisions. In this lesson, we'll dive into two powerful Python libraries, [Matplotlib](../python/intro-scientific-computing.md#concept-matplotlib-library) and Seaborn, to equip you with the skills to create sophisticated and impactful visualizations that truly bring your data to life.
 
 ## Concept Progression
 
+### 1. Beyond the Basics: Why Advanced Visualization?
+Imagine you're trying to describe a bustling city. A simple street map (like a basic bar chart) might show you the main roads. But to truly understand the city – its traffic flow, popular neighborhoods, public transport routes, and hidden gems – you'd need a much more detailed, perhaps interactive, map with multiple layers of information.
+
+Advanced data visualization serves a similar purpose for your [data](../data-science/data-fundamentals-and-types.md#concept-data). While basic plots are excellent for initial exploration and answering simple questions, real-world datasets often contain intricate relationships, multiple variables, and subtle trends. Advanced techniques allow us to:
+-   **Uncover Deeper Insights:** Reveal correlations, distributions, and anomalies that are not immediately obvious.
+-   **Enhance Storytelling:** Present complex information in a clear, engaging, and persuasive manner.
+-   **Support Decision Making:** Provide comprehensive visual evidence to back up conclusions and guide strategic choices.
+
+It's about moving from simply showing data to truly understanding and communicating its underlying meaning, enabling you to ask and answer more complex questions about your data.
+
 <a id="concept-matplotlib"></a>
-### Matplotlib: Gaining Fine-Grained Control
-You've likely used Matplotlib for basic plotting, perhaps with quick commands like `plt.plot()` or `plt.hist()`. While these are great for rapid visualizations, Matplotlib offers a much more powerful and flexible **object-oriented interface**. This approach gives you complete, fine-grained control over every single element of your plot, which is crucial for creating complex, publication-quality figures and for arranging multiple plots effectively.
+### 2. Matplotlib: The Foundation for Customization
+Matplotlib is the grand-daddy of Python plotting libraries. Think of it as a blank canvas and a complete set of high-quality art supplies. You have immense control over every single pixel and element of your plot. This power means you can create almost any static, animated, or interactive visualization imaginable. Because of this granular control, Matplotlib often requires more explicit instructions for common tasks, making it sometimes more verbose. However, its foundational role means that many other plotting libraries, including Seaborn, build directly upon Matplotlib.
 
-Think of it like this: when you use `plt.plot()`, Matplotlib automatically creates a `Figure` (the overall canvas or window) and an `Axes` (the actual plotting area where your data is drawn) for you behind the scenes. With the object-oriented approach, you explicitly create these objects yourself. This allows you to manipulate them independently, adding titles, labels, legends, and even multiple plots to the same figure with precision.
-
-Let's see this in action. We'll start by importing `matplotlib.pyplot` as `plt` and `numpy` for some sample data.
+Let's start by creating a customized scatter plot using [Matplotlib](../python/intro-scientific-computing.md#concept-matplotlib-library). A scatter plot is excellent for visualizing the relationship between two numerical variables.
 
 ```python
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Sample data
-x = np.linspace(0, 10, 100)
-y1 = np.sin(x)
-y2 = np.cos(x)
+# Set a seed for reproducibility so your random data matches ours
+np.random.seed(42)
 
-# 1. Create a Figure and an Axes object
-# fig is the overall window/canvas, ax is the specific plot area within it.
-fig, ax = plt.subplots(figsize=(10, 6)) 
+# Generate some sample data
+# Let's imagine 'x' is study hours and 'y' is exam scores for 50 students
+study_hours = np.random.rand(50) * 10 # Values range from 0 to 10 hours
+exam_scores = 5 * study_hours + 40 + np.random.randn(50) * 10 # Scores around 40-90
 
-# 2. Plot data directly onto the Axes object (ax)
-ax.plot(x, y1, label='Sine Wave', color='blue', linestyle='--')
-ax.plot(x, y2, label='Cosine Wave', color='red', linewidth=2)
+# Create a figure and an axes object.
+# The 'figure' is the overall window or page that contains the plot.
+# The 'axes' (often referred to as 'ax') is the actual plot area where the data is drawn.
+# We can specify the size of the figure using figsize=(width, height) in inches.
+fig, ax = plt.subplots(figsize=(9, 6))
 
-# 3. Customize the Axes object
-ax.set_title('Sine and Cosine Waves', fontsize=16)
-ax.set_xlabel('X-axis', fontsize=12)
-ax.set_ylabel('Y-axis', fontsize=12)
-ax.legend(loc='upper right') # Add a legend
-ax.grid(True, linestyle=':', alpha=0.7) # Add a grid
-ax.set_xlim(0, 10) # Set x-axis limits
-ax.set_ylim(-1.5, 1.5) # Set y-axis limits
+# Plotting the scatter plot on our 'ax' (axes) object.
+# We can customize various aspects like color, marker style, size (s), and transparency (alpha).
+ax.scatter(study_hours, exam_scores,
+           color='darkblue',      # Set the color of the points
+           marker='o',            # Choose the marker style (e.g., 'o' for circles, 'x' for x's)
+           s=80,                  # Adjust the size of the markers
+           alpha=0.7,             # Set transparency (0=fully transparent, 1=fully opaque)
+           label='Student Scores') # Label for this series, used in the legend
 
-# 4. Display the plot
+# Adding a title to the plot, making it larger and bold for emphasis
+ax.set_title('Exam Scores vs. Study Hours', fontsize=18, fontweight='bold')
+
+# Adding clear labels to the X and Y axes
+ax.set_xlabel('Study Hours', fontsize=14)
+ax.set_ylabel('Exam Score', fontsize=14)
+
+# Adding a grid for better readability, with a dashed linestyle and slight transparency
+ax.grid(True, linestyle='--', alpha=0.6)
+
+# Adding a legend to explain the plot elements (e.g., what 'Student Scores' represents)
+ax.legend(fontsize=12)
+
+# Display the plot
 plt.show()
 ```
-In this example, `fig` represents the entire window or page where your plot will be drawn, and `ax` is the actual coordinate system where your data is plotted. By working directly with `fig` and `ax`, you gain precise control over every visual aspect, from titles and labels to line styles and grid visibility. This foundational understanding of Matplotlib's object-oriented structure is key to building more sophisticated and customized visualizations.
 
-[IMAGE_PLACEHOLDER: A Matplotlib plot showing two sine and cosine waves. The plot has a title "Sine and Cosine Waves", labeled X and Y axes, a legend in the upper right, a grid, and distinct blue dashed and red solid lines for the two waves. The figure should clearly show the separation between the overall figure area and the plotting area (axes).]
+<!-- IMAGE_SLOT: img-001 -->
+![A scatter plot created with Matplotlib. The X-axis is labeled "Study Hours" and the Y-axis is labeled "Exam](../../../../../image/data_science/advanced-data-visualization/img-001.png)
+
+
+In this example, we explicitly controlled the figure and axes, set titles and labels, customized point appearance, and added a grid and legend. This level of precise control is Matplotlib's greatest strength, allowing you to fine-tune every visual aspect.
 
 <a id="concept-seaborn"></a>
-### Seaborn: Simplifying Statistical Visualizations
-While Matplotlib provides the fundamental building blocks and granular control, **Seaborn** is a high-level [data visualization](../data-science/exploratory-data-analysis.md#concept-data-visualization) library built directly on top of Matplotlib. It offers a more convenient and intuitive interface for creating attractive and informative statistical graphics. Seaborn excels at handling complex datasets, automatically applying visually appealing styles, and simplifying common statistical plotting tasks.
+### 3. Seaborn: Making Statistical Plots Beautiful and Easy
+While Matplotlib gives you granular control, **Seaborn builds directly on top of Matplotlib** to provide a higher-level interface for drawing attractive and informative statistical graphics. If Matplotlib is your raw canvas and paints, Seaborn is like having a set of specialized brushes and pre-mixed, aesthetically pleasing colors for common statistical visualizations. It simplifies the creation of complex plots and integrates seamlessly with Pandas DataFrames. This means you'll often use Matplotlib functions (like `plt.figure()` or `plt.show()`) alongside Seaborn, as Seaborn leverages Matplotlib for the underlying plotting infrastructure.
 
-Think of Seaborn as a specialized toolkit that takes care of many details for you, allowing you to create sophisticated plots with less code. It's particularly powerful for exploring relationships within your [data](../data-science/data-fundamentals-and-types.md#concept-data), especially when dealing with multiple variables or categorical data. Crucially, because it's built on Matplotlib, you can always use Matplotlib's object-oriented features to further customize Seaborn plots when needed.
-
-Let's compare creating a simple scatterplot using both Matplotlib's object-oriented approach and Seaborn to highlight Seaborn's efficiency. We'll generate some random data for this.
+Let's recreate a similar scatter plot using Seaborn, but this time, we'll add a categorical variable to see how it simplifies grouping and coloring.
 
 ```python
-import pandas as pd
 import seaborn as sns
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt # Seaborn often works best alongside Matplotlib, so we import both
 
-# Sample DataFrame
-data = {
-    'Feature_A': np.random.rand(100) * 10,
-    'Feature_B': np.random.rand(100) * 5 + (np.random.rand(100) * 10),
-    'Category': np.random.choice(['Group 1', 'Group 2', 'Group 3'], 100)
-}
-df = pd.DataFrame(data)
+# Set a seed for reproducibility
+np.random.seed(42)
 
-# Matplotlib scatterplot (object-oriented)
-fig_mpl, ax_mpl = plt.subplots(figsize=(8, 5))
-ax_mpl.scatter(df['Feature_A'], df['Feature_B'], alpha=0.7, color='purple')
-ax_mpl.set_title('Scatterplot with Matplotlib')
-ax_mpl.set_xlabel('Feature A')
-ax_mpl.set_ylabel('Feature B')
-plt.show()
+# Generate sample data with an additional categorical variable: 'Course Type'
+data = pd.DataFrame({
+    'Study Hours': np.random.rand(100) * 10,
+    'Exam Score': 5 * np.random.rand(100) * 10 + 40 + np.random.randn(100) * 10,
+    'Course Type': np.random.choice(['Science', 'Arts', 'Business'], 100)
+})
 
-# Seaborn scatterplot
-# Seaborn can automatically create a figure/axes, or you can pass an existing one.
-plt.figure(figsize=(8, 5)) 
-sns.scatterplot(x='Feature_A', y='Feature_B', data=df, hue='Category', style='Category', s=100)
-plt.title('Scatterplot with Seaborn (by Category)')
-plt.xlabel('Feature A')
-plt.ylabel('Feature B')
+# Create a figure for our plot using Matplotlib, even when using Seaborn.
+# This allows us to control the overall size of the plot.
+plt.figure(figsize=(10, 7))
+
+# sns.scatterplot automatically handles coloring by a categorical variable ('hue')
+# and adds a legend without us needing to specify each color individually.
+sns.scatterplot(x='Study Hours', y='Exam Score',
+                hue='Course Type', # This tells Seaborn to color points based on the 'Course Type' column
+                data=data,         # Specify the DataFrame containing our data
+                s=120,             # Size of the markers
+                alpha=0.8,         # Transparency
+                palette='viridis') # Choose a color palette for the categories
+
+# We still use Matplotlib functions for titles, labels, and grids, as Seaborn integrates with it.
+plt.title('Exam Scores vs. Study Hours by Course Type', fontsize=18, fontweight='bold')
+plt.xlabel('Study Hours', fontsize=14)
+plt.ylabel('Exam Score', fontsize=14)
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.legend(title='Course Type', fontsize=12, title_fontsize=13) # Customize legend title
 plt.show()
 ```
-Notice how Seaborn's `scatterplot()` function directly accepts the DataFrame and column names. It automatically handles coloring (`hue`) and marker style (`style`) based on a categorical variable (`Category`), and even adds a legend for you. This makes it incredibly efficient for exploring relationships within your data and quickly generating aesthetically pleasing plots, especially when dealing with multiple variables.
 
-[IMAGE_PLACEHOLDER: Two scatterplots side-by-side. The left plot, labeled "Scatterplot with Matplotlib", shows purple dots. The right plot, labeled "Scatterplot with Seaborn (by Category)", shows dots colored and styled differently based on three categories (e.g., blue circles for Group 1, orange squares for Group 2, green triangles for Group 3), with a legend.]
+<!-- IMAGE_SLOT: img-002 -->
+![A scatter plot created with Seaborn. The X-axis is "Study Hours" and the Y-axis is "Exam Score". The](../../../../../image/data_science/advanced-data-visualization/img-002.png)
 
-### Advanced Plot Types for Deeper Insights
 
-Now that you're familiar with both Matplotlib's control and Seaborn's convenience, let's dive into some specific advanced plot types that are invaluable for gaining deeper insights from your data. These plots help you visualize distributions, compare groups, and uncover relationships that might be hidden in raw numbers.
+Notice how Seaborn automatically picked distinct colors for each `Course Type` and generated a legend without us needing to specify each color individually. This is a prime example of Seaborn's convenience for creating aesthetically pleasing and statistically informative plots with less code.
 
-#### Histograms and Kernel Density Estimates (KDE)
-You've likely used basic histograms to understand the distribution of a single numerical variable. Seaborn enhances this by easily overlaying a **Kernel Density Estimate (KDE)**. A KDE provides a smoothed, continuous representation of the data's distribution, which can be particularly useful for identifying the shape of the distribution without being affected by the specific binning choices of a histogram.
+### 4. Advanced Plot Types for Deeper Insights
+
+Now that you're familiar with the power of Matplotlib and the convenience of Seaborn, let's explore some specific advanced plot types that are invaluable for deeper [data analysis](../python/intro-scientific-computing.md#concept-data-analysis). These plots help us understand distributions, compare groups, and visualize relationships in ways that simple bar or line charts cannot.
+
+#### 4.1 Histograms: Understanding Distributions
+You've likely encountered basic histograms to see the frequency of values in a dataset. Advanced use of histograms often involves comparing distributions or adding a Kernel Density Estimate (KDE) for a smoother representation of the underlying probability distribution.
+
+-   **Intuition:** A basic histogram is like counting how many people fall into different height ranges. A histogram with a KDE is like drawing a smooth curve over those counts to guess the general shape of the height distribution in the entire population, even for heights not explicitly measured.
+-   **Deeper Understanding:** Histograms divide the range of a numerical variable into bins and show the count or frequency of observations falling into each bin. A KDE plot estimates the probability density [function](../python/functions-in-python.md#concept-function) of a random variable, providing a continuous curve that can be smoother and more informative than a histogram, especially for smaller datasets or when you want to infer the underlying shape of the distribution.
+
+Let's visualize the distribution of `Exam Score` and overlay a KDE to get a clearer picture of its shape.
 
 ```python
-# Using Seaborn for an enhanced histogram with KDE
-plt.figure(figsize=(10, 6))
-sns.histplot(data=df, x='Feature_A', kde=True, bins=15, color='skyblue', edgecolor='black')
-plt.title('Distribution of Feature A with KDE')
-plt.xlabel('Feature A Value')
-plt.ylabel('Frequency')
+plt.figure(figsize=(9, 6))
+sns.histplot(data['Exam Score'],
+             kde=True,           # Overlay a Kernel Density Estimate (the smooth curve)
+             bins=15,            # Number of bins (bars) for the histogram
+             color='teal',       # Color of the histogram bars
+             edgecolor='black',  # Edge color for the bars to make them distinct
+             alpha=0.7)          # Transparency of the bars
+
+plt.title('Distribution of Exam Scores with KDE', fontsize=18, fontweight='bold')
+plt.xlabel('Exam Score', fontsize=14)
+plt.ylabel('Frequency / Density', fontsize=14)
+plt.grid(axis='y', linestyle='--', alpha=0.6) # Grid only on y-axis for cleaner look
 plt.show()
 ```
-The `kde=True` argument adds a smooth curve that estimates the probability density function, giving you a clearer picture of the underlying distribution's shape and peaks.
 
-[IMAGE_PLACEHOLDER: A histogram of 'Feature A' values. The bars are skyblue with black edges. An overlaid smooth blue curve represents the Kernel Density Estimate (KDE). The plot has a title "Distribution of Feature A with KDE" and labeled axes.]
+<!-- IMAGE_SLOT: img-003 -->
+![A histogram showing the distribution of 'Exam Score' values. The bars are teal with black edges and slight](../../../../../image/data_science/advanced-data-visualization/img-003.png)
 
-#### Boxplots: Understanding Data Spread and Outliers
-**Boxplots** are excellent for visualizing the distribution of a numerical variable and comparing it across different categories. They provide a concise summary of the data's central tendency, spread, and potential [outliers](../data-science/data-cleaning-preprocessing.md#concept-outliers).
 
-Let's break down what each part of a boxplot represents:
--   The **box** itself spans from the 25th percentile (Q1) to the 75th percentile (Q3) of the data. This range is known as the Interquartile Range (IQR).
--   The **line inside the box** indicates the median (50th percentile) of the data.
--   The **"whiskers"** extend from the box to the minimum and maximum values within 1.5 times the IQR from Q1 and Q3, respectively. They show the typical range of the data.
--   **Individual points beyond the whiskers** are considered potential outliers, indicating values that are unusually far from the bulk of the data.
+This plot helps us quickly identify if scores are normally distributed, skewed, or have multiple peaks, providing a richer understanding than just looking at average scores.
+
+#### 4.2 Boxplots: Summarizing Data Spread and Outliers
+Boxplots are incredibly useful for quickly summarizing the distribution of a numerical variable and comparing distributions across different categories. They efficiently display the median, quartiles, and potential [outliers](../data-science/data-cleaning-preprocessing.md#concept-outliers), making them excellent for spotting differences between groups.
+
+-   **Intuition:** A boxplot is like a compact infographic for a group of numbers. It shows you the "middle" value (median), where the bulk of the numbers lie (the box), how spread out they are (whiskers), and if there are any unusually high or low numbers (outliers).
+-   **Deeper Understanding:** A boxplot efficiently displays the **five-number summary** of a dataset: the minimum value (excluding outliers, typically the lowest data point within 1.5 * IQR of Q1), the first quartile (Q1, 25th percentile), the median (Q2, 50th percentile), the third quartile (Q3, 75th percentile), and the maximum value (excluding outliers, typically the highest data point within 1.5 * IQR of Q3). Outliers are typically plotted as individual points beyond the "whiskers" (which extend to 1.5 times the interquartile range from Q1 and Q3).
+
+Let's use a boxplot to compare `Exam Score` distributions across different `Course Type` categories, allowing us to see if certain course types tend to have higher or more varied scores.
 
 ```python
-# Boxplot comparing Feature_B across different categories
-plt.figure(figsize=(10, 6))
-sns.boxplot(x='Category', y='Feature_B', data=df, palette='viridis')
-plt.title('Feature B Distribution Across Categories')
-plt.xlabel('Category')
-plt.ylabel('Feature B Value')
+plt.figure(figsize=(9, 6))
+sns.boxplot(x='Course Type', y='Exam Score',
+            data=data,
+            palette='Set2', # A different, visually distinct color palette
+            linewidth=1.5,  # Thickness of the box lines
+            fliersize=8)    # Size of the outlier points (the individual dots)
+
+plt.title('Exam Score Distribution by Course Type', fontsize=18, fontweight='bold')
+plt.xlabel('Course Type', fontsize=14)
+plt.ylabel('Exam Score', fontsize=14)
+plt.grid(axis='y', linestyle='--', alpha=0.6)
 plt.show()
 ```
-This plot quickly shows you how `Feature_B` varies between 'Group 1', 'Group 2', and 'Group 3', highlighting differences in central tendency (medians), spread (box height), and the presence of outliers in each group.
 
-[IMAGE_PLACEHOLDER: A boxplot showing the distribution of 'Feature B' for three distinct categories (Group 1, Group 2, Group 3) on the x-axis. Each boxplot should be a different color from the 'viridis' palette, clearly showing the median line, interquartile range box, whiskers, and any outlier points.]
+<!-- IMAGE_SLOT: img-004 -->
+![A boxplot showing the distribution of 'Exam Score' for each 'Course Type' (Science, Arts, Business). Each category has](../../../../../image/data_science/advanced-data-visualization/img-004.png)
 
-#### Heatmaps: Visualizing Relationships in Matrix Data
-**Heatmaps** are powerful for visualizing matrix-like data, where the intensity of color represents the value of a variable. They are particularly useful for displaying **[correlation](../data-science/exploratory-data-analysis.md#concept-correlation) matrices**, which show the pairwise relationships (correlations) between many numerical variables at once. This allows you to quickly identify strong positive, negative, or weak correlations.
 
-Let's create a correlation matrix for our DataFrame's numerical features and visualize it with a heatmap.
+This makes boxplots invaluable for comparing distributions at a glance, quickly highlighting differences in central tendency, spread, and the presence of extreme values between groups.
+
+#### 4.3 Heatmaps: Visualizing Relationships in Grids
+Heatmaps are powerful for visualizing matrix-like [data](../data-science/data-fundamentals-and-types.md#concept-data), where the intensity of color represents the value in each cell. They are particularly effective for showing [correlation](../data-science/exploratory-data-analysis.md#concept-correlation) matrices, displaying patterns in large tables, or visualizing feature importance in machine learning.
+
+-   **Intuition:** Imagine a table of numbers, but instead of reading each number, you just look at the color of the cell. Darker colors might mean bigger numbers, lighter colors might mean smaller numbers. This helps you quickly spot patterns and relationships without having to scrutinize every single value.
+-   **Deeper Understanding:** In a heatmap, a numerical value is mapped to a color gradient. This allows for quick visual identification of high and low values, and patterns across rows and columns. When applied to a correlation matrix, it immediately highlights strong positive (e.g., dark blue) or negative (e.g., dark red) relationships between variables, making complex interdependencies easy to grasp.
+
+Let's create a correlation heatmap for our numerical features. We'll add another numerical feature to our dataset for this to make the correlation matrix more interesting.
 
 ```python
-# Calculate the correlation matrix for numerical features
-correlation_matrix = df[['Feature_A', 'Feature_B']].corr()
-print("Correlation Matrix:\n", correlation_matrix)
+# Add another numerical feature for correlation analysis
+data['Attendance Rate'] = np.random.rand(100) * 100 # Values from 0 to 100%
+# Create a 'Project Score' that has some correlation with 'Exam Score' and 'Study Hours'
+data['Project Score'] = 0.7 * data['Exam Score'] + 0.2 * data['Study Hours'] + np.random.randn(100) * 5
 
-# Create a heatmap
-plt.figure(figsize=(8, 6))
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=.5)
-plt.title('Correlation Heatmap of Features')
+# Calculate the correlation matrix for only the numerical columns
+numerical_data = data[['Study Hours', 'Exam Score', 'Attendance Rate', 'Project Score']]
+correlation_matrix = numerical_data.corr()
+
+plt.figure(figsize=(8, 7))
+sns.heatmap(correlation_matrix,
+            annot=True,      # Show the correlation values (numbers) on the heatmap cells
+            cmap='coolwarm', # Colormap: 'coolwarm' is excellent for diverging data (positive/negative correlations)
+            fmt=".2f",       # Format annotations to two decimal places
+            linewidths=.5,   # Add lines between cells for better separation
+            cbar_kws={'label': 'Correlation Coefficient'}) # Label for the color bar
+
+plt.title('Correlation Heatmap of Student Performance Metrics', fontsize=18, fontweight='bold')
+plt.xticks(rotation=45, ha='right') # Rotate x-axis labels for better readability
+plt.yticks(rotation=0)              # Keep y-axis labels horizontal
 plt.show()
 ```
-The `annot=True` argument displays the correlation values directly on the heatmap cells, making it easy to read precise numbers. `cmap='coolwarm'` sets the color scheme (typically red for negative correlation, blue for positive, and white/light colors for near-zero correlation), and `fmt=".2f"` formats the numbers to two decimal places. This makes it incredibly easy to spot strong positive or negative correlations at a glance.
 
-[IMAGE_PLACEHOLDER: A heatmap displaying a 2x2 correlation matrix between 'Feature A' and 'Feature B'. The cells should be colored according to the 'coolwarm' colormap (e.g., blue for positive correlation, red for negative). Each cell should also display the numerical correlation coefficient, formatted to two decimal places.]
+<!-- IMAGE_SLOT: img-005 -->
+![A heatmap displaying a correlation matrix between 'Study Hours', 'Exam Score', 'Attendance Rate', and 'Project Score'. The matrix](../../../../../image/data_science/advanced-data-visualization/img-005.png)
 
-### Creating Visual Narratives: Combining Plots for Dashboards
-Often, a single plot isn't enough to tell the whole story or provide a comprehensive overview. Data scientists frequently combine multiple related visualizations into a single, cohesive view to create a **data dashboard**. A dashboard allows stakeholders to quickly grasp key trends, compare different aspects of the data, and monitor performance metrics by presenting a curated collection of insights.
 
-While building interactive dashboards typically involves specialized tools (like Tableau, Power BI, or Python libraries like Dash/Streamlit), you can create static, dashboard-like layouts using Matplotlib's subplot capabilities. This foundational skill helps you arrange your advanced plots effectively and tell a more complete visual story.
+Heatmaps are incredibly effective for quickly identifying which variables are strongly related (positive or negative correlation) and which have little to no linear relationship.
 
-Let's imagine we want to show the distribution of `Feature_A`, the distribution of `Feature_B`, and their relationship in a scatterplot, all within one figure.
+### 5. Building Data Dashboards: Combining Insights
+Individual plots are powerful, but often you need to see several related visualizations together to get a complete picture. A **data dashboard** is a collection of visualizations and metrics displayed on a single screen, designed to provide a comprehensive overview of key information. Instead of presenting insights one by one, a dashboard allows for a holistic view, enabling quicker understanding and decision-making.
+
+-   **Intuition:** A dashboard is like the control panel in a car or an airplane cockpit. Instead of looking at one gauge at a time, you see all the critical indicators (speed, fuel, altitude, etc.) together, giving you a complete operational picture at a glance.
+-   **Deeper Understanding:** Dashboards are crucial for monitoring performance, identifying trends, and facilitating quick decision-making. While specialized tools like Tableau or Power BI are designed for interactive dashboards, you can create static, multi-panel dashboards using Matplotlib's powerful `subplots` capabilities, often enhanced with Seaborn plots, to present a cohesive story.
+
+Let's create a simple dashboard combining a scatter plot, a histogram, and a boxplot to summarize our student performance data. This will demonstrate how to arrange multiple plots into a single, informative view.
 
 ```python
-# Create a figure with multiple subplots
-# plt.subplots(rows, columns, figsize) returns a figure and an array of axes objects.
-fig, axes = plt.subplots(1, 3, figsize=(18, 5)) # 1 row, 3 columns
+# Create a figure with multiple subplots.
+# plt.subplots(rows, columns, figsize) creates a grid of plots.
+fig, axes = plt.subplots(1, 3, figsize=(20, 6)) # 1 row, 3 columns, with a wider figure size
 
-# Plot 1: Histogram of Feature_A on the first axes (axes[0])
-sns.histplot(data=df, x='Feature_A', kde=True, ax=axes[0], color='lightcoral')
-axes[0].set_title('Distribution of Feature A')
-axes[0].set_xlabel('Feature A')
-axes[0].set_ylabel('Frequency')
+# Plot 1 (Left): Scatter Plot (Study Hours vs. Exam Score by Course Type)
+sns.scatterplot(x='Study Hours', y='Exam Score', hue='Course Type',
+                data=data, s=100, alpha=0.8, palette='Set1', ax=axes[0]) # 'ax=axes[0]' directs plot to the first subplot
+axes[0].set_title('Study Hours vs. Exam Score', fontsize=14)
+axes[0].set_xlabel('Study Hours')
+axes[0].set_ylabel('Exam Score')
+axes[0].legend(title='Course Type', fontsize=10, title_fontsize=11, loc='upper left')
+axes[0].grid(True, linestyle=':', alpha=0.5)
 
-# Plot 2: Histogram of Feature_B on the second axes (axes[1])
-sns.histplot(data=df, x='Feature_B', kde=True, ax=axes[1], color='lightgreen')
-axes[1].set_title('Distribution of Feature B')
-axes[1].set_xlabel('Feature B')
-axes[1].set_ylabel('Frequency')
+# Plot 2 (Middle): Histogram with KDE (Distribution of Exam Scores)
+sns.histplot(data['Exam Score'], kde=True, bins=15, color='purple',
+             edgecolor='black', alpha=0.7, ax=axes[1]) # 'ax=axes[1]' directs plot to the second subplot
+axes[1].set_title('Distribution of Exam Scores', fontsize=14)
+axes[1].set_xlabel('Exam Score')
+axes[1].set_ylabel('Frequency / Density')
+axes[1].grid(axis='y', linestyle=':', alpha=0.5)
 
-# Plot 3: Scatterplot of Feature_A vs Feature_B on the third axes (axes[2])
-sns.scatterplot(x='Feature_A', y='Feature_B', data=df, hue='Category', ax=axes[2], s=80)
-axes[2].set_title('Feature A vs Feature B by Category')
-axes[2].set_xlabel('Feature A')
-axes[2].set_ylabel('Feature B')
-axes[2].legend(title='Category')
+# Plot 3 (Right): Boxplot (Exam Score Distribution by Course Type)
+sns.boxplot(x='Course Type', y='Exam Score', data=data,
+            palette='Pastel1', linewidth=1.5, fliersize=6, ax=axes[2]) # 'ax=axes[2]' directs plot to the third subplot
+axes[2].set_title('Exam Score by Course Type', fontsize=14)
+axes[2].set_xlabel('Course Type')
+axes[2].set_ylabel('Exam Score')
+axes[2].grid(axis='y', linestyle=':', alpha=0.5)
 
-plt.tight_layout() # Automatically adjusts subplot parameters for a tight layout, preventing overlaps
+# Add an overall title for the entire dashboard, positioned above all subplots
+plt.suptitle('Student Performance Overview Dashboard', fontsize=22, fontweight='bold', y=1.05)
+
+# Adjust layout to prevent plots and titles from overlapping, making it neat
+plt.tight_layout(rect=[0, 0.03, 1, 0.98]) # [left, bottom, right, top] adjusts the bounding box for tight_layout
 plt.show()
 ```
-Here, `plt.subplots(1, 3)` creates a single figure (`fig`) and an array of three axes objects (`axes`). We then pass each specific `ax` object (e.g., `axes[0]`, `axes[1]`) to our Seaborn plotting functions using the `ax=` argument. `plt.tight_layout()` automatically adjusts spacing to prevent titles or labels from overlapping, ensuring a clean presentation. This approach allows you to curate a visual story, presenting related information together for maximum impact and clarity.
 
-[IMAGE_PLACEHOLDER: A single figure containing three subplots arranged horizontally. The first subplot is a histogram of 'Feature A' with KDE. The second subplot is a histogram of 'Feature B' with KDE. The third subplot is a scatterplot of 'Feature A' vs 'Feature B', with points colored by 'Category' and a legend. Each subplot has its own title and axis labels, and the overall layout is clean and well-spaced.]
+<!-- IMAGE_SLOT: img-006 -->
+![A data dashboard layout with three distinct plots arranged horizontally. The overall title "Student Performance Overview Dashboard" is](../../../../../image/data_science/advanced-data-visualization/img-006.png)
+
+
+This dashboard provides a quick, comprehensive overview of student performance, allowing us to see relationships, distributions, and categorical comparisons all in one place. It's a powerful way to present multiple facets of your data story simultaneously.
 
 ## Wrap-Up
-Congratulations! You've now moved beyond basic plotting to explore the world of advanced data visualization. You've learned how Matplotlib's object-oriented interface provides granular control over every aspect of your plots, and how Seaborn simplifies the creation of sophisticated statistical graphics with less code and beautiful defaults.
+Congratulations! You've now moved beyond basic charts and explored the exciting world of advanced data visualization. You've learned how Matplotlib provides the fundamental building blocks for highly customized plots, and how Seaborn simplifies the creation of beautiful and statistically rich graphics by building on Matplotlib's foundation. We've also delved into specific advanced plot types like histograms with KDEs for understanding distributions, boxplots for summarizing data spread and identifying outliers, and heatmaps for visualizing complex relationships. Finally, you saw how to combine these individual insights into powerful data dashboards, presenting a cohesive narrative.
 
-We covered several invaluable advanced plot types: enhanced histograms with Kernel Density Estimates for understanding distributions, boxplots for comparing distributions and identifying outliers across categories, and heatmaps for visualizing relationships in matrix data like correlation matrices. Finally, you learned the fundamental idea of combining multiple plots into a single figure using Matplotlib's subplot capabilities, a crucial step towards building comprehensive data dashboards.
-
-The ability to create clear, insightful, and aesthetically pleasing visualizations is a cornerstone of effective data science. As you continue your journey, remember that the best visualization is one that accurately and efficiently communicates your data's story. In the next lesson, we'll delve into even more specialized visualization techniques and tools.
+The ability to visualize data effectively is a cornerstone of data science. As you continue your journey, remember that the goal of any visualization is to communicate clearly, uncover insights, and tell a compelling story with your data. Keep experimenting with different plot types and customization options to find the most impactful ways to present your findings and drive understanding.

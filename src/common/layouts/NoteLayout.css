@@ -178,6 +178,7 @@
 /* Main content */
 .note-layout__content {
   flex: 1;
+  min-width: 0;
   padding: 24px;
   background: var(--content-bg);
   border-radius: var(--content-radius);

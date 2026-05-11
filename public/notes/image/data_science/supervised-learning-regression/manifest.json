@@ -1,0 +1,27 @@
+{
+  "subject": "data_science",
+  "topic_slug": "supervised-learning-regression",
+  "provider": "openai_images",
+  "model": "gpt-image-1.5",
+  "prompt_suffix": "Render this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+  "images": [
+    {
+      "slot": "img-001",
+      "prompt": "A scatter plot showing various data points representing house size (x-axis) vs. house price (y-axis). The points are generally trending upwards. A dashed line is drawn through the middle of the points, illustrating a general trend. Labels for x and y axes are \"House Size (sq ft)\" and \"House Price ($)\".",
+      "prompt_final": "A scatter plot showing various data points representing house size (x-axis) vs. house price (y-axis). The points are generally trending upwards. A dashed line is drawn through the middle of the points, illustrating a general trend. Labels for x and y axes are \"House Size (sq ft)\" and \"House Price ($)\".\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+      "image_rel_path": "output/image/data_science/supervised-learning-regression/img-001.png"
+    },
+    {
+      "slot": "img-002",
+      "prompt": "A scatter plot of house size vs. house price. Three different lines are drawn: one clearly too high, one clearly too low, and one that appears to be the \"best fit\" passing through the general trend of the data. The \"best fit\" line is highlighted or labeled as such. Small vertical dashed lines connect a few data points to each of the three lines, illustrating the \"error\" or \"residual\" for each line.",
+      "prompt_final": "A scatter plot of house size vs. house price. Three different lines are drawn: one clearly too high, one clearly too low, and one that appears to be the \"best fit\" passing through the general trend of the data. The \"best fit\" line is highlighted or labeled as such. Small vertical dashed lines connect a few data points to each of the three lines, illustrating the \"error\" or \"residual\" for each line.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+      "image_rel_path": "output/image/data_science/supervised-learning-regression/img-002.png"
+    },
+    {
+      "slot": "img-003",
+      "prompt": "A 2D contour plot representing a loss function (e.g., MSE) with two parameters (e.g., 'm' and 'b') on the x and y axes. The contours show increasing loss values as they move away from the center. A path of small arrows or dots starts from a random point on the contour plot and iteratively moves towards the center (the minimum loss), illustrating the steps of gradient descent. The minimum point is clearly marked.",
+      "prompt_final": "A 2D contour plot representing a loss function (e.g., MSE) with two parameters (e.g., 'm' and 'b') on the x and y axes. The contours show increasing loss values as they move away from the center. A path of small arrows or dots starts from a random point on the contour plot and iteratively moves towards the center (the minimum loss), illustrating the steps of gradient descent. The minimum point is clearly marked.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+      "image_rel_path": "output/image/data_science/supervised-learning-regression/img-003.png"
+    }
+  ]
+}

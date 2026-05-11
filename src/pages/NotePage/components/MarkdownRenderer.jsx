@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import ReactMarkdown from "react-markdown";
@@ -25,6 +25,187 @@ const themeCssMap = {
   light: `${import.meta.env.BASE_URL}theme/github.css`,
   dark: `${import.meta.env.BASE_URL}theme/d42ker-github.css`,
 };
+
+const CROP_PROBE_MAX_PX = 800;
+const BG_ALPHA_MAX = 12;
+const BG_RGB_MIN = 245;
+const MIN_TRIM_SUM_PCT = 5;
+const MIN_INNER_FRAC = 0.12;
+
+function isLikelyBackgroundPixel(r, g, b, a) {
+  if (a <= BG_ALPHA_MAX) return true;
+  return r >= BG_RGB_MIN && g >= BG_RGB_MIN && b >= BG_RGB_MIN;
+}
+
+function computeCropBounds(img) {
+  if (!img?.naturalWidth || !img.naturalHeight) return null;
+
+  const w = img.naturalWidth;
+  const h = img.naturalHeight;
+  const scale = Math.min(1, CROP_PROBE_MAX_PX / Math.max(w, h));
+  const cw = Math.max(1, Math.round(w * scale));
+  const ch = Math.max(1, Math.round(h * scale));
+
+  const canvas = document.createElement("canvas");
+  canvas.width = cw;
+  canvas.height = ch;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return null;
+
+  let data;
+  try {
+    ctx.drawImage(img, 0, 0, cw, ch);
+    ({ data } = ctx.getImageData(0, 0, cw, ch));
+  } catch {
+    return null;
+  }
+
+  let minX = cw;
+  let minY = ch;
+  let maxX = -1;
+  let maxY = -1;
+  const rowCounts = new Array(ch).fill(0);
+  const colCounts = new Array(cw).fill(0);
+
+  for (let y = 0; y < ch; y += 1) {
+    for (let x = 0; x < cw; x += 1) {
+      const i = (y * cw + x) * 4;
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const al = data[i + 3];
+      if (!isLikelyBackgroundPixel(r, g, b, al)) {
+        rowCounts[y] += 1;
+        colCounts[x] += 1;
+      }
+    }
+  }
+
+  const rowThreshold = Math.max(3, Math.round(cw * 0.008));
+  const colThreshold = Math.max(3, Math.round(ch * 0.008));
+
+  for (let y = 0; y < ch; y += 1) {
+    if (rowCounts[y] >= rowThreshold) {
+      minY = y;
+      break;
+    }
+  }
+  for (let y = ch - 1; y >= 0; y -= 1) {
+    if (rowCounts[y] >= rowThreshold) {
+      maxY = y;
+      break;
+    }
+  }
+  for (let x = 0; x < cw; x += 1) {
+    if (colCounts[x] >= colThreshold) {
+      minX = x;
+      break;
+    }
+  }
+  for (let x = cw - 1; x >= 0; x -= 1) {
+    if (colCounts[x] >= colThreshold) {
+      maxX = x;
+      break;
+    }
+  }
+
+  if (maxX < minX || maxY < minY) return null;
+
+  const pad = Math.max(2, Math.round(0.012 * Math.max(cw, ch)));
+  minX = Math.max(0, minX - pad);
+  minY = Math.max(0, minY - pad);
+  maxX = Math.min(cw - 1, maxX + pad);
+  maxY = Math.min(ch - 1, maxY + pad);
+
+  const x0 = Math.floor(minX / scale);
+  const y0 = Math.floor(minY / scale);
+  const x1 = Math.ceil((maxX + 1) / scale);
+  const y1 = Math.ceil((maxY + 1) / scale);
+
+  const trimSumPct =
+    (x0 / w) * 100 +
+    ((w - x1) / w) * 100 +
+    (y0 / h) * 100 +
+    ((h - y1) / h) * 100;
+
+  if (trimSumPct < MIN_TRIM_SUM_PCT) return null;
+
+  const innerW = (x1 - x0) / w;
+  const innerH = (y1 - y0) / h;
+  if (innerW < MIN_INNER_FRAC || innerH < MIN_INNER_FRAC) return null;
+
+  return {
+    sx: Math.max(0, x0),
+    sy: Math.max(0, y0),
+    sw: Math.min(w, x1) - Math.max(0, x0),
+    sh: Math.min(h, y1) - Math.max(0, y0),
+  };
+}
+
+function cropImageToDataUrl(img) {
+  const bounds = computeCropBounds(img);
+  if (!bounds) return null;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = bounds.sw;
+  canvas.height = bounds.sh;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+
+  try {
+    ctx.drawImage(
+      img,
+      bounds.sx,
+      bounds.sy,
+      bounds.sw,
+      bounds.sh,
+      0,
+      0,
+      bounds.sw,
+      bounds.sh,
+    );
+    return canvas.toDataURL("image/png");
+  } catch {
+    return null;
+  }
+}
+
+function MarkdownImage({ finalSrc, style, src: _discardSrc, ...imgRest }) {
+  const [displaySrc, setDisplaySrc] = useState(finalSrc);
+
+  const userHasClip =
+    (typeof style?.clipPath === "string" && style.clipPath.trim() !== "") ||
+    (typeof style?.WebkitClipPath === "string" && style.WebkitClipPath.trim() !== "");
+
+  useEffect(() => {
+    setDisplaySrc(finalSrc);
+  }, [finalSrc]);
+
+  const imgStyle = {
+    display: "block",
+    boxSizing: "border-box",
+    width: "auto",
+    height: "auto",
+    marginTop: "8px",
+    marginBottom: "8px",
+    ...style,
+    maxWidth: "min(100%, calc(100vw - 48px))",
+    marginLeft: "auto",
+    marginRight: "auto",
+  };
+
+  const handleLoad = (event) => {
+    if (userHasClip || displaySrc !== finalSrc) return;
+    const croppedSrc = cropImageToDataUrl(event.currentTarget);
+    if (croppedSrc) setDisplaySrc(croppedSrc);
+  };
+
+  return (
+    <div className="markdown-image-crop-shell">
+      <img src={displaySrc} style={imgStyle} onLoad={handleLoad} {...imgRest} />
+    </div>
+  );
+}
 
 function useH1TitleFit(deps) {
   const toolbarRef = useRef(null);
@@ -355,7 +536,7 @@ const MarkdownRenderer = ({
     h6: (props) => <HeadingWithCopy level={6} {...props} />,
 
     // relative image path
-    img({ src, style, ...props }) {
+    img({ node: _nodeIgnored, src, style, width: _ignoredWidth, height: _ignoredHeight, ...props }) {
       let finalSrc = src;
       if (src && !/^https?:\/\//.test(src) && noteDirectory !== undefined) {
         const base = noteDirectory === "." ? "" : noteDirectory;
@@ -363,15 +544,7 @@ const MarkdownRenderer = ({
         finalSrc = `${import.meta.env.BASE_URL}notes/${resolved}`;
       }
 
-      // 合并用户自定义 style，优先级高于默认
-      const mergedStyle = {
-        display: "block",
-        maxWidth: "100%",
-        marginLeft: "auto",
-        marginRight: "auto",
-        ...style,
-      };
-      return <img src={finalSrc} style={mergedStyle} {...props} />;
+      return <MarkdownImage finalSrc={finalSrc} style={style} {...props} />;
     },
 
     // code block formatting

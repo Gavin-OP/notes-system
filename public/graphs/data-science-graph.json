@@ -18,9 +18,9 @@
       "derives_from",
       "extends"
     ],
-    "lastGenerated": "2026-04-12T21:28:38.422Z",
-    "nodeCount": 104,
-    "edgeCount": 160,
+    "lastGenerated": "2026-05-10T19:49:11.347466+00:00",
+    "nodeCount": 102,
+    "edgeCount": 167,
     "view": "default"
   },
   "categories": [
@@ -36,6 +36,7 @@
         "data-science/accuracy",
         "data-science/classification",
         "data-science/confusion-matrix",
+        "data-science/f1-score",
         "data-science/logistic-regression",
         "data-science/precision-vs-recall",
         "data-science/supervised-learning-classification",
@@ -44,7 +45,7 @@
       "nodeItems": [
         {
           "id": "data-science/accuracy",
-          "displayName": "Key Metrics",
+          "displayName": "Evaluating Classification Models",
           "noteSlug": "supervised-learning-classification",
           "noteTitle": "Supervised Learning: Classification",
           "subject": "data-science"
@@ -58,7 +59,14 @@
         },
         {
           "id": "data-science/confusion-matrix",
-          "displayName": "Evaluating Classification Models",
+          "displayName": "confusion matrix",
+          "noteSlug": "supervised-learning-classification",
+          "noteTitle": "Supervised Learning: Classification",
+          "subject": "data-science"
+        },
+        {
+          "id": "data-science/f1-score",
+          "displayName": "F1-Score",
           "noteSlug": "supervised-learning-classification",
           "noteTitle": "Supervised Learning: Classification",
           "subject": "data-science"
@@ -72,7 +80,7 @@
         },
         {
           "id": "data-science/precision-vs-recall",
-          "displayName": "Key Metrics",
+          "displayName": "Precision and Recall",
           "noteSlug": "supervised-learning-classification",
           "noteTitle": "Supervised Learning: Classification",
           "subject": "data-science"
@@ -116,14 +124,14 @@
         },
         {
           "id": "data-science/matplotlib",
-          "displayName": "Matplotlib",
+          "displayName": "matplotlib",
           "noteSlug": "advanced-data-visualization",
           "noteTitle": "Advanced Data Visualization",
           "subject": "data-science"
         },
         {
           "id": "data-science/seaborn",
-          "displayName": "Seaborn",
+          "displayName": "seaborn",
           "noteSlug": "advanced-data-visualization",
           "noteTitle": "Advanced Data Visualization",
           "subject": "data-science"
@@ -202,8 +210,7 @@
       "nodes": [
         "data-science/bias-variance-tradeoff",
         "data-science/feature-engineering",
-        "data-science/introduction-to-machine-learning",
-        "data-science/overfitting-vs-underfitting"
+        "data-science/introduction-to-machine-learning"
       ],
       "nodeItems": [
         {
@@ -226,13 +233,6 @@
           "noteSlug": "introduction-to-machine-learning",
           "noteTitle": "Introduction to Machine Learning",
           "subject": "data-science"
-        },
-        {
-          "id": "data-science/overfitting-vs-underfitting",
-          "displayName": "Overfitting and Underfitting",
-          "noteSlug": "introduction-to-machine-learning",
-          "noteTitle": "Introduction to Machine Learning",
-          "subject": "data-science"
         }
       ]
     },
@@ -248,6 +248,7 @@
         "data-science/bivariate-analysis",
         "data-science/correlation",
         "data-science/data-visualization",
+        "data-science/descriptive-statistics",
         "data-science/exploratory-data-analysis",
         "data-science/univariate-analysis"
       ],
@@ -269,6 +270,13 @@
         {
           "id": "data-science/data-visualization",
           "displayName": "Data Visualization",
+          "noteSlug": "exploratory-data-analysis",
+          "noteTitle": "Exploratory Data Analysis (EDA)",
+          "subject": "data-science"
+        },
+        {
+          "id": "data-science/descriptive-statistics",
+          "displayName": "Descriptive Statistics",
           "noteSlug": "exploratory-data-analysis",
           "noteTitle": "Exploratory Data Analysis (EDA)",
           "subject": "data-science"
@@ -309,7 +317,7 @@
       "nodeItems": [
         {
           "id": "data-science/categorical-encoding",
-          "displayName": "categorical encoding",
+          "displayName": "Categorical Encoding",
           "noteSlug": "data-cleaning-preprocessing",
           "noteTitle": "Data Cleaning and Preprocessing",
           "subject": "data-science"
@@ -323,21 +331,21 @@
         },
         {
           "id": "data-science/data-imputation",
-          "displayName": "Filling the Gaps",
+          "displayName": "Handling Missing Data",
           "noteSlug": "data-cleaning-preprocessing",
           "noteTitle": "Data Cleaning and Preprocessing",
           "subject": "data-science"
         },
         {
           "id": "data-science/data-transformation",
-          "displayName": "Shaping Your Data",
+          "displayName": "Transforming Data for Better Models",
           "noteSlug": "data-cleaning-preprocessing",
           "noteTitle": "Data Cleaning and Preprocessing",
           "subject": "data-science"
         },
         {
           "id": "data-science/feature-scaling",
-          "displayName": "Leveling the Playing Field",
+          "displayName": "feature scaling",
           "noteSlug": "data-cleaning-preprocessing",
           "noteTitle": "Data Cleaning and Preprocessing",
           "subject": "data-science"
@@ -378,14 +386,14 @@
       "nodeItems": [
         {
           "id": "data-science/clustering",
-          "displayName": "clustering",
+          "displayName": "Clustering",
           "noteSlug": "unsupervised-learning-clustering",
           "noteTitle": "Unsupervised Learning: Clustering",
           "subject": "data-science"
         },
         {
           "id": "data-science/dimensionality-reduction",
-          "displayName": "Dimensionality Reduction",
+          "displayName": "Dealing with Too Many Features",
           "noteSlug": "unsupervised-learning-clustering",
           "noteTitle": "Unsupervised Learning: Clustering",
           "subject": "data-science"
@@ -413,7 +421,7 @@
         },
         {
           "id": "data-science/silhouette-score",
-          "displayName": "Evaluating Clustering",
+          "displayName": "silhouette score",
           "noteSlug": "unsupervised-learning-clustering",
           "noteTitle": "Unsupervised Learning: Clustering",
           "subject": "data-science"
@@ -513,56 +521,11 @@
       ]
     },
     {
-      "id": "note-data-science-programming-for-data-science-python",
-      "name": "Programming for Data Science with Python",
-      "displayName": "Programming for Data Science with Python",
-      "color": "#74D3AE",
-      "order": 9,
-      "description": "",
-      "subject": "data-science",
-      "nodes": [
-        "data-science/control-flow-python",
-        "data-science/data-structures-python",
-        "data-science/programming-for-data-science-python",
-        "data-science/python-programming"
-      ],
-      "nodeItems": [
-        {
-          "id": "data-science/control-flow-python",
-          "displayName": "control flow python",
-          "noteSlug": "programming-for-data-science-python",
-          "noteTitle": "Programming for Data Science with Python",
-          "subject": "data-science"
-        },
-        {
-          "id": "data-science/data-structures-python",
-          "displayName": "Lists",
-          "noteSlug": "programming-for-data-science-python",
-          "noteTitle": "Programming for Data Science with Python",
-          "subject": "data-science"
-        },
-        {
-          "id": "data-science/programming-for-data-science-python",
-          "displayName": "programming for data science python",
-          "noteSlug": "programming-for-data-science-python",
-          "noteTitle": "Programming for Data Science with Python",
-          "subject": "data-science"
-        },
-        {
-          "id": "data-science/python-programming",
-          "displayName": "Python Programming Fundamentals",
-          "noteSlug": "programming-for-data-science-python",
-          "noteTitle": "Programming for Data Science with Python",
-          "subject": "data-science"
-        }
-      ]
-    },
-    {
       "id": "note-data-science-machine-learning-fundamentals",
       "name": "Cross-Validation",
       "displayName": "Cross-Validation",
       "color": "#74D3AE",
-      "order": 10,
+      "order": 9,
       "description": "",
       "subject": "data-science",
       "nodes": [
@@ -592,9 +555,9 @@
         },
         {
           "id": "data-science/machine-learning",
-          "displayName": "machine learning",
+          "displayName": "Machine Learning",
           "noteSlug": "machine-learning-fundamentals",
-          "noteTitle": "machine learning",
+          "noteTitle": "Machine Learning",
           "subject": "data-science"
         },
         {
@@ -635,48 +598,11 @@
       ]
     },
     {
-      "id": "note-data-science-data-acquisition-and-storage",
-      "name": "Data Acquisition and Storage",
-      "displayName": "Data Acquisition and Storage",
-      "color": "#74D3AE",
-      "order": 11,
-      "description": "",
-      "subject": "data-science",
-      "nodes": [
-        "data-science/csv-file",
-        "data-science/data-acquisition-and-storage",
-        "data-science/json-file"
-      ],
-      "nodeItems": [
-        {
-          "id": "data-science/csv-file",
-          "displayName": "csv file",
-          "noteSlug": "data-acquisition-and-storage",
-          "noteTitle": "Data Acquisition and Storage",
-          "subject": "data-science"
-        },
-        {
-          "id": "data-science/data-acquisition-and-storage",
-          "displayName": "Data Acquisition and Storage",
-          "noteSlug": "data-acquisition-and-storage",
-          "noteTitle": "Data Acquisition and Storage",
-          "subject": "data-science"
-        },
-        {
-          "id": "data-science/json-file",
-          "displayName": "json file",
-          "noteSlug": "data-acquisition-and-storage",
-          "noteTitle": "Data Acquisition and Storage",
-          "subject": "data-science"
-        }
-      ]
-    },
-    {
       "id": "note-data-science-data-fundamentals-and-types",
       "name": "Data Fundamentals and Types",
       "displayName": "Data Fundamentals and Types",
       "color": "#74D3AE",
-      "order": 12,
+      "order": 10,
       "description": "",
       "subject": "data-science",
       "nodes": [
@@ -712,14 +638,14 @@
         },
         {
           "id": "data-science/quantitative-data",
-          "displayName": "quantitative data",
+          "displayName": "Quantitative Data",
           "noteSlug": "data-fundamentals-and-types",
           "noteTitle": "Data Fundamentals and Types",
           "subject": "data-science"
         },
         {
           "id": "data-science/semi-structured-data",
-          "displayName": "Semi-structured Data",
+          "displayName": "Semi-Structured Data",
           "noteSlug": "data-fundamentals-and-types",
           "noteTitle": "Data Fundamentals and Types",
           "subject": "data-science"
@@ -742,10 +668,10 @@
     },
     {
       "id": "note-data-science-data-acquisition",
-      "name": "Sourcing and Acquiring Data",
-      "displayName": "Sourcing and Acquiring Data",
+      "name": "Data Acquisition",
+      "displayName": "Data Acquisition",
       "color": "#74D3AE",
-      "order": 13,
+      "order": 11,
       "description": "",
       "subject": "data-science",
       "nodes": [
@@ -756,9 +682,9 @@
       "nodeItems": [
         {
           "id": "data-science/data-acquisition",
-          "displayName": "Sourcing and Acquiring Data",
+          "displayName": "Data Acquisition",
           "noteSlug": "data-acquisition",
-          "noteTitle": "Sourcing and Acquiring Data",
+          "noteTitle": "Data Acquisition",
           "subject": "data-science"
         },
         {
@@ -778,11 +704,40 @@
       ]
     },
     {
+      "id": "note-data-science-data-acquisition-and-storage",
+      "name": "Data Acquisition and Storage",
+      "displayName": "Data Acquisition and Storage",
+      "color": "#74D3AE",
+      "order": 12,
+      "description": "",
+      "subject": "data-science",
+      "nodes": [
+        "data-science/data-acquisition-and-storage",
+        "data-science/sql"
+      ],
+      "nodeItems": [
+        {
+          "id": "data-science/data-acquisition-and-storage",
+          "displayName": "Data Acquisition and Storage",
+          "noteSlug": "data-acquisition-and-storage",
+          "noteTitle": "Data Acquisition and Storage",
+          "subject": "data-science"
+        },
+        {
+          "id": "data-science/sql",
+          "displayName": "Relational Databases and SQL",
+          "noteSlug": "data-acquisition-and-storage",
+          "noteTitle": "Data Acquisition and Storage",
+          "subject": "data-science"
+        }
+      ]
+    },
+    {
       "id": "note-data-science-python-libraries",
       "name": "data aggregation",
       "displayName": "data aggregation",
       "color": "#74D3AE",
-      "order": 14,
+      "order": 13,
       "description": "",
       "subject": "data-science",
       "nodes": [
@@ -859,7 +814,7 @@
       "name": "Ethical Considerations in Data Communication",
       "displayName": "Ethical Considerations in Data Communication",
       "color": "#74D3AE",
-      "order": 15,
+      "order": 14,
       "description": "",
       "subject": "data-science",
       "nodes": [
@@ -888,7 +843,7 @@
       "name": "Introduction to Data Science",
       "displayName": "Introduction to Data Science",
       "color": "#74D3AE",
-      "order": 16,
+      "order": 15,
       "description": "",
       "subject": "data-science",
       "nodes": [
@@ -913,6 +868,43 @@
       ]
     },
     {
+      "id": "note-data-science-programming-for-data-science-python",
+      "name": "Programming for Data Science with Python",
+      "displayName": "Programming for Data Science with Python",
+      "color": "#74D3AE",
+      "order": 16,
+      "description": "",
+      "subject": "data-science",
+      "nodes": [
+        "data-science/data-structures-python",
+        "data-science/programming-for-data-science-python",
+        "data-science/python-programming"
+      ],
+      "nodeItems": [
+        {
+          "id": "data-science/data-structures-python",
+          "displayName": "Lists",
+          "noteSlug": "programming-for-data-science-python",
+          "noteTitle": "Programming for Data Science with Python",
+          "subject": "data-science"
+        },
+        {
+          "id": "data-science/programming-for-data-science-python",
+          "displayName": "programming for data science python",
+          "noteSlug": "programming-for-data-science-python",
+          "noteTitle": "Programming for Data Science with Python",
+          "subject": "data-science"
+        },
+        {
+          "id": "data-science/python-programming",
+          "displayName": "Python Programming Fundamentals",
+          "noteSlug": "programming-for-data-science-python",
+          "noteTitle": "Programming for Data Science with Python",
+          "subject": "data-science"
+        }
+      ]
+    },
+    {
       "id": "note-data-science-supervised-learning-regression",
       "name": "Supervised Learning: Regression",
       "displayName": "Supervised Learning: Regression",
@@ -932,7 +924,7 @@
       "nodeItems": [
         {
           "id": "data-science/gradient-descent",
-          "displayName": "Finding the Best Line",
+          "displayName": "Gradient Descent",
           "noteSlug": "supervised-learning-regression",
           "noteTitle": "Supervised Learning: Regression",
           "subject": "data-science"
@@ -946,14 +938,14 @@
         },
         {
           "id": "data-science/mean-squared-error",
-          "displayName": "mean squared error",
+          "displayName": "Measuring Model Performance",
           "noteSlug": "supervised-learning-regression",
           "noteTitle": "Supervised Learning: Regression",
           "subject": "data-science"
         },
         {
           "id": "data-science/multiple-linear-regression",
-          "displayName": "Beyond Simple Lines",
+          "displayName": "Multiple Linear Regression",
           "noteSlug": "supervised-learning-regression",
           "noteTitle": "Supervised Learning: Regression",
           "subject": "data-science"
@@ -1019,7 +1011,7 @@
         },
         {
           "id": "data-science/version-control",
-          "displayName": "Version Control",
+          "displayName": "Version Control for ML Projects",
           "noteSlug": "model-evaluation-deployment",
           "noteTitle": "Model Evaluation and Deployment",
           "subject": "data-science"
@@ -1038,7 +1030,6 @@
         "data-science/hypothesis-testing",
         "data-science/p-value",
         "data-science/probability",
-        "data-science/probability-distribution",
         "data-science/sampling",
         "data-science/statistical-foundations"
       ],
@@ -1052,7 +1043,7 @@
         },
         {
           "id": "data-science/p-value",
-          "displayName": "P-value",
+          "displayName": "P-Value",
           "noteSlug": "statistical-foundations",
           "noteTitle": "Statistical Foundations for Data Science",
           "subject": "data-science"
@@ -1060,13 +1051,6 @@
         {
           "id": "data-science/probability",
           "displayName": "Probability",
-          "noteSlug": "statistical-foundations",
-          "noteTitle": "Statistical Foundations for Data Science",
-          "subject": "data-science"
-        },
-        {
-          "id": "data-science/probability-distribution",
-          "displayName": "probability distribution",
           "noteSlug": "statistical-foundations",
           "noteTitle": "Statistical Foundations for Data Science",
           "subject": "data-science"
@@ -1140,10 +1124,8 @@
         "data-science/clustering",
         "data-science/confusion-matrix",
         "data-science/control-flow",
-        "data-science/control-flow-python",
         "data-science/correlation",
         "data-science/cross-validation",
-        "data-science/csv-file",
         "data-science/data",
         "data-science/data-acquisition",
         "data-science/data-acquisition-and-storage",
@@ -1164,10 +1146,12 @@
         "data-science/data-types",
         "data-science/data-visualization",
         "data-science/data-visualization-communication",
+        "data-science/descriptive-statistics",
         "data-science/dimensionality-reduction",
         "data-science/error-handling",
         "data-science/ethical-considerations-in-data-science",
         "data-science/exploratory-data-analysis",
+        "data-science/f1-score",
         "data-science/feature-engineering",
         "data-science/feature-scaling",
         "data-science/feature-selection",
@@ -1180,7 +1164,6 @@
         "data-science/intro-topic",
         "data-science/introduction-to-data-science",
         "data-science/introduction-to-machine-learning",
-        "data-science/json-file",
         "data-science/k-means-clustering",
         "data-science/linear-regression",
         "data-science/logistic-regression",
@@ -1199,13 +1182,11 @@
         "data-science/numpy-array",
         "data-science/object-oriented-programming",
         "data-science/outliers",
-        "data-science/overfitting-vs-underfitting",
         "data-science/p-value",
         "data-science/pandas-dataframe",
         "data-science/precision-vs-recall",
         "data-science/principal-component-analysis",
         "data-science/probability",
-        "data-science/probability-distribution",
         "data-science/programming-for-data-science-python",
         "data-science/python-fundamentals",
         "data-science/python-libraries",
@@ -1220,6 +1201,7 @@
         "data-science/semi-structured-data",
         "data-science/series",
         "data-science/silhouette-score",
+        "data-science/sql",
         "data-science/statistical-foundations",
         "data-science/structured-data",
         "data-science/supervised-learning",
@@ -1234,16 +1216,16 @@
         "data-science/version-control",
         "data-science/web-scraping"
       ],
-      "degree": 103,
-      "weightedDegree": 103,
+      "degree": 101,
+      "weightedDegree": 101,
       "networkSize": 140,
       "isDomainNode": true
     },
     {
       "id": "data-science/accuracy",
-      "name": "Key Metrics",
-      "title": "Key Metrics",
-      "displayTitle": "Key Metrics",
+      "name": "Evaluating Classification Models",
+      "title": "Evaluating Classification Models",
+      "displayTitle": "Evaluating Classification Models",
       "subject": "data-science",
       "noteSlug": "supervised-learning-classification",
       "noteTitle": "Supervised Learning: Classification",
@@ -1296,10 +1278,10 @@
       "linkedConcepts": [
         "data-science",
         "data-science/bivariate-analysis",
-        "data-science/control-flow-python",
         "data-science/data",
+        "data-science/data-structures-python",
         "data-science/data-visualization",
-        "data-science/exploratory-data-analysis"
+        "data-science/outliers"
       ],
       "degree": 6,
       "weightedDegree": 6,
@@ -1398,9 +1380,9 @@
     },
     {
       "id": "data-science/categorical-encoding",
-      "name": "categorical encoding",
-      "title": "categorical encoding",
-      "displayTitle": "categorical encoding",
+      "name": "Categorical Encoding",
+      "title": "Categorical Encoding",
+      "displayTitle": "Categorical Encoding",
       "subject": "data-science",
       "noteSlug": "data-cleaning-preprocessing",
       "noteTitle": "Data Cleaning and Preprocessing",
@@ -1421,7 +1403,7 @@
       "linkedConcepts": [
         "data-science",
         "data-science/bivariate-analysis",
-        "data-science/csv-file"
+        "data-science/data-acquisition-and-storage"
       ],
       "degree": 3,
       "weightedDegree": 3,
@@ -1450,17 +1432,18 @@
         "classification"
       ],
       "linkedConcepts": [
-        "data-science"
+        "data-science",
+        "data-science/data"
       ],
-      "degree": 1,
-      "weightedDegree": 1,
-      "networkSize": 48
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
     },
     {
       "id": "data-science/clustering",
-      "name": "clustering",
-      "title": "clustering",
-      "displayTitle": "clustering",
+      "name": "Clustering",
+      "title": "Clustering",
+      "displayTitle": "Clustering",
       "subject": "data-science",
       "noteSlug": "unsupervised-learning-clustering",
       "noteTitle": "Unsupervised Learning: Clustering",
@@ -1481,19 +1464,17 @@
       "linkedConcepts": [
         "data-science",
         "data-science/bias-variance-tradeoff",
-        "data-science/data",
-        "data-science/hyperparameter-tuning",
-        "data-science/model-evaluation-deployment"
+        "data-science/hyperparameter-tuning"
       ],
-      "degree": 5,
-      "weightedDegree": 5,
-      "networkSize": 80
+      "degree": 3,
+      "weightedDegree": 3,
+      "networkSize": 64
     },
     {
       "id": "data-science/confusion-matrix",
-      "name": "Evaluating Classification Models",
-      "title": "Evaluating Classification Models",
-      "displayTitle": "Evaluating Classification Models",
+      "name": "confusion matrix",
+      "title": "confusion matrix",
+      "displayTitle": "confusion matrix",
       "subject": "data-science",
       "noteSlug": "supervised-learning-classification",
       "noteTitle": "Supervised Learning: Classification",
@@ -1543,39 +1524,6 @@
       "degree": 1,
       "weightedDegree": 1,
       "networkSize": 48
-    },
-    {
-      "id": "data-science/control-flow-python",
-      "name": "control flow python",
-      "title": "control flow python",
-      "displayTitle": "control flow python",
-      "subject": "data-science",
-      "noteSlug": "programming-for-data-science-python",
-      "noteTitle": "Programming for Data Science with Python",
-      "noteUrl": "/note/data-science/programming-for-data-science-python.md#concept-control-flow-python",
-      "anchorId": "concept-control-flow-python",
-      "category": "Data Science",
-      "categoryId": "subject-data-science",
-      "importance": "medium",
-      "prerequisites": [],
-      "difficulty": "medium",
-      "difficultyLevel": 2,
-      "estimatedMinutes": 180,
-      "learningOrder": 3,
-      "tags": [
-        "programming",
-        "python",
-        "tools"
-      ],
-      "linkedConcepts": [
-        "data-science",
-        "data-science/advanced-data-visualization",
-        "data-science/csv-file",
-        "data-science/data"
-      ],
-      "degree": 4,
-      "weightedDegree": 4,
-      "networkSize": 72
     },
     {
       "id": "data-science/correlation",
@@ -1635,38 +1583,6 @@
       "networkSize": 48
     },
     {
-      "id": "data-science/csv-file",
-      "name": "csv file",
-      "title": "csv file",
-      "displayTitle": "csv file",
-      "subject": "data-science",
-      "noteSlug": "data-acquisition-and-storage",
-      "noteTitle": "Data Acquisition and Storage",
-      "noteUrl": "/note/data-science/data-acquisition-and-storage.md#concept-csv-file",
-      "anchorId": "concept-csv-file",
-      "category": "Data Science",
-      "categoryId": "subject-data-science",
-      "importance": "medium",
-      "prerequisites": [],
-      "difficulty": "medium",
-      "difficultyLevel": 2,
-      "estimatedMinutes": 120,
-      "learningOrder": 4,
-      "tags": [
-        "data-engineering",
-        "databases",
-        "apis"
-      ],
-      "linkedConcepts": [
-        "data-science",
-        "data-science/categorical-encoding",
-        "data-science/control-flow-python"
-      ],
-      "degree": 3,
-      "weightedDegree": 3,
-      "networkSize": 64
-    },
-    {
       "id": "data-science/data",
       "name": "data",
       "title": "data",
@@ -1691,38 +1607,39 @@
       "linkedConcepts": [
         "data-science",
         "data-science/advanced-data-visualization",
-        "data-science/clustering",
-        "data-science/control-flow-python",
+        "data-science/classification",
         "data-science/data-acquisition-and-storage",
         "data-science/data-cleaning-preprocessing",
         "data-science/data-driven-decision-making",
-        "data-science/data-imputation",
+        "data-science/data-structures-python",
+        "data-science/descriptive-statistics",
         "data-science/exploratory-data-analysis",
         "data-science/introduction-to-machine-learning",
         "data-science/linear-regression",
         "data-science/logistic-regression",
+        "data-science/missing-data",
         "data-science/model-evaluation-deployment",
         "data-science/probability",
         "data-science/programming-for-data-science-python",
         "data-science/python-programming",
         "data-science/seaborn",
+        "data-science/sql",
         "data-science/statistical-foundations",
         "data-science/supervised-learning-regression",
-        "data-science/support-vector-machine",
         "data-science/unsupervised-learning-clustering"
       ],
-      "degree": 21,
+      "degree": 22,
       "weightedDegree": 25,
       "networkSize": 140
     },
     {
       "id": "data-science/data-acquisition",
-      "name": "Sourcing and Acquiring Data",
-      "title": "Sourcing and Acquiring Data",
-      "displayTitle": "Sourcing and Acquiring Data",
+      "name": "Data Acquisition",
+      "title": "Data Acquisition",
+      "displayTitle": "Data Acquisition",
       "subject": "data-science",
       "noteSlug": "data-acquisition",
-      "noteTitle": "Sourcing and Acquiring Data",
+      "noteTitle": "Data Acquisition",
       "noteUrl": "/note/data-science/data-acquisition.md#concept-data-acquisition",
       "anchorId": "concept-data-acquisition",
       "category": "Data Science",
@@ -1766,12 +1683,13 @@
       ],
       "linkedConcepts": [
         "data-science",
+        "data-science/categorical-encoding",
         "data-science/data",
-        "data-science/structured-data"
+        "data-science/data-structures-python"
       ],
-      "degree": 3,
+      "degree": 4,
       "weightedDegree": 4,
-      "networkSize": 64
+      "networkSize": 72
     },
     {
       "id": "data-science/data-aggregation",
@@ -1824,7 +1742,7 @@
       "linkedConcepts": [
         "data-science",
         "data-science/data",
-        "data-science/exploratory-data-analysis"
+        "data-science/structured-data"
       ],
       "degree": 3,
       "weightedDegree": 3,
@@ -1917,9 +1835,9 @@
     },
     {
       "id": "data-science/data-imputation",
-      "name": "Filling the Gaps",
-      "title": "Filling the Gaps",
-      "displayTitle": "Filling the Gaps",
+      "name": "Handling Missing Data",
+      "title": "Handling Missing Data",
+      "displayTitle": "Handling Missing Data",
       "subject": "data-science",
       "noteSlug": "data-cleaning-preprocessing",
       "noteTitle": "Data Cleaning and Preprocessing",
@@ -1938,12 +1856,11 @@
         "feature-engineering"
       ],
       "linkedConcepts": [
-        "data-science",
-        "data-science/data"
+        "data-science"
       ],
-      "degree": 2,
-      "weightedDegree": 2,
-      "networkSize": 56
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
     },
     {
       "id": "data-science/data-indexing",
@@ -2125,17 +2042,21 @@
         "tools"
       ],
       "linkedConcepts": [
-        "data-science"
+        "data-science",
+        "data-science/advanced-data-visualization",
+        "data-science/data",
+        "data-science/data-acquisition-and-storage",
+        "data-science/structured-data"
       ],
-      "degree": 1,
-      "weightedDegree": 1,
-      "networkSize": 48
+      "degree": 5,
+      "weightedDegree": 5,
+      "networkSize": 80
     },
     {
       "id": "data-science/data-transformation",
-      "name": "Shaping Your Data",
-      "title": "Shaping Your Data",
-      "displayTitle": "Shaping Your Data",
+      "name": "Transforming Data for Better Models",
+      "title": "Transforming Data for Better Models",
+      "displayTitle": "Transforming Data for Better Models",
       "subject": "data-science",
       "noteSlug": "data-cleaning-preprocessing",
       "noteTitle": "Data Cleaning and Preprocessing",
@@ -2211,14 +2132,11 @@
       ],
       "linkedConcepts": [
         "data-science",
-        "data-science/advanced-data-visualization",
-        "data-science/introduction-to-machine-learning",
-        "data-science/outliers",
-        "data-science/seaborn"
+        "data-science/advanced-data-visualization"
       ],
-      "degree": 5,
-      "weightedDegree": 5,
-      "networkSize": 80
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
     },
     {
       "id": "data-science/data-visualization-communication",
@@ -2247,10 +2165,42 @@
       "networkSize": 48
     },
     {
+      "id": "data-science/descriptive-statistics",
+      "name": "Descriptive Statistics",
+      "title": "Descriptive Statistics",
+      "displayTitle": "Descriptive Statistics",
+      "subject": "data-science",
+      "noteSlug": "exploratory-data-analysis",
+      "noteTitle": "Exploratory Data Analysis (EDA)",
+      "noteUrl": "/note/data-science/exploratory-data-analysis.md#concept-descriptive-statistics",
+      "anchorId": "concept-descriptive-statistics",
+      "category": "Data Science",
+      "categoryId": "subject-data-science",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 120,
+      "learningOrder": 6,
+      "tags": [
+        "analysis",
+        "visualization",
+        "statistics"
+      ],
+      "linkedConcepts": [
+        "data-science",
+        "data-science/data",
+        "data-science/outliers"
+      ],
+      "degree": 3,
+      "weightedDegree": 4,
+      "networkSize": 64
+    },
+    {
       "id": "data-science/dimensionality-reduction",
-      "name": "Dimensionality Reduction",
-      "title": "Dimensionality Reduction",
-      "displayTitle": "Dimensionality Reduction",
+      "name": "Dealing with Too Many Features",
+      "title": "Dealing with Too Many Features",
+      "displayTitle": "Dealing with Too Many Features",
       "subject": "data-science",
       "noteSlug": "unsupervised-learning-clustering",
       "noteTitle": "Unsupervised Learning: Clustering",
@@ -2352,15 +2302,41 @@
       ],
       "linkedConcepts": [
         "data-science",
-        "data-science/advanced-data-visualization",
         "data-science/data",
-        "data-science/data-cleaning-preprocessing",
-        "data-science/outliers",
         "data-science/statistical-foundations"
       ],
-      "degree": 6,
-      "weightedDegree": 7,
-      "networkSize": 88
+      "degree": 3,
+      "weightedDegree": 3,
+      "networkSize": 64
+    },
+    {
+      "id": "data-science/f1-score",
+      "name": "F1-Score",
+      "title": "F1-Score",
+      "displayTitle": "F1-Score",
+      "subject": "data-science",
+      "noteSlug": "supervised-learning-classification",
+      "noteTitle": "Supervised Learning: Classification",
+      "noteUrl": "/note/data-science/supervised-learning-classification.md#concept-f1-score",
+      "anchorId": "concept-f1-score",
+      "category": "Data Science",
+      "categoryId": "subject-data-science",
+      "importance": "high",
+      "prerequisites": [],
+      "difficulty": "hard",
+      "difficultyLevel": 4,
+      "estimatedMinutes": 150,
+      "learningOrder": 10,
+      "tags": [
+        "machine-learning",
+        "classification"
+      ],
+      "linkedConcepts": [
+        "data-science"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
     },
     {
       "id": "data-science/feature-engineering",
@@ -2393,9 +2369,9 @@
     },
     {
       "id": "data-science/feature-scaling",
-      "name": "Leveling the Playing Field",
-      "title": "Leveling the Playing Field",
-      "displayTitle": "Leveling the Playing Field",
+      "name": "feature scaling",
+      "title": "feature scaling",
+      "displayTitle": "feature scaling",
       "subject": "data-science",
       "noteSlug": "data-cleaning-preprocessing",
       "noteTitle": "Data Cleaning and Preprocessing",
@@ -2474,9 +2450,9 @@
     },
     {
       "id": "data-science/gradient-descent",
-      "name": "Finding the Best Line",
-      "title": "Finding the Best Line",
-      "displayTitle": "Finding the Best Line",
+      "name": "Gradient Descent",
+      "title": "Gradient Descent",
+      "displayTitle": "Gradient Descent",
       "subject": "data-science",
       "noteSlug": "supervised-learning-regression",
       "noteTitle": "Supervised Learning: Regression",
@@ -2497,12 +2473,11 @@
       "linkedConcepts": [
         "data-science",
         "data-science/accuracy",
-        "data-science/bias-variance-tradeoff",
-        "data-science/hyperparameter-tuning"
+        "data-science/bias-variance-tradeoff"
       ],
-      "degree": 4,
-      "weightedDegree": 4,
-      "networkSize": 72
+      "degree": 3,
+      "weightedDegree": 3,
+      "networkSize": 64
     },
     {
       "id": "data-science/hierarchical-clustering",
@@ -2560,13 +2535,12 @@
         "data-science",
         "data-science/accuracy",
         "data-science/clustering",
-        "data-science/gradient-descent",
         "data-science/linear-regression",
         "data-science/logistic-regression"
       ],
-      "degree": 6,
-      "weightedDegree": 6,
-      "networkSize": 88
+      "degree": 5,
+      "weightedDegree": 5,
+      "networkSize": 80
     },
     {
       "id": "data-science/hypothesis-testing",
@@ -2704,42 +2678,11 @@
       ],
       "linkedConcepts": [
         "data-science",
-        "data-science/data",
-        "data-science/data-visualization"
+        "data-science/data"
       ],
-      "degree": 3,
-      "weightedDegree": 4,
-      "networkSize": 64
-    },
-    {
-      "id": "data-science/json-file",
-      "name": "json file",
-      "title": "json file",
-      "displayTitle": "json file",
-      "subject": "data-science",
-      "noteSlug": "data-acquisition-and-storage",
-      "noteTitle": "Data Acquisition and Storage",
-      "noteUrl": "/note/data-science/data-acquisition-and-storage.md#concept-json-file",
-      "anchorId": "concept-json-file",
-      "category": "Data Science",
-      "categoryId": "subject-data-science",
-      "importance": "medium",
-      "prerequisites": [],
-      "difficulty": "medium",
-      "difficultyLevel": 2,
-      "estimatedMinutes": 120,
-      "learningOrder": 4,
-      "tags": [
-        "data-engineering",
-        "databases",
-        "apis"
-      ],
-      "linkedConcepts": [
-        "data-science"
-      ],
-      "degree": 1,
-      "weightedDegree": 1,
-      "networkSize": 48
+      "degree": 2,
+      "weightedDegree": 3,
+      "networkSize": 56
     },
     {
       "id": "data-science/k-means-clustering",
@@ -2764,12 +2707,11 @@
         "unsupervised"
       ],
       "linkedConcepts": [
-        "data-science",
-        "data-science/outliers"
+        "data-science"
       ],
-      "degree": 2,
-      "weightedDegree": 2,
-      "networkSize": 56
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
     },
     {
       "id": "data-science/linear-regression",
@@ -2837,12 +2779,12 @@
     },
     {
       "id": "data-science/machine-learning",
-      "name": "machine learning",
-      "title": "machine learning",
-      "displayTitle": "machine learning",
+      "name": "Machine Learning",
+      "title": "Machine Learning",
+      "displayTitle": "Machine Learning",
       "subject": "data-science",
       "noteSlug": "machine-learning-fundamentals",
-      "noteTitle": "machine learning",
+      "noteTitle": "Machine Learning",
       "noteUrl": "/note/data-science/machine-learning-fundamentals.md#concept-machine-learning",
       "anchorId": "concept-machine-learning",
       "category": "Data Science",
@@ -2889,9 +2831,9 @@
     },
     {
       "id": "data-science/matplotlib",
-      "name": "Matplotlib",
-      "title": "Matplotlib",
-      "displayTitle": "Matplotlib",
+      "name": "matplotlib",
+      "title": "matplotlib",
+      "displayTitle": "matplotlib",
       "subject": "data-science",
       "noteSlug": "advanced-data-visualization",
       "noteTitle": "Advanced Data Visualization",
@@ -2918,9 +2860,9 @@
     },
     {
       "id": "data-science/mean-squared-error",
-      "name": "mean squared error",
-      "title": "mean squared error",
-      "displayTitle": "mean squared error",
+      "name": "Measuring Model Performance",
+      "title": "Measuring Model Performance",
+      "displayTitle": "Measuring Model Performance",
       "subject": "data-science",
       "noteSlug": "supervised-learning-regression",
       "noteTitle": "Supervised Learning: Regression",
@@ -2994,11 +2936,12 @@
         "feature-engineering"
       ],
       "linkedConcepts": [
-        "data-science"
+        "data-science",
+        "data-science/data"
       ],
-      "degree": 1,
-      "weightedDegree": 1,
-      "networkSize": 48
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
     },
     {
       "id": "data-science/model-deployment",
@@ -3082,12 +3025,11 @@
       "linkedConcepts": [
         "data-science",
         "data-science/accuracy",
-        "data-science/clustering",
         "data-science/data"
       ],
-      "degree": 4,
-      "weightedDegree": 6,
-      "networkSize": 72
+      "degree": 3,
+      "weightedDegree": 5,
+      "networkSize": 64
     },
     {
       "id": "data-science/model-training",
@@ -3143,9 +3085,9 @@
     },
     {
       "id": "data-science/multiple-linear-regression",
-      "name": "Beyond Simple Lines",
-      "title": "Beyond Simple Lines",
-      "displayTitle": "Beyond Simple Lines",
+      "name": "Multiple Linear Regression",
+      "title": "Multiple Linear Regression",
+      "displayTitle": "Multiple Linear Regression",
       "subject": "data-science",
       "noteSlug": "supervised-learning-regression",
       "noteTitle": "Supervised Learning: Regression",
@@ -3246,50 +3188,19 @@
       ],
       "linkedConcepts": [
         "data-science",
-        "data-science/data-visualization",
-        "data-science/exploratory-data-analysis",
-        "data-science/k-means-clustering",
-        "data-science/seaborn",
-        "data-science/statistical-foundations"
+        "data-science/advanced-data-visualization",
+        "data-science/descriptive-statistics",
+        "data-science/seaborn"
       ],
-      "degree": 6,
-      "weightedDegree": 6,
-      "networkSize": 88
-    },
-    {
-      "id": "data-science/overfitting-vs-underfitting",
-      "name": "Overfitting and Underfitting",
-      "title": "Overfitting and Underfitting",
-      "displayTitle": "Overfitting and Underfitting",
-      "subject": "data-science",
-      "noteSlug": "introduction-to-machine-learning",
-      "noteTitle": "Introduction to Machine Learning",
-      "noteUrl": "/note/data-science/introduction-to-machine-learning.md#concept-overfitting-vs-underfitting",
-      "anchorId": "concept-overfitting-vs-underfitting",
-      "category": "Data Science",
-      "categoryId": "subject-data-science",
-      "importance": "medium",
-      "prerequisites": [],
-      "difficulty": "medium",
-      "difficultyLevel": 3,
-      "estimatedMinutes": 90,
-      "learningOrder": 8,
-      "tags": [
-        "machine-learning",
-        "algorithms"
-      ],
-      "linkedConcepts": [
-        "data-science"
-      ],
-      "degree": 1,
-      "weightedDegree": 1,
-      "networkSize": 48
+      "degree": 4,
+      "weightedDegree": 5,
+      "networkSize": 72
     },
     {
       "id": "data-science/p-value",
-      "name": "P-value",
-      "title": "P-value",
-      "displayTitle": "P-value",
+      "name": "P-Value",
+      "title": "P-Value",
+      "displayTitle": "P-Value",
       "subject": "data-science",
       "noteSlug": "statistical-foundations",
       "noteTitle": "Statistical Foundations for Data Science",
@@ -3342,9 +3253,9 @@
     },
     {
       "id": "data-science/precision-vs-recall",
-      "name": "Key Metrics",
-      "title": "Key Metrics",
-      "displayTitle": "Key Metrics",
+      "name": "Precision and Recall",
+      "title": "Precision and Recall",
+      "displayTitle": "Precision and Recall",
       "subject": "data-science",
       "noteSlug": "supervised-learning-classification",
       "noteTitle": "Supervised Learning: Classification",
@@ -3427,35 +3338,6 @@
       "degree": 2,
       "weightedDegree": 2,
       "networkSize": 56
-    },
-    {
-      "id": "data-science/probability-distribution",
-      "name": "probability distribution",
-      "title": "probability distribution",
-      "displayTitle": "probability distribution",
-      "subject": "data-science",
-      "noteSlug": "statistical-foundations",
-      "noteTitle": "Statistical Foundations for Data Science",
-      "noteUrl": "/note/data-science/statistical-foundations.md#concept-probability-distribution",
-      "anchorId": "concept-probability-distribution",
-      "category": "Data Science",
-      "categoryId": "subject-data-science",
-      "importance": "medium",
-      "prerequisites": [],
-      "difficulty": "medium",
-      "difficultyLevel": 3,
-      "estimatedMinutes": 150,
-      "learningOrder": 7,
-      "tags": [
-        "statistics",
-        "mathematics"
-      ],
-      "linkedConcepts": [
-        "data-science"
-      ],
-      "degree": 1,
-      "weightedDegree": 1,
-      "networkSize": 48
     },
     {
       "id": "data-science/programming-for-data-science-python",
@@ -3628,9 +3510,9 @@
     },
     {
       "id": "data-science/quantitative-data",
-      "name": "quantitative data",
-      "title": "quantitative data",
-      "displayTitle": "quantitative data",
+      "name": "Quantitative Data",
+      "title": "Quantitative Data",
+      "displayTitle": "Quantitative Data",
       "subject": "data-science",
       "noteSlug": "data-fundamentals-and-types",
       "noteTitle": "Data Fundamentals and Types",
@@ -3744,9 +3626,9 @@
     },
     {
       "id": "data-science/seaborn",
-      "name": "Seaborn",
-      "title": "Seaborn",
-      "displayTitle": "Seaborn",
+      "name": "seaborn",
+      "title": "seaborn",
+      "displayTitle": "seaborn",
       "subject": "data-science",
       "noteSlug": "advanced-data-visualization",
       "noteTitle": "Advanced Data Visualization",
@@ -3768,18 +3650,17 @@
         "data-science",
         "data-science/correlation",
         "data-science/data",
-        "data-science/data-visualization",
         "data-science/outliers"
       ],
-      "degree": 5,
-      "weightedDegree": 5,
-      "networkSize": 80
+      "degree": 4,
+      "weightedDegree": 4,
+      "networkSize": 72
     },
     {
       "id": "data-science/semi-structured-data",
-      "name": "Semi-structured Data",
-      "title": "Semi-structured Data",
-      "displayTitle": "Semi-structured Data",
+      "name": "Semi-Structured Data",
+      "title": "Semi-Structured Data",
+      "displayTitle": "Semi-Structured Data",
       "subject": "data-science",
       "noteSlug": "data-fundamentals-and-types",
       "noteTitle": "Data Fundamentals and Types",
@@ -3832,9 +3713,9 @@
     },
     {
       "id": "data-science/silhouette-score",
-      "name": "Evaluating Clustering",
-      "title": "Evaluating Clustering",
-      "displayTitle": "Evaluating Clustering",
+      "name": "silhouette score",
+      "title": "silhouette score",
+      "displayTitle": "silhouette score",
       "subject": "data-science",
       "noteSlug": "unsupervised-learning-clustering",
       "noteTitle": "Unsupervised Learning: Clustering",
@@ -3858,6 +3739,38 @@
       "degree": 1,
       "weightedDegree": 1,
       "networkSize": 48
+    },
+    {
+      "id": "data-science/sql",
+      "name": "Relational Databases and SQL",
+      "title": "Relational Databases and SQL",
+      "displayTitle": "Relational Databases and SQL",
+      "subject": "data-science",
+      "noteSlug": "data-acquisition-and-storage",
+      "noteTitle": "Data Acquisition and Storage",
+      "noteUrl": "/note/data-science/data-acquisition-and-storage.md#concept-sql",
+      "anchorId": "concept-sql",
+      "category": "Data Science",
+      "categoryId": "subject-data-science",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 120,
+      "learningOrder": 4,
+      "tags": [
+        "data-engineering",
+        "databases",
+        "apis"
+      ],
+      "linkedConcepts": [
+        "data-science",
+        "data-science/data",
+        "data-science/structured-data"
+      ],
+      "degree": 3,
+      "weightedDegree": 3,
+      "networkSize": 64
     },
     {
       "id": "data-science/statistical-foundations",
@@ -3884,12 +3797,11 @@
       "linkedConcepts": [
         "data-science",
         "data-science/data",
-        "data-science/exploratory-data-analysis",
-        "data-science/outliers"
+        "data-science/exploratory-data-analysis"
       ],
-      "degree": 4,
-      "weightedDegree": 4,
-      "networkSize": 72
+      "degree": 3,
+      "weightedDegree": 3,
+      "networkSize": 64
     },
     {
       "id": "data-science/structured-data",
@@ -3915,11 +3827,13 @@
       ],
       "linkedConcepts": [
         "data-science",
-        "data-science/data-acquisition-and-storage"
+        "data-science/data-cleaning-preprocessing",
+        "data-science/data-structures-python",
+        "data-science/sql"
       ],
-      "degree": 2,
-      "weightedDegree": 2,
-      "networkSize": 56
+      "degree": 4,
+      "weightedDegree": 4,
+      "networkSize": 72
     },
     {
       "id": "data-science/supervised-learning",
@@ -3975,7 +3889,7 @@
         "data-science/unsupervised-learning-clustering"
       ],
       "degree": 3,
-      "weightedDegree": 3,
+      "weightedDegree": 4,
       "networkSize": 64
     },
     {
@@ -4032,12 +3946,11 @@
         "classification"
       ],
       "linkedConcepts": [
-        "data-science",
-        "data-science/data"
+        "data-science"
       ],
-      "degree": 2,
-      "weightedDegree": 2,
-      "networkSize": 56
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
     },
     {
       "id": "data-science/univariate-analysis",
@@ -4152,7 +4065,7 @@
         "data-science/supervised-learning-classification"
       ],
       "degree": 3,
-      "weightedDegree": 3,
+      "weightedDegree": 5,
       "networkSize": 64
     },
     {
@@ -4183,9 +4096,9 @@
     },
     {
       "id": "data-science/version-control",
-      "name": "Version Control",
-      "title": "Version Control",
-      "displayTitle": "Version Control",
+      "name": "Version Control for ML Projects",
+      "title": "Version Control for ML Projects",
+      "displayTitle": "Version Control for ML Projects",
       "subject": "data-science",
       "noteSlug": "model-evaluation-deployment",
       "noteTitle": "Model Evaluation and Deployment",
@@ -4253,9 +4166,9 @@
     },
     {
       "id": "prereq-1",
-      "from": "data-science/control-flow-python",
+      "from": "data-science/data-structures-python",
       "to": "data-science/data",
-      "source": "data-science/control-flow-python",
+      "source": "data-science/data-structures-python",
       "target": "data-science/data",
       "type": "prerequisite",
       "label": "Prerequisite",
@@ -4265,10 +4178,10 @@
     },
     {
       "id": "prereq-2",
-      "from": "data-science/csv-file",
-      "to": "data-science/control-flow-python",
-      "source": "data-science/csv-file",
-      "target": "data-science/control-flow-python",
+      "from": "data-science/data-acquisition-and-storage",
+      "to": "data-science/data-structures-python",
+      "source": "data-science/data-acquisition-and-storage",
+      "target": "data-science/data-structures-python",
       "type": "prerequisite",
       "label": "Prerequisite",
       "weight": 1,
@@ -4278,9 +4191,9 @@
     {
       "id": "prereq-3",
       "from": "data-science/categorical-encoding",
-      "to": "data-science/csv-file",
+      "to": "data-science/data-acquisition-and-storage",
       "source": "data-science/categorical-encoding",
-      "target": "data-science/csv-file",
+      "target": "data-science/data-acquisition-and-storage",
       "type": "prerequisite",
       "label": "Prerequisite",
       "weight": 1,
@@ -4374,9 +4287,9 @@
     {
       "id": "prereq-11",
       "from": "data-science/advanced-data-visualization",
-      "to": "data-science/control-flow-python",
+      "to": "data-science/data-structures-python",
       "source": "data-science/advanced-data-visualization",
-      "target": "data-science/control-flow-python",
+      "target": "data-science/data-structures-python",
       "type": "prerequisite",
       "label": "Prerequisite",
       "weight": 1,
@@ -4529,18 +4442,6 @@
     },
     {
       "id": "belongs-10",
-      "from": "data-science/control-flow-python",
-      "to": "data-science",
-      "source": "data-science/control-flow-python",
-      "target": "data-science",
-      "type": "belongs_to",
-      "label": "Belongs To",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "belongs-11",
       "from": "data-science/correlation",
       "to": "data-science",
       "source": "data-science/correlation",
@@ -4552,7 +4453,7 @@
       "directed": true
     },
     {
-      "id": "belongs-12",
+      "id": "belongs-11",
       "from": "data-science/cross-validation",
       "to": "data-science",
       "source": "data-science/cross-validation",
@@ -4564,19 +4465,7 @@
       "directed": true
     },
     {
-      "id": "belongs-13",
-      "from": "data-science/csv-file",
-      "to": "data-science",
-      "source": "data-science/csv-file",
-      "target": "data-science",
-      "type": "belongs_to",
-      "label": "Belongs To",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "belongs-14",
+      "id": "belongs-12",
       "from": "data-science/data",
       "to": "data-science",
       "source": "data-science/data",
@@ -4588,7 +4477,7 @@
       "directed": true
     },
     {
-      "id": "belongs-15",
+      "id": "belongs-13",
       "from": "data-science/data-acquisition",
       "to": "data-science",
       "source": "data-science/data-acquisition",
@@ -4600,7 +4489,7 @@
       "directed": true
     },
     {
-      "id": "belongs-16",
+      "id": "belongs-14",
       "from": "data-science/data-acquisition-and-storage",
       "to": "data-science",
       "source": "data-science/data-acquisition-and-storage",
@@ -4612,7 +4501,7 @@
       "directed": true
     },
     {
-      "id": "belongs-17",
+      "id": "belongs-15",
       "from": "data-science/data-aggregation",
       "to": "data-science",
       "source": "data-science/data-aggregation",
@@ -4624,7 +4513,7 @@
       "directed": true
     },
     {
-      "id": "belongs-18",
+      "id": "belongs-16",
       "from": "data-science/data-cleaning-preprocessing",
       "to": "data-science",
       "source": "data-science/data-cleaning-preprocessing",
@@ -4636,7 +4525,7 @@
       "directed": true
     },
     {
-      "id": "belongs-19",
+      "id": "belongs-17",
       "from": "data-science/data-communication",
       "to": "data-science",
       "source": "data-science/data-communication",
@@ -4648,7 +4537,7 @@
       "directed": true
     },
     {
-      "id": "belongs-20",
+      "id": "belongs-18",
       "from": "data-science/data-driven-decision-making",
       "to": "data-science",
       "source": "data-science/data-driven-decision-making",
@@ -4660,7 +4549,7 @@
       "directed": true
     },
     {
-      "id": "belongs-21",
+      "id": "belongs-19",
       "from": "data-science/data-fundamentals-and-types",
       "to": "data-science",
       "source": "data-science/data-fundamentals-and-types",
@@ -4672,7 +4561,7 @@
       "directed": true
     },
     {
-      "id": "belongs-22",
+      "id": "belongs-20",
       "from": "data-science/data-imputation",
       "to": "data-science",
       "source": "data-science/data-imputation",
@@ -4684,7 +4573,7 @@
       "directed": true
     },
     {
-      "id": "belongs-23",
+      "id": "belongs-21",
       "from": "data-science/data-indexing",
       "to": "data-science",
       "source": "data-science/data-indexing",
@@ -4696,7 +4585,7 @@
       "directed": true
     },
     {
-      "id": "belongs-24",
+      "id": "belongs-22",
       "from": "data-science/data-manipulation",
       "to": "data-science",
       "source": "data-science/data-manipulation",
@@ -4708,7 +4597,7 @@
       "directed": true
     },
     {
-      "id": "belongs-25",
+      "id": "belongs-23",
       "from": "data-science/data-privacy",
       "to": "data-science",
       "source": "data-science/data-privacy",
@@ -4720,7 +4609,7 @@
       "directed": true
     },
     {
-      "id": "belongs-26",
+      "id": "belongs-24",
       "from": "data-science/data-science",
       "to": "data-science",
       "source": "data-science/data-science",
@@ -4732,7 +4621,7 @@
       "directed": true
     },
     {
-      "id": "belongs-27",
+      "id": "belongs-25",
       "from": "data-science/data-science-lifecycle",
       "to": "data-science",
       "source": "data-science/data-science-lifecycle",
@@ -4744,7 +4633,7 @@
       "directed": true
     },
     {
-      "id": "belongs-28",
+      "id": "belongs-26",
       "from": "data-science/data-scientist",
       "to": "data-science",
       "source": "data-science/data-scientist",
@@ -4756,7 +4645,7 @@
       "directed": true
     },
     {
-      "id": "belongs-29",
+      "id": "belongs-27",
       "from": "data-science/data-structures-python",
       "to": "data-science",
       "source": "data-science/data-structures-python",
@@ -4768,7 +4657,7 @@
       "directed": true
     },
     {
-      "id": "belongs-30",
+      "id": "belongs-28",
       "from": "data-science/data-transformation",
       "to": "data-science",
       "source": "data-science/data-transformation",
@@ -4780,7 +4669,7 @@
       "directed": true
     },
     {
-      "id": "belongs-31",
+      "id": "belongs-29",
       "from": "data-science/data-types",
       "to": "data-science",
       "source": "data-science/data-types",
@@ -4792,7 +4681,7 @@
       "directed": true
     },
     {
-      "id": "belongs-32",
+      "id": "belongs-30",
       "from": "data-science/data-visualization",
       "to": "data-science",
       "source": "data-science/data-visualization",
@@ -4804,7 +4693,7 @@
       "directed": true
     },
     {
-      "id": "belongs-33",
+      "id": "belongs-31",
       "from": "data-science/data-visualization-communication",
       "to": "data-science",
       "source": "data-science/data-visualization-communication",
@@ -4816,7 +4705,19 @@
       "directed": true
     },
     {
-      "id": "belongs-34",
+      "id": "belongs-32",
+      "from": "data-science/descriptive-statistics",
+      "to": "data-science",
+      "source": "data-science/descriptive-statistics",
+      "target": "data-science",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-33",
       "from": "data-science/dimensionality-reduction",
       "to": "data-science",
       "source": "data-science/dimensionality-reduction",
@@ -4828,7 +4729,7 @@
       "directed": true
     },
     {
-      "id": "belongs-35",
+      "id": "belongs-34",
       "from": "data-science/error-handling",
       "to": "data-science",
       "source": "data-science/error-handling",
@@ -4840,7 +4741,7 @@
       "directed": true
     },
     {
-      "id": "belongs-36",
+      "id": "belongs-35",
       "from": "data-science/ethical-considerations-in-data-science",
       "to": "data-science",
       "source": "data-science/ethical-considerations-in-data-science",
@@ -4852,10 +4753,22 @@
       "directed": true
     },
     {
-      "id": "belongs-37",
+      "id": "belongs-36",
       "from": "data-science/exploratory-data-analysis",
       "to": "data-science",
       "source": "data-science/exploratory-data-analysis",
+      "target": "data-science",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-37",
+      "from": "data-science/f1-score",
+      "to": "data-science",
+      "source": "data-science/f1-score",
       "target": "data-science",
       "type": "belongs_to",
       "label": "Belongs To",
@@ -5009,18 +4922,6 @@
     },
     {
       "id": "belongs-50",
-      "from": "data-science/json-file",
-      "to": "data-science",
-      "source": "data-science/json-file",
-      "target": "data-science",
-      "type": "belongs_to",
-      "label": "Belongs To",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "belongs-51",
       "from": "data-science/k-means-clustering",
       "to": "data-science",
       "source": "data-science/k-means-clustering",
@@ -5032,7 +4933,7 @@
       "directed": true
     },
     {
-      "id": "belongs-52",
+      "id": "belongs-51",
       "from": "data-science/linear-regression",
       "to": "data-science",
       "source": "data-science/linear-regression",
@@ -5044,7 +4945,7 @@
       "directed": true
     },
     {
-      "id": "belongs-53",
+      "id": "belongs-52",
       "from": "data-science/logistic-regression",
       "to": "data-science",
       "source": "data-science/logistic-regression",
@@ -5056,7 +4957,7 @@
       "directed": true
     },
     {
-      "id": "belongs-54",
+      "id": "belongs-53",
       "from": "data-science/machine-learning",
       "to": "data-science",
       "source": "data-science/machine-learning",
@@ -5068,7 +4969,7 @@
       "directed": true
     },
     {
-      "id": "belongs-55",
+      "id": "belongs-54",
       "from": "data-science/machine-learning-fundamentals",
       "to": "data-science",
       "source": "data-science/machine-learning-fundamentals",
@@ -5080,7 +4981,7 @@
       "directed": true
     },
     {
-      "id": "belongs-56",
+      "id": "belongs-55",
       "from": "data-science/matplotlib",
       "to": "data-science",
       "source": "data-science/matplotlib",
@@ -5092,7 +4993,7 @@
       "directed": true
     },
     {
-      "id": "belongs-57",
+      "id": "belongs-56",
       "from": "data-science/mean-squared-error",
       "to": "data-science",
       "source": "data-science/mean-squared-error",
@@ -5104,7 +5005,7 @@
       "directed": true
     },
     {
-      "id": "belongs-58",
+      "id": "belongs-57",
       "from": "data-science/merging-and-joining-dataframes",
       "to": "data-science",
       "source": "data-science/merging-and-joining-dataframes",
@@ -5116,7 +5017,7 @@
       "directed": true
     },
     {
-      "id": "belongs-59",
+      "id": "belongs-58",
       "from": "data-science/missing-data",
       "to": "data-science",
       "source": "data-science/missing-data",
@@ -5128,7 +5029,7 @@
       "directed": true
     },
     {
-      "id": "belongs-60",
+      "id": "belongs-59",
       "from": "data-science/model-deployment",
       "to": "data-science",
       "source": "data-science/model-deployment",
@@ -5140,7 +5041,7 @@
       "directed": true
     },
     {
-      "id": "belongs-61",
+      "id": "belongs-60",
       "from": "data-science/model-evaluation",
       "to": "data-science",
       "source": "data-science/model-evaluation",
@@ -5152,7 +5053,7 @@
       "directed": true
     },
     {
-      "id": "belongs-62",
+      "id": "belongs-61",
       "from": "data-science/model-evaluation-deployment",
       "to": "data-science",
       "source": "data-science/model-evaluation-deployment",
@@ -5164,7 +5065,7 @@
       "directed": true
     },
     {
-      "id": "belongs-63",
+      "id": "belongs-62",
       "from": "data-science/model-training",
       "to": "data-science",
       "source": "data-science/model-training",
@@ -5176,7 +5077,7 @@
       "directed": true
     },
     {
-      "id": "belongs-64",
+      "id": "belongs-63",
       "from": "data-science/modules-and-packages",
       "to": "data-science",
       "source": "data-science/modules-and-packages",
@@ -5188,7 +5089,7 @@
       "directed": true
     },
     {
-      "id": "belongs-65",
+      "id": "belongs-64",
       "from": "data-science/multiple-linear-regression",
       "to": "data-science",
       "source": "data-science/multiple-linear-regression",
@@ -5200,7 +5101,7 @@
       "directed": true
     },
     {
-      "id": "belongs-66",
+      "id": "belongs-65",
       "from": "data-science/numpy-array",
       "to": "data-science",
       "source": "data-science/numpy-array",
@@ -5212,7 +5113,7 @@
       "directed": true
     },
     {
-      "id": "belongs-67",
+      "id": "belongs-66",
       "from": "data-science/object-oriented-programming",
       "to": "data-science",
       "source": "data-science/object-oriented-programming",
@@ -5224,7 +5125,7 @@
       "directed": true
     },
     {
-      "id": "belongs-68",
+      "id": "belongs-67",
       "from": "data-science/outliers",
       "to": "data-science",
       "source": "data-science/outliers",
@@ -5236,19 +5137,7 @@
       "directed": true
     },
     {
-      "id": "belongs-69",
-      "from": "data-science/overfitting-vs-underfitting",
-      "to": "data-science",
-      "source": "data-science/overfitting-vs-underfitting",
-      "target": "data-science",
-      "type": "belongs_to",
-      "label": "Belongs To",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "belongs-70",
+      "id": "belongs-68",
       "from": "data-science/p-value",
       "to": "data-science",
       "source": "data-science/p-value",
@@ -5260,7 +5149,7 @@
       "directed": true
     },
     {
-      "id": "belongs-71",
+      "id": "belongs-69",
       "from": "data-science/pandas-dataframe",
       "to": "data-science",
       "source": "data-science/pandas-dataframe",
@@ -5272,7 +5161,7 @@
       "directed": true
     },
     {
-      "id": "belongs-72",
+      "id": "belongs-70",
       "from": "data-science/precision-vs-recall",
       "to": "data-science",
       "source": "data-science/precision-vs-recall",
@@ -5284,7 +5173,7 @@
       "directed": true
     },
     {
-      "id": "belongs-73",
+      "id": "belongs-71",
       "from": "data-science/principal-component-analysis",
       "to": "data-science",
       "source": "data-science/principal-component-analysis",
@@ -5296,7 +5185,7 @@
       "directed": true
     },
     {
-      "id": "belongs-74",
+      "id": "belongs-72",
       "from": "data-science/probability",
       "to": "data-science",
       "source": "data-science/probability",
@@ -5308,19 +5197,7 @@
       "directed": true
     },
     {
-      "id": "belongs-75",
-      "from": "data-science/probability-distribution",
-      "to": "data-science",
-      "source": "data-science/probability-distribution",
-      "target": "data-science",
-      "type": "belongs_to",
-      "label": "Belongs To",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "belongs-76",
+      "id": "belongs-73",
       "from": "data-science/programming-for-data-science-python",
       "to": "data-science",
       "source": "data-science/programming-for-data-science-python",
@@ -5332,7 +5209,7 @@
       "directed": true
     },
     {
-      "id": "belongs-77",
+      "id": "belongs-74",
       "from": "data-science/python-fundamentals",
       "to": "data-science",
       "source": "data-science/python-fundamentals",
@@ -5344,7 +5221,7 @@
       "directed": true
     },
     {
-      "id": "belongs-78",
+      "id": "belongs-75",
       "from": "data-science/python-libraries",
       "to": "data-science",
       "source": "data-science/python-libraries",
@@ -5356,7 +5233,7 @@
       "directed": true
     },
     {
-      "id": "belongs-79",
+      "id": "belongs-76",
       "from": "data-science/python-programming",
       "to": "data-science",
       "source": "data-science/python-programming",
@@ -5368,7 +5245,7 @@
       "directed": true
     },
     {
-      "id": "belongs-80",
+      "id": "belongs-77",
       "from": "data-science/python-programming-language",
       "to": "data-science",
       "source": "data-science/python-programming-language",
@@ -5380,7 +5257,7 @@
       "directed": true
     },
     {
-      "id": "belongs-81",
+      "id": "belongs-78",
       "from": "data-science/qualitative-data",
       "to": "data-science",
       "source": "data-science/qualitative-data",
@@ -5392,7 +5269,7 @@
       "directed": true
     },
     {
-      "id": "belongs-82",
+      "id": "belongs-79",
       "from": "data-science/quantitative-data",
       "to": "data-science",
       "source": "data-science/quantitative-data",
@@ -5404,7 +5281,7 @@
       "directed": true
     },
     {
-      "id": "belongs-83",
+      "id": "belongs-80",
       "from": "data-science/r-squared",
       "to": "data-science",
       "source": "data-science/r-squared",
@@ -5416,7 +5293,7 @@
       "directed": true
     },
     {
-      "id": "belongs-84",
+      "id": "belongs-81",
       "from": "data-science/regression-analysis",
       "to": "data-science",
       "source": "data-science/regression-analysis",
@@ -5428,7 +5305,7 @@
       "directed": true
     },
     {
-      "id": "belongs-85",
+      "id": "belongs-82",
       "from": "data-science/sampling",
       "to": "data-science",
       "source": "data-science/sampling",
@@ -5440,7 +5317,7 @@
       "directed": true
     },
     {
-      "id": "belongs-86",
+      "id": "belongs-83",
       "from": "data-science/seaborn",
       "to": "data-science",
       "source": "data-science/seaborn",
@@ -5452,7 +5329,7 @@
       "directed": true
     },
     {
-      "id": "belongs-87",
+      "id": "belongs-84",
       "from": "data-science/semi-structured-data",
       "to": "data-science",
       "source": "data-science/semi-structured-data",
@@ -5464,7 +5341,7 @@
       "directed": true
     },
     {
-      "id": "belongs-88",
+      "id": "belongs-85",
       "from": "data-science/series",
       "to": "data-science",
       "source": "data-science/series",
@@ -5476,7 +5353,7 @@
       "directed": true
     },
     {
-      "id": "belongs-89",
+      "id": "belongs-86",
       "from": "data-science/silhouette-score",
       "to": "data-science",
       "source": "data-science/silhouette-score",
@@ -5488,7 +5365,19 @@
       "directed": true
     },
     {
-      "id": "belongs-90",
+      "id": "belongs-87",
+      "from": "data-science/sql",
+      "to": "data-science",
+      "source": "data-science/sql",
+      "target": "data-science",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-88",
       "from": "data-science/statistical-foundations",
       "to": "data-science",
       "source": "data-science/statistical-foundations",
@@ -5500,7 +5389,7 @@
       "directed": true
     },
     {
-      "id": "belongs-91",
+      "id": "belongs-89",
       "from": "data-science/structured-data",
       "to": "data-science",
       "source": "data-science/structured-data",
@@ -5512,7 +5401,7 @@
       "directed": true
     },
     {
-      "id": "belongs-92",
+      "id": "belongs-90",
       "from": "data-science/supervised-learning",
       "to": "data-science",
       "source": "data-science/supervised-learning",
@@ -5524,7 +5413,7 @@
       "directed": true
     },
     {
-      "id": "belongs-93",
+      "id": "belongs-91",
       "from": "data-science/supervised-learning-classification",
       "to": "data-science",
       "source": "data-science/supervised-learning-classification",
@@ -5536,7 +5425,7 @@
       "directed": true
     },
     {
-      "id": "belongs-94",
+      "id": "belongs-92",
       "from": "data-science/supervised-learning-regression",
       "to": "data-science",
       "source": "data-science/supervised-learning-regression",
@@ -5548,7 +5437,7 @@
       "directed": true
     },
     {
-      "id": "belongs-95",
+      "id": "belongs-93",
       "from": "data-science/support-vector-machine",
       "to": "data-science",
       "source": "data-science/support-vector-machine",
@@ -5560,7 +5449,7 @@
       "directed": true
     },
     {
-      "id": "belongs-96",
+      "id": "belongs-94",
       "from": "data-science/univariate-analysis",
       "to": "data-science",
       "source": "data-science/univariate-analysis",
@@ -5572,7 +5461,7 @@
       "directed": true
     },
     {
-      "id": "belongs-97",
+      "id": "belongs-95",
       "from": "data-science/unstructured-data",
       "to": "data-science",
       "source": "data-science/unstructured-data",
@@ -5584,7 +5473,7 @@
       "directed": true
     },
     {
-      "id": "belongs-98",
+      "id": "belongs-96",
       "from": "data-science/unsupervised-learning",
       "to": "data-science",
       "source": "data-science/unsupervised-learning",
@@ -5596,7 +5485,7 @@
       "directed": true
     },
     {
-      "id": "belongs-99",
+      "id": "belongs-97",
       "from": "data-science/unsupervised-learning-clustering",
       "to": "data-science",
       "source": "data-science/unsupervised-learning-clustering",
@@ -5608,7 +5497,7 @@
       "directed": true
     },
     {
-      "id": "belongs-100",
+      "id": "belongs-98",
       "from": "data-science/variables",
       "to": "data-science",
       "source": "data-science/variables",
@@ -5620,7 +5509,7 @@
       "directed": true
     },
     {
-      "id": "belongs-101",
+      "id": "belongs-99",
       "from": "data-science/version-control",
       "to": "data-science",
       "source": "data-science/version-control",
@@ -5632,7 +5521,7 @@
       "directed": true
     },
     {
-      "id": "belongs-102",
+      "id": "belongs-100",
       "from": "data-science/web-scraping",
       "to": "data-science",
       "source": "data-science/web-scraping",
@@ -5646,9 +5535,9 @@
     {
       "id": "related-0",
       "from": "data-science/advanced-data-visualization",
-      "to": "data-science/exploratory-data-analysis",
+      "to": "data-science/data-visualization",
       "source": "data-science/advanced-data-visualization",
-      "target": "data-science/exploratory-data-analysis",
+      "target": "data-science/data-visualization",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -5658,9 +5547,9 @@
     {
       "id": "related-1",
       "from": "data-science/advanced-data-visualization",
-      "to": "data-science/data-visualization",
+      "to": "data-science/outliers",
       "source": "data-science/advanced-data-visualization",
-      "target": "data-science/data-visualization",
+      "target": "data-science/outliers",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -5669,6 +5558,18 @@
     },
     {
       "id": "related-2",
+      "from": "data-science/advanced-data-visualization",
+      "to": "python/matplotlib-library",
+      "source": "data-science/advanced-data-visualization",
+      "target": "python/matplotlib-library",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-3",
       "from": "data-science/advanced-data-visualization",
       "to": "data-science/data",
       "source": "data-science/advanced-data-visualization",
@@ -5680,23 +5581,11 @@
       "directed": true
     },
     {
-      "id": "related-3",
-      "from": "data-science/seaborn",
-      "to": "data-science/data-visualization",
-      "source": "data-science/seaborn",
-      "target": "data-science/data-visualization",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
       "id": "related-4",
-      "from": "data-science/seaborn",
-      "to": "data-science/data",
-      "source": "data-science/seaborn",
-      "target": "data-science/data",
+      "from": "data-science/matplotlib",
+      "to": "python/matplotlib-library",
+      "source": "data-science/matplotlib",
+      "target": "python/matplotlib-library",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -5705,6 +5594,30 @@
     },
     {
       "id": "related-5",
+      "from": "data-science/seaborn",
+      "to": "python/data-analysis",
+      "source": "data-science/seaborn",
+      "target": "python/data-analysis",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-6",
+      "from": "data-science/seaborn",
+      "to": "python/function",
+      "source": "data-science/seaborn",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-7",
       "from": "data-science/seaborn",
       "to": "data-science/outliers",
       "source": "data-science/seaborn",
@@ -5716,7 +5629,19 @@
       "directed": true
     },
     {
-      "id": "related-6",
+      "id": "related-8",
+      "from": "data-science/seaborn",
+      "to": "data-science/data",
+      "source": "data-science/seaborn",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-9",
       "from": "data-science/seaborn",
       "to": "data-science/correlation",
       "source": "data-science/seaborn",
@@ -5728,22 +5653,46 @@
       "directed": true
     },
     {
-      "id": "related-7",
+      "id": "related-10",
       "from": "data-science/data-acquisition-and-storage",
       "to": "data-science/data",
       "source": "data-science/data-acquisition-and-storage",
       "target": "data-science/data",
       "type": "related_to",
       "label": "Related",
-      "weight": 2,
-      "frequency": 2,
+      "weight": 1,
+      "frequency": 1,
       "directed": true
     },
     {
-      "id": "related-8",
-      "from": "data-science/data-acquisition-and-storage",
+      "id": "related-11",
+      "from": "data-science/sql",
+      "to": "data-science/data",
+      "source": "data-science/sql",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-12",
+      "from": "data-science/sql",
+      "to": "python/python-data-structures",
+      "source": "data-science/sql",
+      "target": "python/python-data-structures",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-13",
+      "from": "data-science/sql",
       "to": "data-science/structured-data",
-      "source": "data-science/data-acquisition-and-storage",
+      "source": "data-science/sql",
       "target": "data-science/structured-data",
       "type": "related_to",
       "label": "Related",
@@ -5752,7 +5701,7 @@
       "directed": true
     },
     {
-      "id": "related-9",
+      "id": "related-14",
       "from": "data-science/data-cleaning-preprocessing",
       "to": "data-science/data",
       "source": "data-science/data-cleaning-preprocessing",
@@ -5764,83 +5713,23 @@
       "directed": true
     },
     {
-      "id": "related-10",
-      "from": "data-science/data-imputation",
-      "to": "data-science/data",
-      "source": "data-science/data-imputation",
-      "target": "data-science/data",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-11",
-      "from": "data-science/exploratory-data-analysis",
-      "to": "data-science/data",
-      "source": "data-science/exploratory-data-analysis",
-      "target": "data-science/data",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 2,
-      "frequency": 2,
-      "directed": true
-    },
-    {
-      "id": "related-12",
-      "from": "data-science/exploratory-data-analysis",
-      "to": "data-science/data-cleaning-preprocessing",
-      "source": "data-science/exploratory-data-analysis",
-      "target": "data-science/data-cleaning-preprocessing",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-13",
-      "from": "data-science/exploratory-data-analysis",
-      "to": "data-science/outliers",
-      "source": "data-science/exploratory-data-analysis",
-      "target": "data-science/outliers",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-14",
-      "from": "data-science/data-visualization",
-      "to": "data-science/outliers",
-      "source": "data-science/data-visualization",
-      "target": "data-science/outliers",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
       "id": "related-15",
-      "from": "data-science/introduction-to-machine-learning",
-      "to": "data-science/data",
-      "source": "data-science/introduction-to-machine-learning",
-      "target": "data-science/data",
+      "from": "data-science/data-cleaning-preprocessing",
+      "to": "data-science/structured-data",
+      "source": "data-science/data-cleaning-preprocessing",
+      "target": "data-science/structured-data",
       "type": "related_to",
       "label": "Related",
-      "weight": 2,
-      "frequency": 2,
+      "weight": 1,
+      "frequency": 1,
       "directed": true
     },
     {
       "id": "related-16",
-      "from": "data-science/introduction-to-machine-learning",
-      "to": "data-science/data-visualization",
-      "source": "data-science/introduction-to-machine-learning",
-      "target": "data-science/data-visualization",
+      "from": "data-science/missing-data",
+      "to": "python/pandas-library",
+      "source": "data-science/missing-data",
+      "target": "python/pandas-library",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -5849,6 +5738,102 @@
     },
     {
       "id": "related-17",
+      "from": "data-science/missing-data",
+      "to": "data-science/data",
+      "source": "data-science/missing-data",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-18",
+      "from": "data-science/exploratory-data-analysis",
+      "to": "data-science/data",
+      "source": "data-science/exploratory-data-analysis",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-19",
+      "from": "data-science/exploratory-data-analysis",
+      "to": "python/data-analysis",
+      "source": "data-science/exploratory-data-analysis",
+      "target": "python/data-analysis",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-20",
+      "from": "data-science/descriptive-statistics",
+      "to": "data-science/outliers",
+      "source": "data-science/descriptive-statistics",
+      "target": "data-science/outliers",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-21",
+      "from": "data-science/descriptive-statistics",
+      "to": "data-science/data",
+      "source": "data-science/descriptive-statistics",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-22",
+      "from": "data-science/descriptive-statistics",
+      "to": "python/function",
+      "source": "data-science/descriptive-statistics",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-23",
+      "from": "data-science/introduction-to-data-science",
+      "to": "python/data-analysis",
+      "source": "data-science/introduction-to-data-science",
+      "target": "python/data-analysis",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-24",
+      "from": "data-science/introduction-to-machine-learning",
+      "to": "data-science/data",
+      "source": "data-science/introduction-to-machine-learning",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-25",
       "from": "data-science/model-evaluation-deployment",
       "to": "data-science/data",
       "source": "data-science/model-evaluation-deployment",
@@ -5860,19 +5845,7 @@
       "directed": true
     },
     {
-      "id": "related-18",
-      "from": "data-science/model-evaluation-deployment",
-      "to": "data-science/clustering",
-      "source": "data-science/model-evaluation-deployment",
-      "target": "data-science/clustering",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-19",
+      "id": "related-26",
       "from": "data-science/model-evaluation-deployment",
       "to": "data-science/accuracy",
       "source": "data-science/model-evaluation-deployment",
@@ -5884,19 +5857,7 @@
       "directed": true
     },
     {
-      "id": "related-20",
-      "from": "data-science/model-evaluation-deployment",
-      "to": "python/iteration",
-      "source": "data-science/model-evaluation-deployment",
-      "target": "python/iteration",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-21",
+      "id": "related-27",
       "from": "data-science/hyperparameter-tuning",
       "to": "data-science/linear-regression",
       "source": "data-science/hyperparameter-tuning",
@@ -5908,19 +5869,7 @@
       "directed": true
     },
     {
-      "id": "related-22",
-      "from": "data-science/hyperparameter-tuning",
-      "to": "data-science/gradient-descent",
-      "source": "data-science/hyperparameter-tuning",
-      "target": "data-science/gradient-descent",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-23",
+      "id": "related-28",
       "from": "data-science/hyperparameter-tuning",
       "to": "data-science/logistic-regression",
       "source": "data-science/hyperparameter-tuning",
@@ -5932,7 +5881,7 @@
       "directed": true
     },
     {
-      "id": "related-24",
+      "id": "related-29",
       "from": "data-science/programming-for-data-science-python",
       "to": "data-science/data",
       "source": "data-science/programming-for-data-science-python",
@@ -5944,7 +5893,43 @@
       "directed": true
     },
     {
-      "id": "related-25",
+      "id": "related-30",
+      "from": "data-science/programming-for-data-science-python",
+      "to": "python/python-programming-language",
+      "source": "data-science/programming-for-data-science-python",
+      "target": "python/python-programming-language",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-31",
+      "from": "data-science/programming-for-data-science-python",
+      "to": "python/python-data-structures",
+      "source": "data-science/programming-for-data-science-python",
+      "target": "python/python-data-structures",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-32",
+      "from": "data-science/python-programming",
+      "to": "python/function",
+      "source": "data-science/python-programming",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-33",
       "from": "data-science/python-programming",
       "to": "data-science/data",
       "source": "data-science/python-programming",
@@ -5956,11 +5941,11 @@
       "directed": true
     },
     {
-      "id": "related-26",
+      "id": "related-34",
       "from": "data-science/data-structures-python",
-      "to": "python/conditional-statements",
+      "to": "python/python-data-structures",
       "source": "data-science/data-structures-python",
-      "target": "python/conditional-statements",
+      "target": "python/python-data-structures",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -5968,7 +5953,43 @@
       "directed": true
     },
     {
-      "id": "related-27",
+      "id": "related-35",
+      "from": "data-science/data-structures-python",
+      "to": "data-science/structured-data",
+      "source": "data-science/data-structures-python",
+      "target": "data-science/structured-data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-36",
+      "from": "data-science/data-structures-python",
+      "to": "python/function",
+      "source": "data-science/data-structures-python",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-37",
+      "from": "data-science/statistical-foundations",
+      "to": "data-science/data",
+      "source": "data-science/statistical-foundations",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-38",
       "from": "data-science/statistical-foundations",
       "to": "data-science/exploratory-data-analysis",
       "source": "data-science/statistical-foundations",
@@ -5980,31 +6001,7 @@
       "directed": true
     },
     {
-      "id": "related-28",
-      "from": "data-science/statistical-foundations",
-      "to": "data-science/outliers",
-      "source": "data-science/statistical-foundations",
-      "target": "data-science/outliers",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-29",
-      "from": "data-science/statistical-foundations",
-      "to": "data-science/data",
-      "source": "data-science/statistical-foundations",
-      "target": "data-science/data",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-30",
+      "id": "related-39",
       "from": "data-science/probability",
       "to": "data-science/data",
       "source": "data-science/probability",
@@ -6016,7 +6013,19 @@
       "directed": true
     },
     {
-      "id": "related-31",
+      "id": "related-40",
+      "from": "data-science/probability",
+      "to": "python/function",
+      "source": "data-science/probability",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-41",
       "from": "data-science/supervised-learning-classification",
       "to": "data-science/supervised-learning-regression",
       "source": "data-science/supervised-learning-classification",
@@ -6028,7 +6037,19 @@
       "directed": true
     },
     {
-      "id": "related-32",
+      "id": "related-42",
+      "from": "data-science/classification",
+      "to": "data-science/data",
+      "source": "data-science/classification",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-43",
       "from": "data-science/logistic-regression",
       "to": "data-science/linear-regression",
       "source": "data-science/logistic-regression",
@@ -6040,7 +6061,19 @@
       "directed": true
     },
     {
-      "id": "related-33",
+      "id": "related-44",
+      "from": "data-science/logistic-regression",
+      "to": "python/function",
+      "source": "data-science/logistic-regression",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-45",
       "from": "data-science/logistic-regression",
       "to": "data-science/data",
       "source": "data-science/logistic-regression",
@@ -6052,19 +6085,7 @@
       "directed": true
     },
     {
-      "id": "related-34",
-      "from": "data-science/support-vector-machine",
-      "to": "data-science/data",
-      "source": "data-science/support-vector-machine",
-      "target": "data-science/data",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-35",
+      "id": "related-46",
       "from": "data-science/supervised-learning-regression",
       "to": "data-science/data",
       "source": "data-science/supervised-learning-regression",
@@ -6076,7 +6097,7 @@
       "directed": true
     },
     {
-      "id": "related-36",
+      "id": "related-47",
       "from": "data-science/linear-regression",
       "to": "data-science/data",
       "source": "data-science/linear-regression",
@@ -6088,11 +6109,11 @@
       "directed": true
     },
     {
-      "id": "related-37",
+      "id": "related-48",
       "from": "data-science/mean-squared-error",
-      "to": "python/functions",
+      "to": "python/function",
       "source": "data-science/mean-squared-error",
-      "target": "python/functions",
+      "target": "python/function",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -6100,11 +6121,11 @@
       "directed": true
     },
     {
-      "id": "related-38",
-      "from": "data-science/gradient-descent",
-      "to": "python/iteration",
-      "source": "data-science/gradient-descent",
-      "target": "python/iteration",
+      "id": "related-49",
+      "from": "data-science/multiple-linear-regression",
+      "to": "python/function",
+      "source": "data-science/multiple-linear-regression",
+      "target": "python/function",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -6112,51 +6133,27 @@
       "directed": true
     },
     {
-      "id": "related-39",
+      "id": "related-50",
       "from": "data-science/unsupervised-learning-clustering",
       "to": "data-science/supervised-learning-classification",
       "source": "data-science/unsupervised-learning-clustering",
       "target": "data-science/supervised-learning-classification",
       "type": "related_to",
       "label": "Related",
-      "weight": 1,
-      "frequency": 1,
+      "weight": 2,
+      "frequency": 2,
       "directed": true
     },
     {
-      "id": "related-40",
+      "id": "related-51",
       "from": "data-science/unsupervised-learning-clustering",
       "to": "data-science/data",
       "source": "data-science/unsupervised-learning-clustering",
       "target": "data-science/data",
       "type": "related_to",
       "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-41",
-      "from": "data-science/clustering",
-      "to": "data-science/data",
-      "source": "data-science/clustering",
-      "target": "data-science/data",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-42",
-      "from": "data-science/k-means-clustering",
-      "to": "data-science/outliers",
-      "source": "data-science/k-means-clustering",
-      "target": "data-science/outliers",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
+      "weight": 2,
+      "frequency": 2,
       "directed": true
     }
   ],
@@ -6175,9 +6172,9 @@
     },
     {
       "id": "prereq-1",
-      "from": "data-science/control-flow-python",
+      "from": "data-science/data-structures-python",
       "to": "data-science/data",
-      "source": "data-science/control-flow-python",
+      "source": "data-science/data-structures-python",
       "target": "data-science/data",
       "type": "prerequisite",
       "label": "Prerequisite",
@@ -6187,10 +6184,10 @@
     },
     {
       "id": "prereq-2",
-      "from": "data-science/csv-file",
-      "to": "data-science/control-flow-python",
-      "source": "data-science/csv-file",
-      "target": "data-science/control-flow-python",
+      "from": "data-science/data-acquisition-and-storage",
+      "to": "data-science/data-structures-python",
+      "source": "data-science/data-acquisition-and-storage",
+      "target": "data-science/data-structures-python",
       "type": "prerequisite",
       "label": "Prerequisite",
       "weight": 1,
@@ -6200,9 +6197,9 @@
     {
       "id": "prereq-3",
       "from": "data-science/categorical-encoding",
-      "to": "data-science/csv-file",
+      "to": "data-science/data-acquisition-and-storage",
       "source": "data-science/categorical-encoding",
-      "target": "data-science/csv-file",
+      "target": "data-science/data-acquisition-and-storage",
       "type": "prerequisite",
       "label": "Prerequisite",
       "weight": 1,
@@ -6296,9 +6293,9 @@
     {
       "id": "prereq-11",
       "from": "data-science/advanced-data-visualization",
-      "to": "data-science/control-flow-python",
+      "to": "data-science/data-structures-python",
       "source": "data-science/advanced-data-visualization",
-      "target": "data-science/control-flow-python",
+      "target": "data-science/data-structures-python",
       "type": "prerequisite",
       "label": "Prerequisite",
       "weight": 1,
@@ -6334,9 +6331,9 @@
     {
       "id": "related-0",
       "from": "data-science/advanced-data-visualization",
-      "to": "data-science/exploratory-data-analysis",
+      "to": "data-science/data-visualization",
       "source": "data-science/advanced-data-visualization",
-      "target": "data-science/exploratory-data-analysis",
+      "target": "data-science/data-visualization",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -6346,9 +6343,9 @@
     {
       "id": "related-1",
       "from": "data-science/advanced-data-visualization",
-      "to": "data-science/data-visualization",
+      "to": "data-science/outliers",
       "source": "data-science/advanced-data-visualization",
-      "target": "data-science/data-visualization",
+      "target": "data-science/outliers",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -6357,6 +6354,18 @@
     },
     {
       "id": "related-2",
+      "from": "data-science/advanced-data-visualization",
+      "to": "python/matplotlib-library",
+      "source": "data-science/advanced-data-visualization",
+      "target": "python/matplotlib-library",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-3",
       "from": "data-science/advanced-data-visualization",
       "to": "data-science/data",
       "source": "data-science/advanced-data-visualization",
@@ -6368,23 +6377,11 @@
       "directed": true
     },
     {
-      "id": "related-3",
-      "from": "data-science/seaborn",
-      "to": "data-science/data-visualization",
-      "source": "data-science/seaborn",
-      "target": "data-science/data-visualization",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
       "id": "related-4",
-      "from": "data-science/seaborn",
-      "to": "data-science/data",
-      "source": "data-science/seaborn",
-      "target": "data-science/data",
+      "from": "data-science/matplotlib",
+      "to": "python/matplotlib-library",
+      "source": "data-science/matplotlib",
+      "target": "python/matplotlib-library",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -6393,6 +6390,30 @@
     },
     {
       "id": "related-5",
+      "from": "data-science/seaborn",
+      "to": "python/data-analysis",
+      "source": "data-science/seaborn",
+      "target": "python/data-analysis",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-6",
+      "from": "data-science/seaborn",
+      "to": "python/function",
+      "source": "data-science/seaborn",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-7",
       "from": "data-science/seaborn",
       "to": "data-science/outliers",
       "source": "data-science/seaborn",
@@ -6404,7 +6425,19 @@
       "directed": true
     },
     {
-      "id": "related-6",
+      "id": "related-8",
+      "from": "data-science/seaborn",
+      "to": "data-science/data",
+      "source": "data-science/seaborn",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-9",
       "from": "data-science/seaborn",
       "to": "data-science/correlation",
       "source": "data-science/seaborn",
@@ -6416,22 +6449,46 @@
       "directed": true
     },
     {
-      "id": "related-7",
+      "id": "related-10",
       "from": "data-science/data-acquisition-and-storage",
       "to": "data-science/data",
       "source": "data-science/data-acquisition-and-storage",
       "target": "data-science/data",
       "type": "related_to",
       "label": "Related",
-      "weight": 2,
-      "frequency": 2,
+      "weight": 1,
+      "frequency": 1,
       "directed": true
     },
     {
-      "id": "related-8",
-      "from": "data-science/data-acquisition-and-storage",
+      "id": "related-11",
+      "from": "data-science/sql",
+      "to": "data-science/data",
+      "source": "data-science/sql",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-12",
+      "from": "data-science/sql",
+      "to": "python/python-data-structures",
+      "source": "data-science/sql",
+      "target": "python/python-data-structures",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-13",
+      "from": "data-science/sql",
       "to": "data-science/structured-data",
-      "source": "data-science/data-acquisition-and-storage",
+      "source": "data-science/sql",
       "target": "data-science/structured-data",
       "type": "related_to",
       "label": "Related",
@@ -6440,7 +6497,7 @@
       "directed": true
     },
     {
-      "id": "related-9",
+      "id": "related-14",
       "from": "data-science/data-cleaning-preprocessing",
       "to": "data-science/data",
       "source": "data-science/data-cleaning-preprocessing",
@@ -6452,83 +6509,23 @@
       "directed": true
     },
     {
-      "id": "related-10",
-      "from": "data-science/data-imputation",
-      "to": "data-science/data",
-      "source": "data-science/data-imputation",
-      "target": "data-science/data",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-11",
-      "from": "data-science/exploratory-data-analysis",
-      "to": "data-science/data",
-      "source": "data-science/exploratory-data-analysis",
-      "target": "data-science/data",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 2,
-      "frequency": 2,
-      "directed": true
-    },
-    {
-      "id": "related-12",
-      "from": "data-science/exploratory-data-analysis",
-      "to": "data-science/data-cleaning-preprocessing",
-      "source": "data-science/exploratory-data-analysis",
-      "target": "data-science/data-cleaning-preprocessing",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-13",
-      "from": "data-science/exploratory-data-analysis",
-      "to": "data-science/outliers",
-      "source": "data-science/exploratory-data-analysis",
-      "target": "data-science/outliers",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-14",
-      "from": "data-science/data-visualization",
-      "to": "data-science/outliers",
-      "source": "data-science/data-visualization",
-      "target": "data-science/outliers",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
       "id": "related-15",
-      "from": "data-science/introduction-to-machine-learning",
-      "to": "data-science/data",
-      "source": "data-science/introduction-to-machine-learning",
-      "target": "data-science/data",
+      "from": "data-science/data-cleaning-preprocessing",
+      "to": "data-science/structured-data",
+      "source": "data-science/data-cleaning-preprocessing",
+      "target": "data-science/structured-data",
       "type": "related_to",
       "label": "Related",
-      "weight": 2,
-      "frequency": 2,
+      "weight": 1,
+      "frequency": 1,
       "directed": true
     },
     {
       "id": "related-16",
-      "from": "data-science/introduction-to-machine-learning",
-      "to": "data-science/data-visualization",
-      "source": "data-science/introduction-to-machine-learning",
-      "target": "data-science/data-visualization",
+      "from": "data-science/missing-data",
+      "to": "python/pandas-library",
+      "source": "data-science/missing-data",
+      "target": "python/pandas-library",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -6537,6 +6534,102 @@
     },
     {
       "id": "related-17",
+      "from": "data-science/missing-data",
+      "to": "data-science/data",
+      "source": "data-science/missing-data",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-18",
+      "from": "data-science/exploratory-data-analysis",
+      "to": "data-science/data",
+      "source": "data-science/exploratory-data-analysis",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-19",
+      "from": "data-science/exploratory-data-analysis",
+      "to": "python/data-analysis",
+      "source": "data-science/exploratory-data-analysis",
+      "target": "python/data-analysis",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-20",
+      "from": "data-science/descriptive-statistics",
+      "to": "data-science/outliers",
+      "source": "data-science/descriptive-statistics",
+      "target": "data-science/outliers",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-21",
+      "from": "data-science/descriptive-statistics",
+      "to": "data-science/data",
+      "source": "data-science/descriptive-statistics",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-22",
+      "from": "data-science/descriptive-statistics",
+      "to": "python/function",
+      "source": "data-science/descriptive-statistics",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-23",
+      "from": "data-science/introduction-to-data-science",
+      "to": "python/data-analysis",
+      "source": "data-science/introduction-to-data-science",
+      "target": "python/data-analysis",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-24",
+      "from": "data-science/introduction-to-machine-learning",
+      "to": "data-science/data",
+      "source": "data-science/introduction-to-machine-learning",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-25",
       "from": "data-science/model-evaluation-deployment",
       "to": "data-science/data",
       "source": "data-science/model-evaluation-deployment",
@@ -6548,19 +6641,7 @@
       "directed": true
     },
     {
-      "id": "related-18",
-      "from": "data-science/model-evaluation-deployment",
-      "to": "data-science/clustering",
-      "source": "data-science/model-evaluation-deployment",
-      "target": "data-science/clustering",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-19",
+      "id": "related-26",
       "from": "data-science/model-evaluation-deployment",
       "to": "data-science/accuracy",
       "source": "data-science/model-evaluation-deployment",
@@ -6572,19 +6653,7 @@
       "directed": true
     },
     {
-      "id": "related-20",
-      "from": "data-science/model-evaluation-deployment",
-      "to": "python/iteration",
-      "source": "data-science/model-evaluation-deployment",
-      "target": "python/iteration",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-21",
+      "id": "related-27",
       "from": "data-science/hyperparameter-tuning",
       "to": "data-science/linear-regression",
       "source": "data-science/hyperparameter-tuning",
@@ -6596,19 +6665,7 @@
       "directed": true
     },
     {
-      "id": "related-22",
-      "from": "data-science/hyperparameter-tuning",
-      "to": "data-science/gradient-descent",
-      "source": "data-science/hyperparameter-tuning",
-      "target": "data-science/gradient-descent",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-23",
+      "id": "related-28",
       "from": "data-science/hyperparameter-tuning",
       "to": "data-science/logistic-regression",
       "source": "data-science/hyperparameter-tuning",
@@ -6620,7 +6677,7 @@
       "directed": true
     },
     {
-      "id": "related-24",
+      "id": "related-29",
       "from": "data-science/programming-for-data-science-python",
       "to": "data-science/data",
       "source": "data-science/programming-for-data-science-python",
@@ -6632,7 +6689,43 @@
       "directed": true
     },
     {
-      "id": "related-25",
+      "id": "related-30",
+      "from": "data-science/programming-for-data-science-python",
+      "to": "python/python-programming-language",
+      "source": "data-science/programming-for-data-science-python",
+      "target": "python/python-programming-language",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-31",
+      "from": "data-science/programming-for-data-science-python",
+      "to": "python/python-data-structures",
+      "source": "data-science/programming-for-data-science-python",
+      "target": "python/python-data-structures",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-32",
+      "from": "data-science/python-programming",
+      "to": "python/function",
+      "source": "data-science/python-programming",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-33",
       "from": "data-science/python-programming",
       "to": "data-science/data",
       "source": "data-science/python-programming",
@@ -6644,11 +6737,11 @@
       "directed": true
     },
     {
-      "id": "related-26",
+      "id": "related-34",
       "from": "data-science/data-structures-python",
-      "to": "python/conditional-statements",
+      "to": "python/python-data-structures",
       "source": "data-science/data-structures-python",
-      "target": "python/conditional-statements",
+      "target": "python/python-data-structures",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -6656,7 +6749,43 @@
       "directed": true
     },
     {
-      "id": "related-27",
+      "id": "related-35",
+      "from": "data-science/data-structures-python",
+      "to": "data-science/structured-data",
+      "source": "data-science/data-structures-python",
+      "target": "data-science/structured-data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-36",
+      "from": "data-science/data-structures-python",
+      "to": "python/function",
+      "source": "data-science/data-structures-python",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-37",
+      "from": "data-science/statistical-foundations",
+      "to": "data-science/data",
+      "source": "data-science/statistical-foundations",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-38",
       "from": "data-science/statistical-foundations",
       "to": "data-science/exploratory-data-analysis",
       "source": "data-science/statistical-foundations",
@@ -6668,31 +6797,7 @@
       "directed": true
     },
     {
-      "id": "related-28",
-      "from": "data-science/statistical-foundations",
-      "to": "data-science/outliers",
-      "source": "data-science/statistical-foundations",
-      "target": "data-science/outliers",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-29",
-      "from": "data-science/statistical-foundations",
-      "to": "data-science/data",
-      "source": "data-science/statistical-foundations",
-      "target": "data-science/data",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-30",
+      "id": "related-39",
       "from": "data-science/probability",
       "to": "data-science/data",
       "source": "data-science/probability",
@@ -6704,7 +6809,19 @@
       "directed": true
     },
     {
-      "id": "related-31",
+      "id": "related-40",
+      "from": "data-science/probability",
+      "to": "python/function",
+      "source": "data-science/probability",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-41",
       "from": "data-science/supervised-learning-classification",
       "to": "data-science/supervised-learning-regression",
       "source": "data-science/supervised-learning-classification",
@@ -6716,7 +6833,19 @@
       "directed": true
     },
     {
-      "id": "related-32",
+      "id": "related-42",
+      "from": "data-science/classification",
+      "to": "data-science/data",
+      "source": "data-science/classification",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-43",
       "from": "data-science/logistic-regression",
       "to": "data-science/linear-regression",
       "source": "data-science/logistic-regression",
@@ -6728,7 +6857,19 @@
       "directed": true
     },
     {
-      "id": "related-33",
+      "id": "related-44",
+      "from": "data-science/logistic-regression",
+      "to": "python/function",
+      "source": "data-science/logistic-regression",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-45",
       "from": "data-science/logistic-regression",
       "to": "data-science/data",
       "source": "data-science/logistic-regression",
@@ -6740,19 +6881,7 @@
       "directed": true
     },
     {
-      "id": "related-34",
-      "from": "data-science/support-vector-machine",
-      "to": "data-science/data",
-      "source": "data-science/support-vector-machine",
-      "target": "data-science/data",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-35",
+      "id": "related-46",
       "from": "data-science/supervised-learning-regression",
       "to": "data-science/data",
       "source": "data-science/supervised-learning-regression",
@@ -6764,7 +6893,7 @@
       "directed": true
     },
     {
-      "id": "related-36",
+      "id": "related-47",
       "from": "data-science/linear-regression",
       "to": "data-science/data",
       "source": "data-science/linear-regression",
@@ -6776,11 +6905,11 @@
       "directed": true
     },
     {
-      "id": "related-37",
+      "id": "related-48",
       "from": "data-science/mean-squared-error",
-      "to": "python/functions",
+      "to": "python/function",
       "source": "data-science/mean-squared-error",
-      "target": "python/functions",
+      "target": "python/function",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -6788,11 +6917,11 @@
       "directed": true
     },
     {
-      "id": "related-38",
-      "from": "data-science/gradient-descent",
-      "to": "python/iteration",
-      "source": "data-science/gradient-descent",
-      "target": "python/iteration",
+      "id": "related-49",
+      "from": "data-science/multiple-linear-regression",
+      "to": "python/function",
+      "source": "data-science/multiple-linear-regression",
+      "target": "python/function",
       "type": "related_to",
       "label": "Related",
       "weight": 1,
@@ -6800,51 +6929,27 @@
       "directed": true
     },
     {
-      "id": "related-39",
+      "id": "related-50",
       "from": "data-science/unsupervised-learning-clustering",
       "to": "data-science/supervised-learning-classification",
       "source": "data-science/unsupervised-learning-clustering",
       "target": "data-science/supervised-learning-classification",
       "type": "related_to",
       "label": "Related",
-      "weight": 1,
-      "frequency": 1,
+      "weight": 2,
+      "frequency": 2,
       "directed": true
     },
     {
-      "id": "related-40",
+      "id": "related-51",
       "from": "data-science/unsupervised-learning-clustering",
       "to": "data-science/data",
       "source": "data-science/unsupervised-learning-clustering",
       "target": "data-science/data",
       "type": "related_to",
       "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-41",
-      "from": "data-science/clustering",
-      "to": "data-science/data",
-      "source": "data-science/clustering",
-      "target": "data-science/data",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
-      "directed": true
-    },
-    {
-      "id": "related-42",
-      "from": "data-science/k-means-clustering",
-      "to": "data-science/outliers",
-      "source": "data-science/k-means-clustering",
-      "target": "data-science/outliers",
-      "type": "related_to",
-      "label": "Related",
-      "weight": 1,
-      "frequency": 1,
+      "weight": 2,
+      "frequency": 2,
       "directed": true
     }
   ],
@@ -6857,7 +6962,6 @@
       "data-science/correlation",
       "data-science/cross-validation",
       "data-science/data-acquisition",
-      "data-science/data-acquisition-and-storage",
       "data-science/data-aggregation",
       "data-science/data-cleaning-preprocessing",
       "data-science/data-communication",
@@ -6870,15 +6974,16 @@
       "data-science/data-science",
       "data-science/data-science-lifecycle",
       "data-science/data-scientist",
-      "data-science/data-structures-python",
       "data-science/data-transformation",
       "data-science/data-types",
       "data-science/data-visualization",
       "data-science/data-visualization-communication",
+      "data-science/descriptive-statistics",
       "data-science/dimensionality-reduction",
       "data-science/error-handling",
       "data-science/ethical-considerations-in-data-science",
       "data-science/exploratory-data-analysis",
+      "data-science/f1-score",
       "data-science/feature-engineering",
       "data-science/feature-scaling",
       "data-science/feature-selection",
@@ -6888,7 +6993,6 @@
       "data-science/intro-topic",
       "data-science/introduction-to-data-science",
       "data-science/introduction-to-machine-learning",
-      "data-science/json-file",
       "data-science/k-means-clustering",
       "data-science/linear-regression",
       "data-science/logistic-regression",
@@ -6907,13 +7011,11 @@
       "data-science/numpy-array",
       "data-science/object-oriented-programming",
       "data-science/outliers",
-      "data-science/overfitting-vs-underfitting",
       "data-science/p-value",
       "data-science/pandas-dataframe",
       "data-science/precision-vs-recall",
       "data-science/principal-component-analysis",
       "data-science/probability",
-      "data-science/probability-distribution",
       "data-science/programming-for-data-science-python",
       "data-science/python-fundamentals",
       "data-science/python-libraries",
@@ -6928,6 +7030,7 @@
       "data-science/semi-structured-data",
       "data-science/series",
       "data-science/silhouette-score",
+      "data-science/sql",
       "data-science/statistical-foundations",
       "data-science/structured-data",
       "data-science/supervised-learning",
@@ -6942,8 +7045,8 @@
       "data-science/version-control",
       "data-science/web-scraping",
       "data-science/data",
-      "data-science/control-flow-python",
-      "data-science/csv-file",
+      "data-science/data-structures-python",
+      "data-science/data-acquisition-and-storage",
       "data-science/categorical-encoding",
       "data-science/bivariate-analysis",
       "data-science/advanced-data-visualization",
@@ -6963,7 +7066,6 @@
         "data-science/correlation",
         "data-science/cross-validation",
         "data-science/data-acquisition",
-        "data-science/data-acquisition-and-storage",
         "data-science/data-aggregation",
         "data-science/data-cleaning-preprocessing",
         "data-science/data-communication",
@@ -6976,15 +7078,16 @@
         "data-science/data-science",
         "data-science/data-science-lifecycle",
         "data-science/data-scientist",
-        "data-science/data-structures-python",
         "data-science/data-transformation",
         "data-science/data-types",
         "data-science/data-visualization",
         "data-science/data-visualization-communication",
+        "data-science/descriptive-statistics",
         "data-science/dimensionality-reduction",
         "data-science/error-handling",
         "data-science/ethical-considerations-in-data-science",
         "data-science/exploratory-data-analysis",
+        "data-science/f1-score",
         "data-science/feature-engineering",
         "data-science/feature-scaling",
         "data-science/feature-selection",
@@ -6994,7 +7097,6 @@
         "data-science/intro-topic",
         "data-science/introduction-to-data-science",
         "data-science/introduction-to-machine-learning",
-        "data-science/json-file",
         "data-science/k-means-clustering",
         "data-science/linear-regression",
         "data-science/logistic-regression",
@@ -7013,13 +7115,11 @@
         "data-science/numpy-array",
         "data-science/object-oriented-programming",
         "data-science/outliers",
-        "data-science/overfitting-vs-underfitting",
         "data-science/p-value",
         "data-science/pandas-dataframe",
         "data-science/precision-vs-recall",
         "data-science/principal-component-analysis",
         "data-science/probability",
-        "data-science/probability-distribution",
         "data-science/programming-for-data-science-python",
         "data-science/python-fundamentals",
         "data-science/python-libraries",
@@ -7034,6 +7134,7 @@
         "data-science/semi-structured-data",
         "data-science/series",
         "data-science/silhouette-score",
+        "data-science/sql",
         "data-science/statistical-foundations",
         "data-science/structured-data",
         "data-science/supervised-learning",
@@ -7052,10 +7153,10 @@
         "data-science/data"
       ],
       [
-        "data-science/control-flow-python"
+        "data-science/data-structures-python"
       ],
       [
-        "data-science/csv-file"
+        "data-science/data-acquisition-and-storage"
       ],
       [
         "data-science/categorical-encoding"
@@ -7089,7 +7190,6 @@
       "data-science/correlation",
       "data-science/cross-validation",
       "data-science/data-acquisition",
-      "data-science/data-acquisition-and-storage",
       "data-science/data-aggregation",
       "data-science/data-cleaning-preprocessing",
       "data-science/data-communication",
@@ -7102,15 +7202,16 @@
       "data-science/data-science",
       "data-science/data-science-lifecycle",
       "data-science/data-scientist",
-      "data-science/data-structures-python",
       "data-science/data-transformation",
       "data-science/data-types",
       "data-science/data-visualization",
       "data-science/data-visualization-communication",
+      "data-science/descriptive-statistics",
       "data-science/dimensionality-reduction",
       "data-science/error-handling",
       "data-science/ethical-considerations-in-data-science",
       "data-science/exploratory-data-analysis",
+      "data-science/f1-score",
       "data-science/feature-engineering",
       "data-science/feature-scaling",
       "data-science/feature-selection",
@@ -7120,7 +7221,6 @@
       "data-science/intro-topic",
       "data-science/introduction-to-data-science",
       "data-science/introduction-to-machine-learning",
-      "data-science/json-file",
       "data-science/k-means-clustering",
       "data-science/linear-regression",
       "data-science/logistic-regression",
@@ -7139,13 +7239,11 @@
       "data-science/numpy-array",
       "data-science/object-oriented-programming",
       "data-science/outliers",
-      "data-science/overfitting-vs-underfitting",
       "data-science/p-value",
       "data-science/pandas-dataframe",
       "data-science/precision-vs-recall",
       "data-science/principal-component-analysis",
       "data-science/probability",
-      "data-science/probability-distribution",
       "data-science/programming-for-data-science-python",
       "data-science/python-fundamentals",
       "data-science/python-libraries",
@@ -7160,6 +7258,7 @@
       "data-science/semi-structured-data",
       "data-science/series",
       "data-science/silhouette-score",
+      "data-science/sql",
       "data-science/statistical-foundations",
       "data-science/structured-data",
       "data-science/supervised-learning",
@@ -7192,7 +7291,7 @@
           "weight": 1
         }
       ],
-      "data-science/control-flow-python": [
+      "data-science/data-structures-python": [
         {
           "to": "data-science/data",
           "type": "prerequisite",
@@ -7202,11 +7301,26 @@
           "to": "data-science",
           "type": "belongs_to",
           "weight": 1
+        },
+        {
+          "to": "python/python-data-structures",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "data-science/structured-data",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "python/function",
+          "type": "related_to",
+          "weight": 1
         }
       ],
-      "data-science/csv-file": [
+      "data-science/data-acquisition-and-storage": [
         {
-          "to": "data-science/control-flow-python",
+          "to": "data-science/data-structures-python",
           "type": "prerequisite",
           "weight": 1
         },
@@ -7214,11 +7328,16 @@
           "to": "data-science",
           "type": "belongs_to",
           "weight": 1
+        },
+        {
+          "to": "data-science/data",
+          "type": "related_to",
+          "weight": 1
         }
       ],
       "data-science/categorical-encoding": [
         {
-          "to": "data-science/csv-file",
+          "to": "data-science/data-acquisition-and-storage",
           "type": "prerequisite",
           "weight": 1
         },
@@ -7274,11 +7393,6 @@
           "to": "data-science",
           "type": "belongs_to",
           "weight": 1
-        },
-        {
-          "to": "python/iteration",
-          "type": "related_to",
-          "weight": 1
         }
       ],
       "data-science/accuracy": [
@@ -7303,11 +7417,6 @@
           "to": "data-science",
           "type": "belongs_to",
           "weight": 1
-        },
-        {
-          "to": "data-science/data",
-          "type": "related_to",
-          "weight": 1
         }
       ],
       "data-science/advanced-data-visualization": [
@@ -7317,7 +7426,7 @@
           "weight": 1
         },
         {
-          "to": "data-science/control-flow-python",
+          "to": "data-science/data-structures-python",
           "type": "prerequisite",
           "weight": 1
         },
@@ -7327,12 +7436,17 @@
           "weight": 1
         },
         {
-          "to": "data-science/exploratory-data-analysis",
+          "to": "data-science/data-visualization",
           "type": "related_to",
           "weight": 1
         },
         {
-          "to": "data-science/data-visualization",
+          "to": "data-science/outliers",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "python/matplotlib-library",
           "type": "related_to",
           "weight": 1
         },
@@ -7364,11 +7478,6 @@
           "weight": 1
         },
         {
-          "to": "data-science/gradient-descent",
-          "type": "related_to",
-          "weight": 1
-        },
-        {
           "to": "data-science/logistic-regression",
           "type": "related_to",
           "weight": 1
@@ -7385,6 +7494,11 @@
         {
           "to": "data-science",
           "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "data-science/data",
+          "type": "related_to",
           "weight": 1
         }
       ],
@@ -7423,23 +7537,6 @@
           "weight": 1
         }
       ],
-      "data-science/data-acquisition-and-storage": [
-        {
-          "to": "data-science",
-          "type": "belongs_to",
-          "weight": 1
-        },
-        {
-          "to": "data-science/data",
-          "type": "related_to",
-          "weight": 2
-        },
-        {
-          "to": "data-science/structured-data",
-          "type": "related_to",
-          "weight": 1
-        }
-      ],
       "data-science/data-aggregation": [
         {
           "to": "data-science",
@@ -7455,6 +7552,11 @@
         },
         {
           "to": "data-science/data",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "data-science/structured-data",
           "type": "related_to",
           "weight": 1
         }
@@ -7484,11 +7586,6 @@
         {
           "to": "data-science",
           "type": "belongs_to",
-          "weight": 1
-        },
-        {
-          "to": "data-science/data",
-          "type": "related_to",
           "weight": 1
         }
       ],
@@ -7534,18 +7631,6 @@
           "weight": 1
         }
       ],
-      "data-science/data-structures-python": [
-        {
-          "to": "data-science",
-          "type": "belongs_to",
-          "weight": 1
-        },
-        {
-          "to": "python/conditional-statements",
-          "type": "related_to",
-          "weight": 1
-        }
-      ],
       "data-science/data-transformation": [
         {
           "to": "data-science",
@@ -7565,17 +7650,34 @@
           "to": "data-science",
           "type": "belongs_to",
           "weight": 1
-        },
-        {
-          "to": "data-science/outliers",
-          "type": "related_to",
-          "weight": 1
         }
       ],
       "data-science/data-visualization-communication": [
         {
           "to": "data-science",
           "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "data-science/descriptive-statistics": [
+        {
+          "to": "data-science",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "data-science/outliers",
+          "type": "related_to",
+          "weight": 2
+        },
+        {
+          "to": "data-science/data",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "python/function",
+          "type": "related_to",
           "weight": 1
         }
       ],
@@ -7609,16 +7711,18 @@
         {
           "to": "data-science/data",
           "type": "related_to",
-          "weight": 2
-        },
-        {
-          "to": "data-science/data-cleaning-preprocessing",
-          "type": "related_to",
           "weight": 1
         },
         {
-          "to": "data-science/outliers",
+          "to": "python/data-analysis",
           "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "data-science/f1-score": [
+        {
+          "to": "data-science",
+          "type": "belongs_to",
           "weight": 1
         }
       ],
@@ -7676,6 +7780,11 @@
           "to": "data-science",
           "type": "belongs_to",
           "weight": 1
+        },
+        {
+          "to": "python/data-analysis",
+          "type": "related_to",
+          "weight": 2
         }
       ],
       "data-science/introduction-to-machine-learning": [
@@ -7688,29 +7797,12 @@
           "to": "data-science/data",
           "type": "related_to",
           "weight": 2
-        },
-        {
-          "to": "data-science/data-visualization",
-          "type": "related_to",
-          "weight": 1
-        }
-      ],
-      "data-science/json-file": [
-        {
-          "to": "data-science",
-          "type": "belongs_to",
-          "weight": 1
         }
       ],
       "data-science/k-means-clustering": [
         {
           "to": "data-science",
           "type": "belongs_to",
-          "weight": 1
-        },
-        {
-          "to": "data-science/outliers",
-          "type": "related_to",
           "weight": 1
         }
       ],
@@ -7734,6 +7826,11 @@
         },
         {
           "to": "data-science/linear-regression",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "python/function",
           "type": "related_to",
           "weight": 1
         },
@@ -7762,6 +7859,11 @@
           "to": "data-science",
           "type": "belongs_to",
           "weight": 1
+        },
+        {
+          "to": "python/matplotlib-library",
+          "type": "related_to",
+          "weight": 1
         }
       ],
       "data-science/mean-squared-error": [
@@ -7771,7 +7873,7 @@
           "weight": 1
         },
         {
-          "to": "python/functions",
+          "to": "python/function",
           "type": "related_to",
           "weight": 1
         }
@@ -7787,6 +7889,16 @@
         {
           "to": "data-science",
           "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "python/pandas-library",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "data-science/data",
+          "type": "related_to",
           "weight": 1
         }
       ],
@@ -7816,19 +7928,9 @@
           "weight": 2
         },
         {
-          "to": "data-science/clustering",
-          "type": "related_to",
-          "weight": 1
-        },
-        {
           "to": "data-science/accuracy",
           "type": "related_to",
           "weight": 2
-        },
-        {
-          "to": "python/iteration",
-          "type": "related_to",
-          "weight": 1
         }
       ],
       "data-science/model-training": [
@@ -7850,6 +7952,11 @@
           "to": "data-science",
           "type": "belongs_to",
           "weight": 1
+        },
+        {
+          "to": "python/function",
+          "type": "related_to",
+          "weight": 1
         }
       ],
       "data-science/numpy-array": [
@@ -7867,13 +7974,6 @@
         }
       ],
       "data-science/outliers": [
-        {
-          "to": "data-science",
-          "type": "belongs_to",
-          "weight": 1
-        }
-      ],
-      "data-science/overfitting-vs-underfitting": [
         {
           "to": "data-science",
           "type": "belongs_to",
@@ -7918,12 +8018,10 @@
           "to": "data-science/data",
           "type": "related_to",
           "weight": 1
-        }
-      ],
-      "data-science/probability-distribution": [
+        },
         {
-          "to": "data-science",
-          "type": "belongs_to",
+          "to": "python/function",
+          "type": "related_to",
           "weight": 1
         }
       ],
@@ -7935,6 +8033,16 @@
         },
         {
           "to": "data-science/data",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "python/python-programming-language",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "python/python-data-structures",
           "type": "related_to",
           "weight": 1
         }
@@ -7957,6 +8065,11 @@
         {
           "to": "data-science",
           "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "python/function",
+          "type": "related_to",
           "weight": 1
         },
         {
@@ -8014,17 +8127,22 @@
           "weight": 1
         },
         {
-          "to": "data-science/data-visualization",
+          "to": "python/data-analysis",
           "type": "related_to",
           "weight": 1
         },
         {
-          "to": "data-science/data",
+          "to": "python/function",
           "type": "related_to",
           "weight": 1
         },
         {
           "to": "data-science/outliers",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "data-science/data",
           "type": "related_to",
           "weight": 1
         },
@@ -8055,6 +8173,28 @@
           "weight": 1
         }
       ],
+      "data-science/sql": [
+        {
+          "to": "data-science",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "data-science/data",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "python/python-data-structures",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "data-science/structured-data",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
       "data-science/statistical-foundations": [
         {
           "to": "data-science",
@@ -8062,17 +8202,12 @@
           "weight": 1
         },
         {
-          "to": "data-science/exploratory-data-analysis",
-          "type": "related_to",
-          "weight": 1
-        },
-        {
-          "to": "data-science/outliers",
-          "type": "related_to",
-          "weight": 1
-        },
-        {
           "to": "data-science/data",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "data-science/exploratory-data-analysis",
           "type": "related_to",
           "weight": 1
         }
@@ -8120,11 +8255,6 @@
           "to": "data-science",
           "type": "belongs_to",
           "weight": 1
-        },
-        {
-          "to": "data-science/data",
-          "type": "related_to",
-          "weight": 1
         }
       ],
       "data-science/univariate-analysis": [
@@ -8157,12 +8287,12 @@
         {
           "to": "data-science/supervised-learning-classification",
           "type": "related_to",
-          "weight": 1
+          "weight": 2
         },
         {
           "to": "data-science/data",
           "type": "related_to",
-          "weight": 1
+          "weight": 2
         }
       ],
       "data-science/variables": [
@@ -8197,7 +8327,7 @@
       ],
       "data-science/data": [
         {
-          "from": "data-science/control-flow-python",
+          "from": "data-science/data-structures-python",
           "type": "prerequisite",
           "weight": 1
         },
@@ -8214,7 +8344,12 @@
         {
           "from": "data-science/data-acquisition-and-storage",
           "type": "related_to",
-          "weight": 2
+          "weight": 1
+        },
+        {
+          "from": "data-science/sql",
+          "type": "related_to",
+          "weight": 1
         },
         {
           "from": "data-science/data-cleaning-preprocessing",
@@ -8222,14 +8357,19 @@
           "weight": 1
         },
         {
-          "from": "data-science/data-imputation",
+          "from": "data-science/missing-data",
           "type": "related_to",
           "weight": 1
         },
         {
           "from": "data-science/exploratory-data-analysis",
           "type": "related_to",
-          "weight": 2
+          "weight": 1
+        },
+        {
+          "from": "data-science/descriptive-statistics",
+          "type": "related_to",
+          "weight": 1
         },
         {
           "from": "data-science/introduction-to-machine-learning",
@@ -8262,12 +8402,12 @@
           "weight": 1
         },
         {
-          "from": "data-science/logistic-regression",
+          "from": "data-science/classification",
           "type": "related_to",
           "weight": 1
         },
         {
-          "from": "data-science/support-vector-machine",
+          "from": "data-science/logistic-regression",
           "type": "related_to",
           "weight": 1
         },
@@ -8284,17 +8424,12 @@
         {
           "from": "data-science/unsupervised-learning-clustering",
           "type": "related_to",
-          "weight": 1
-        },
-        {
-          "from": "data-science/clustering",
-          "type": "related_to",
-          "weight": 1
+          "weight": 2
         }
       ],
-      "data-science/control-flow-python": [
+      "data-science/data-structures-python": [
         {
-          "from": "data-science/csv-file",
+          "from": "data-science/data-acquisition-and-storage",
           "type": "prerequisite",
           "weight": 1
         },
@@ -8304,7 +8439,7 @@
           "weight": 1
         }
       ],
-      "data-science/csv-file": [
+      "data-science/data-acquisition-and-storage": [
         {
           "from": "data-science/categorical-encoding",
           "type": "prerequisite",
@@ -8354,11 +8489,6 @@
           "from": "data-science/accuracy",
           "type": "prerequisite",
           "weight": 1
-        },
-        {
-          "from": "data-science/hyperparameter-tuning",
-          "type": "related_to",
-          "weight": 1
         }
       ],
       "data-science/accuracy": [
@@ -8377,11 +8507,6 @@
         {
           "from": "data-science/hyperparameter-tuning",
           "type": "prerequisite",
-          "weight": 1
-        },
-        {
-          "from": "data-science/model-evaluation-deployment",
-          "type": "related_to",
           "weight": 1
         }
       ],
@@ -8437,22 +8562,12 @@
           "weight": 1
         },
         {
-          "from": "data-science/control-flow-python",
-          "type": "belongs_to",
-          "weight": 1
-        },
-        {
           "from": "data-science/correlation",
           "type": "belongs_to",
           "weight": 1
         },
         {
           "from": "data-science/cross-validation",
-          "type": "belongs_to",
-          "weight": 1
-        },
-        {
-          "from": "data-science/csv-file",
           "type": "belongs_to",
           "weight": 1
         },
@@ -8557,6 +8672,11 @@
           "weight": 1
         },
         {
+          "from": "data-science/descriptive-statistics",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
           "from": "data-science/dimensionality-reduction",
           "type": "belongs_to",
           "weight": 1
@@ -8573,6 +8693,11 @@
         },
         {
           "from": "data-science/exploratory-data-analysis",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "data-science/f1-score",
           "type": "belongs_to",
           "weight": 1
         },
@@ -8633,11 +8758,6 @@
         },
         {
           "from": "data-science/introduction-to-machine-learning",
-          "type": "belongs_to",
-          "weight": 1
-        },
-        {
-          "from": "data-science/json-file",
           "type": "belongs_to",
           "weight": 1
         },
@@ -8732,11 +8852,6 @@
           "weight": 1
         },
         {
-          "from": "data-science/overfitting-vs-underfitting",
-          "type": "belongs_to",
-          "weight": 1
-        },
-        {
           "from": "data-science/p-value",
           "type": "belongs_to",
           "weight": 1
@@ -8758,11 +8873,6 @@
         },
         {
           "from": "data-science/probability",
-          "type": "belongs_to",
-          "weight": 1
-        },
-        {
-          "from": "data-science/probability-distribution",
           "type": "belongs_to",
           "weight": 1
         },
@@ -8837,6 +8947,11 @@
           "weight": 1
         },
         {
+          "from": "data-science/sql",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
           "from": "data-science/statistical-foundations",
           "type": "belongs_to",
           "weight": 1
@@ -8902,19 +9017,14 @@
           "weight": 1
         }
       ],
-      "data-science/exploratory-data-analysis": [
+      "data-science/data-visualization": [
         {
           "from": "data-science/advanced-data-visualization",
           "type": "related_to",
           "weight": 1
-        },
-        {
-          "from": "data-science/statistical-foundations",
-          "type": "related_to",
-          "weight": 1
         }
       ],
-      "data-science/data-visualization": [
+      "data-science/outliers": [
         {
           "from": "data-science/advanced-data-visualization",
           "type": "related_to",
@@ -8926,12 +9036,24 @@
           "weight": 1
         },
         {
-          "from": "data-science/introduction-to-machine-learning",
+          "from": "data-science/descriptive-statistics",
+          "type": "related_to",
+          "weight": 2
+        }
+      ],
+      "python/matplotlib-library": [
+        {
+          "from": "data-science/advanced-data-visualization",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "data-science/matplotlib",
           "type": "related_to",
           "weight": 1
         }
       ],
-      "data-science/outliers": [
+      "python/data-analysis": [
         {
           "from": "data-science/seaborn",
           "type": "related_to",
@@ -8943,17 +9065,49 @@
           "weight": 1
         },
         {
-          "from": "data-science/data-visualization",
+          "from": "data-science/introduction-to-data-science",
+          "type": "related_to",
+          "weight": 2
+        }
+      ],
+      "python/function": [
+        {
+          "from": "data-science/seaborn",
           "type": "related_to",
           "weight": 1
         },
         {
-          "from": "data-science/statistical-foundations",
+          "from": "data-science/descriptive-statistics",
           "type": "related_to",
           "weight": 1
         },
         {
-          "from": "data-science/k-means-clustering",
+          "from": "data-science/python-programming",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "data-science/data-structures-python",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "data-science/probability",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "data-science/logistic-regression",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "data-science/mean-squared-error",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "data-science/multiple-linear-regression",
           "type": "related_to",
           "weight": 1
         }
@@ -8965,28 +9119,43 @@
           "weight": 1
         }
       ],
-      "data-science/structured-data": [
+      "python/python-data-structures": [
         {
-          "from": "data-science/data-acquisition-and-storage",
-          "type": "related_to",
-          "weight": 1
-        }
-      ],
-      "data-science/data-cleaning-preprocessing": [
-        {
-          "from": "data-science/exploratory-data-analysis",
-          "type": "related_to",
-          "weight": 1
-        }
-      ],
-      "python/iteration": [
-        {
-          "from": "data-science/model-evaluation-deployment",
+          "from": "data-science/sql",
           "type": "related_to",
           "weight": 1
         },
         {
-          "from": "data-science/gradient-descent",
+          "from": "data-science/programming-for-data-science-python",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "data-science/data-structures-python",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "data-science/structured-data": [
+        {
+          "from": "data-science/sql",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "data-science/data-cleaning-preprocessing",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "data-science/data-structures-python",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "python/pandas-library": [
+        {
+          "from": "data-science/missing-data",
           "type": "related_to",
           "weight": 1
         }
@@ -9010,9 +9179,16 @@
           "weight": 1
         }
       ],
-      "python/conditional-statements": [
+      "python/python-programming-language": [
         {
-          "from": "data-science/data-structures-python",
+          "from": "data-science/programming-for-data-science-python",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "data-science/exploratory-data-analysis": [
+        {
+          "from": "data-science/statistical-foundations",
           "type": "related_to",
           "weight": 1
         }
@@ -9024,18 +9200,11 @@
           "weight": 1
         }
       ],
-      "python/functions": [
-        {
-          "from": "data-science/mean-squared-error",
-          "type": "related_to",
-          "weight": 1
-        }
-      ],
       "data-science/supervised-learning-classification": [
         {
           "from": "data-science/unsupervised-learning-clustering",
           "type": "related_to",
-          "weight": 1
+          "weight": 2
         }
       ]
     }
@@ -9098,12 +9267,6 @@
     {
       "slug": "programming-for-data-science-python",
       "title": "Programming for Data Science with Python",
-      "noteUrl": "/note/data-science/programming-for-data-science-python.md#concept-control-flow-python",
-      "learningOrder": 3
-    },
-    {
-      "slug": "programming-for-data-science-python",
-      "title": "Programming for Data Science with Python",
       "noteUrl": "/note/data-science/programming-for-data-science-python.md#concept-data-structures-python",
       "learningOrder": 3
     },
@@ -9122,19 +9285,13 @@
     {
       "slug": "data-acquisition-and-storage",
       "title": "Data Acquisition and Storage",
-      "noteUrl": "/note/data-science/data-acquisition-and-storage.md#concept-csv-file",
-      "learningOrder": 4
-    },
-    {
-      "slug": "data-acquisition-and-storage",
-      "title": "Data Acquisition and Storage",
       "noteUrl": "/note/data-science/data-acquisition-and-storage.md#concept-data-acquisition-and-storage",
       "learningOrder": 4
     },
     {
       "slug": "data-acquisition-and-storage",
       "title": "Data Acquisition and Storage",
-      "noteUrl": "/note/data-science/data-acquisition-and-storage.md#concept-json-file",
+      "noteUrl": "/note/data-science/data-acquisition-and-storage.md#concept-sql",
       "learningOrder": 4
     },
     {
@@ -9200,6 +9357,12 @@
     {
       "slug": "exploratory-data-analysis",
       "title": "Exploratory Data Analysis (EDA)",
+      "noteUrl": "/note/data-science/exploratory-data-analysis.md#concept-descriptive-statistics",
+      "learningOrder": 6
+    },
+    {
+      "slug": "exploratory-data-analysis",
+      "title": "Exploratory Data Analysis (EDA)",
       "noteUrl": "/note/data-science/exploratory-data-analysis.md#concept-exploratory-data-analysis",
       "learningOrder": 6
     },
@@ -9230,12 +9393,6 @@
     {
       "slug": "statistical-foundations",
       "title": "Statistical Foundations for Data Science",
-      "noteUrl": "/note/data-science/statistical-foundations.md#concept-probability-distribution",
-      "learningOrder": 7
-    },
-    {
-      "slug": "statistical-foundations",
-      "title": "Statistical Foundations for Data Science",
       "noteUrl": "/note/data-science/statistical-foundations.md#concept-sampling",
       "learningOrder": 7
     },
@@ -9261,12 +9418,6 @@
       "slug": "introduction-to-machine-learning",
       "title": "Introduction to Machine Learning",
       "noteUrl": "/note/data-science/introduction-to-machine-learning.md#concept-introduction-to-machine-learning",
-      "learningOrder": 8
-    },
-    {
-      "slug": "introduction-to-machine-learning",
-      "title": "Introduction to Machine Learning",
-      "noteUrl": "/note/data-science/introduction-to-machine-learning.md#concept-overfitting-vs-underfitting",
       "learningOrder": 8
     },
     {
@@ -9327,6 +9478,12 @@
       "slug": "supervised-learning-classification",
       "title": "Supervised Learning: Classification",
       "noteUrl": "/note/data-science/supervised-learning-classification.md#concept-confusion-matrix",
+      "learningOrder": 10
+    },
+    {
+      "slug": "supervised-learning-classification",
+      "title": "Supervised Learning: Classification",
+      "noteUrl": "/note/data-science/supervised-learning-classification.md#concept-f1-score",
       "learningOrder": 10
     },
     {
@@ -9468,33 +9625,9 @@
       "learningOrder": 999
     },
     {
-      "slug": "python-libraries",
-      "title": "data aggregation",
-      "noteUrl": "/note/data-science/python-libraries.md#concept-data-aggregation",
-      "learningOrder": 999
-    },
-    {
-      "slug": "python-libraries",
-      "title": "data indexing",
-      "noteUrl": "/note/data-science/python-libraries.md#concept-data-indexing",
-      "learningOrder": 999
-    },
-    {
-      "slug": "intro-to-data-science",
-      "title": "data science",
-      "noteUrl": "/note/data-science/intro-to-data-science.md#concept-data-science",
-      "learningOrder": 999
-    },
-    {
-      "slug": "intro-to-data-science",
-      "title": "data science lifecycle",
-      "noteUrl": "/note/data-science/intro-to-data-science.md#concept-data-science-lifecycle",
-      "learningOrder": 999
-    },
-    {
-      "slug": "intro-to-data-science",
-      "title": "data scientist",
-      "noteUrl": "/note/data-science/intro-to-data-science.md#concept-data-scientist",
+      "slug": "data-acquisition",
+      "title": "Data Acquisition",
+      "noteUrl": "/note/data-science/data-acquisition.md#concept-data-acquisition",
       "learningOrder": 999
     },
     {
@@ -9516,12 +9649,6 @@
       "learningOrder": 999
     },
     {
-      "slug": "data-acquisition",
-      "title": "Ethical and Legal Considerations",
-      "noteUrl": "/note/data-science/data-acquisition.md#concept-data-privacy",
-      "learningOrder": 999
-    },
-    {
       "slug": "data-visualization-communication",
       "title": "Ethical Considerations in Data Communication",
       "noteUrl": "/note/data-science/data-visualization-communication.md#concept-data-communication",
@@ -9534,6 +9661,12 @@
       "learningOrder": 999
     },
     {
+      "slug": "data-acquisition",
+      "title": "Ethical and Legal Considerations",
+      "noteUrl": "/note/data-science/data-acquisition.md#concept-data-privacy",
+      "learningOrder": 999
+    },
+    {
       "slug": "machine-learning-fundamentals",
       "title": "Feature Selection",
       "noteUrl": "/note/data-science/machine-learning-fundamentals.md#concept-feature-selection",
@@ -9543,12 +9676,6 @@
       "slug": "python-fundamentals",
       "title": "Functions",
       "noteUrl": "/note/data-science/python-fundamentals.md#concept-functions",
-      "learningOrder": 999
-    },
-    {
-      "slug": "intro-to-data-science",
-      "title": "intro to data science",
-      "noteUrl": "/note/data-science/intro-to-data-science.md#concept-intro-to-data-science",
       "learningOrder": 999
     },
     {
@@ -9577,7 +9704,7 @@
     },
     {
       "slug": "machine-learning-fundamentals",
-      "title": "machine learning",
+      "title": "Machine Learning",
       "noteUrl": "/note/data-science/machine-learning-fundamentals.md#concept-machine-learning",
       "learningOrder": 999
     },
@@ -9612,33 +9739,9 @@
       "learningOrder": 999
     },
     {
-      "slug": "python-libraries",
-      "title": "numpy array",
-      "noteUrl": "/note/data-science/python-libraries.md#concept-numpy-array",
-      "learningOrder": 999
-    },
-    {
-      "slug": "python-fundamentals",
-      "title": "object oriented programming",
-      "noteUrl": "/note/data-science/python-fundamentals.md#concept-object-oriented-programming",
-      "learningOrder": 999
-    },
-    {
       "slug": "python-fundamentals",
       "title": "Python Fundamentals for Data Science",
       "noteUrl": "/note/data-science/python-fundamentals.md#concept-python-fundamentals",
-      "learningOrder": 999
-    },
-    {
-      "slug": "python-fundamentals",
-      "title": "python programming language",
-      "noteUrl": "/note/data-science/python-fundamentals.md#concept-python-programming-language",
-      "learningOrder": 999
-    },
-    {
-      "slug": "data-acquisition",
-      "title": "Sourcing and Acquiring Data",
-      "noteUrl": "/note/data-science/data-acquisition.md#concept-data-acquisition",
       "learningOrder": 999
     },
     {
@@ -9657,6 +9760,60 @@
       "slug": "python-fundamentals",
       "title": "Variables",
       "noteUrl": "/note/data-science/python-fundamentals.md#concept-variables",
+      "learningOrder": 999
+    },
+    {
+      "slug": "python-libraries",
+      "title": "data aggregation",
+      "noteUrl": "/note/data-science/python-libraries.md#concept-data-aggregation",
+      "learningOrder": 999
+    },
+    {
+      "slug": "python-libraries",
+      "title": "data indexing",
+      "noteUrl": "/note/data-science/python-libraries.md#concept-data-indexing",
+      "learningOrder": 999
+    },
+    {
+      "slug": "intro-to-data-science",
+      "title": "data science",
+      "noteUrl": "/note/data-science/intro-to-data-science.md#concept-data-science",
+      "learningOrder": 999
+    },
+    {
+      "slug": "intro-to-data-science",
+      "title": "data science lifecycle",
+      "noteUrl": "/note/data-science/intro-to-data-science.md#concept-data-science-lifecycle",
+      "learningOrder": 999
+    },
+    {
+      "slug": "intro-to-data-science",
+      "title": "data scientist",
+      "noteUrl": "/note/data-science/intro-to-data-science.md#concept-data-scientist",
+      "learningOrder": 999
+    },
+    {
+      "slug": "intro-to-data-science",
+      "title": "intro to data science",
+      "noteUrl": "/note/data-science/intro-to-data-science.md#concept-intro-to-data-science",
+      "learningOrder": 999
+    },
+    {
+      "slug": "python-libraries",
+      "title": "numpy array",
+      "noteUrl": "/note/data-science/python-libraries.md#concept-numpy-array",
+      "learningOrder": 999
+    },
+    {
+      "slug": "python-fundamentals",
+      "title": "object oriented programming",
+      "noteUrl": "/note/data-science/python-fundamentals.md#concept-object-oriented-programming",
+      "learningOrder": 999
+    },
+    {
+      "slug": "python-fundamentals",
+      "title": "python programming language",
+      "noteUrl": "/note/data-science/python-fundamentals.md#concept-python-programming-language",
       "learningOrder": 999
     }
   ],
@@ -9710,6 +9867,7 @@
             "data-science/accuracy",
             "data-science/classification",
             "data-science/confusion-matrix",
+            "data-science/f1-score",
             "data-science/logistic-regression",
             "data-science/precision-vs-recall",
             "data-science/supervised-learning-classification",
@@ -9749,8 +9907,7 @@
           "nodeIds": [
             "data-science/bias-variance-tradeoff",
             "data-science/feature-engineering",
-            "data-science/introduction-to-machine-learning",
-            "data-science/overfitting-vs-underfitting"
+            "data-science/introduction-to-machine-learning"
           ]
         },
         {
@@ -9762,6 +9919,7 @@
             "data-science/bivariate-analysis",
             "data-science/correlation",
             "data-science/data-visualization",
+            "data-science/descriptive-statistics",
             "data-science/exploratory-data-analysis",
             "data-science/univariate-analysis"
           ]
@@ -9814,18 +9972,6 @@
           ]
         },
         {
-          "id": "note-data-science-programming-for-data-science-python",
-          "label": "Programming for Data Science with Python",
-          "subject": "data-science",
-          "color": "#74D3AE",
-          "nodeIds": [
-            "data-science/control-flow-python",
-            "data-science/data-structures-python",
-            "data-science/programming-for-data-science-python",
-            "data-science/python-programming"
-          ]
-        },
-        {
           "id": "note-data-science-machine-learning-fundamentals",
           "label": "Cross-Validation",
           "subject": "data-science",
@@ -9839,17 +9985,6 @@
             "data-science/model-training",
             "data-science/supervised-learning",
             "data-science/unsupervised-learning"
-          ]
-        },
-        {
-          "id": "note-data-science-data-acquisition-and-storage",
-          "label": "Data Acquisition and Storage",
-          "subject": "data-science",
-          "color": "#74D3AE",
-          "nodeIds": [
-            "data-science/csv-file",
-            "data-science/data-acquisition-and-storage",
-            "data-science/json-file"
           ]
         },
         {
@@ -9869,13 +10004,23 @@
         },
         {
           "id": "note-data-science-data-acquisition",
-          "label": "Sourcing and Acquiring Data",
+          "label": "Data Acquisition",
           "subject": "data-science",
           "color": "#74D3AE",
           "nodeIds": [
             "data-science/data-acquisition",
             "data-science/data-privacy",
             "data-science/web-scraping"
+          ]
+        },
+        {
+          "id": "note-data-science-data-acquisition-and-storage",
+          "label": "Data Acquisition and Storage",
+          "subject": "data-science",
+          "color": "#74D3AE",
+          "nodeIds": [
+            "data-science/data-acquisition-and-storage",
+            "data-science/sql"
           ]
         },
         {
@@ -9915,6 +10060,17 @@
           ]
         },
         {
+          "id": "note-data-science-programming-for-data-science-python",
+          "label": "Programming for Data Science with Python",
+          "subject": "data-science",
+          "color": "#74D3AE",
+          "nodeIds": [
+            "data-science/data-structures-python",
+            "data-science/programming-for-data-science-python",
+            "data-science/python-programming"
+          ]
+        },
+        {
           "id": "note-data-science-supervised-learning-regression",
           "label": "Supervised Learning: Regression",
           "subject": "data-science",
@@ -9950,7 +10106,6 @@
             "data-science/hypothesis-testing",
             "data-science/p-value",
             "data-science/probability",
-            "data-science/probability-distribution",
             "data-science/sampling",
             "data-science/statistical-foundations"
           ]

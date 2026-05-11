@@ -1,0 +1,39 @@
+{
+  "subject": "data_science",
+  "topic_slug": "supervised-learning-classification",
+  "provider": "openai_images",
+  "model": "gpt-image-1.5",
+  "prompt_suffix": "Render this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+  "images": [
+    {
+      "slot": "img-001",
+      "prompt": "A diagram illustrating the difference between regression and classification. On the left, a scatter plot with a line fitting continuous data points (regression). Labels should clearly indicate \"Continuous Output\" for regression. On the right, a scatter plot with two distinct clusters of data points, separated by a decision boundary, each cluster labeled with a different category (classification). Labels should clearly indicate \"Categorical Output\" for classification.",
+      "prompt_final": "A diagram illustrating the difference between regression and classification. On the left, a scatter plot with a line fitting continuous data points (regression). Labels should clearly indicate \"Continuous Output\" for regression. On the right, a scatter plot with two distinct clusters of data points, separated by a decision boundary, each cluster labeled with a different category (classification). Labels should clearly indicate \"Categorical Output\" for classification.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+      "image_rel_path": "output/image/data_science/supervised-learning-classification/img-001.png"
+    },
+    {
+      "slot": "img-002",
+      "prompt": "A graph showing the sigmoid function (S-shaped curve). The x-axis represents the input (z, the linear combination of features), and the y-axis represents the output probability (ranging from 0 to 1). The curve should clearly show values approaching 0 for large negative inputs and approaching 1 for large positive inputs, with a steep rise around z=0, illustrating how it transforms a continuous input into a probability.",
+      "prompt_final": "A graph showing the sigmoid function (S-shaped curve). The x-axis represents the input (z, the linear combination of features), and the y-axis represents the output probability (ranging from 0 to 1). The curve should clearly show values approaching 0 for large negative inputs and approaching 1 for large positive inputs, with a steep rise around z=0, illustrating how it transforms a continuous input into a probability.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+      "image_rel_path": "output/image/data_science/supervised-learning-classification/img-002.png"
+    },
+    {
+      "slot": "img-003",
+      "prompt": "A simple decision tree diagram. The root node is \"Outlook\" with branches for \"Sunny\", \"Overcast\", \"Rainy\". The \"Overcast\" branch leads directly to a leaf node \"Play\". The \"Sunny\" branch leads to an internal node \"Humidity\" with branches \"High\" (leaf \"Don't Play\") and \"Normal\" (leaf \"Play\"). The \"Rainy\" branch leads to an internal node \"Wind\" with branches \"Strong\" (leaf \"Don't Play\") and \"Weak\" (leaf \"Play\").",
+      "prompt_final": "A simple decision tree diagram. The root node is \"Outlook\" with branches for \"Sunny\", \"Overcast\", \"Rainy\". The \"Overcast\" branch leads directly to a leaf node \"Play\". The \"Sunny\" branch leads to an internal node \"Humidity\" with branches \"High\" (leaf \"Don't Play\") and \"Normal\" (leaf \"Play\"). The \"Rainy\" branch leads to an internal node \"Wind\" with branches \"Strong\" (leaf \"Don't Play\") and \"Weak\" (leaf \"Play\").\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+      "image_rel_path": "output/image/data_science/supervised-learning-classification/img-003.png"
+    },
+    {
+      "slot": "img-004",
+      "prompt": "A 2D scatter plot showing two distinct clusters of data points, one colored blue and one red. A solid line (the hyperplane) separates the two clusters. Two dashed lines run parallel to the solid line, one on each side, representing the margin. A few data points from each class should be highlighted, touching or near the dashed lines; these are the support vectors. Labels should clearly indicate \"Hyperplane\", \"Margin\", and \"Support Vectors\".",
+      "prompt_final": "A 2D scatter plot showing two distinct clusters of data points, one colored blue and one red. A solid line (the hyperplane) separates the two clusters. Two dashed lines run parallel to the solid line, one on each side, representing the margin. A few data points from each class should be highlighted, touching or near the dashed lines; these are the support vectors. Labels should clearly indicate \"Hyperplane\", \"Margin\", and \"Support Vectors\".\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+      "image_rel_path": "output/image/data_science/supervised-learning-classification/img-004.png"
+    },
+    {
+      "slot": "img-005",
+      "prompt": "A clear, labeled diagram of a 2x2 confusion matrix. The rows are \"Actual Positive\" and \"Actual Negative\". The columns are \"Predicted Positive\" and \"Predicted Negative\". Each cell contains its corresponding term: TP, FN, FP, TN. Use distinct colors or shading for correct vs. incorrect predictions, e.g., green for TP/TN and red for FP/FN.",
+      "prompt_final": "A clear, labeled diagram of a 2x2 confusion matrix. The rows are \"Actual Positive\" and \"Actual Negative\". The columns are \"Predicted Positive\" and \"Predicted Negative\". Each cell contains its corresponding term: TP, FN, FP, TN. Use distinct colors or shading for correct vs. incorrect predictions, e.g., green for TP/TN and red for FP/FN.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+      "image_rel_path": "output/image/data_science/supervised-learning-classification/img-005.png"
+    }
+  ]
+}

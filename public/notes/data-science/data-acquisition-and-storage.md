@@ -3,366 +3,294 @@
 
 ## Learning Objectives
 By the end of this lesson, you will be able to:
-- Explain the importance of data acquisition and identify common data sources.
-- Retrieve data from relational databases using SQL queries in Python.
-- Interact with web APIs to programmatically fetch structured data.
-- Understand the basics of web scraping for extracting data from websites.
-- Store and load data using common file formats like CSV and JSON.
+- Explain the importance of data acquisition and storage in the data science workflow.
+- Identify common sources for acquiring data, including databases, APIs, and web scraping.
+- Understand the basic principles of relational databases and use simple SQL queries.
+- Interact with web APIs to retrieve data using Python.
+- Perform basic web scraping to extract information from web pages.
+- Store and retrieve data using common file formats like CSV and JSON.
 
 ## Introduction
-Imagine you're a chef, ready to create a delicious meal. You can't cook without ingredients, right? In [data](../data-science/data-fundamentals-and-types.md#concept-data) science, data is our main ingredient! Before we can analyze, model, or visualize anything, we first need to *get* the data and then *store* it in a way that's easy to work with. This two-part process of gathering information from various places and saving it is called **data acquisition and storage**.
+Imagine you're a chef, and you want to bake a delicious cake. Before you can even think about mixing ingredients or preheating the oven, you need to gather all your ingredients and make sure they're properly stored. [Data](../data-science/data-fundamentals-and-types.md#concept-data) science is very similar! Before you can analyze data, build models, or create stunning visualizations, you first need to **acquire** that data and then **store** it in a way that makes it accessible and usable.
 
-This lesson will introduce you to the fundamental methods of acquiring data, from structured sources like databases and APIs to less structured web content. We'll also explore common file formats used to store this data, ensuring it's ready for your data science recipes.
+This lesson is your guide to the foundational steps of any data project: finding the data you need and saving it effectively. We'll explore various methods to get data from different places and look at the popular ways to keep that data organized for future use.
 
-## Concept Progression
+## The Journey Begins: Acquiring Your Data
 
 <a id="concept-data-acquisition"></a>
-### What is Data Acquisition?
-**Data acquisition** is simply the process of collecting or gathering data from different sources. Think of it as finding and collecting all the raw materials you need for your project. Data can come from many places: company databases, public websites, social media feeds, sensors, or even spreadsheets created by hand. The goal is to get this raw data into a format and location where you can start working with it.
+### Data Acquisition: The First Step
+**Data acquisition**, often called data collection, is the process of gathering information from various sources. It's the very first stage in the data science pipeline, as without data, there's nothing to analyze. The quality and relevance of the data you acquire directly impact the insights you can gain. Think of it as filling your pantry before you start cooking; if you don't have the right ingredients, or if they're stale, your final dish won't be good.
 
-Why is this important? Because the quality and relevance of your data directly impact the insights you can gain. If you start with bad ingredients, you'll end up with a bad meal. Similarly, if your data is incomplete, inaccurate, or irrelevant, your analysis will suffer.
+Data can come from countless places: internal company records, public datasets, social media feeds, sensors, and more. The method you choose to acquire data depends heavily on where the data resides and how it's made available.
 
-[IMAGE_PLACEHOLDER: A flowchart showing "Data Sources" (Databases, APIs, Webpages, Files) flowing into "Data Acquisition" (Python scripts, SQL queries) which then flows into "Raw Data Storage" (CSV, JSON, Database). Arrows indicate the flow of data.]
+<!-- IMAGE_SLOT: img-001 -->
+![A flowchart showing the data science pipeline: "Data Acquisition" (highlighted) -> "Data Cleaning" -> "Data Analysis" -> "Modeling"](../../../../../image/data_science/data-acquisition-and-storage/img-001.png)
 
-### Acquiring Data from Databases
-Now that we understand *what* data acquisition is, let's dive into *how* we actually do it, starting with one of the most common sources: **databases**. A database is an organized collection of information, designed to store, manage, and retrieve [data](../data-science/data-fundamentals-and-types.md#concept-data) efficiently. Think of it like a highly organized digital filing cabinet where information is structured for quick access.
 
-There are different types of databases, but two you'll encounter frequently are:
-*   **Relational Databases:** These store data in tables, much like spreadsheets, with rows and columns. Tables are related to each other through common fields, allowing for complex queries across different datasets. Examples include PostgreSQL, MySQL, and SQLite.
-*   **NoSQL Databases:** These are more flexible and don't use the traditional table structure. They're good for handling large amounts of unstructured or semi-[structured data](../data-science/data-fundamentals-and-types.md#concept-structured-data), like documents or key-value pairs. Examples include MongoDB and Cassandra.
+### Databases: Organized Data Repositories
+One of the most common and organized places to find data is in a **database**. A database is essentially an organized collection of information, or data, structured in such a way that it can be easily accessed, managed, and updated. Databases are the backbone of almost every application and website you use daily, from online stores to banking systems.
 
-For relational databases, we use a special language called **SQL** (Structured Query Language) to communicate with them. SQL allows us to ask the database questions, like "Show me all customers from New York" or "Give me the total sales for last month."
+<a id="concept-sql"></a>
+#### Relational Databases and SQL
+The most prevalent type of database is the **relational database**. In a relational database, [data](../data-science/data-fundamentals-and-types.md#concept-data) is organized into one or more tables (also called relations), with each table consisting of rows and columns. Each row represents a unique record, and each column represents a specific attribute of that record. These tables can be "related" to each other through common columns, allowing for complex [data structures](../python/python-data-structures.md#concept-python-data-structures).
 
-Let's see a simple Python example using `sqlite3` to connect to a local SQLite database and fetch some data. SQLite is a file-based database, meaning the entire database is stored in a single file, making it an excellent choice for learning and small projects without needing a separate server.
+To interact with relational databases, we use a special language called **SQL** (Structured Query Language). SQL allows you to perform various operations, such as:
+-   **Querying data:** Retrieving specific information.
+-   **Inserting data:** Adding new records.
+-   **Updating data:** Modifying existing records.
+-   **Deleting data:** Removing records.
 
-First, let's create a dummy database file and add some data:
+Let's look at a simple example. Imagine a database for an online bookstore. It might have a `Books` table and an `Authors` table.
+
+<!-- IMAGE_SLOT: img-002 -->
+![A diagram illustrating a simple relational database schema. On the left, a table named 'Authors' with columns: 'author_id'](../../../../../image/data_science/data-acquisition-and-storage/img-002.png)
+
+
+To get the titles of all books written by 'Jane Doe', you might use a SQL query like this:
+
+```sql
+SELECT Books.title
+FROM Books
+JOIN Authors ON Books.author_id = Authors.author_id
+WHERE Authors.first_name = 'Jane' AND Authors.last_name = 'Doe';
+```
+
+In Python, you can connect to databases using libraries like `sqlite3` (for SQLite databases) or `psycopg2` (for PostgreSQL). Here's how you might query a local SQLite database:
 
 ```python
 import sqlite3
 
-# Connect to a database file named 'my_customers.db'.
-# If the file doesn't exist, it will be created.
-conn = sqlite3.connect('my_customers.db')
-cursor = conn.cursor() # A cursor allows us to execute SQL commands
+# Connect to a database file named 'bookstore.db' (it will be created if it doesn't exist)
+conn = sqlite3.connect('bookstore.db')
+cursor = conn.cursor() # A cursor allows you to execute SQL commands
 
-# Create a table named 'customers' if it doesn't already exist.
-# It has columns for id (primary key), name, city, and age.
+# Create the Authors table if it doesn't already exist
 cursor.execute('''
-    CREATE TABLE IF NOT EXISTS customers (
-        id INTEGER PRIMARY KEY,
-        name TEXT,
-        city TEXT,
-        age INTEGER
+    CREATE TABLE IF NOT EXISTS Authors (
+        author_id INTEGER PRIMARY KEY,
+        first_name TEXT,
+        last_name TEXT
     )
 ''')
 
-# Insert some sample data into the 'customers' table.
-cursor.execute("INSERT INTO customers (name, city, age) VALUES ('Alice', 'New York', 30)")
-cursor.execute("INSERT INTO customers (name, city, age) VALUES ('Bob', 'London', 24)")
-cursor.execute("INSERT INTO customers (name, city, age) VALUES ('Charlie', 'New York', 35)")
+# Create the Books table if it doesn't already exist, with a foreign key linking to Authors
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS Books (
+        book_id INTEGER PRIMARY KEY,
+        title TEXT,
+        publication_year INTEGER,
+        author_id INTEGER,
+        FOREIGN KEY (author_id) REFERENCES Authors(author_id)
+    )
+''')
 
-# Save (commit) the changes to the database. Without this, changes might not be permanent.
+# Insert some sample data into the Authors table.
+# 'INSERT OR IGNORE' prevents errors if you run the script multiple times.
+cursor.execute("INSERT OR IGNORE INTO Authors (author_id, first_name, last_name) VALUES (1, 'Jane', 'Doe')")
+cursor.execute("INSERT OR IGNORE INTO Authors (author_id, first_name, last_name) VALUES (2, 'John', 'Smith')")
+
+# Insert some sample data into the Books table
+cursor.execute("INSERT OR IGNORE INTO Books (book_id, title, publication_year, author_id) VALUES (101, 'The Data Journey', 2020, 1)")
+cursor.execute("INSERT OR IGNORE INTO Books (book_id, title, publication_year, author_id) VALUES (102, 'Python for Beginners', 2019, 2)")
+cursor.execute("INSERT OR IGNORE INTO Books (book_id, title, publication_year, author_id) VALUES (103, 'Advanced SQL', 2021, 1)")
+
+# Commit the changes to the database
 conn.commit()
-# Close the connection to the database. It's good practice to do this when done.
-conn.close()
 
-print("Database 'my_customers.db' created and populated.")
-```
+# Now, let's query for books written by 'Jane Doe'
+cursor.execute('''
+    SELECT Books.title
+    FROM Books
+    JOIN Authors ON Books.author_id = Authors.author_id
+    WHERE Authors.first_name = 'Jane' AND Authors.last_name = 'Doe'
+''')
 
-Now, let's acquire data from it using SQL queries within Python:
+# Fetch all the results from the query
+jane_doe_books = cursor.fetchall()
+print("Books by Jane Doe:", [book[0] for book in jane_doe_books])
 
-```python
-import sqlite3
-
-# Connect to the existing database file.
-conn = sqlite3.connect('my_customers.db')
-cursor = conn.cursor()
-
-# Execute a SQL query to select all columns (*) from the 'customers' table.
-cursor.execute("SELECT * FROM customers")
-
-# Fetch all the results from the executed query. Each row will be a tuple.
-rows = cursor.fetchall()
-
-# Print the retrieved data.
-print("All customers:")
-for row in rows:
-    print(row)
-
-# Execute a SQL query to select only the 'name' and 'age' columns
-# for customers where the 'city' is 'New York'.
-cursor.execute("SELECT name, age FROM customers WHERE city = 'New York'")
-ny_customers = cursor.fetchall()
-
-print("\nCustomers from New York:")
-for customer in ny_customers:
-    print(customer)
-
-# Close the connection to the database.
+# Close the database connection when done
 conn.close()
 ```
 
-This example shows how Python, combined with SQL, can be a powerful tool for extracting specific information from databases. SQL is a fundamental skill for any data professional working with structured data.
+#### NoSQL Databases (Brief Mention)
+While relational databases are excellent for [structured data](../data-science/data-fundamentals-and-types.md#concept-structured-data), **NoSQL databases** (like MongoDB or Cassandra) are designed for more flexible, unstructured, or semi-structured data. They don't use tables, rows, and columns in the same way, offering different ways to store and retrieve information, often at a very large scale. For this introductory lesson, we'll focus on the more common relational approach.
 
-### Acquiring Data via APIs
-While databases are great for internal, structured data, much of the world's public data is accessed differently. This brings us to **APIs** (Application Programming Interfaces). Think of an API as a standardized menu that a restaurant provides. You don't need to know how the kitchen works (the internal logic of the service); you just need to know what you can order from the menu (the available API endpoints) and how to ask for it (the request format).
+### APIs: Programmatic Data Access
+Moving beyond structured databases, many online services and platforms offer their data through an **API** (Application Programming Interface). Think of an API as a waiter in a restaurant. You (the client, perhaps your Python script) tell the waiter (the API) what you want (e.g., "give me today's specials"), and the waiter goes to the kitchen (the server/database), gets the information, and brings it back to you. You don't need to know how the kitchen works, just how to communicate with the waiter.
 
-When you use an API, your program sends a request to a specific web address (an "endpoint"), and the API responds with the data you asked for, usually in a structured format like **JSON** (JavaScript Object Notation). This is a much more reliable and efficient way to get data than trying to guess how a website is structured.
+APIs provide a structured and controlled way to access data, ensuring that you only get the information you're allowed to see and in a consistent format (often JSON or XML). This is much more reliable and efficient than trying to guess how a website's data is organized.
 
-Let's use Python's `requests` library, which is the standard for making HTTP requests, to fetch data from a public API. We'll use the JSONPlaceholder API, which provides fake online REST APIs for testing and prototyping.
+<!-- IMAGE_SLOT: img-003 -->
+![A diagram showing a client (e.g., a Python script) making an API request to a server. The request](../../../../../image/data_science/data-acquisition-and-storage/img-003.png)
 
-```python
-import requests # Import the requests library to make HTTP calls
 
-# Define the API endpoint for a specific post (post with ID 1)
-api_url = "https://jsonplaceholder.typicode.com/posts/1"
-
-# Send a GET request to the API endpoint.
-# A GET request is used to retrieve data.
-response = requests.get(api_url)
-
-# Check if the request was successful.
-# A status code of 200 typically means "OK".
-if response.status_code == 200:
-    # Parse the JSON response body into a Python dictionary.
-    data = response.json()
-    print("Data acquired from API:")
-    print(f"User ID: {data['userId']}")
-    print(f"Title: {data['title']}")
-    print(f"Body: {data['body']}")
-else:
-    print(f"Failed to retrieve data. Status code: {response.status_code}")
-
-# Let's try fetching a list of posts for a specific user.
-# We add a query parameter `userId=1` to filter the results.
-api_url_list = "https://jsonplaceholder.typicode.com/posts?userId=1"
-response_list = requests.get(api_url_list)
-
-if response_list.status_code == 200:
-    # This time, the response is a list of dictionaries (posts).
-    posts = response_list.json()
-    print(f"\nFound {len(posts)} posts for User ID 1:")
-    for post in posts[:3]: # Print titles of the first 3 posts
-        print(f"- {post['title']}")
-else:
-    print(f"Failed to retrieve list of posts. Status code: {response_list.status_code}")
-```
-
-This example demonstrates how easy it is to get data from an API. APIs are crucial for integrating with services like Twitter, weather data providers, financial data feeds, and many more, making them a cornerstone of modern data acquisition.
-
-<a id="concept-web-scraping"></a>
-### Acquiring Data through Web Scraping
-What if the data you need isn't neatly organized in a database or offered through a convenient API? Sometimes, the information you're looking for lives directly on a website, embedded within its visual structure. This is where **web scraping** comes in. Web scraping is the process of extracting data from websites by programmatically reading and parsing their HTML content.
-
-It's like manually copying information from a webpage, but doing it automatically with code. While powerful, web scraping comes with important ethical and legal considerations you must always keep in mind:
-*   **Respect `robots.txt`:** Websites often have a `robots.txt` file that tells web crawlers which parts of the site they are allowed to access. Always check this file.
-*   **Terms of Service:** Many websites' terms of service explicitly prohibit scraping. Violating these can lead to legal action.
-*   **Rate Limiting:** Don't overload a server with too many requests in a short period. This can be seen as a denial-of-service attack and get your IP address blocked.
-*   **Data Privacy:** Be mindful of privacy laws (like GDPR) when collecting personal data.
-
-For web scraping in Python, popular libraries include `requests` (to download the webpage content) and `BeautifulSoup` (to parse the HTML and extract specific elements).
-
-Let's scrape a simple, static HTML page. For this example, we'll assume a local HTML file named `simple_page.html` exists in the same directory as your Python script with the following content:
-
-```html
-<!-- simple_page.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Simple Page</title>
-</head>
-<body>
-    <h1>Welcome to My Page</h1>
-    <p class="intro">This is an introductory paragraph.</p>
-    <ul>
-        <li>Item 1</li>
-        <li>Item 2</li>
-        <li>Item 3</li>
-    </ul>
-    <p>Another paragraph with some <a href="https://example.com">link</a>.</p>
-</body>
-</html>
-```
-
-Now, the Python code to scrape it:
+In Python, the `requests` library is the standard way to make HTTP requests to APIs.
 
 ```python
 import requests
-from bs4 import BeautifulSoup # BeautifulSoup helps parse HTML and XML documents
 
-# For a real website, you'd typically use requests to download the page:
-# url = "http://example.com"
-# response = requests.get(url)
-# html_content = response.text
+# A public API endpoint for fetching a random user
+api_url = "https://randomuser.me/api/"
 
-# For our local file example, we read the HTML content from 'simple_page.html'.
 try:
-    with open('simple_page.html', 'r', encoding='utf-8') as f:
-        html_content = f.read()
-except FileNotFoundError:
-    print("Please create 'simple_page.html' in the same directory as this script.")
-    # Fallback for demonstration if file doesn't exist, so the script can still run.
-    html_content = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>My Simple Page</title>
-    </head>
-    <body>
-        <h1>Welcome to My Page</h1>
-        <p class="intro">This is an introductory paragraph.</p>
-        <ul>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-        </ul>
-        <p>Another paragraph with some <a href="https://example.com">link</a>.</p>
-    </body>
-    </html>
-    """
+    # Make a GET request to the API
+    response = requests.get(api_url)
+    response.raise_for_status() # Raise an exception for HTTP errors (4xx or 5xx)
 
-# Parse the HTML content using BeautifulSoup.
-# 'html.parser' is a built-in Python parser.
-soup = BeautifulSoup(html_content, 'html.parser')
+    data = response.json() # Parse the JSON response into a Python dictionary
 
-# Extract the text content of the <title> tag.
-page_title = soup.title.string
-print(f"Page Title: {page_title}")
+    # Extract some information from the nested dictionary structure
+    user = data['results'][0] # The API returns a list of results, we take the first one
+    name = user['name']
+    email = user['email']
 
-# Extract the text content of the first <h1> tag.
-main_heading = soup.h1.string
-print(f"Main Heading: {main_heading}")
+    print(f"Acquired data for: {name['first']} {name['last']}")
+    print(f"Email: {email}")
 
-# Find all <li> tags and extract their text content.
-list_items = soup.find_all('li') # find_all returns a list of all matching tags
-print("List Items:")
-for item in list_items:
-    print(f"- {item.string}")
-
-# Find the first <p> tag with the class 'intro' and extract its text.
-intro_paragraph = soup.find('p', class_='intro').string # find returns the first matching tag
-print(f"Intro Paragraph: {intro_paragraph}")
-
-# Find the first <a> (link) tag.
-link = soup.find('a')
-if link:
-    print(f"Link Text: {link.string}") # Extract the visible text of the link
-    print(f"Link URL: {link['href']}") # Extract the 'href' attribute value
+except requests.exceptions.RequestException as e:
+    print(f"Error fetching data from API: {e}")
 ```
+This example fetches data from a public API that provides random user information. The `response.json()` method automatically parses the JSON data into a Python dictionary, making it easy to work with.
 
-This example shows how `BeautifulSoup` helps navigate the HTML structure to pull out specific pieces of information. While powerful, remember to always scrape responsibly and ethically.
+<a id="concept-web-scraping"></a>
+### Web Scraping: When APIs Aren't Enough
+Sometimes, the data you need is available on a website, but there's no public API to access it programmatically. In such cases, **web scraping** (or data scraping) can be used. Web scraping involves writing code to automatically extract data from web pages. It's like manually copying information from a website, but done by a program.
 
-### Data Storage: Common File Formats
-Regardless of how you acquire your data – whether from databases, APIs, or web scraping – the next crucial step is to store it effectively. This ensures it's persistent, shareable, and ready for your analysis. While databases are excellent for persistent storage, data scientists often work with flat files for temporary storage, sharing, or when dealing with smaller datasets. Let's look at two very common and versatile file formats: CSV and JSON.
+**Important Considerations for Web Scraping:**
+-   **Legality and Ethics:** Always check a website's `robots.txt` file (e.g., `www.example.com/robots.txt`) and Terms of Service to see if scraping is allowed. Respect their rules. Scraping personal data or copyrighted content without permission can have serious consequences.
+-   **Rate Limiting:** Don't bombard a website with too many requests too quickly, as this can overload their servers and get your IP address blocked. Be polite and add delays (`time.sleep()`) between requests.
+-   **Website Changes:** Websites can change their structure (e.g., HTML element names, classes), which can break your scraping code. Web scraping often requires maintenance.
 
-<a id="concept-csv-file"></a>
-#### CSV (Comma Separated Values)
-A **CSV file** (Comma Separated Values) is a plain text file where each line represents a row of data, and values within each row are separated by commas. It's one of the simplest and most widely used formats for tabular data.
+For web scraping in Python, `requests` is used to download the web page content, and then a library like `BeautifulSoup` is used to parse the HTML and extract the desired information.
 
-Think of a CSV file as a basic spreadsheet that can be opened by almost any data analysis tool. It's easy for both humans and computers to read.
+```python
+import requests
+from bs4 import BeautifulSoup
+import time # Import time for adding delays
 
-**Example `data.csv` content:**
+# Example URL (using a simple, static page designed for scraping practice)
+url = "http://quotes.toscrape.com/"
+
+try:
+    response = requests.get(url)
+    response.raise_for_status() # Check for HTTP errors
+
+    # Parse the HTML content of the page
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Find all elements that contain a quote text (they have a specific class)
+    quotes = soup.find_all('span', class_='text')
+    # Find all elements that contain the author's name
+    authors = soup.find_all('small', class_='author')
+
+    print("--- Scraped Quotes ---")
+    for i in range(len(quotes)):
+        print(f'"{quotes[i].get_text()}" - {authors[i].get_text()}')
+    
+    # Add a small delay to be polite to the server
+    time.sleep(1) 
+
+except requests.exceptions.RequestException as e:
+    print(f"Error during web scraping: {e}")
+```
+This script fetches quotes and their authors from a sample website. It demonstrates how `BeautifulSoup` helps navigate the HTML structure to pinpoint specific elements (like `<span>` tags with a `class='text'`) and extract their content.
+
+## Storing Your Data: Common File Formats
+Once you've successfully acquired data, the next crucial step is to store it persistently. This allows you to reuse it, share it, and continue your analysis without having to re-acquire it every time. Choosing the right storage format depends on the data's structure, size, and how you plan to use it.
+
+### CSV Files: Simple Tabular Data
+**CSV** (Comma Separated Values) is one of the simplest and most widely used file formats for storing tabular data. Each line in a CSV file typically represents a data record (like a row in a spreadsheet), and each record consists of one or more fields (like columns) separated by commas. It's essentially a plain text version of a spreadsheet.
+
+**Example CSV Structure:**
 ```csv
 Name,Age,City
 Alice,30,New York
 Bob,24,London
-Charlie,35,New York
+Charlie,35,Paris
 ```
 
-Here's how you can write data to a CSV file and then read it back using Python's `pandas` library, which is a staple for data manipulation and analysis.
+CSV files are easy to read and write, making them a popular choice for exchanging data between different applications. Python's built-in `csv` module or the `pandas` library (which you'll likely use a lot in data science) can handle them easily.
 
 ```python
-import pandas as pd # pandas is a powerful library for working with tabular data
+import csv
 
-# Data to save, represented as a Python dictionary which pandas can easily convert to a DataFrame.
-data = {
-    'Name': ['Alice', 'Bob', 'Charlie'],
-    'Age': [30, 24, 35],
-    'City': ['New York', 'London', 'New York']
-}
-df = pd.DataFrame(data) # Create a pandas DataFrame from the dictionary
+# Data to be written to the CSV file
+data_to_write = [
+    ['Product', 'Price', 'Quantity'], # Header row
+    ['Laptop', 1200, 10],
+    ['Mouse', 25, 50],
+    ['Keyboard', 75, 30]
+]
 
-# Save the DataFrame to a CSV file.
-# `index=False` prevents pandas from writing the DataFrame's row index as a column in the CSV.
-df.to_csv('my_data.csv', index=False)
-print("Data saved to 'my_data.csv'")
+# Open the file in write mode ('w'), 'newline=''' is important to prevent extra blank rows
+with open('products.csv', 'w', newline='') as file:
+    writer = csv.writer(file) # Create a CSV writer object
+    writer.writerows(data_to_write) # Write all rows at once
+print("products.csv created.")
 
-# Load data back from the CSV file into a new DataFrame.
-loaded_df = pd.read_csv('my_data.csv')
-print("\nData loaded from 'my_data.csv':")
-print(loaded_df)
+# Reading data from the CSV file
+print("\nReading from products.csv:")
+with open('products.csv', 'r') as file:
+    reader = csv.reader(file) # Create a CSV reader object
+    for row in reader:
+        print(row) # Each row is read as a list of strings
 ```
 
-<a id="concept-json-file"></a>
-#### JSON (JavaScript Object Notation)
-While CSV is excellent for simple tabular data, many real-world datasets have a more complex, hierarchical structure. For these cases, **JSON** (JavaScript Object Notation) is often the preferred format. JSON is a lightweight data-interchange format that is easy for humans to read and write, and easy for machines to parse and generate. It's built on two fundamental structures:
-1.  A collection of name/value pairs (like Python dictionaries or JavaScript objects).
-2.  An ordered list of values (like Python lists or JavaScript arrays).
+### JSON Files: Flexible, Hierarchical Data
+**JSON** (JavaScript Object Notation) is another very popular data format, especially for data exchanged over the web (like from APIs, as we saw earlier). Unlike CSV, JSON is semi-structured and can represent hierarchical data, meaning data can contain nested objects (like Python dictionaries) and arrays (like Python lists). It's human-readable and easy for machines to parse.
 
-JSON is particularly popular for web APIs because it can represent nested and complex data structures that CSV cannot easily handle.
-
-**Example `config.json` content:**
+**Example JSON Structure:**
 ```json
-{
-  "name": "Data Project",
-  "version": "1.0",
-  "settings": {
-    "database": {
-      "host": "localhost",
-      "port": 5432
-    },
-    "features": ["analysis", "reporting"]
+[
+  {
+    "name": "Alice",
+    "age": 30,
+    "city": "New York",
+    "interests": ["reading", "hiking"]
   },
-  "users": [
-    {"id": 1, "username": "alice"},
-    {"id": 2, "username": "bob"}
-  ]
-}
+  {
+    "name": "Bob",
+    "age": 24,
+    "city": "London",
+    "interests": ["gaming", "cooking"]
+  }
+]
 ```
+Notice how JSON can easily store a list of interests for each person, something that's harder to represent cleanly in a simple CSV without creating many columns.
 
-Here's how to write and read JSON files in Python using the built-in `json` library:
+JSON's flexibility makes it suitable for more complex data structures where a simple table might not be sufficient. Python has a built-in `json` module to work with JSON data.
 
 ```python
-import json # The json library provides methods for working with JSON data
+import json
 
-# Data to save, represented as a nested Python dictionary.
-config_data = {
-    "name": "Data Project",
-    "version": "1.0",
-    "settings": {
-        "database": {
-            "host": "localhost",
-            "port": 5432
-        },
-        "features": ["analysis", "reporting"]
-    },
-    "users": [
-        {"id": 1, "username": "alice"},
-        {"id": 2, "username": "bob"}
-    ]
-}
+# Data to be written to the JSON file (a list of dictionaries)
+data_to_write = [
+    {"name": "Alice", "age": 30, "city": "New York", "interests": ["reading", "hiking"]},
+    {"name": "Bob", "age": 24, "city": "London", "interests": ["gaming", "cooking"]}
+]
 
-# Save the Python dictionary to a JSON file.
-# `json.dump()` serializes the Python object to a JSON formatted stream.
-# `indent=4` makes the JSON file human-readable by adding indentation.
-with open('my_config.json', 'w') as f:
-    json.dump(config_data, f, indent=4)
-print("Data saved to 'my_config.json'")
+# Open the file in write mode ('w')
+with open('users.json', 'w') as file:
+    # json.dump writes Python objects to a JSON file
+    # indent=4 makes the output human-readable with nice formatting
+    json.dump(data_to_write, file, indent=4) 
+print("users.json created.")
 
-# Load data back from the JSON file into a Python dictionary.
-# `json.load()` deserializes the JSON formatted stream to a Python object.
-with open('my_config.json', 'r') as f:
-    loaded_config = json.load(f)
-print("\nData loaded from 'my_config.json':")
-print(loaded_config)
-print(f"Project Name: {loaded_config['name']}")
-# Accessing nested data is similar to accessing nested dictionaries in Python.
-print(f"Database Host: {loaded_config['settings']['database']['host']}")
+# Reading data from the JSON file
+print("\nReading from users.json:")
+with open('users.json', 'r') as file:
+    # json.load reads JSON data from a file and converts it to Python objects
+    loaded_data = json.load(file)
+    for user in loaded_data:
+        print(f"Name: {user['name']}, Age: {user['age']}, City: {user['city']}, Interests: {', '.join(user['interests'])}")
 ```
 
-Both CSV and JSON are fundamental for handling data in various data science workflows. Choosing between them often depends on the structure of your data and how it needs to be used: CSV for simple tables, JSON for more complex, hierarchical information.
+<!-- IMAGE_SLOT: img-004 -->
+![Two side-by-side examples of data representation. On the left, a small CSV file snippet showing 'Name,Age,City\nAlice,30,New York\nBob,24,London'. On](../../../../../image/data_science/data-acquisition-and-storage/img-004.png)
+`. The JSON example should clearly show key-value pairs and potentially nested elements if space allows, contrasting with the flat CSV.]
 
 ## Wrap-Up
-In this lesson, we've explored the crucial first steps in any data science project: acquiring and storing data. You've learned how to pull data from structured sources like databases using SQL, interact with web services through APIs, and even extract information from regular websites using web scraping. We also covered the practical aspects of storing your acquired data in common file formats like CSV for tabular data and JSON for more hierarchical structures.
+Congratulations! You've taken your first crucial steps into the world of data science by learning how to acquire and store data. We've covered various methods, from querying structured databases with SQL and interacting with web APIs, to carefully scraping data from websites. You also learned about two fundamental file formats, CSV and JSON, for saving your precious data.
 
-Mastering these techniques provides you with the "raw ingredients" necessary to begin your data analysis journey. With these skills, you're now equipped to gather data from a wide variety of sources. In the next lessons, we'll move on to cleaning and preparing this data, which is often the most time-consuming but vital step before any meaningful analysis can begin.
+Remember, getting the right data is paramount. The skills you've gained here are the foundation for every data project. In the next lesson, we'll move on to the equally important step of cleaning and preparing this acquired data, making it ready for analysis.
