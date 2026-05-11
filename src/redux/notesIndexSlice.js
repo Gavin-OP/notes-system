@@ -26,6 +26,21 @@ function collectFileNoteUrls(items, urls = new Set()) {
   return urls;
 }
 
+function countFileItems(items) {
+  if (!Array.isArray(items)) return 0;
+  let count = 0;
+  items.forEach((item) => {
+    if (!item || typeof item !== "object") return;
+    if (item.type === "file") {
+      count += 1;
+    }
+    if (Array.isArray(item.children) && item.children.length > 0) {
+      count += countFileItems(item.children);
+    }
+  });
+  return count;
+}
+
 function noteUrlToAssetPath(noteUrl) {
   if (typeof noteUrl !== "string" || !noteUrl.startsWith("/note/")) return null;
   let relativePath = noteUrl.replace(/^\/note\//, "");
@@ -99,7 +114,13 @@ function pruneNotesIndexByValidUrls(items, validUrls) {
 
 async function sanitizeNotesIndex(items) {
   const validUrls = await buildValidNoteUrlSet(items);
-  return pruneNotesIndexByValidUrls(items, validUrls);
+  const sanitized = pruneNotesIndexByValidUrls(items, validUrls);
+  // Some static hosts (e.g. GitHub Pages with Jekyll processing) can make .md probing unreliable.
+  // If validation prunes everything, keep original index as a safe fallback.
+  if (countFileItems(items) > 0 && countFileItems(sanitized) === 0) {
+    return items;
+  }
+  return sanitized;
 }
 
 function collectSubjectIdsFromNotesIndex(items, subjectIds = new Set()) {
@@ -213,10 +234,13 @@ export const fetchSubjectNotesIndexFromGraph = createAsyncThunk(
     const validNoteUrls = new Set(
       validationResults.filter((entry) => entry.valid).map((entry) => entry.noteUrl),
     );
-    const sanitizedGraphNotesIndex = rawGraphNotesIndex.filter((entry) => {
+    let sanitizedGraphNotesIndex = rawGraphNotesIndex.filter((entry) => {
       const noteUrl = normalizeUrl(String(entry?.noteUrl || "").split("#")[0]);
       return validNoteUrls.has(noteUrl);
     });
+    if (rawGraphNotesIndex.length > 0 && sanitizedGraphNotesIndex.length === 0) {
+      sanitizedGraphNotesIndex = rawGraphNotesIndex;
+    }
 
     return {
       subjectId,

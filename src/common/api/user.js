@@ -29,7 +29,13 @@ function parsePayload(text) {
 
 function getErrorMessage(payload, fallback) {
   if (!payload) return fallback;
-  if (typeof payload === "string") return payload;
+  if (typeof payload === "string") {
+    const trimmed = payload.trim();
+    if (/^<!doctype html>/i.test(trimmed) || /^<html[\s>]/i.test(trimmed)) {
+      return "User service is unavailable in this deployment. Please deploy backend APIs to enable profile features.";
+    }
+    return payload;
+  }
   if (typeof payload?.detail === "string") return payload.detail;
   if (Array.isArray(payload?.detail)) {
     const detailText = payload.detail

@@ -199,6 +199,27 @@ function normalizeCompletedNotes(profile) {
   }));
 }
 
+const PREVIEW_USER = {
+  id: "preview-user",
+  email: "preview@local",
+  displayName: "Preview Learner",
+  createdAt: "",
+};
+
+const PREVIEW_PROFILE = {
+  overview: {
+    completed_lessons: 0,
+    current_streak: 0,
+    assistant_sessions: 0,
+    notes_saved: 0,
+  },
+  learning_tracks: [],
+  assistant_conversations: [],
+  saved_notes: [],
+  completed_notes: [],
+  learning_history: [],
+};
+
 function UserProfilePage() {
   const navigate = useNavigate();
   const notesIndex = useSelector((state) => state.notesIndex?.data) || [];
@@ -209,12 +230,16 @@ function UserProfilePage() {
   const [userInfo, setUserInfo] = useState(null);
   const [profileInfo, setProfileInfo] = useState({});
   const [fallbackProgress, setFallbackProgress] = useState(null);
+  const [previewMode, setPreviewMode] = useState(false);
+  const [previewNotice, setPreviewNotice] = useState("");
 
   useEffect(() => {
     let mounted = true;
     async function loadProfile() {
       setLoading(true);
       setErrorText("");
+      setPreviewMode(false);
+      setPreviewNotice("");
       try {
         const mePayload = await getCurrentUser();
         const normalizedUser = normalizeUser(mePayload);
@@ -235,7 +260,16 @@ function UserProfilePage() {
       } catch (error) {
         if (!mounted) return;
         const messageText = error instanceof Error ? error.message : "Failed to load profile.";
-        setErrorText(messageText);
+        // Public static deployment can run without backend APIs; render a preview shell instead of hard fail.
+        setPreviewMode(true);
+        setPreviewNotice(
+          messageText ||
+            "Backend services are unavailable in this deployment. Showing profile preview mode.",
+        );
+        setErrorText("");
+        setUserInfo(PREVIEW_USER);
+        setProfileInfo(PREVIEW_PROFILE);
+        setFallbackProgress(null);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -383,6 +417,10 @@ function UserProfilePage() {
   }, [fallbackProgress, learningTracks, profileInfo]);
 
   const handleLogout = async () => {
+    if (previewMode) {
+      message.info("Preview mode has no active backend session to logout.");
+      return;
+    }
     try {
       await logoutUser();
       message.success("Logged out.");
@@ -425,6 +463,18 @@ function UserProfilePage() {
           <Space align="start" size={16}>
             <Avatar size={72} icon={<UserOutlined />} />
             <div>
+              {previewMode ? (
+                <Alert
+                  type="warning"
+                  showIcon
+                  style={{ marginBottom: 12 }}
+                  message="Profile preview mode"
+                  description={
+                    previewNotice ||
+                    "Backend services are currently unavailable. Data below is a read-only preview."
+                  }
+                />
+              ) : null}
               <Title level={3} className="user-profile-page__hero-title">
                 {userInfo?.displayName || "Learner"}
               </Title>
@@ -433,13 +483,13 @@ function UserProfilePage() {
                 Personalized learning workspace for progress tracking, AI conversations, and study notes.
               </Paragraph>
               <Space wrap>
-                <Button type="primary" icon={<EditOutlined />}>
+                <Button type="primary" icon={<EditOutlined />} disabled={previewMode}>
                   Edit profile
                 </Button>
                 <Button icon={<BookOutlined />} onClick={() => navigate(continueLearningPath)}>
                   Continue learning
                 </Button>
-                <Button icon={<LogoutOutlined />} onClick={handleLogout}>
+                <Button icon={<LogoutOutlined />} onClick={handleLogout} disabled={previewMode}>
                   Logout
                 </Button>
               </Space>

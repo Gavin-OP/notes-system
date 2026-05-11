@@ -27,6 +27,7 @@ jobs:
       - run: npm run build
       # SPA 路由直刷兜底（很重要）
       - run: cp dist/index.html dist/404.html
+      - run: touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
