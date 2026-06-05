@@ -139,6 +139,29 @@
   margin: 0;
 }
 
+.learning-path-view__career-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.learning-path-view__career-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.learning-path-view__career-terms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
 .learning-path-view--loading,
 .learning-path-view--error {
   width: 100%;
@@ -178,6 +201,10 @@
 }
 
 [data-theme="dark"] .learning-path-view__layer {
+  border-color: #334155;
+}
+
+[data-theme="dark"] .learning-path-view__career-item {
   border-color: #334155;
 }
 

@@ -1,7 +1,27 @@
 .note-page__complete-footer {
   margin-top: 20px;
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
   justify-content: center;
+}
+
+.note-page__micro-course-btn {
+  border: 1px solid #722ed1;
+  background: linear-gradient(135deg, #722ed1, #1677ff);
+  color: #fff;
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 14px;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(114, 46, 209, 0.18);
+}
+
+.note-page__micro-course-btn:hover {
+  border-color: #9254de;
+  background: linear-gradient(135deg, #9254de, #4096ff);
 }
 
 .note-page__complete-btn {
@@ -33,6 +53,11 @@
 [data-theme="dark"] .note-page__complete-btn {
   background: #1668dc;
   border-color: #1668dc;
+}
+
+[data-theme="dark"] .note-page__micro-course-btn {
+  border-color: #9254de;
+  background: linear-gradient(135deg, #642ab5, #1668dc);
 }
 
 [data-theme="dark"] .note-page__complete-btn.is-completed {

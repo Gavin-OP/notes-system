@@ -57,6 +57,10 @@ function NotePage() {
   const navigate = useNavigate();
 
   const noteSlugTrimmed = typeof note_url === "string" ? note_url.trim() : "";
+  const notePathWithoutHash = noteSlugTrimmed.split("#")[0].replace(/^\/+/, "");
+  const showMicroCourseLink =
+    notePathWithoutHash === "data-science/data-cleaning-preprocessing.md" ||
+    notePathWithoutHash === "data-science/data-cleaning-preprocessing";
 
   // redux
   const dispatch = useDispatch();
@@ -239,6 +243,15 @@ function NotePage() {
               onMarkComplete={onToggleCurrentNoteCompletion}
             />
             <div className="note-page__complete-footer">
+              {showMicroCourseLink ? (
+                <button
+                  type="button"
+                  className="note-page__micro-course-btn"
+                  onClick={() => navigate("/micro-course/data-cleaning-preprocessing")}
+                >
+                  Open interactive micro-course
+                </button>
+              ) : null}
               <button
                 type="button"
                 className={`note-page__complete-btn ${isCurrentNoteCompleted ? "is-completed" : ""}`}

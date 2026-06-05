@@ -16,40 +16,41 @@ import {
   Row,
   Space,
   Spin,
-  Statistic,
   Tag,
   Tabs,
-  Timeline,
+  Tooltip,
   Typography,
 } from "antd";
 import {
   BookOutlined,
-  CheckCircleOutlined,
   CommentOutlined,
   EditOutlined,
   LogoutOutlined,
-  RobotOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { getCurrentUser, getMyProfile, getUserProgress, logoutUser } from "../common/api/user";
+import {
+  getCareerTaxonomy,
+  getMyCareerBackground,
+  getMyCareerRecommendations,
+  updateMyCareerBackground,
+} from "../common/api/careers";
+import CareerBackgroundCard from "../common/components/careers/CareerBackgroundCard";
+import CareerRecommendationsCard from "../common/components/careers/CareerRecommendationsCard";
+import CareerSkillGapPanel from "../common/components/careers/CareerSkillGapPanel";
 import { isConcreteNoteRoute, normalizeNoteRoute } from "../utils/notesIndexUtils";
 import AppFeatureTour from "../common/components/guide/AppFeatureTour";
 
 import "./UserProfilePage.css";
 
 const { Title, Text, Paragraph } = Typography;
+const CONTRIBUTION_TOTAL_WEEKS = 52;
 
 function normalizeDate(rawValue) {
   if (!rawValue) return "";
   const date = new Date(rawValue);
   if (Number.isNaN(date.getTime())) return String(rawValue);
   return date.toLocaleString();
-}
-
-function toNumberOrNull(value) {
-  if (typeof value === "number" && Number.isFinite(value)) return value;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
 }
 
 function toReadableLabel(rawValue) {
@@ -163,6 +164,7 @@ function normalizeNotes(profile) {
       note.name ||
       `Note ${index + 1}`,
     updatedAt: normalizeDate(note.updatedAt || note.updated_at || note.created_at),
+    updatedAtRaw: note.updatedAt || note.updated_at || note.created_at || "",
     subject:
       note.subjectTitle ||
       note.subject_title ||
@@ -174,15 +176,85 @@ function normalizeNotes(profile) {
   }));
 }
 
-function normalizeHistoryItems(profile) {
-  const history = profile.learningHistory || profile.learning_history || profile.timeline || [];
-  if (!Array.isArray(history)) return [];
-  return history.map((item, index) => ({
-    color:
-      item.color ||
-      (item.status === "completed" ? "green" : item.status === "in_progress" ? "blue" : "gray"),
-    children: item.text || item.title || item.description || `History item ${index + 1}`,
-  }));
+function toDateKey(rawValue) {
+  if (!rawValue) return "";
+  const parsed = new Date(rawValue);
+  if (Number.isNaN(parsed.getTime())) return "";
+  const year = parsed.getFullYear();
+  const month = String(parsed.getMonth() + 1).padStart(2, "0");
+  const day = String(parsed.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function buildContributionMatrix(activities = [], totalWeeks = 52) {
+  const totalDays = totalWeeks * 7;
+  const end = new Date();
+  end.setHours(0, 0, 0, 0);
+  const start = new Date(end);
+  start.setDate(end.getDate() - (totalDays - 1));
+
+  const detailByDate = new Map();
+  activities.forEach((activity) => {
+    const key = toDateKey(activity?.rawDate || activity?.date || "");
+    if (!key) return;
+    const existing = detailByDate.get(key) || [];
+    const label = String(activity?.label || activity?.title || "").trim();
+    detailByDate.set(key, label ? [...existing, label] : existing);
+  });
+
+  const cells = [];
+  for (let i = 0; i < totalDays; i += 1) {
+    const date = new Date(start);
+    date.setDate(start.getDate() + i);
+    const key = toDateKey(date);
+    cells.push({
+      key,
+      date,
+      dateLabel: date.toLocaleDateString(),
+      notes: detailByDate.get(key) || [],
+    });
+  }
+
+  const maxCount = Math.max(0, ...cells.map((item) => item.notes.length));
+  const levelOf = (count) => {
+    if (count <= 0) return 0;
+    if (maxCount <= 1) return 4;
+    const ratio = count / maxCount;
+    if (ratio >= 0.75) return 4;
+    if (ratio >= 0.5) return 3;
+    if (ratio >= 0.25) return 2;
+    return 1;
+  };
+
+  const weeks = [];
+  const monthLabels = [];
+  let previousMonth = -1;
+  for (let week = 0; week < totalWeeks; week += 1) {
+    const weekDays = cells.slice(week * 7, week * 7 + 7).map((day) => ({
+      ...day,
+      count: day.notes.length,
+      level: levelOf(day.notes.length),
+    }));
+    const firstDay = weekDays[0]?.date;
+    if (firstDay && (week === 0 || firstDay.getMonth() !== previousMonth)) {
+      monthLabels.push({
+        id: `month-${week}`,
+        label: firstDay.toLocaleString("en-US", { month: "short" }),
+        column: week + 1,
+      });
+      previousMonth = firstDay.getMonth();
+    }
+    weeks.push({
+      id: `week-${week + 1}`,
+      days: weekDays,
+    });
+  }
+
+  return {
+    weeks,
+    monthLabels,
+    totalContributions: cells.reduce((sum, day) => sum + day.notes.length, 0),
+  };
 }
 
 function normalizeCompletedNotes(profile) {
@@ -197,7 +269,13 @@ function normalizeCompletedNotes(profile) {
     noteUrl: item.noteUrl || item.note_url || "",
     subject: item.subject || "",
     completedAt: normalizeDate(item.completedAt || item.completed_at),
+    completedAtRaw: item.completedAt || item.completed_at || "",
   }));
+}
+
+function formatScore(value) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? Math.round(numeric) : 0;
 }
 
 const PREVIEW_USER = {
@@ -223,7 +301,8 @@ const PREVIEW_PROFILE = {
 
 function UserProfilePage() {
   const navigate = useNavigate();
-  const notesIndex = useSelector((state) => state.notesIndex?.data) || [];
+  const rawNotesIndex = useSelector((state) => state.notesIndex?.data);
+  const notesIndex = useMemo(() => rawNotesIndex || [], [rawNotesIndex]);
   const [conversationWorkspaceOpen, setConversationWorkspaceOpen] = useState(false);
   const [activeConversationId, setActiveConversationId] = useState("");
   const [loading, setLoading] = useState(true);
@@ -231,11 +310,18 @@ function UserProfilePage() {
   const [userInfo, setUserInfo] = useState(null);
   const [profileInfo, setProfileInfo] = useState({});
   const [fallbackProgress, setFallbackProgress] = useState(null);
+  const [careerRecommendations, setCareerRecommendations] = useState([]);
+  const [careerBackground, setCareerBackground] = useState({});
+  const [careerTaxonomy, setCareerTaxonomy] = useState([]);
+  const [careerLoading, setCareerLoading] = useState(false);
+  const [careerSaving, setCareerSaving] = useState(false);
+  const [careerErrorText, setCareerErrorText] = useState("");
   const [previewMode, setPreviewMode] = useState(false);
   const [previewNotice, setPreviewNotice] = useState("");
-  const profileStatsRef = useRef(null);
+  const [activeDashboard, setActiveDashboard] = useState("learning");
+  const [selectedCareerRole, setSelectedCareerRole] = useState("");
   const profileLearningRef = useRef(null);
-  const profileCompletedRef = useRef(null);
+  const profileCareerRef = useRef(null);
   const profileRecordsRef = useRef(null);
 
   useEffect(() => {
@@ -285,6 +371,35 @@ function UserProfilePage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!userInfo?.id || previewMode) return;
+    let mounted = true;
+    async function loadCareerData() {
+      setCareerLoading(true);
+      setCareerErrorText("");
+      try {
+        const [recommendationsPayload, backgroundPayload, taxonomyPayload] = await Promise.all([
+          getMyCareerRecommendations(5),
+          getMyCareerBackground(),
+          getCareerTaxonomy(),
+        ]);
+        if (!mounted) return;
+        setCareerRecommendations(recommendationsPayload?.recommendations || []);
+        setCareerBackground(backgroundPayload || {});
+        setCareerTaxonomy(taxonomyPayload?.profiles || []);
+      } catch (error) {
+        if (!mounted) return;
+        setCareerErrorText(error instanceof Error ? error.message : "Failed to load career data.");
+      } finally {
+        if (mounted) setCareerLoading(false);
+      }
+    }
+    loadCareerData();
+    return () => {
+      mounted = false;
+    };
+  }, [previewMode, userInfo?.id]);
+
   const learningTracks = useMemo(
     () => normalizeLearningTracks(profileInfo),
     [profileInfo],
@@ -295,10 +410,6 @@ function UserProfilePage() {
   );
   const recentNotes = useMemo(
     () => normalizeNotes(profileInfo),
-    [profileInfo],
-  );
-  const timelineItems = useMemo(
-    () => normalizeHistoryItems(profileInfo),
     [profileInfo],
   );
   const completedNotes = useMemo(
@@ -312,35 +423,6 @@ function UserProfilePage() {
       setActiveConversationId(recentChats[0].id);
     }
   }, [activeConversationId, recentChats]);
-
-  const overview = useMemo(() => {
-    const raw = profileInfo.overview || profileInfo.stats || {};
-    const completedLessons =
-      toNumberOrNull(raw.completedLessons) ??
-      toNumberOrNull(raw.completed_lessons) ??
-      toNumberOrNull(fallbackProgress?.completed_lessons) ??
-      0;
-    const currentStreak =
-      toNumberOrNull(raw.currentStreak) ??
-      toNumberOrNull(raw.current_streak) ??
-      toNumberOrNull(fallbackProgress?.current_streak) ??
-      0;
-    const assistantSessions =
-      toNumberOrNull(raw.assistantSessions) ??
-      toNumberOrNull(raw.assistant_sessions) ??
-      recentChats.length;
-    const notesSaved =
-      toNumberOrNull(raw.notesSaved) ??
-      toNumberOrNull(raw.notes_saved) ??
-      recentNotes.length;
-
-    return {
-      completedLessons,
-      currentStreak,
-      assistantSessions,
-      notesSaved,
-    };
-  }, [fallbackProgress, profileInfo, recentChats.length, recentNotes.length]);
 
   const activeConversation =
     recentChats.find((conversation) => conversation.id === activeConversationId) || recentChats[0];
@@ -397,6 +479,66 @@ function UserProfilePage() {
     });
   }, [completedNotes, noteLabelByUrl]);
 
+  const contributionMatrix = useMemo(() => {
+    const history = profileInfo.learningHistory || profileInfo.learning_history || profileInfo.timeline || [];
+    const historyActivities = Array.isArray(history)
+      ? history.map((item) => ({
+          rawDate: item.date || item.created_at || item.createdAt || item.updated_at || item.updatedAt,
+          label: item.note_title || item.noteTitle || item.title || item.text || item.description || "Learning activity",
+        }))
+      : [];
+    return buildContributionMatrix(
+      [
+        ...historyActivities,
+        ...recentNotes.map((note) => ({ rawDate: note.updatedAtRaw, label: toReadableLabel(note.title) })),
+        ...completedNotes.map((note) => ({ rawDate: note.completedAtRaw, label: toReadableLabel(note.title) })),
+      ],
+      CONTRIBUTION_TOTAL_WEEKS,
+    );
+  }, [completedNotes, profileInfo, recentNotes]);
+
+  const accumulationDashboard = useMemo(() => {
+    const fromCareerKnowledge = careerBackground.knowledge_areas || careerBackground.knowledgeAreas || [];
+    const fromCareerSkills = careerBackground.skills || [];
+    const fromCareerTools = careerBackground.tools || [];
+    const inferredKnowledge = [
+      ...learningTracks.map((track) => track.title),
+      ...decoratedCompletedNotes.map((note) => note.displaySubject),
+    ];
+    const inferredSkills = recentNotes.flatMap((note) => note.tags || []);
+
+    const dedupe = (values) =>
+      [
+        ...new Set(
+          (Array.isArray(values) ? values : [])
+            .map((value) => String(value || "").trim())
+            .filter(Boolean),
+        ),
+      ];
+
+    return {
+      knowledge: dedupe([...fromCareerKnowledge, ...inferredKnowledge]),
+      skills: dedupe([...fromCareerSkills, ...inferredSkills]),
+      tools: dedupe(fromCareerTools),
+    };
+  }, [careerBackground, decoratedCompletedNotes, learningTracks, recentNotes]);
+
+  const selectedCareerRecommendation = useMemo(
+    () => careerRecommendations.find((item) => item?.title === selectedCareerRole),
+    [careerRecommendations, selectedCareerRole],
+  );
+
+  useEffect(() => {
+    if (!careerRecommendations.length) {
+      setSelectedCareerRole("");
+      return;
+    }
+    const exists = careerRecommendations.some((item) => item?.title === selectedCareerRole);
+    if (!exists) {
+      setSelectedCareerRole(careerRecommendations[0]?.title || "");
+    }
+  }, [careerRecommendations, selectedCareerRole]);
+
   const continueLearningPath = useMemo(() => {
     const FALLBACK_NOTE = "/note/disclaimer.md";
 
@@ -435,33 +577,45 @@ function UserProfilePage() {
     }
   };
 
+  const handleCareerBackgroundSave = async (values) => {
+    if (previewMode) {
+      message.info("Preview mode cannot save career background.");
+      return;
+    }
+    setCareerSaving(true);
+    try {
+      const nextBackground = await updateMyCareerBackground(values);
+      const recommendationsPayload = await getMyCareerRecommendations(5);
+      setCareerBackground(nextBackground || {});
+      setCareerRecommendations(recommendationsPayload?.recommendations || []);
+      message.success("Career background updated.");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Failed to update career background.");
+    } finally {
+      setCareerSaving(false);
+    }
+  };
+
   const profileGuideSteps = [
     {
-      title: "Overview Metrics",
+      title: "Learning Records",
       description:
-        "Get a quick pulse of your progress: completed lessons, streak, assistant sessions, and saved notes.",
-      target: () => profileStatsRef.current,
+        "Review subject progress, completed notes, and your learning timeline in one place.",
+      target: () => profileLearningRef.current,
       placement: "bottom",
     },
     {
-      title: "Learning Progress",
+      title: "Interaction Records",
       description:
-        "Review subject-by-subject progress and see exactly where to continue next.",
-      target: () => profileLearningRef.current,
-      placement: "right",
-    },
-    {
-      title: "Completed Notes",
-      description:
-        "Celebrate wins here: every finished note is recorded with completion time.",
-      target: () => profileCompletedRef.current,
-      placement: "right",
-    },
-    {
-      title: "Knowledge Records",
-      description:
-        "Revisit recent AI conversations and personal notes anytime. Ready to keep building? Jump back into your next lesson now!",
+        "Revisit recent AI conversations and saved notes from your study workflow.",
       target: () => profileRecordsRef.current,
+      placement: "right",
+    },
+    {
+      title: "Career Planning",
+      description:
+        "Maintain your background, compare career matches, and identify skill gaps to close.",
+      target: () => profileCareerRef.current,
       placement: "left",
     },
   ];
@@ -491,6 +645,29 @@ function UserProfilePage() {
       </div>
     );
   }
+
+  const dashboardTabs = (
+    <div className="user-profile-page__folder-tabs" role="tablist" aria-label="Dashboard switch">
+      <button
+        type="button"
+        role="tab"
+        aria-selected={activeDashboard === "learning"}
+        className={`user-profile-page__folder-tab ${activeDashboard === "learning" ? "is-active" : ""}`}
+        onClick={() => setActiveDashboard("learning")}
+      >
+        Learning
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected={activeDashboard === "career"}
+        className={`user-profile-page__folder-tab ${activeDashboard === "career" ? "is-active" : ""}`}
+        onClick={() => setActiveDashboard("career")}
+      >
+        Career
+      </button>
+    </div>
+  );
 
   return (
     <div className="user-profile-page">
@@ -542,179 +719,395 @@ function UserProfilePage() {
           </Card>
         </div>
 
-        <div ref={profileStatsRef}>
-          <Row gutter={[16, 16]}>
-          <Col xs={24} sm={12} lg={6}>
-            <Card>
-              <Statistic title="Completed Lessons" value={overview.completedLessons} prefix={<CheckCircleOutlined />} />
-            </Card>
-          </Col>
-          <Col xs={24} sm={12} lg={6}>
-            <Card>
-              <Statistic title="Current Streak" value={overview.currentStreak} suffix="days" />
-            </Card>
-          </Col>
-          <Col xs={24} sm={12} lg={6}>
-            <Card>
-              <Statistic title="Assistant Sessions" value={overview.assistantSessions} prefix={<RobotOutlined />} />
-            </Card>
-          </Col>
-          <Col xs={24} sm={12} lg={6}>
-            <Card>
-              <Statistic title="Saved Notes" value={overview.notesSaved} prefix={<EditOutlined />} />
-            </Card>
-          </Col>
-          </Row>
-        </div>
-
-        <Row gutter={[16, 16]} className="user-profile-page__main-grid">
-          <Col xs={24} lg={14}>
-            <div ref={profileLearningRef}>
-              <Card title="Learning Progress" extra={<Button type="link">View all</Button>}>
-              {learningTracks.length > 0 ? (
-                <Space direction="vertical" className="user-profile-page__block" size={16}>
-                  {learningTracks.map((track) => (
-                    <div key={track.id}>
-                      <div className="user-profile-page__track-head">
-                        <Text strong>{track.title}</Text>
-                        <Tag color={track.status === "Completed" ? "green" : "blue"}>{track.status}</Tag>
-                      </div>
-                      <Progress
-                        percent={track.progress}
-                        strokeColor={track.progress >= 100 ? "#52c41a" : "#1677ff"}
-                      />
-                      <Text type="secondary">Current topic: {track.current}</Text>
-                    </div>
-                  ))}
-                </Space>
-              ) : (
-                <Empty description="No learning progress yet." />
-              )}
-              </Card>
-            </div>
-
-            <Card title="Learning History Timeline" className="user-profile-page__section">
-              {timelineItems.length > 0 ? (
-                <Timeline items={timelineItems} />
-              ) : (
-                <Empty description="No learning history yet." />
-              )}
-              <Divider />
-              <Button block>Export learning report</Button>
-            </Card>
-
-            <div ref={profileCompletedRef}>
-              <Card title="Completed Notes" className="user-profile-page__section">
-              {decoratedCompletedNotes.length > 0 ? (
-                <List
-                  dataSource={decoratedCompletedNotes}
-                  renderItem={(item) => (
-                    <List.Item>
-                      <List.Item.Meta
-                        title={item.displayTitle}
-                        description={
-                          item.displaySubject
-                            ? `${item.displaySubject}${item.completedAt ? ` · ${item.completedAt}` : ""}`
-                            : item.completedAt || "Marked as completed"
-                        }
-                      />
-                      <Tag color="green">Completed</Tag>
-                    </List.Item>
-                  )}
-                />
-              ) : (
-                <Empty description="No completed notes yet." />
-              )}
-              </Card>
-            </div>
-          </Col>
-
-          <Col xs={24} lg={10}>
-            <div ref={profileRecordsRef}>
-              <Card
-                title="Knowledge Records"
-                className="user-profile-page__section"
-                extra={
-                <Button type="link" onClick={() => setConversationWorkspaceOpen(true)}>
-                  Open conversation workspace
-                </Button>
-              }
-              >
-              <Tabs
-                items={[
-                  {
-                    key: "conversations",
-                    label: "Recent Assistant Conversations",
-                    children: (
-                      recentChats.length > 0 ? (
-                        <List
-                          itemLayout="vertical"
-                          dataSource={recentChats}
-                          renderItem={(item) => (
-                            <List.Item
-                              actions={[
-                                <Button
-                                  key={`open-${item.id}`}
-                                  type="link"
-                                  onClick={() => {
-                                    setActiveConversationId(item.id);
-                                    setConversationWorkspaceOpen(true);
+        {activeDashboard === "learning" ? (
+        <div ref={profileLearningRef}>
+          <Card title={dashboardTabs} className="user-profile-page__section user-profile-page__dashboard-card">
+            <Tabs
+              items={[
+                {
+                  key: "study",
+                  label: "Study Records",
+                  children: (
+                    <Row gutter={[16, 16]}>
+                      <Col xs={24} lg={12}>
+                        <Card type="inner" title="Learning Progress" extra={<Button type="link">View all</Button>}>
+                          {learningTracks.length > 0 ? (
+                            <Space direction="vertical" className="user-profile-page__block" size={16}>
+                              {learningTracks.map((track) => (
+                                <div key={track.id}>
+                                  <div className="user-profile-page__track-head">
+                                    <Text strong>{track.title}</Text>
+                                    <Tag color={track.status === "Completed" ? "green" : "blue"}>{track.status}</Tag>
+                                  </div>
+                                  <Progress
+                                    percent={track.progress}
+                                    strokeColor={track.progress >= 100 ? "#52c41a" : "#1677ff"}
+                                  />
+                                  <Text type="secondary">Current topic: {track.current}</Text>
+                                </div>
+                              ))}
+                            </Space>
+                          ) : (
+                            <Empty description="No learning progress yet." />
+                          )}
+                        </Card>
+                      </Col>
+                      <Col xs={24} lg={12}>
+                        <Card type="inner" title="Completed Notes">
+                          {decoratedCompletedNotes.length > 0 ? (
+                            <List
+                              dataSource={decoratedCompletedNotes}
+                              renderItem={(item) => (
+                                <List.Item>
+                                  <List.Item.Meta
+                                    title={item.displayTitle}
+                                    description={
+                                      item.displaySubject
+                                        ? `${item.displaySubject}${item.completedAt ? ` · ${item.completedAt}` : ""}`
+                                        : item.completedAt || "Marked as completed"
+                                    }
+                                  />
+                                  <Tag color="green">Completed</Tag>
+                                </List.Item>
+                              )}
+                            />
+                          ) : (
+                            <Empty description="No completed notes yet." />
+                          )}
+                        </Card>
+                      </Col>
+                      <Col xs={24}>
+                        <Card type="inner" title="Learning History" className="user-profile-page__timeline-card">
+                          <div className="user-profile-page__contrib">
+                            <div className="user-profile-page__contrib-body">
+                              <div className="user-profile-page__contrib-weekdays">
+                                <span>Mon</span>
+                                <span>Wed</span>
+                                <span>Fri</span>
+                              </div>
+                              <div className="user-profile-page__contrib-main">
+                                <div
+                                  className="user-profile-page__contrib-months"
+                                  style={{
+                                    gridTemplateColumns: `repeat(${contributionMatrix.weeks.length}, minmax(7px, 1fr))`,
                                   }}
                                 >
-                                  Open conversation
-                                </Button>,
-                              ]}
-                            >
-                              <List.Item.Meta
-                                avatar={<Avatar icon={<CommentOutlined />} />}
-                                title={item.title}
-                                description={`${item.time || "Unknown time"} · ${item.note}`}
-                              />
-                              <Paragraph>{item.summary}</Paragraph>
-                            </List.Item>
-                          )}
+                                  {contributionMatrix.monthLabels.map((item) => (
+                                    <span
+                                      key={item.id}
+                                      className="user-profile-page__contrib-month"
+                                      style={{ gridColumnStart: item.column }}
+                                    >
+                                      {item.label}
+                                    </span>
+                                  ))}
+                                </div>
+                                <div
+                                  className="user-profile-page__contrib-grid"
+                                  style={{
+                                    gridTemplateColumns: `repeat(${contributionMatrix.weeks.length}, minmax(7px, 1fr))`,
+                                  }}
+                                >
+                                  {contributionMatrix.weeks.map((week) => (
+                                    <div key={week.id} className="user-profile-page__contrib-week">
+                                      {week.days.map((day) => (
+                                        <Tooltip
+                                          key={day.key}
+                                          placement="top"
+                                          title={
+                                            <div className="user-profile-page__contrib-tooltip">
+                                              <div>
+                                                <strong>{day.dateLabel}</strong> · {day.count} notes
+                                              </div>
+                                              {day.count > 0 ? (
+                                                <ul className="user-profile-page__contrib-tooltip-list">
+                                                  {[...new Set(day.notes)].slice(0, 6).map((note) => (
+                                                    <li key={`${day.key}-${note}`}>{note}</li>
+                                                  ))}
+                                                </ul>
+                                              ) : (
+                                                <div>No study activity on this day.</div>
+                                              )}
+                                            </div>
+                                          }
+                                        >
+                                          <span className={`user-profile-page__contrib-cell level-${day.level}`} />
+                                        </Tooltip>
+                                      ))}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {contributionMatrix.totalContributions === 0 ? (
+                            <Empty description="No learning history yet." />
+                          ) : null}
+                        </Card>
+                      </Col>
+                    </Row>
+                  ),
+                },
+                {
+                  key: "interactions",
+                  label: "Interaction Records",
+                  children: (
+                    <div ref={profileRecordsRef}>
+                      <Tabs
+                        items={[
+                          {
+                            key: "conversations",
+                            label: "Recent Assistant Conversations",
+                            children: (
+                              recentChats.length > 0 ? (
+                                <List
+                                  itemLayout="vertical"
+                                  dataSource={recentChats}
+                                  renderItem={(item) => (
+                                    <List.Item
+                                      actions={[
+                                        <Button
+                                          key={`open-${item.id}`}
+                                          type="link"
+                                          onClick={() => {
+                                            setActiveConversationId(item.id);
+                                            setConversationWorkspaceOpen(true);
+                                          }}
+                                        >
+                                          Open conversation
+                                        </Button>,
+                                      ]}
+                                    >
+                                      <List.Item.Meta
+                                        avatar={<Avatar icon={<CommentOutlined />} />}
+                                        title={item.title}
+                                        description={`${item.time || "Unknown time"} · ${item.note}`}
+                                      />
+                                      <Paragraph>{item.summary}</Paragraph>
+                                    </List.Item>
+                                  )}
+                                />
+                              ) : (
+                                <Empty description="No assistant conversations yet." />
+                              )
+                            ),
+                          },
+                          {
+                            key: "notes",
+                            label: "Saved Personal Notes",
+                            children: (
+                              decoratedRecentNotes.length > 0 ? (
+                                <List
+                                  dataSource={decoratedRecentNotes}
+                                  renderItem={(item) => (
+                                    <List.Item>
+                                      <List.Item.Meta
+                                        title={item.displayTitle}
+                                        description={
+                                          item.updatedAt
+                                            ? `${item.displaySubject || "General"} · ${item.updatedAt}`
+                                            : `${item.displaySubject || "General"}`
+                                        }
+                                      />
+                                      <Space wrap>
+                                        {item.tags.map((tag) => (
+                                          <Tag key={`${item.id}-${tag}`}>{tag}</Tag>
+                                        ))}
+                                      </Space>
+                                    </List.Item>
+                                  )}
+                                />
+                              ) : (
+                                <Empty description="No saved notes yet." />
+                              )
+                            ),
+                          },
+                        ]}
+                        tabBarExtraContent={
+                          <Button type="link" onClick={() => setConversationWorkspaceOpen(true)}>
+                            Open conversation workspace
+                          </Button>
+                        }
+                      />
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </Card>
+        </div>
+        ) : null}
+
+        {activeDashboard === "career" ? (
+        <div ref={profileCareerRef}>
+          <Card title={dashboardTabs} className="user-profile-page__section user-profile-page__dashboard-card">
+            <Card type="inner" title="My Background Atlas" className="user-profile-page__section">
+              <Space direction="vertical" className="user-profile-page__block" size={12}>
+                <div>
+                  <Text strong>Knowledge Areas</Text>
+                  <div className="user-profile-page__tag-wall">
+                    {accumulationDashboard.knowledge.length > 0 ? (
+                      accumulationDashboard.knowledge.map((item) => (
+                        <Tag key={`knowledge-${item}`} color="blue">
+                          {item}
+                        </Tag>
+                      ))
+                    ) : (
+                      <Text type="secondary">No knowledge areas yet.</Text>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <Text strong>Skills</Text>
+                  <div className="user-profile-page__tag-wall">
+                    {accumulationDashboard.skills.length > 0 ? (
+                      accumulationDashboard.skills.map((item) => (
+                        <Tag key={`skill-${item}`} color="purple">
+                          {item}
+                        </Tag>
+                      ))
+                    ) : (
+                      <Text type="secondary">No skills tagged yet.</Text>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <Text strong>Tools</Text>
+                  <div className="user-profile-page__tag-wall">
+                    {accumulationDashboard.tools.length > 0 ? (
+                      accumulationDashboard.tools.map((item) => (
+                        <Tag key={`tool-${item}`} color="geekblue">
+                          {item}
+                        </Tag>
+                      ))
+                    ) : (
+                      <Text type="secondary">No tools tracked yet.</Text>
+                    )}
+                  </div>
+                </div>
+              </Space>
+            </Card>
+            <Divider />
+            <Row gutter={[16, 16]}>
+              <Col xs={24} lg={17}>
+                <Card type="inner" title="Career Matches">
+                  <Row gutter={[20, 20]}>
+                    <Col xs={24} lg={11}>
+                      <div className="user-profile-page__career-pane">
+                        <CareerBackgroundCard
+                          key={JSON.stringify(careerBackground)}
+                          background={careerBackground}
+                          taxonomy={careerTaxonomy}
+                          learningTracks={learningTracks}
+                          onSave={handleCareerBackgroundSave}
+                          saving={careerSaving}
+                          disabled={previewMode}
                         />
-                      ) : (
-                        <Empty description="No assistant conversations yet." />
-                      )
-                    ),
-                  },
-                  {
-                    key: "notes",
-                    label: "Saved Personal Notes",
-                    children: (
-                      decoratedRecentNotes.length > 0 ? (
-                        <List
-                          dataSource={decoratedRecentNotes}
-                          renderItem={(item) => (
-                            <List.Item>
-                              <List.Item.Meta
-                                title={item.displayTitle}
-                                description={
-                                  item.updatedAt
-                                    ? `${item.displaySubject || "General"} · ${item.updatedAt}`
-                                    : `${item.displaySubject || "General"}`
-                                }
-                              />
-                              <Space wrap>
-                                {item.tags.map((tag) => (
-                                  <Tag key={`${item.id}-${tag}`}>{tag}</Tag>
-                                ))}
-                              </Space>
-                            </List.Item>
-                          )}
+                      </div>
+                    </Col>
+                    <Col xs={24} lg={13}>
+                      <div className="user-profile-page__career-pane">
+                        <CareerRecommendationsCard
+                          recommendations={careerRecommendations}
+                          loading={careerLoading}
+                          errorText={careerErrorText}
+                          selectedTitle={selectedCareerRole}
+                          onSelect={(roleTitle) => setSelectedCareerRole(roleTitle)}
                         />
-                      ) : (
-                        <Empty description="No saved notes yet." />
-                      )
-                    ),
-                  },
-                ]}
-              />
-              </Card>
-            </div>
-          </Col>
-        </Row>
+                      </div>
+                    </Col>
+                  </Row>
+                </Card>
+              </Col>
+              <Col xs={24} lg={7}>
+                <Card type="inner" title="Role Details">
+                  {selectedCareerRecommendation ? (
+                    <Space direction="vertical" size={12} className="user-profile-page__block">
+                      <div className="user-profile-page__role-detail-head">
+                        <Text strong>{selectedCareerRecommendation.title}</Text>
+                        <Tag
+                          color={
+                            formatScore(selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore) >= 70
+                              ? "green"
+                              : formatScore(selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore) >= 45
+                                ? "blue"
+                                : "orange"
+                          }
+                        >
+                          {formatScore(selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore)}% match
+                        </Tag>
+                      </div>
+                      <Progress
+                        percent={formatScore(selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore)}
+                        showInfo={false}
+                      />
+                      <Space wrap size={[8, 8]}>
+                        <Tag>
+                          Knowledge{" "}
+                          {formatScore(
+                            selectedCareerRecommendation.knowledge_match ??
+                              selectedCareerRecommendation.knowledgeMatch,
+                          )}
+                          %
+                        </Tag>
+                        <Tag>
+                          Skills{" "}
+                          {formatScore(
+                            selectedCareerRecommendation.skill_match ??
+                              selectedCareerRecommendation.skillMatch,
+                          )}
+                          %
+                        </Tag>
+                        <Tag>
+                          Work Style{" "}
+                          {formatScore(
+                            selectedCareerRecommendation.work_style_match ??
+                              selectedCareerRecommendation.workStyleMatch,
+                          )}
+                          %
+                        </Tag>
+                      </Space>
+                      <Paragraph className="career-recommendation-card__reasoning">
+                        {selectedCareerRecommendation.reasoning ||
+                          "This role has partial overlap with your learning record."}
+                      </Paragraph>
+                      <Space wrap size={[8, 8]}>
+                        {(selectedCareerRecommendation.skill_gaps ||
+                          selectedCareerRecommendation.skillGaps ||
+                          []).slice(0, 6).map((gap) => (
+                          <Tag
+                            key={`${selectedCareerRecommendation.job_id || selectedCareerRecommendation.jobId}-${gap.category}-${gap.skill}`}
+                            color="gold"
+                          >
+                            {gap.skill}
+                          </Tag>
+                        ))}
+                      </Space>
+                      <Divider style={{ margin: "4px 0" }} />
+                      <Text strong>Skill Gap</Text>
+                      <CareerSkillGapPanel
+                        recommendations={careerRecommendations.filter(
+                          (item) => item?.title === selectedCareerRole,
+                        )}
+                      />
+                      <Space wrap>
+                        <Button size="small" type="link">
+                          View learning gaps
+                        </Button>
+                        <Button size="small" type="link">
+                          Add as career goal
+                        </Button>
+                      </Space>
+                    </Space>
+                  ) : (
+                    <Empty description="Select a role to view details." />
+                  )}
+                </Card>
+              </Col>
+            </Row>
+          </Card>
+        </div>
+        ) : null}
       </div>
 
       <Modal

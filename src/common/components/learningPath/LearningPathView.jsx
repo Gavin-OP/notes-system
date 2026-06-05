@@ -7,11 +7,13 @@ import "reactflow/dist/style.css";
 
 import LearningPathToolbar from "./LearningPathToolbar";
 import { extractLearningPathData, loadSubjectGraph } from "./utils";
+import { getSubjectJobMatches } from "../../api/careers";
 import "./LearningPathView.css";
 
 const LearningPathView = ({ subjectId }) => {
   const navigate = useNavigate();
   const [graphData, setGraphData] = useState(null);
+  const [careerMatches, setCareerMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -47,6 +49,23 @@ const LearningPathView = ({ subjectId }) => {
     };
   }, [subjectId]);
 
+  useEffect(() => {
+    let active = true;
+    async function fetchCareerMatches() {
+      try {
+        const payload = await getSubjectJobMatches();
+        if (!active) return;
+        setCareerMatches(payload?.matches || []);
+      } catch {
+        if (active) setCareerMatches([]);
+      }
+    }
+    fetchCareerMatches();
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const learningPathData = useMemo(
     () => extractLearningPathData(graphData),
     [graphData],
@@ -68,6 +87,13 @@ const LearningPathView = ({ subjectId }) => {
   const hasCycle = learningPathData?.hasCycle ?? false;
   const cycleNodes = learningPathData?.cycleNodes ?? [];
   const warnings = learningPathData?.warnings ?? [];
+  const subjectCareerMatches = useMemo(() => {
+    const normalizedSubjectId = String(subjectId || "").replace(/_/g, "-");
+    return careerMatches
+      .filter((match) => match.subject_slug === normalizedSubjectId || match.subjectSlug === normalizedSubjectId)
+      .sort((a, b) => (b.score || 0) - (a.score || 0))
+      .slice(0, 4);
+  }, [careerMatches, subjectId]);
 
   const flowGraphData = useMemo(() => {
     const byId = new Map(orderedNodes.map((node) => [node.id, node]));
@@ -167,6 +193,28 @@ const LearningPathView = ({ subjectId }) => {
             description={warnings.join(" | ")}
           />
         )}
+
+        {subjectCareerMatches.length > 0 ? (
+          <Card title="Career paths connected to this subject" className="learning-path-view__card">
+            <div className="learning-path-view__career-list">
+              {subjectCareerMatches.map((match) => (
+                <div key={`${match.subject_id || match.subjectId}-${match.job_id || match.jobId}`} className="learning-path-view__career-item">
+                  <div>
+                    <strong>{match.job_title || match.jobTitle}</strong>
+                    <div className="learning-path-view__career-terms">
+                      {(match.matched_terms || match.matchedTerms || []).slice(0, 4).map((term) => (
+                        <Tag key={`${match.job_id || match.jobId}-${term}`} color="blue">
+                          {term}
+                        </Tag>
+                      ))}
+                    </div>
+                  </div>
+                  <Tag color="green">{Math.round((match.score || 0) * 100)}% aligned</Tag>
+                </div>
+              ))}
+            </div>
+          </Card>
+        ) : null}
 
         <Card
           title="Learning Path Graph"

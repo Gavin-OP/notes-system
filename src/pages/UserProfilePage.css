@@ -35,6 +35,45 @@
   max-width: 760px;
 }
 
+.user-profile-page__dashboard-card > .ant-card-head {
+  min-height: 0;
+  padding: 0 24px;
+  border-bottom: 1px solid rgba(5, 5, 5, 0.08);
+}
+
+.user-profile-page__dashboard-card > .ant-card-head .ant-card-head-title {
+  padding: 0;
+}
+
+.user-profile-page__folder-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  padding-top: 10px;
+}
+
+.user-profile-page__folder-tab {
+  position: relative;
+  border: 1px solid rgba(5, 5, 5, 0.08);
+  border-bottom: 0;
+  background: #f7f8fa;
+  color: rgba(5, 5, 5, 0.55);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 12px 28px 13px;
+  border-radius: 12px 12px 0 0;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.user-profile-page__folder-tab.is-active {
+  z-index: 1;
+  background: #fff;
+  color: rgba(5, 5, 5, 0.88);
+  transform: translateY(1px);
+}
+
 .user-profile-page__main-grid {
   margin-top: 2px;
 }
@@ -55,8 +94,217 @@
   gap: 8px;
 }
 
+.user-profile-page__contrib {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user-profile-page__contrib-grid {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  min-width: 520px;
+}
+
+.user-profile-page__contrib-week {
+  display: grid;
+  grid-template-rows: repeat(7, auto);
+  gap: 2px;
+}
+
+.user-profile-page__contrib-cell {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 2px;
+  background: #ebedf0;
+  display: inline-block;
+}
+
+.user-profile-page__contrib-head {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.user-profile-page__contrib-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.user-profile-page__contrib-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-profile-page__contrib-months {
+  display: grid;
+  margin-bottom: 4px;
+}
+
+.user-profile-page__contrib-month {
+  font-size: 12px;
+  color: rgba(5, 5, 5, 0.55);
+  white-space: nowrap;
+}
+
+.user-profile-page__contrib-weekdays {
+  width: 32px;
+  padding-top: 18px;
+  display: grid;
+  grid-template-rows: repeat(7, 8px);
+  gap: 2px;
+  font-size: 12px;
+  color: rgba(5, 5, 5, 0.55);
+}
+
+.user-profile-page__contrib-weekdays span:nth-child(2) {
+  transform: translateY(10px);
+}
+
+.user-profile-page__contrib-weekdays span:nth-child(3) {
+  transform: translateY(20px);
+}
+
+.user-profile-page__contrib-cell.level-1 {
+  background: #c6e48b;
+}
+
+.user-profile-page__contrib-cell.level-2 {
+  background: #7bc96f;
+}
+
+.user-profile-page__contrib-cell.level-3 {
+  background: #239a3b;
+}
+
+.user-profile-page__contrib-cell.level-4 {
+  background: #196127;
+}
+
+.user-profile-page__timeline-card {
+  width: 100%;
+}
+
+.user-profile-page__timeline-card .ant-card-body {
+  padding: 12px 14px;
+}
+
+.user-profile-page__tag-wall {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.user-profile-page__career-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.career-recommendation-card {
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.career-recommendation-card.is-active {
+  background: rgba(22, 119, 255, 0.08);
+}
+
+.user-profile-page__role-detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.user-profile-page__contrib-tooltip {
+  max-width: 280px;
+  font-size: 12px;
+}
+
+.user-profile-page__contrib-tooltip-list {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+
+.career-background-card,
+.career-recommendation-card__body {
+  width: 100%;
+}
+
+.career-background-card .ant-form-item {
+  margin-bottom: 8px;
+}
+
+.career-recommendation-card {
+  padding-inline: 0 !important;
+}
+
+.career-recommendation-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.career-recommendation-card__reasoning {
+  margin-bottom: 0 !important;
+}
+
+.career-gap-item {
+  padding-inline: 0 !important;
+}
+
 [data-theme="dark"] .user-profile-page {
   background: #0f0f10;
+}
+
+[data-theme="dark"] .user-profile-page__dashboard-card > .ant-card-head {
+  border-bottom-color: rgba(255, 255, 255, 0.16);
+}
+
+[data-theme="dark"] .user-profile-page__folder-tab {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: #161b22;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+[data-theme="dark"] .user-profile-page__folder-tab.is-active {
+  background: #0f0f10;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .user-profile-page__contrib-month,
+[data-theme="dark"] .user-profile-page__contrib-weekdays {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+[data-theme="dark"] .user-profile-page__contrib-cell {
+  background: #2d333b;
+}
+
+[data-theme="dark"] .user-profile-page__contrib-cell.level-1 {
+  background: #0e4429;
+}
+
+[data-theme="dark"] .user-profile-page__contrib-cell.level-2 {
+  background: #006d32;
+}
+
+[data-theme="dark"] .user-profile-page__contrib-cell.level-3 {
+  background: #26a641;
+}
+
+[data-theme="dark"] .user-profile-page__contrib-cell.level-4 {
+  background: #39d353;
+}
+
+[data-theme="dark"] .career-recommendation-card.is-active {
+  background: rgba(22, 119, 255, 0.2);
 }
 
 .user-profile-page .ant-card {
