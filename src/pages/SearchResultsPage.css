@@ -1,0 +1,116 @@
+.search-results-page {
+  min-height: 100vh;
+  padding: 32px min(6vw, 72px);
+  background: var(--content-bg, #fff);
+}
+
+.search-results-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+
+.search-results-page__header .ant-btn {
+  width: fit-content;
+}
+
+.search-results-page__controls {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 180px auto;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.search-results-page__subject-select {
+  width: 100%;
+}
+
+.search-results-page__summary {
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.search-results-page__list {
+  max-width: 980px;
+}
+
+.search-results-page__result {
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 14px 16px !important;
+}
+
+.search-results-page__result:hover {
+  background: rgba(22, 119, 255, 0.06);
+}
+
+.search-results-page__result-main {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.search-results-page__path {
+  font-size: 12px;
+}
+
+.search-results-page__snippet {
+  color: rgba(0, 0, 0, 0.72);
+  line-height: 1.65;
+}
+
+.search-results-page__mark {
+  padding: 0 2px;
+  border-radius: 3px;
+  background: rgba(250, 219, 20, 0.45);
+  color: inherit;
+}
+
+.search-results-page__badge {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(22, 119, 255, 0.1);
+  color: #1677ff;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.search-results-page__badge--title {
+  background: rgba(82, 196, 26, 0.12);
+  color: #389e0d;
+}
+
+.search-results-page__badge--heading {
+  background: rgba(114, 46, 209, 0.1);
+  color: #722ed1;
+}
+
+.search-results-page__load-more {
+  max-width: 980px;
+  display: flex;
+  justify-content: center;
+  padding: 18px 0;
+}
+
+@media (max-width: 720px) {
+  .search-results-page {
+    padding: 20px 14px;
+  }
+
+  .search-results-page__controls {
+    grid-template-columns: 1fr;
+  }
+}
+
+[data-theme="dark"] .search-results-page__snippet {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+[data-theme="dark"] .search-results-page__result:hover {
+  background: rgba(22, 119, 255, 0.16);
+}

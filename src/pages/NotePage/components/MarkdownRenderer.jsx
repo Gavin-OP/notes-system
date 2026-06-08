@@ -223,6 +223,52 @@ function unwrapExistingQuoteHighlights(root) {
   });
 }
 
+function unwrapExistingSearchHighlights(root) {
+  root.querySelectorAll(".note-search-highlight").forEach((element) => {
+    const textNode = document.createTextNode(element.textContent || "");
+    element.replaceWith(textNode);
+    textNode.parentElement?.normalize();
+  });
+}
+
+function wrapFirstSearchMatch(root, matchText, queryText) {
+  const candidates = [matchText, queryText]
+    .flatMap((value) => {
+      const raw = String(value || "").trim();
+      if (!raw) return [];
+      const words = raw.split(/\s+/).filter((word) => word.length >= 3);
+      return [raw, ...words];
+    })
+    .filter(Boolean);
+
+  for (const candidate of candidates) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (isSkippableHighlightNode(node)) return NodeFilter.FILTER_REJECT;
+        const text = node.nodeValue || "";
+        return text.toLowerCase().includes(candidate.toLowerCase())
+          ? NodeFilter.FILTER_ACCEPT
+          : NodeFilter.FILTER_SKIP;
+      },
+    });
+
+    const target = walker.nextNode();
+    if (!target) continue;
+    const lowerText = target.nodeValue.toLowerCase();
+    const startIndex = lowerText.indexOf(candidate.toLowerCase());
+    if (startIndex < 0) continue;
+    const matchNode = target.splitText(startIndex);
+    matchNode.splitText(candidate.length);
+    const wrapper = document.createElement("span");
+    wrapper.className = "note-search-highlight";
+    wrapper.title = "Search result";
+    matchNode.parentNode.insertBefore(wrapper, matchNode);
+    wrapper.appendChild(matchNode);
+    return wrapper;
+  }
+  return null;
+}
+
 function wrapFirstTextMatch(root, quote, activeQuoteId) {
   const selectedText = String(quote?.selected_text || quote?.selectedText || "").trim();
   if (!selectedText) return null;
@@ -441,6 +487,8 @@ const MarkdownRenderer = ({
   isCompleted = false,
   noteQuotes = [],
   activeQuoteId = "",
+  searchQuery = "",
+  searchMatchText = "",
   onCreateQuoteFromSelection,
   onAskWithSelectedText,
   headerAddon,
@@ -551,20 +599,25 @@ const MarkdownRenderer = ({
     if (!root) return undefined;
     window.setTimeout(() => {
       unwrapExistingQuoteHighlights(root);
+      unwrapExistingSearchHighlights(root);
       let activeElement = null;
       confirmedQuotes.forEach((quote) => {
         const wrapped = wrapFirstTextMatch(root, quote, activeQuoteId);
         const quoteId = String(quote.quote_id || quote.quoteId || "");
         if (quoteId && quoteId === activeQuoteId) activeElement = wrapped;
       });
+      if (searchQuery || searchMatchText) {
+        activeElement = wrapFirstSearchMatch(root, searchMatchText, searchQuery) || activeElement;
+      }
       if (activeElement) {
         activeElement.scrollIntoView({ block: "center", behavior: "smooth" });
       }
     }, 0);
     return () => {
       unwrapExistingQuoteHighlights(root);
+      unwrapExistingSearchHighlights(root);
     };
-  }, [content, confirmedQuotes, activeQuoteId]);
+  }, [content, confirmedQuotes, activeQuoteId, searchQuery, searchMatchText]);
 
   const restoreSavedSelection = () => {
     const range = selectionRangeRef.current;

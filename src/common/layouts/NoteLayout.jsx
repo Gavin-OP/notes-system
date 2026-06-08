@@ -87,6 +87,33 @@ function flattenMenuLeafItems(items, list = []) {
   return list;
 }
 
+function flattenSearchItems(items, trail = [], list = []) {
+  items.forEach((item) => {
+    const label = typeof item.label === "string" ? item.label : item.key?.split("/").pop() || "";
+    const nextTrail = label ? [...trail, label] : trail;
+    if (Array.isArray(item.children) && item.children.length > 0) {
+      flattenSearchItems(item.children, nextTrail, list);
+      return;
+    }
+    if (typeof item.key === "string") {
+      list.push({
+        path: item.key,
+        title: label || item.key,
+        breadcrumb: nextTrail.slice(0, -1).join(" / "),
+      });
+    }
+  });
+  return list;
+}
+
+function normalizeSearchText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[-_/]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function escapeHtml(value) {
   return String(value || "")
     .replace(/&/g, "&amp;")
@@ -379,6 +406,26 @@ const NoteLayout = () => {
   // menu contents & icons
   const plainMenuItems = useMemo(() => buildMenuItems(notesIndex), [notesIndex]);
   const iconMenuItems = useMemo(() => addIconsToMenuItems(plainMenuItems), [plainMenuItems]);
+  const searchItems = useMemo(() => flattenSearchItems(plainMenuItems), [plainMenuItems]);
+  const searchOptions = useMemo(
+    () =>
+      searchItems.map((item) => {
+        const searchText = normalizeSearchText(`${item.title} ${item.breadcrumb} ${item.path}`);
+        return {
+          value: item.path,
+          label: (
+            <div className="note-layout__search-option">
+              <span className="note-layout__search-option-title">{item.title}</span>
+              <span className="note-layout__search-option-meta">
+                {[item.breadcrumb, item.path].filter(Boolean).join(" · ")}
+              </span>
+            </div>
+          ),
+          searchText,
+        };
+      }),
+    [searchItems],
+  );
 
   // breadcrumb (reuse menu labels so display is consistent)
   const breadcrumbItems = useMemo(() => {
@@ -394,7 +441,24 @@ const NoteLayout = () => {
   const handleThemeChange = (checked) =>
     dispatch(setTheme(checked ? "dark" : "light"));
   const handleLanguageChange = (value) => dispatch(setLanguage(value));
-  const handleSearch = (value) => {};
+  const handleSearch = (value) => {
+    const rawValue = String(value || "").trim();
+    if (!rawValue) return;
+    const exactItem = searchItems.find((item) => item.path === rawValue);
+    if (exactItem) {
+      navigate(exactItem.path);
+      return;
+    }
+    const normalizedQuery = normalizeSearchText(rawValue);
+    const bestMatch = searchItems.find((item) =>
+      normalizeSearchText(`${item.title} ${item.breadcrumb} ${item.path}`).includes(normalizedQuery),
+    );
+    if (bestMatch) {
+      navigate(bestMatch.path);
+    } else {
+      message.info("No matching note found.");
+    }
+  };
   const handleNoteSelect = (path) => navigate(path);
 
   const noteName = useMemo(() => {
@@ -983,6 +1047,7 @@ const NoteLayout = () => {
               onThemeChange={handleThemeChange}
               onLanguageChange={handleLanguageChange}
               onSearch={handleSearch}
+              searchOptions={searchOptions}
               narrationState={narrationState}
               isNarrationPlaying={isNarrationPlaying}
               onToggleNarration={handleToggleNarration}

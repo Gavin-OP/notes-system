@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { AutoComplete, Dropdown, Space, Tooltip } from "antd";
+import { Dropdown, Space, Tooltip } from "antd";
 import {
   SearchOutlined,
   GlobalOutlined,
@@ -13,6 +13,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import AppFeatureTour from "./guide/AppFeatureTour";
+import SearchModal from "./SearchModal";
 
 import "./NoteHeader.css";
 
@@ -21,7 +22,7 @@ function NoteHeader({
   onThemeChange,
   language,
   onLanguageChange,
-  onSearch,
+  searchOptions = [],
   narrationState = "idle",
   isNarrationPlaying = false,
   onToggleNarration,
@@ -34,11 +35,7 @@ function NoteHeader({
   const isMobile = useSelector((state) => state.preference.isMobile);
 
   // state
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
-
-  // constants
-  const searchPlaceholder = language === "cn" ? "搜索..." : "Search...";
+  const [searchOpen, setSearchOpen] = useState(false);
 
   // language menu items
   const languageItems = [
@@ -78,30 +75,15 @@ function NoteHeader({
     <div>
       <Space size={isMobile ? "small" : "middle"}>
         {/* search */}
-        <span
-          className="note-header__search-wrapper"
-          onMouseEnter={() => setShowSearch(true)}
-          onMouseLeave={() => setShowSearch(false)}
-        >
-          <Space>
-            {showSearch && (
-              <AutoComplete
-                className={`note-header__search-input ${isMobile ? "note-header__search-input--mobile" : ""}`}
-                value={searchValue}
-                options={[]}
-                onChange={setSearchValue}
-                onSelect={onSearch}
-                placeholder={searchPlaceholder}
-                showSearch
-                autoFocus
-              ></AutoComplete>
-            )}
-            <SearchOutlined
-              className="note-header__search-icon"
-              onClick={() => setShowSearch(true)}
-            />
-          </Space>
-        </span>
+        <SearchOutlined
+          className="note-header__search-icon"
+          onClick={() => setSearchOpen(true)}
+        />
+        <SearchModal
+          open={searchOpen}
+          onClose={() => setSearchOpen(false)}
+          localOptions={searchOptions}
+        />
 
         {/* language selector - click globe icon to show dropdown */}
         <Dropdown

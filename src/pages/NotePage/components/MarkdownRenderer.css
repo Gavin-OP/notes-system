@@ -152,6 +152,12 @@
   text-decoration-style: solid;
 }
 
+.note-search-highlight {
+  border-radius: 3px;
+  background: rgba(250, 219, 20, 0.55);
+  box-shadow: 0 0 0 3px rgba(250, 219, 20, 0.22);
+}
+
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3,
@@ -264,5 +270,10 @@
 
 [data-theme="dark"] .note-quote-highlight--active {
   background: rgba(250, 219, 20, 0.28);
+}
+
+[data-theme="dark"] .note-search-highlight {
+  background: rgba(250, 219, 20, 0.32);
+  box-shadow: 0 0 0 3px rgba(250, 219, 20, 0.16);
 }
 

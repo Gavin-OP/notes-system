@@ -12,6 +12,7 @@ import UserLoginPage from "../pages/UserLoginPage";
 import UserProfilePage from "../pages/UserProfilePage";
 import MicroCourseDemoPage from "../pages/MicroCourseDemoPage";
 import DataCleaningMicroCoursePage from "../pages/DataCleaningMicroCoursePage";
+import SearchResultsPage from "../pages/SearchResultsPage";
 import { AdminAuthRoot } from "../admin/auth/AdminAuthProvider";
 import AdminRouteGuard from "../admin/auth/AdminRouteGuard";
 import AdminLayout from "../admin/layout/AdminLayout";
@@ -76,6 +77,9 @@ function RoutesWithTracking() {
       <Route path="user/login" element={<UserLoginPage />} />
       <Route path="user/profile" element={<UserProfilePage />} />
       <Route path="user" element={<Navigate to="/user/login" replace />} />
+
+      {/* Search */}
+      <Route path="search" element={<SearchResultsPage />} />
 
       {/* MVP micro-course demo */}
       <Route path="micro-course/data-science-intro" element={<MicroCourseDemoPage />} />

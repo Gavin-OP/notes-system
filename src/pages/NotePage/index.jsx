@@ -84,7 +84,10 @@ function NotePage() {
   const outletContext = useOutletContext() || {};
   const isCurrentNoteCompleted = Boolean(outletContext.isCurrentNoteCompleted);
   const completeCurrentNotePending = Boolean(outletContext.completeCurrentNotePending);
-  const activeQuoteId = new URLSearchParams(location.search).get("quoteId") || "";
+  const noteSearchParams = new URLSearchParams(location.search);
+  const activeQuoteId = noteSearchParams.get("quoteId") || "";
+  const searchQuery = noteSearchParams.get("search") || "";
+  const searchMatchText = noteSearchParams.get("match") || "";
   const noteQuotes = Array.isArray(outletContext.noteQuotes) ? outletContext.noteQuotes : [];
   const onToggleCurrentNoteCompletion =
     typeof outletContext.onToggleCurrentNoteCompletion === "function"
@@ -375,6 +378,8 @@ function NotePage() {
               onMarkComplete={onToggleCurrentNoteCompletion}
               noteQuotes={visibleNoteQuotes}
               activeQuoteId={activeQuoteId}
+              searchQuery={searchQuery}
+              searchMatchText={searchMatchText}
               onCreateQuoteFromSelection={onCreateQuoteFromSelection}
               onAskWithSelectedText={onAskWithSelectedText}
               headerAddon={versionHeaderAddon}
