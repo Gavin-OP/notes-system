@@ -148,6 +148,40 @@ export function uncompleteMyNote(payload) {
   });
 }
 
+export function getMyNoteQuotes(noteUrl = "") {
+  const query = noteUrl ? `?note_url=${encodeURIComponent(noteUrl)}` : "";
+  return userApiRequest(`/api/v1/users/me/annotations${query}`);
+}
+
+export function createMyNoteQuote(payload) {
+  return userApiRequest("/api/v1/users/me/annotations", {
+    method: "POST",
+    body: JSON.stringify({
+      note_url: payload?.noteUrl ?? "",
+      note_title: payload?.noteTitle ?? "",
+      subject: payload?.subject ?? "",
+      selected_text: payload?.selectedText ?? "",
+      context_before: payload?.contextBefore ?? "",
+      context_after: payload?.contextAfter ?? "",
+      note_version_id: payload?.noteVersionId ?? "current",
+      note_content_hash: payload?.noteContentHash ?? "",
+    }),
+  });
+}
+
+export function updateMyAnnotationStatus(annotationId, status) {
+  return userApiRequest(`/api/v1/users/me/annotations/${encodeURIComponent(annotationId)}`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+}
+
+export function deleteMyAnnotation(annotationId) {
+  return userApiRequest(`/api/v1/users/me/annotations/${encodeURIComponent(annotationId)}`, {
+    method: "DELETE",
+  });
+}
+
 export function getUserProgress(userId) {
   return userApiRequest(`/api/v1/users/${encodeURIComponent(userId)}/progress`);
 }

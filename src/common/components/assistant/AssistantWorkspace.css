@@ -123,6 +123,24 @@
   word-break: break-word;
 }
 
+.assistant-workspace__editor .personal-note-quote {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border-left: 3px solid #722ed1;
+  border-radius: 8px;
+  background: rgba(114, 46, 209, 0.08);
+}
+
+.assistant-workspace__editor .personal-note-quote p {
+  margin: 0;
+}
+
+.assistant-workspace__editor .personal-note-quote footer {
+  margin-top: 6px;
+  color: rgba(5, 5, 5, 0.55);
+  font-size: 12px;
+}
+
 .assistant-workspace__editor:empty::before {
   content: attr(data-placeholder);
   color: rgba(0, 0, 0, 0.3);

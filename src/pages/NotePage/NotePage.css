@@ -24,6 +24,75 @@
   background: linear-gradient(135deg, #9254de, #4096ff);
 }
 
+.note-page__version-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  color: rgba(0, 0, 0, 0.88);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.note-page__version-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.note-page__version-select-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.note-page__version-select-label {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 13px;
+}
+
+.note-page__version-select {
+  min-width: 116px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: #fff;
+  color: rgba(0, 0, 0, 0.88);
+  font: inherit;
+}
+
+.note-page__restore-btn {
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  padding: 5px 10px;
+  background: #fff;
+  color: rgba(0, 0, 0, 0.88);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.note-page__restore-btn:hover:not(:disabled) {
+  border-color: #1677ff;
+  color: #1677ff;
+}
+
+.note-page__restore-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.note-page__restore-status {
+  color: #1677ff;
+  font-size: 13px;
+  font-weight: 500;
+}
+
 .note-page__complete-btn {
   border: 1px solid #1677ff;
   background: #1677ff;
@@ -58,6 +127,33 @@
 [data-theme="dark"] .note-page__micro-course-btn {
   border-color: #9254de;
   background: linear-gradient(135deg, #642ab5, #1668dc);
+}
+
+[data-theme="dark"] .note-page__version-tools {
+  border-color: #424242;
+  background: #1f1f1f;
+  color: rgba(255, 255, 255, 0.88);
+  box-shadow: none;
+}
+
+[data-theme="dark"] .note-page__version-select-label {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+[data-theme="dark"] .note-page__version-select,
+[data-theme="dark"] .note-page__restore-btn {
+  border-color: #424242;
+  background: #141414;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+[data-theme="dark"] .note-page__restore-btn:hover:not(:disabled) {
+  border-color: #1668dc;
+  color: #69b1ff;
+}
+
+[data-theme="dark"] .note-page__restore-status {
+  color: #69b1ff;
 }
 
 [data-theme="dark"] .note-page__complete-btn.is-completed {

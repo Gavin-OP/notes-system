@@ -47,6 +47,12 @@
   line-height: 1.25;
 }
 
+.markdown-h1-addon {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
 .markdown-heading-with-link--h1 .markdown-complete-btn {
   float: none;
   flex: 0 0 auto;
@@ -86,8 +92,64 @@
 }
 
 .markdown-body {
+  position: relative;
   min-width: 0;
   max-width: 100%;
+}
+
+.note-selection-toolbar {
+  position: fixed;
+  z-index: 2000;
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transform: translateX(-50%);
+}
+
+.note-selection-toolbar button {
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 5px 10px;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 13px;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.note-selection-toolbar button:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.note-selection-toolbar button:first-child {
+  border-color: #1677ff;
+  background: #1677ff;
+  color: #fff;
+}
+
+.note-selection-toolbar button:first-child:hover {
+  border-color: #4096ff;
+  background: #4096ff;
+}
+
+.note-quote-highlight {
+  cursor: pointer;
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: #722ed1;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  border-radius: 3px;
+}
+
+.note-quote-highlight--active {
+  background: rgba(250, 219, 20, 0.45);
+  box-shadow: 0 0 0 3px rgba(250, 219, 20, 0.22);
+  text-decoration-style: solid;
 }
 
 .markdown-body h1,
@@ -175,5 +237,32 @@
 [data-theme="dark"] .markdown-complete-btn.is-completed {
   background: #49aa19;
   border-color: #49aa19;
+}
+
+[data-theme="dark"] .note-selection-toolbar {
+  border-color: #424242;
+  background: #1f1f1f;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .note-selection-toolbar button {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+[data-theme="dark"] .note-selection-toolbar button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .note-selection-toolbar button:first-child {
+  border-color: #1668dc;
+  background: #1668dc;
+}
+
+[data-theme="dark"] .note-quote-highlight {
+  text-decoration-color: #b37feb;
+}
+
+[data-theme="dark"] .note-quote-highlight--active {
+  background: rgba(250, 219, 20, 0.28);
 }
 

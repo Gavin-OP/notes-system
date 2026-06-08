@@ -41,7 +41,7 @@ import {
   requestAssistantQuiz,
   requestAssistantQuizEvaluate,
 } from "../api/assistant";
-import { completeMyNote, getMyProfile, uncompleteMyNote } from "../api/user";
+import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncompleteMyNote } from "../api/user";
 
 import "./NoteLayout.css";
 
@@ -85,6 +85,15 @@ function flattenMenuLeafItems(items, list = []) {
     }
   });
   return list;
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function normalizeMenuKey(key) {
@@ -304,6 +313,7 @@ const NoteLayout = () => {
   const [quizPending, setQuizPending] = useState(false);
   const [quizError, setQuizError] = useState("");
   const [completedNoteUrls, setCompletedNoteUrls] = useState(new Set());
+  const [noteQuotes, setNoteQuotes] = useState([]);
   const [completeNotePending, setCompleteNotePending] = useState(false);
   const [narrationState, setNarrationState] = useState("idle");
   const [narrationAudioUrls, setNarrationAudioUrls] = useState([]);
@@ -388,9 +398,17 @@ const NoteLayout = () => {
   const handleNoteSelect = (path) => navigate(path);
 
   const noteName = useMemo(() => {
-    if (currentMeta?.name) return currentMeta.name;
+    const h1Match = String(currentNoteContent || "").match(/^#\s+(.+)$/m);
+    if (h1Match?.[1]) return h1Match[1].trim();
+    const rawTitle = currentMeta?.title || currentMeta?.name || "";
+    if (rawTitle) {
+      return String(rawTitle)
+        .replace(/\.md$/i, "")
+        .replace(/[-_]+/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+    }
     return "Current note";
-  }, [currentMeta]);
+  }, [currentMeta, currentNoteContent]);
   const currentNoteUrlNormalized = useMemo(
     () => normalizeMenuKey(currentMeta?.url || ""),
     [currentMeta?.url],
@@ -422,6 +440,28 @@ const NoteLayout = () => {
       mounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadNoteQuotes() {
+      if (!currentNoteUrlNormalized) {
+        setNoteQuotes([]);
+        return;
+      }
+      try {
+        const quotes = await getMyNoteQuotes(currentNoteUrlNormalized);
+        if (!mounted) return;
+        setNoteQuotes(Array.isArray(quotes) ? quotes : []);
+      } catch {
+        if (!mounted) return;
+        setNoteQuotes([]);
+      }
+    }
+    loadNoteQuotes();
+    return () => {
+      mounted = false;
+    };
+  }, [currentNoteUrlNormalized]);
 
   const handleToggleCurrentNoteCompletion = async () => {
     const currentUrl = currentNoteUrlNormalized;
@@ -461,6 +501,52 @@ const NoteLayout = () => {
     } finally {
       setCompleteNotePending(false);
     }
+  };
+
+  const handleCreateQuoteFromSelection = async (selection) => {
+    const selectedText = String(selection?.selectedText || "").trim();
+    if (!selectedText || !currentNoteUrlNormalized) return null;
+    try {
+      const quote = await createMyNoteQuote({
+        noteUrl: currentNoteUrlNormalized,
+        noteTitle: noteName,
+        subject: currentMeta?.subjectName || "",
+        selectedText,
+        contextBefore: selection?.contextBefore || "",
+        contextAfter: selection?.contextAfter || "",
+        noteVersionId: "current",
+      });
+      setNoteQuotes((prev) => [...prev, quote]);
+      setScratchHtml((prev) => {
+        const safeSelectedText = escapeHtml(selectedText);
+        const safeNoteName = escapeHtml(noteName);
+        const quoteHtml = [
+          `<blockquote class="personal-note-quote" data-quote-id="${quote.quote_id}">`,
+          `<p>${safeSelectedText}</p>`,
+          `<footer>From ${safeNoteName}</footer>`,
+          "</blockquote>",
+        ].join("");
+        return prev ? `${prev}${quoteHtml}` : quoteHtml;
+      });
+      setAssistantDockTab("notes");
+      setAssistantTool("notes");
+      setAssistantCollapsed(false);
+      message.success("Added selected text to your notes.");
+      return quote;
+    } catch (error) {
+      const errorText = error instanceof Error ? error.message : "Failed to save selected text.";
+      message.error(errorText);
+      return null;
+    }
+  };
+
+  const handleAskWithSelectedText = (selection) => {
+    const selectedText = String(selection?.selectedText || "").trim();
+    if (!selectedText) return;
+    setQaInput(`Explain this selected passage from ${noteName}:\n\n"${selectedText}"`);
+    setAssistantDockTab("qa");
+    setAssistantTool("qa");
+    setAssistantCollapsed(false);
   };
 
   const menuItems = useMemo(
@@ -1011,6 +1097,9 @@ const NoteLayout = () => {
                   isCurrentNoteCompleted,
                   completeCurrentNotePending: completeNotePending,
                   onToggleCurrentNoteCompletion: handleToggleCurrentNoteCompletion,
+                  noteQuotes,
+                  onCreateQuoteFromSelection: handleCreateQuoteFromSelection,
+                  onAskWithSelectedText: handleAskWithSelectedText,
                 }}
               />
             </Content>

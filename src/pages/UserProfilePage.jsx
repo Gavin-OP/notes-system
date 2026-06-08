@@ -28,7 +28,7 @@ import {
   LogoutOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { getCurrentUser, getMyProfile, getUserProgress, logoutUser } from "../common/api/user";
+import { getCurrentUser, getMyNoteQuotes, getMyProfile, getUserProgress, logoutUser } from "../common/api/user";
 import {
   getCareerTaxonomy,
   getMyCareerBackground,
@@ -309,6 +309,7 @@ function UserProfilePage() {
   const [errorText, setErrorText] = useState("");
   const [userInfo, setUserInfo] = useState(null);
   const [profileInfo, setProfileInfo] = useState({});
+  const [personalNoteQuotes, setPersonalNoteQuotes] = useState([]);
   const [fallbackProgress, setFallbackProgress] = useState(null);
   const [careerRecommendations, setCareerRecommendations] = useState([]);
   const [careerBackground, setCareerBackground] = useState({});
@@ -338,6 +339,12 @@ function UserProfilePage() {
           throw new Error("Unable to resolve current user.");
         }
         const profilePayload = await getMyProfile();
+        let noteQuotesPayload = [];
+        try {
+          noteQuotesPayload = await getMyNoteQuotes();
+        } catch {
+          noteQuotesPayload = [];
+        }
         let fallback = null;
         try {
           fallback = await getUserProgress(normalizedUser.id);
@@ -347,6 +354,7 @@ function UserProfilePage() {
         if (!mounted) return;
         setUserInfo(normalizedUser);
         setProfileInfo(normalizeProfile(profilePayload));
+        setPersonalNoteQuotes(Array.isArray(noteQuotesPayload) ? noteQuotesPayload : []);
         setFallbackProgress(fallback);
       } catch (error) {
         if (!mounted) return;
@@ -360,6 +368,7 @@ function UserProfilePage() {
         setErrorText("");
         setUserInfo(PREVIEW_USER);
         setProfileInfo(PREVIEW_PROFILE);
+        setPersonalNoteQuotes([]);
         setFallbackProgress(null);
       } finally {
         if (mounted) setLoading(false);
@@ -896,24 +905,28 @@ function UserProfilePage() {
                             key: "notes",
                             label: "Saved Personal Notes",
                             children: (
-                              decoratedRecentNotes.length > 0 ? (
+                              personalNoteQuotes.length > 0 ? (
                                 <List
-                                  dataSource={decoratedRecentNotes}
+                                  dataSource={personalNoteQuotes}
                                   renderItem={(item) => (
-                                    <List.Item>
+                                    <List.Item
+                                      className="user-profile-page__quote-note"
+                                      onClick={() => {
+                                        const quoteUrl = `${item.note_url}${item.note_url.includes("?") ? "&" : "?"}quoteId=${encodeURIComponent(item.quote_id)}`;
+                                        navigate(quoteUrl);
+                                      }}
+                                    >
                                       <List.Item.Meta
-                                        title={item.displayTitle}
+                                        title={item.note_title || item.note_url}
                                         description={
-                                          item.updatedAt
-                                            ? `${item.displaySubject || "General"} · ${item.updatedAt}`
-                                            : `${item.displaySubject || "General"}`
+                                          item.created_at
+                                            ? `${item.subject || "General"} · ${normalizeDate(item.created_at)}`
+                                            : `${item.subject || "General"}`
                                         }
                                       />
-                                      <Space wrap>
-                                        {item.tags.map((tag) => (
-                                          <Tag key={`${item.id}-${tag}`}>{tag}</Tag>
-                                        ))}
-                                      </Space>
+                                      <Paragraph className="user-profile-page__quote-text">
+                                        {item.selected_text}
+                                      </Paragraph>
                                     </List.Item>
                                   )}
                                 />

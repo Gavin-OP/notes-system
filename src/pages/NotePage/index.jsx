@@ -15,6 +15,11 @@ import {
 import MarkdownRenderer from "./components/MarkdownRenderer";
 import { findMeta } from "../../utils/notesIndexUtils";
 import { getOutline } from "../../utils/markdownUtils";
+import {
+  getNoteVersionContent,
+  getNoteVersions,
+  restoreNoteAnnotations,
+} from "../../common/api/noteVersions";
 import "./NotePage.css";
 
 function removeYamlFrontMatter(text) {
@@ -50,6 +55,16 @@ function resolveNoteFilePath(meta, rawNoteUrl) {
   return `${normalizedUrl}.md`;
 }
 
+function parseNoteSubjectAndTopic(notePath) {
+  const cleanPath = String(notePath || "").split("?")[0].split("#")[0].replace(/^\/+/, "");
+  const parts = cleanPath.split("/").filter(Boolean);
+  if (parts.length < 2) return { subjectSlug: "", topicSlug: "" };
+  return {
+    subjectSlug: parts[0],
+    topicSlug: parts[1].replace(/\.md$/i, ""),
+  };
+}
+
 function NotePage() {
   // navigation
   const { "*": note_url } = useParams();
@@ -69,15 +84,102 @@ function NotePage() {
   const outletContext = useOutletContext() || {};
   const isCurrentNoteCompleted = Boolean(outletContext.isCurrentNoteCompleted);
   const completeCurrentNotePending = Boolean(outletContext.completeCurrentNotePending);
+  const activeQuoteId = new URLSearchParams(location.search).get("quoteId") || "";
+  const noteQuotes = Array.isArray(outletContext.noteQuotes) ? outletContext.noteQuotes : [];
   const onToggleCurrentNoteCompletion =
     typeof outletContext.onToggleCurrentNoteCompletion === "function"
       ? outletContext.onToggleCurrentNoteCompletion
       : null;
+  const onCreateQuoteFromSelection =
+    typeof outletContext.onCreateQuoteFromSelection === "function"
+      ? outletContext.onCreateQuoteFromSelection
+      : null;
+  const onAskWithSelectedText =
+    typeof outletContext.onAskWithSelectedText === "function"
+      ? outletContext.onAskWithSelectedText
+      : null;
 
   // state
   const [noteContent, setNoteContent] = useState("");
+  const [noteVersions, setNoteVersions] = useState([]);
+  const [selectedVersionId, setSelectedVersionId] = useState("current");
+  const [versionApiAvailable, setVersionApiAvailable] = useState(false);
+  const [restoreCandidates, setRestoreCandidates] = useState([]);
+  const [restorePending, setRestorePending] = useState(false);
 
   const outline = useMemo(() => getOutline(noteContent), [noteContent]);
+  const { subjectSlug, topicSlug } = useMemo(
+    () => parseNoteSubjectAndTopic(notePathWithoutHash),
+    [notePathWithoutHash],
+  );
+  const visibleNoteQuotes = useMemo(
+    () => {
+      const filtered = noteQuotes.filter((quote) => {
+        const quoteVersion = quote.note_version_id || quote.noteVersionId || "current";
+        return selectedVersionId === "current"
+          ? quoteVersion === "current" || !quoteVersion
+          : quoteVersion === selectedVersionId;
+      });
+      const restored = restoreCandidates.map((mapping) => ({
+        quote_id: mapping.annotation_id || mapping.mapping_id,
+        selected_text: mapping.matched_text,
+        note_version_id: selectedVersionId,
+        status: "restored_candidate",
+      }));
+      return [...filtered, ...restored];
+    },
+    [noteQuotes, restoreCandidates, selectedVersionId],
+  );
+
+  const handleRestoreAnnotations = async () => {
+    if (!subjectSlug || !topicSlug || restorePending) return;
+    setRestorePending(true);
+    try {
+      const payload = await restoreNoteAnnotations(subjectSlug, topicSlug, selectedVersionId);
+      setRestoreCandidates(Array.isArray(payload?.mappings) ? payload.mappings : []);
+    } catch {
+      setRestoreCandidates([]);
+    } finally {
+      setRestorePending(false);
+    }
+  };
+
+  const versionHeaderAddon =
+    noteVersions.length > 0 ? (
+      <div className="note-page__version-tools">
+        <span className="note-page__version-label">Note version</span>
+        <label className="note-page__version-select-wrap">
+          <span className="note-page__version-select-label">View</span>
+          <select
+            className="note-page__version-select"
+            value={selectedVersionId}
+            onChange={(event) => {
+              setSelectedVersionId(event.target.value);
+              setRestoreCandidates([]);
+            }}
+          >
+            {noteVersions.map((version) => (
+              <option key={version.version_id} value={version.version_id}>
+                {version.is_current ? "Current" : version.version_id}
+              </option>
+            ))}
+          </select>
+        </label>
+        <button
+          type="button"
+          className="note-page__restore-btn"
+          onClick={handleRestoreAnnotations}
+          disabled={restorePending}
+        >
+          {restorePending ? "Restoring..." : "Restore previous highlights"}
+        </button>
+        {restoreCandidates.length > 0 ? (
+          <span className="note-page__restore-status">
+            {restoreCandidates.length} candidates ready to review
+          </span>
+        ) : null}
+      </div>
+    ) : null;
 
   const currentSubjectId = useMemo(() => {
     if (!noteSlugTrimmed) return null;
@@ -123,6 +225,11 @@ function NotePage() {
         }
 
         try {
+          if (versionApiAvailable && selectedVersionId !== "current" && subjectSlug && topicSlug) {
+            const versionPayload = await getNoteVersionContent(subjectSlug, topicSlug, selectedVersionId);
+            setNoteContent(removeYamlFrontMatter(versionPayload?.content || ""));
+            return;
+          }
           const res = await fetch(
             `${import.meta.env.BASE_URL}notes/${filePath}`,
           );
@@ -139,7 +246,32 @@ function NotePage() {
       }
       fetchNote();
     }
-  }, [notesIndex, noteSlugTrimmed, dispatch]);
+  }, [notesIndex, noteSlugTrimmed, dispatch, selectedVersionId, subjectSlug, topicSlug, versionApiAvailable]);
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadVersions() {
+      setNoteVersions([]);
+      setSelectedVersionId("current");
+      setVersionApiAvailable(false);
+      setRestoreCandidates([]);
+      if (!subjectSlug || !topicSlug) return;
+      try {
+        const versions = await getNoteVersions(subjectSlug, topicSlug);
+        if (!mounted) return;
+        setNoteVersions(Array.isArray(versions) ? versions : []);
+        setVersionApiAvailable(true);
+      } catch {
+        if (!mounted) return;
+        setNoteVersions([]);
+        setVersionApiAvailable(false);
+      }
+    }
+    loadVersions();
+    return () => {
+      mounted = false;
+    };
+  }, [subjectSlug, topicSlug]);
 
   useEffect(() => {
     dispatch(setCurrentNoteOutline(outline));
@@ -241,6 +373,11 @@ function NotePage() {
               isCompleted={isCurrentNoteCompleted}
               completionPending={completeCurrentNotePending}
               onMarkComplete={onToggleCurrentNoteCompletion}
+              noteQuotes={visibleNoteQuotes}
+              activeQuoteId={activeQuoteId}
+              onCreateQuoteFromSelection={onCreateQuoteFromSelection}
+              onAskWithSelectedText={onAskWithSelectedText}
+              headerAddon={versionHeaderAddon}
             />
             <div className="note-page__complete-footer">
               {showMicroCourseLink ? (

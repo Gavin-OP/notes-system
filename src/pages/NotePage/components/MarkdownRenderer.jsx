@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import ReactMarkdown from "react-markdown";
@@ -31,6 +31,8 @@ const BG_ALPHA_MAX = 12;
 const BG_RGB_MIN = 245;
 const MIN_TRIM_SUM_PCT = 5;
 const MIN_INNER_FRAC = 0.12;
+
+const MARKDOWN_REMARK_PLUGINS = [remarkGfm, remarkMath, remarkHighlightMark, remarkSlug];
 
 function isLikelyBackgroundPixel(r, g, b, a) {
   if (a <= BG_ALPHA_MAX) return true;
@@ -207,6 +209,64 @@ function MarkdownImage({ finalSrc, style, src: _discardSrc, ...imgRest }) {
   );
 }
 
+function isSkippableHighlightNode(node) {
+  const element = node?.parentElement;
+  if (!element) return true;
+  return Boolean(element.closest("pre, code, script, style, textarea, button, .note-selection-toolbar"));
+}
+
+function unwrapExistingQuoteHighlights(root) {
+  root.querySelectorAll(".note-quote-highlight").forEach((element) => {
+    const textNode = document.createTextNode(element.textContent || "");
+    element.replaceWith(textNode);
+    textNode.parentElement?.normalize();
+  });
+}
+
+function wrapFirstTextMatch(root, quote, activeQuoteId) {
+  const selectedText = String(quote?.selected_text || quote?.selectedText || "").trim();
+  if (!selectedText) return null;
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (isSkippableHighlightNode(node)) return NodeFilter.FILTER_REJECT;
+      const text = node.nodeValue || "";
+      return text.includes(selectedText) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+    },
+  });
+
+  const target = walker.nextNode();
+  if (!target) return null;
+
+  const startIndex = target.nodeValue.indexOf(selectedText);
+  const matchNode = target.splitText(startIndex);
+  matchNode.splitText(selectedText.length);
+
+  const wrapper = document.createElement("span");
+  const quoteId = String(quote.quote_id || quote.quoteId || "");
+  wrapper.className =
+    quoteId && quoteId === activeQuoteId
+      ? "note-quote-highlight note-quote-highlight--active"
+      : "note-quote-highlight";
+  wrapper.dataset.quoteId = quoteId;
+  wrapper.title = "Saved to your notes";
+  matchNode.parentNode.insertBefore(wrapper, matchNode);
+  wrapper.appendChild(matchNode);
+  return wrapper;
+}
+
+function getSelectionContext(selection, selectedText) {
+  const anchorText = selection.anchorNode?.parentElement?.textContent || "";
+  const matchIndex = anchorText.indexOf(selectedText);
+  if (matchIndex < 0) {
+    return { contextBefore: "", contextAfter: "" };
+  }
+  return {
+    contextBefore: anchorText.slice(Math.max(0, matchIndex - 180), matchIndex),
+    contextAfter: anchorText.slice(matchIndex + selectedText.length, matchIndex + selectedText.length + 180),
+  };
+}
+
 function useH1TitleFit(deps) {
   const toolbarRef = useRef(null);
   const titleRef = useRef(null);
@@ -266,6 +326,7 @@ function HeadingCopyH1({
   onMarkComplete,
   completionPending,
   isCompleted,
+  headerAddon,
   ...domProps
 }) {
   const [toolbarRef, titleRef] = useH1TitleFit([
@@ -312,6 +373,7 @@ function HeadingCopyH1({
         </span>
         {completionBtn}
       </div>
+      {headerAddon ? <div className="markdown-h1-addon">{headerAddon}</div> : null}
     </h1>
   );
 }
@@ -322,6 +384,7 @@ const HeadingWithCopy = ({
   onMarkComplete,
   completionPending = false,
   isCompleted = false,
+  headerAddon,
   ...props
 }) => {
   const id = props.node?.data?.id || props.id;
@@ -339,6 +402,7 @@ const HeadingWithCopy = ({
         onMarkComplete={onMarkComplete}
         completionPending={completionPending}
         isCompleted={isCompleted}
+        headerAddon={headerAddon}
       >
         {children}
       </HeadingCopyH1>
@@ -353,6 +417,21 @@ const HeadingWithCopy = ({
   );
 };
 
+const MarkdownContent = memo(function MarkdownContent({
+  content,
+  components,
+  rehypePlugins,
+}) {
+  return (
+    <ReactMarkdown
+      remarkPlugins={MARKDOWN_REMARK_PLUGINS}
+      rehypePlugins={rehypePlugins}
+      components={components}
+    >
+      {content}
+    </ReactMarkdown>
+  );
+});
 
 const MarkdownRenderer = ({
   content,
@@ -360,9 +439,23 @@ const MarkdownRenderer = ({
   onMarkComplete,
   completionPending = false,
   isCompleted = false,
+  noteQuotes = [],
+  activeQuoteId = "",
+  onCreateQuoteFromSelection,
+  onAskWithSelectedText,
+  headerAddon,
 }) => {
+  const bodyRef = useRef(null);
+  const selectionRangeRef = useRef(null);
+  const selectionStartedInBodyRef = useRef(false);
+  const [selectionToolbar, setSelectionToolbar] = useState(null);
   const noteDirectory = useSelector(
     (state) => state.currentNote.meta?.directory,
+  );
+
+  const confirmedQuotes = useMemo(
+    () => (Array.isArray(noteQuotes) ? noteQuotes.filter((quote) => quote?.selected_text || quote?.selectedText) : []),
+    [noteQuotes],
   );
 
   // code cell style
@@ -453,6 +546,155 @@ const MarkdownRenderer = ({
     };
   }, [theme]);
 
+  useEffect(() => {
+    const root = bodyRef.current;
+    if (!root) return undefined;
+    window.setTimeout(() => {
+      unwrapExistingQuoteHighlights(root);
+      let activeElement = null;
+      confirmedQuotes.forEach((quote) => {
+        const wrapped = wrapFirstTextMatch(root, quote, activeQuoteId);
+        const quoteId = String(quote.quote_id || quote.quoteId || "");
+        if (quoteId && quoteId === activeQuoteId) activeElement = wrapped;
+      });
+      if (activeElement) {
+        activeElement.scrollIntoView({ block: "center", behavior: "smooth" });
+      }
+    }, 0);
+    return () => {
+      unwrapExistingQuoteHighlights(root);
+    };
+  }, [content, confirmedQuotes, activeQuoteId]);
+
+  const restoreSavedSelection = () => {
+    const range = selectionRangeRef.current;
+    if (!range) return;
+    const selection = window.getSelection();
+    if (!selection) return;
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
+
+  useLayoutEffect(() => {
+    if (!selectionToolbar) return;
+    restoreSavedSelection();
+  }, [selectionToolbar]);
+
+  useEffect(() => {
+    if (!selectionToolbar) return undefined;
+
+    const handleOutsideToolbarPointerDown = (event) => {
+      if (event.target?.closest?.(".note-selection-toolbar")) return;
+      setSelectionToolbar(null);
+      selectionRangeRef.current = null;
+    };
+
+    document.addEventListener("pointerdown", handleOutsideToolbarPointerDown, true);
+    return () => {
+      document.removeEventListener("pointerdown", handleOutsideToolbarPointerDown, true);
+    };
+  }, [selectionToolbar]);
+
+  const updateSelectionToolbarFromCurrentSelection = () => {
+    const root = bodyRef.current;
+    const selection = window.getSelection();
+    if (!root || !selection || selection.rangeCount === 0 || selection.isCollapsed) {
+      setSelectionToolbar(null);
+      selectionRangeRef.current = null;
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    if (!root.contains(range.commonAncestorContainer)) {
+      setSelectionToolbar(null);
+      selectionRangeRef.current = null;
+      return;
+    }
+    const selectedText = selection.toString().replace(/\s+/g, " ").trim();
+    if (!selectedText) {
+      setSelectionToolbar(null);
+      selectionRangeRef.current = null;
+      return;
+    }
+    const rect = range.getBoundingClientRect();
+    const fallbackRect = range.getClientRects()?.[0];
+    const selectionRect = rect.width || rect.height ? rect : fallbackRect;
+    if (!selectionRect) return;
+    const context = getSelectionContext(selection, selectedText);
+    selectionRangeRef.current = range.cloneRange();
+    setSelectionToolbar({
+      selectedText,
+      ...context,
+      x: selectionRect.left + selectionRect.width / 2,
+      y: Math.max(12, selectionRect.top - 44),
+    });
+  };
+
+  const scheduleSelectionToolbarUpdate = () => {
+    window.setTimeout(updateSelectionToolbarFromCurrentSelection, 0);
+  };
+
+  const handleSelectionPointerDownCapture = (event) => {
+    if (event.target?.closest?.(".note-selection-toolbar")) return;
+    selectionStartedInBodyRef.current = true;
+  };
+
+  const handleSelectionMouseUp = (event) => {
+    if (event.target?.closest?.(".note-selection-toolbar")) return;
+    scheduleSelectionToolbarUpdate();
+  };
+
+  useEffect(() => {
+    const handleDocumentSelectionEnd = (event) => {
+      if (event.target?.closest?.(".note-selection-toolbar")) return;
+      if (!selectionStartedInBodyRef.current) return;
+      selectionStartedInBodyRef.current = false;
+      scheduleSelectionToolbarUpdate();
+    };
+
+    const handleKeyboardSelection = () => {
+      const root = bodyRef.current;
+      const selection = window.getSelection();
+      if (!root || !selection || selection.rangeCount === 0) return;
+      if (!root.contains(selection.getRangeAt(0).commonAncestorContainer)) return;
+      scheduleSelectionToolbarUpdate();
+    };
+
+    document.addEventListener("pointerup", handleDocumentSelectionEnd, true);
+    document.addEventListener("mouseup", handleDocumentSelectionEnd, true);
+    document.addEventListener("keyup", handleKeyboardSelection, true);
+    return () => {
+      document.removeEventListener("pointerup", handleDocumentSelectionEnd, true);
+      document.removeEventListener("mouseup", handleDocumentSelectionEnd, true);
+      document.removeEventListener("keyup", handleKeyboardSelection, true);
+    };
+  }, []);
+
+  const clearSelectionToolbar = () => {
+    setSelectionToolbar(null);
+    selectionRangeRef.current = null;
+  };
+
+  const handleAddSelectionToNotes = async () => {
+    if (!selectionToolbar) return;
+    restoreSavedSelection();
+    await onCreateQuoteFromSelection?.(selectionToolbar);
+    clearSelectionToolbar();
+  };
+
+  const handleAskSelection = () => {
+    if (!selectionToolbar) return;
+    restoreSavedSelection();
+    onAskWithSelectedText?.(selectionToolbar);
+    clearSelectionToolbar();
+  };
+
+  const preventToolbarSelectionLoss = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    restoreSavedSelection();
+  };
+
   // code block theme change
   useEffect(() => {
     const old = document.getElementById("highlight-theme-css");
@@ -519,87 +761,119 @@ const MarkdownRenderer = ({
     };
   }, [theme]);
 
-  const components = {
-    h1: (props) => (
-      <HeadingWithCopy
-        level={1}
-        onMarkComplete={onMarkComplete}
-        completionPending={completionPending}
-        isCompleted={isCompleted}
-        {...props}
-      />
-    ),
-    h2: (props) => <HeadingWithCopy level={2} {...props} />,
-    h3: (props) => <HeadingWithCopy level={3} {...props} />,
-    h4: (props) => <HeadingWithCopy level={4} {...props} />,
-    h5: (props) => <HeadingWithCopy level={5} {...props} />,
-    h6: (props) => <HeadingWithCopy level={6} {...props} />,
+  const components = useMemo(
+    () => ({
+      h1: (props) => (
+        <HeadingWithCopy
+          level={1}
+          onMarkComplete={onMarkComplete}
+          completionPending={completionPending}
+          isCompleted={isCompleted}
+          headerAddon={headerAddon}
+          {...props}
+        />
+      ),
+      h2: (props) => <HeadingWithCopy level={2} {...props} />,
+      h3: (props) => <HeadingWithCopy level={3} {...props} />,
+      h4: (props) => <HeadingWithCopy level={4} {...props} />,
+      h5: (props) => <HeadingWithCopy level={5} {...props} />,
+      h6: (props) => <HeadingWithCopy level={6} {...props} />,
 
-    // relative image path
-    img({ node: _nodeIgnored, src, style, width: _ignoredWidth, height: _ignoredHeight, ...props }) {
-      let finalSrc = src;
-      if (src && !/^https?:\/\//.test(src) && noteDirectory !== undefined) {
-        const base = noteDirectory === "." ? "" : noteDirectory;
-        const resolved = resolveRelativePath(base, src);
-        finalSrc = `${import.meta.env.BASE_URL}notes/${resolved}`;
-      }
+      // relative image path
+      img({ node: _nodeIgnored, src, style, width: _ignoredWidth, height: _ignoredHeight, ...props }) {
+        let finalSrc = src;
+        if (src && !/^https?:\/\//.test(src) && noteDirectory !== undefined) {
+          const base = noteDirectory === "." ? "" : noteDirectory;
+          const resolved = resolveRelativePath(base, src);
+          finalSrc = `${import.meta.env.BASE_URL}notes/${resolved}`;
+        }
 
-      return <MarkdownImage finalSrc={finalSrc} style={style} {...props} />;
-    },
+        return <MarkdownImage finalSrc={finalSrc} style={style} {...props} />;
+      },
 
-    // code block formatting
-    pre({ node, ...props }) {
-      return <pre className="md-fences" {...props} />;
-    },
+      // code block formatting
+      pre({ node, ...props }) {
+        return <pre className="md-fences" {...props} />;
+      },
 
-    // table styling
-    table({ node, ...props }) {
-      return <table className="markdown-table" {...props} />;
-    },
+      // table styling
+      table({ node, ...props }) {
+        return <table className="markdown-table" {...props} />;
+      },
 
-    li({ children, ...props }) {
-      // 1. 只有纯文本时才包裹 p
-      if (
-        typeof children === "string" ||
-        (Array.isArray(children) &&
-          children.every((child) => typeof child === "string"))
-      ) {
-        return (
-          <li {...props}>
-            <p>{children}</p>
-          </li>
-        );
-      }
+      li({ children, ...props }) {
+        // 1. 只有纯文本时才包裹 p
+        if (
+          typeof children === "string" ||
+          (Array.isArray(children) &&
+            children.every((child) => typeof child === "string"))
+        ) {
+          return (
+            <li {...props}>
+              <p>{children}</p>
+            </li>
+          );
+        }
 
-      // 3. 其他情况原样渲染
-      return <li {...props}>{children}</li>;
-    },
+        // 3. 其他情况原样渲染
+        return <li {...props}>{children}</li>;
+      },
 
-    MermaidBlock: MermaidBlock,
-  };
+      MermaidBlock: MermaidBlock,
+    }),
+    [completionPending, headerAddon, isCompleted, noteDirectory, onMarkComplete],
+  );
+
+  const rehypePlugins = useMemo(
+    () => [
+      [rehypeRaw],
+      [rehypeKatex, { strict: false }],
+      [rehypeHighlight],
+      [
+        rehypeMermaid,
+        {
+          mermaidConfig: {
+            theme: theme === "dark" ? "dark" : "default",
+            flowchart: { useMaxWidth: true },
+          },
+        },
+      ],
+    ],
+    [theme],
+  );
 
   return (
-    <div className="markdown-body">
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkMath, remarkHighlightMark, remarkSlug]}
-        rehypePlugins={[
-          [rehypeRaw],
-          [rehypeKatex, { strict: false }],
-          [rehypeHighlight],
-          [
-            rehypeMermaid,
-            {
-              mermaidConfig: {
-                theme: theme === "dark" ? "dark" : "default",
-                flowchart: { useMaxWidth: true },
-              },
-            },
-          ],
-        ]}
-        components={components}
-      >
-        {content}
-      </ReactMarkdown>
+    <div
+      ref={bodyRef}
+      className="markdown-body"
+      onPointerDownCapture={handleSelectionPointerDownCapture}
+      onMouseUp={handleSelectionMouseUp}
+    >
+      <MarkdownContent content={content} components={components} rehypePlugins={rehypePlugins} />
+      {selectionToolbar ? (
+        <div
+          className="note-selection-toolbar"
+          onPointerDown={preventToolbarSelectionLoss}
+          onMouseDown={preventToolbarSelectionLoss}
+          onPointerUp={preventToolbarSelectionLoss}
+          onMouseUp={preventToolbarSelectionLoss}
+          onClick={(event) => {
+            event.stopPropagation();
+            restoreSavedSelection();
+          }}
+          style={{
+            left: `${selectionToolbar.x}px`,
+            top: `${selectionToolbar.y}px`,
+          }}
+        >
+          <button type="button" tabIndex={-1} onClick={handleAddSelectionToNotes}>
+            Add to notes
+          </button>
+          <button type="button" tabIndex={-1} onClick={handleAskSelection}>
+            Send to Q&A
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 };
