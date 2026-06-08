@@ -1,0 +1,15 @@
+{
+  "subject": "finance",
+  "topic_slug": "behavioral-finance",
+  "provider": "openai_images",
+  "model": "gpt-image-1.5",
+  "prompt_suffix": "Render this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+  "images": [
+    {
+      "slot": "img-001",
+      "prompt": "A circular diagram illustrating several common cognitive biases (e.g., Anchoring, Confirmation Bias, Overconfidence, Loss Aversion) as distinct segments, with arrows pointing from each bias to a central figure representing an investor making a suboptimal financial decision. The style should be clean and illustrative, using icons for each bias.",
+      "prompt_final": "A circular diagram illustrating several common cognitive biases (e.g., Anchoring, Confirmation Bias, Overconfidence, Loss Aversion) as distinct segments, with arrows pointing from each bias to a central figure representing an investor making a suboptimal financial decision. The style should be clean and illustrative, using icons for each bias.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/finance/behavioral-finance/img-001.png"
+    }
+  ]
+}

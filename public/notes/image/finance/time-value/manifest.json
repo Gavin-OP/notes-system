@@ -1,0 +1,21 @@
+{
+  "subject": "finance",
+  "topic_slug": "time-value",
+  "provider": "openai_images",
+  "model": "gpt-image-1.5",
+  "prompt_suffix": "Render this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+  "images": [
+    {
+      "slot": "img-001",
+      "prompt": "A timeline diagram illustrating compounding. It shows an initial amount (PV) at time 0, growing larger at time 1, then even larger at time 2, and finally reaching the Future Value (FV) at time n. Arrows indicate the passage of time and the accumulation of interest, with each subsequent arrow representing a larger interest amount added to the growing principal.",
+      "prompt_final": "A timeline diagram illustrating compounding. It shows an initial amount (PV) at time 0, growing larger at time 1, then even larger at time 2, and finally reaching the Future Value (FV) at time n. Arrows indicate the passage of time and the accumulation of interest, with each subsequent arrow representing a larger interest amount added to the growing principal.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/finance/time-value/img-001.png"
+    },
+    {
+      "slot": "img-002",
+      "prompt": "A timeline diagram illustrating discounting. It shows a larger amount (FV) at time n, shrinking as it moves backward in time to time n-1, then smaller at time 1, and finally reaching the Present Value (PV) at time 0. Arrows indicate the reverse passage of time and the removal of interest, with each subsequent arrow representing a smaller amount as the value is discounted.",
+      "prompt_final": "A timeline diagram illustrating discounting. It shows a larger amount (FV) at time n, shrinking as it moves backward in time to time n-1, then smaller at time 1, and finally reaching the Present Value (PV) at time 0. Arrows indicate the reverse passage of time and the removal of interest, with each subsequent arrow representing a smaller amount as the value is discounted.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/finance/time-value/img-002.png"
+    }
+  ]
+}

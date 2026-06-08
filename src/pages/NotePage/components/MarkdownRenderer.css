@@ -190,6 +190,13 @@
   overflow: visible;
 }
 
+.markdown-image-crop-shell > img {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: contain;
+}
+
 /* Remove padding-bottom from h1 and h2 to match light mode style */
 .markdown-body h1,
 .markdown-body h2 {

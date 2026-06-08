@@ -1,0 +1,3870 @@
+{
+  "meta": {
+    "subjectId": "finance",
+    "subjectName": "Finance",
+    "version": "3.0.0",
+    "graphLevel": "concept",
+    "directed": true,
+    "storageModel": "single_direction_with_incoming_query",
+    "edgeTypes": [
+      "prerequisite",
+      "belongs_to",
+      "related_to",
+      "part_of",
+      "has_property",
+      "used_in",
+      "contrasts_with",
+      "equivalent_to",
+      "derives_from",
+      "extends"
+    ],
+    "lastGenerated": "2026-06-08T13:27:07.981744+00:00",
+    "nodeCount": 38,
+    "edgeCount": 61,
+    "view": "default"
+  },
+  "categories": [
+    {
+      "id": "note-finance-risk-and-insurance",
+      "name": "Risk and Insurance",
+      "displayName": "Risk and Insurance",
+      "color": "#FF7675",
+      "order": 1,
+      "description": "",
+      "subject": "finance",
+      "nodes": [
+        "finance/adverse-selection",
+        "finance/hazard",
+        "finance/insurance",
+        "finance/risk",
+        "finance/risk-and-insurance",
+        "finance/risk-management"
+      ],
+      "nodeItems": [
+        {
+          "id": "finance/adverse-selection",
+          "displayName": "Adverse Selection",
+          "noteSlug": "risk-and-insurance",
+          "noteTitle": "Risk and Insurance",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/hazard",
+          "displayName": "Hazard",
+          "noteSlug": "risk-and-insurance",
+          "noteTitle": "Risk and Insurance",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/insurance",
+          "displayName": "insurance",
+          "noteSlug": "risk-and-insurance",
+          "noteTitle": "Risk and Insurance",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/risk",
+          "displayName": "risk",
+          "noteSlug": "risk-and-insurance",
+          "noteTitle": "Risk and Insurance",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/risk-and-insurance",
+          "displayName": "Risk and Insurance",
+          "noteSlug": "risk-and-insurance",
+          "noteTitle": "Risk and Insurance",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/risk-management",
+          "displayName": "Risk Management",
+          "noteSlug": "risk-and-insurance",
+          "noteTitle": "Risk and Insurance",
+          "subject": "finance"
+        }
+      ]
+    },
+    {
+      "id": "note-finance-basic-definition",
+      "name": "Basic Definition",
+      "displayName": "Basic Definition",
+      "color": "#FF7675",
+      "order": 2,
+      "description": "",
+      "subject": "finance",
+      "nodes": [
+        "finance/arbitrage",
+        "finance/basic-definition",
+        "finance/basis-points",
+        "finance/holding-period-return",
+        "finance/rate-of-return",
+        "finance/risk-neutral-pricing"
+      ],
+      "nodeItems": [
+        {
+          "id": "finance/arbitrage",
+          "displayName": "Arbitrage",
+          "noteSlug": "basic-definition",
+          "noteTitle": "Basic Definition",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/basic-definition",
+          "displayName": "Basic Definitions in Finance",
+          "noteSlug": "basic-definition",
+          "noteTitle": "Basic Definition",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/basis-points",
+          "displayName": "basis points",
+          "noteSlug": "basic-definition",
+          "noteTitle": "Basic Definition",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/holding-period-return",
+          "displayName": "holding period return",
+          "noteSlug": "basic-definition",
+          "noteTitle": "Basic Definition",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/rate-of-return",
+          "displayName": "rate of return",
+          "noteSlug": "basic-definition",
+          "noteTitle": "Basic Definition",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/risk-neutral-pricing",
+          "displayName": "Risk-Neutral Pricing",
+          "noteSlug": "basic-definition",
+          "noteTitle": "Basic Definition",
+          "subject": "finance"
+        }
+      ]
+    },
+    {
+      "id": "note-finance-behavioral-finance",
+      "name": "Behavioral Finance",
+      "displayName": "Behavioral Finance",
+      "color": "#FF7675",
+      "order": 3,
+      "description": "",
+      "subject": "finance",
+      "nodes": [
+        "finance/behavioral-finance"
+      ],
+      "nodeItems": [
+        {
+          "id": "finance/behavioral-finance",
+          "displayName": "Behavioral Finance",
+          "noteSlug": "behavioral-finance",
+          "noteTitle": "Behavioral Finance",
+          "subject": "finance"
+        }
+      ]
+    },
+    {
+      "id": "note-finance-fixed-income",
+      "name": "Fixed Income",
+      "displayName": "Fixed Income",
+      "color": "#FF7675",
+      "order": 4,
+      "description": "",
+      "subject": "finance",
+      "nodes": [
+        "finance/bond",
+        "finance/convexity",
+        "finance/duration",
+        "finance/fixed-income",
+        "finance/immunization",
+        "finance/yield"
+      ],
+      "nodeItems": [
+        {
+          "id": "finance/bond",
+          "displayName": "bond",
+          "noteSlug": "fixed-income",
+          "noteTitle": "Fixed Income",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/convexity",
+          "displayName": "Beyond Duration",
+          "noteSlug": "fixed-income",
+          "noteTitle": "Fixed Income",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/duration",
+          "displayName": "Measuring Interest Rate Sensitivity",
+          "noteSlug": "fixed-income",
+          "noteTitle": "Fixed Income",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/fixed-income",
+          "displayName": "Fixed Income",
+          "noteSlug": "fixed-income",
+          "noteTitle": "Fixed Income",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/immunization",
+          "displayName": "Protecting Your Portfolio",
+          "noteSlug": "fixed-income",
+          "noteTitle": "Fixed Income",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/yield",
+          "displayName": "yield",
+          "noteSlug": "fixed-income",
+          "noteTitle": "Fixed Income",
+          "subject": "finance"
+        }
+      ]
+    },
+    {
+      "id": "note-finance-equity-market",
+      "name": "Equity Market",
+      "displayName": "Equity Market",
+      "color": "#FF7675",
+      "order": 5,
+      "description": "",
+      "subject": "finance",
+      "nodes": [
+        "finance/common-stock",
+        "finance/equity-market",
+        "finance/preferred-stock",
+        "finance/stock",
+        "finance/stock-valuation"
+      ],
+      "nodeItems": [
+        {
+          "id": "finance/common-stock",
+          "displayName": "common stock",
+          "noteSlug": "equity-market",
+          "noteTitle": "Equity Market",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/equity-market",
+          "displayName": "Equity Market",
+          "noteSlug": "equity-market",
+          "noteTitle": "Equity Market",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/preferred-stock",
+          "displayName": "Preferred Stock",
+          "noteSlug": "equity-market",
+          "noteTitle": "Equity Market",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/stock",
+          "displayName": "stock",
+          "noteSlug": "equity-market",
+          "noteTitle": "Equity Market",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/stock-valuation",
+          "displayName": "Introduction to Stock Valuation",
+          "noteSlug": "equity-market",
+          "noteTitle": "Equity Market",
+          "subject": "finance"
+        }
+      ]
+    },
+    {
+      "id": "note-finance-time-value",
+      "name": "Time Value",
+      "displayName": "Time Value",
+      "color": "#FF7675",
+      "order": 6,
+      "description": "",
+      "subject": "finance",
+      "nodes": [
+        "finance/compounding",
+        "finance/future-value",
+        "finance/present-value",
+        "finance/time-value",
+        "finance/time-value-of-money"
+      ],
+      "nodeItems": [
+        {
+          "id": "finance/compounding",
+          "displayName": "compounding",
+          "noteSlug": "time-value",
+          "noteTitle": "Time Value",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/future-value",
+          "displayName": "future value",
+          "noteSlug": "time-value",
+          "noteTitle": "Time Value",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/present-value",
+          "displayName": "present value",
+          "noteSlug": "time-value",
+          "noteTitle": "Time Value",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/time-value",
+          "displayName": "Time Value of Money",
+          "noteSlug": "time-value",
+          "noteTitle": "Time Value",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/time-value-of-money",
+          "displayName": "time value of money",
+          "noteSlug": "time-value",
+          "noteTitle": "Time Value",
+          "subject": "finance"
+        }
+      ]
+    },
+    {
+      "id": "note-finance-derivatives",
+      "name": "Derivatives",
+      "displayName": "Derivatives",
+      "color": "#FF7675",
+      "order": 7,
+      "description": "",
+      "subject": "finance",
+      "nodes": [
+        "finance/derivatives",
+        "finance/futures",
+        "finance/option"
+      ],
+      "nodeItems": [
+        {
+          "id": "finance/derivatives",
+          "displayName": "Derivatives",
+          "noteSlug": "derivatives",
+          "noteTitle": "Derivatives",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/futures",
+          "displayName": "Futures",
+          "noteSlug": "derivatives",
+          "noteTitle": "Derivatives",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/option",
+          "displayName": "option",
+          "noteSlug": "derivatives",
+          "noteTitle": "Derivatives",
+          "subject": "finance"
+        }
+      ]
+    },
+    {
+      "id": "note-finance-rules-of-thumb",
+      "name": "Rules of Thumb",
+      "displayName": "Rules of Thumb",
+      "color": "#FF7675",
+      "order": 8,
+      "description": "",
+      "subject": "finance",
+      "nodes": [
+        "finance/finance-abbreviations",
+        "finance/finance-dictionary",
+        "finance/rules-of-thumb"
+      ],
+      "nodeItems": [
+        {
+          "id": "finance/finance-abbreviations",
+          "displayName": "Financial Abbreviations",
+          "noteSlug": "rules-of-thumb",
+          "noteTitle": "Rules of Thumb",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/finance-dictionary",
+          "displayName": "Key Finance Dictionary Terms",
+          "noteSlug": "rules-of-thumb",
+          "noteTitle": "Rules of Thumb",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/rules-of-thumb",
+          "displayName": "Rules of Thumb",
+          "noteSlug": "rules-of-thumb",
+          "noteTitle": "Rules of Thumb",
+          "subject": "finance"
+        }
+      ]
+    },
+    {
+      "id": "note-finance-portfolio-management",
+      "name": "Portfolio Management",
+      "displayName": "Portfolio Management",
+      "color": "#FF7675",
+      "order": 9,
+      "description": "",
+      "subject": "finance",
+      "nodes": [
+        "finance/portfolio-diversification",
+        "finance/portfolio-management"
+      ],
+      "nodeItems": [
+        {
+          "id": "finance/portfolio-diversification",
+          "displayName": "portfolio diversification",
+          "noteSlug": "portfolio-management",
+          "noteTitle": "Portfolio Management",
+          "subject": "finance"
+        },
+        {
+          "id": "finance/portfolio-management",
+          "displayName": "Portfolio Management",
+          "noteSlug": "portfolio-management",
+          "noteTitle": "Portfolio Management",
+          "subject": "finance"
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "finance",
+      "name": "Finance",
+      "title": "Finance",
+      "displayTitle": "Finance",
+      "subject": "finance",
+      "noteSlug": "",
+      "noteTitle": "Finance",
+      "noteUrl": "",
+      "anchorId": "",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "high",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": null,
+      "learningOrder": 0,
+      "tags": [],
+      "linkedConcepts": [
+        "finance/adverse-selection",
+        "finance/arbitrage",
+        "finance/basic-definition",
+        "finance/basis-points",
+        "finance/behavioral-finance",
+        "finance/bond",
+        "finance/common-stock",
+        "finance/compounding",
+        "finance/convexity",
+        "finance/derivatives",
+        "finance/duration",
+        "finance/equity-market",
+        "finance/finance-abbreviations",
+        "finance/finance-dictionary",
+        "finance/fixed-income",
+        "finance/future-value",
+        "finance/futures",
+        "finance/hazard",
+        "finance/holding-period-return",
+        "finance/immunization",
+        "finance/insurance",
+        "finance/option",
+        "finance/portfolio-diversification",
+        "finance/portfolio-management",
+        "finance/preferred-stock",
+        "finance/present-value",
+        "finance/rate-of-return",
+        "finance/risk",
+        "finance/risk-and-insurance",
+        "finance/risk-management",
+        "finance/risk-neutral-pricing",
+        "finance/rules-of-thumb",
+        "finance/stock",
+        "finance/stock-valuation",
+        "finance/time-value",
+        "finance/time-value-of-money",
+        "finance/yield"
+      ],
+      "degree": 37,
+      "weightedDegree": 37,
+      "networkSize": 140,
+      "isDomainNode": true
+    },
+    {
+      "id": "finance/adverse-selection",
+      "name": "Adverse Selection",
+      "title": "Adverse Selection",
+      "displayTitle": "Adverse Selection",
+      "subject": "finance",
+      "noteSlug": "risk-and-insurance",
+      "noteTitle": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-adverse-selection",
+      "anchorId": "concept-adverse-selection",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 9,
+      "tags": [
+        "risk",
+        "insurance"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/compounding",
+        "finance/portfolio-diversification"
+      ],
+      "degree": 3,
+      "weightedDegree": 3,
+      "networkSize": 64
+    },
+    {
+      "id": "finance/arbitrage",
+      "name": "Arbitrage",
+      "title": "Arbitrage",
+      "displayTitle": "Arbitrage",
+      "subject": "finance",
+      "noteSlug": "basic-definition",
+      "noteTitle": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-arbitrage",
+      "anchorId": "concept-arbitrage",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningOrder": 2,
+      "tags": [
+        "foundations",
+        "returns"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/behavioral-finance",
+        "finance/bond",
+        "finance/common-stock",
+        "finance/compounding",
+        "finance/derivatives",
+        "finance/finance-abbreviations"
+      ],
+      "degree": 7,
+      "weightedDegree": 7,
+      "networkSize": 96
+    },
+    {
+      "id": "finance/basic-definition",
+      "name": "Basic Definitions in Finance",
+      "title": "Basic Definitions in Finance",
+      "displayTitle": "Basic Definitions in Finance",
+      "subject": "finance",
+      "noteSlug": "basic-definition",
+      "noteTitle": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-basic-definition",
+      "anchorId": "concept-basic-definition",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningOrder": 2,
+      "tags": [
+        "foundations",
+        "returns"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/basis-points",
+      "name": "basis points",
+      "title": "basis points",
+      "displayTitle": "basis points",
+      "subject": "finance",
+      "noteSlug": "basic-definition",
+      "noteTitle": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-basis-points",
+      "anchorId": "concept-basis-points",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningOrder": 2,
+      "tags": [
+        "foundations",
+        "returns"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/behavioral-finance",
+      "name": "Behavioral Finance",
+      "title": "Behavioral Finance",
+      "displayTitle": "Behavioral Finance",
+      "subject": "finance",
+      "noteSlug": "behavioral-finance",
+      "noteTitle": "Behavioral Finance",
+      "noteUrl": "/note/finance/behavioral-finance.md#concept-behavioral-finance",
+      "anchorId": "concept-behavioral-finance",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 60,
+      "learningOrder": 7,
+      "tags": [
+        "behavioral",
+        "markets"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/arbitrage",
+        "finance/common-stock",
+        "finance/rules-of-thumb",
+        "finance/stock"
+      ],
+      "degree": 5,
+      "weightedDegree": 6,
+      "networkSize": 80
+    },
+    {
+      "id": "finance/bond",
+      "name": "bond",
+      "title": "bond",
+      "displayTitle": "bond",
+      "subject": "finance",
+      "noteSlug": "fixed-income",
+      "noteTitle": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-bond",
+      "anchorId": "concept-bond",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 3,
+      "tags": [
+        "bonds",
+        "fixed-income"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/arbitrage",
+        "finance/derivatives",
+        "finance/portfolio-diversification"
+      ],
+      "degree": 4,
+      "weightedDegree": 4,
+      "networkSize": 72
+    },
+    {
+      "id": "finance/common-stock",
+      "name": "common stock",
+      "title": "common stock",
+      "displayTitle": "common stock",
+      "subject": "finance",
+      "noteSlug": "equity-market",
+      "noteTitle": "Equity Market",
+      "noteUrl": "/note/finance/equity-market.md#concept-common-stock",
+      "anchorId": "concept-common-stock",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningOrder": 4,
+      "tags": [
+        "equity",
+        "stocks"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/arbitrage",
+        "finance/behavioral-finance",
+        "finance/derivatives",
+        "finance/portfolio-diversification"
+      ],
+      "degree": 5,
+      "weightedDegree": 5,
+      "networkSize": 80
+    },
+    {
+      "id": "finance/compounding",
+      "name": "compounding",
+      "title": "compounding",
+      "displayTitle": "compounding",
+      "subject": "finance",
+      "noteSlug": "time-value",
+      "noteTitle": "Time Value",
+      "noteUrl": "/note/finance/time-value.md#concept-compounding",
+      "anchorId": "concept-compounding",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningOrder": 8,
+      "tags": [
+        "time-value",
+        "interest-rates"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/adverse-selection",
+        "finance/arbitrage"
+      ],
+      "degree": 3,
+      "weightedDegree": 3,
+      "networkSize": 64
+    },
+    {
+      "id": "finance/convexity",
+      "name": "Beyond Duration",
+      "title": "Beyond Duration",
+      "displayTitle": "Beyond Duration",
+      "subject": "finance",
+      "noteSlug": "fixed-income",
+      "noteTitle": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-convexity",
+      "anchorId": "concept-convexity",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 3,
+      "tags": [
+        "bonds",
+        "fixed-income"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/derivatives",
+      "name": "Derivatives",
+      "title": "Derivatives",
+      "displayTitle": "Derivatives",
+      "subject": "finance",
+      "noteSlug": "derivatives",
+      "noteTitle": "Derivatives",
+      "noteUrl": "/note/finance/derivatives.md#concept-derivatives",
+      "anchorId": "concept-derivatives",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 120,
+      "learningOrder": 5,
+      "tags": [
+        "derivatives",
+        "options",
+        "futures"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/arbitrage",
+        "finance/bond",
+        "finance/common-stock",
+        "finance/stock"
+      ],
+      "degree": 5,
+      "weightedDegree": 5,
+      "networkSize": 80
+    },
+    {
+      "id": "finance/duration",
+      "name": "Measuring Interest Rate Sensitivity",
+      "title": "Measuring Interest Rate Sensitivity",
+      "displayTitle": "Measuring Interest Rate Sensitivity",
+      "subject": "finance",
+      "noteSlug": "fixed-income",
+      "noteTitle": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-duration",
+      "anchorId": "concept-duration",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 3,
+      "tags": [
+        "bonds",
+        "fixed-income"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/equity-market",
+      "name": "Equity Market",
+      "title": "Equity Market",
+      "displayTitle": "Equity Market",
+      "subject": "finance",
+      "noteSlug": "equity-market",
+      "noteTitle": "Equity Market",
+      "noteUrl": "/note/finance/equity-market.md#concept-equity-market",
+      "anchorId": "concept-equity-market",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningOrder": 4,
+      "tags": [
+        "equity",
+        "stocks"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/finance-abbreviations",
+      "name": "Financial Abbreviations",
+      "title": "Financial Abbreviations",
+      "displayTitle": "Financial Abbreviations",
+      "subject": "finance",
+      "noteSlug": "rules-of-thumb",
+      "noteTitle": "Rules of Thumb",
+      "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-abbreviations",
+      "anchorId": "concept-finance-abbreviations",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 45,
+      "learningOrder": 1,
+      "tags": [
+        "reference",
+        "foundations"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/arbitrage"
+      ],
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
+    },
+    {
+      "id": "finance/finance-dictionary",
+      "name": "Key Finance Dictionary Terms",
+      "title": "Key Finance Dictionary Terms",
+      "displayTitle": "Key Finance Dictionary Terms",
+      "subject": "finance",
+      "noteSlug": "rules-of-thumb",
+      "noteTitle": "Rules of Thumb",
+      "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-dictionary",
+      "anchorId": "concept-finance-dictionary",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 45,
+      "learningOrder": 1,
+      "tags": [
+        "reference",
+        "foundations"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/fixed-income",
+      "name": "Fixed Income",
+      "title": "Fixed Income",
+      "displayTitle": "Fixed Income",
+      "subject": "finance",
+      "noteSlug": "fixed-income",
+      "noteTitle": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-fixed-income",
+      "anchorId": "concept-fixed-income",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 3,
+      "tags": [
+        "bonds",
+        "fixed-income"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/future-value",
+      "name": "future value",
+      "title": "future value",
+      "displayTitle": "future value",
+      "subject": "finance",
+      "noteSlug": "time-value",
+      "noteTitle": "Time Value",
+      "noteUrl": "/note/finance/time-value.md#concept-future-value",
+      "anchorId": "concept-future-value",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningOrder": 8,
+      "tags": [
+        "time-value",
+        "interest-rates"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/futures",
+      "name": "Futures",
+      "title": "Futures",
+      "displayTitle": "Futures",
+      "subject": "finance",
+      "noteSlug": "derivatives",
+      "noteTitle": "Derivatives",
+      "noteUrl": "/note/finance/derivatives.md#concept-futures",
+      "anchorId": "concept-futures",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 120,
+      "learningOrder": 5,
+      "tags": [
+        "derivatives",
+        "options",
+        "futures"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/stock"
+      ],
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
+    },
+    {
+      "id": "finance/hazard",
+      "name": "Hazard",
+      "title": "Hazard",
+      "displayTitle": "Hazard",
+      "subject": "finance",
+      "noteSlug": "risk-and-insurance",
+      "noteTitle": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-hazard",
+      "anchorId": "concept-hazard",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 9,
+      "tags": [
+        "risk",
+        "insurance"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/holding-period-return",
+      "name": "holding period return",
+      "title": "holding period return",
+      "displayTitle": "holding period return",
+      "subject": "finance",
+      "noteSlug": "basic-definition",
+      "noteTitle": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-holding-period-return",
+      "anchorId": "concept-holding-period-return",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningOrder": 2,
+      "tags": [
+        "foundations",
+        "returns"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/immunization",
+      "name": "Protecting Your Portfolio",
+      "title": "Protecting Your Portfolio",
+      "displayTitle": "Protecting Your Portfolio",
+      "subject": "finance",
+      "noteSlug": "fixed-income",
+      "noteTitle": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-immunization",
+      "anchorId": "concept-immunization",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 3,
+      "tags": [
+        "bonds",
+        "fixed-income"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/insurance",
+      "name": "insurance",
+      "title": "insurance",
+      "displayTitle": "insurance",
+      "subject": "finance",
+      "noteSlug": "risk-and-insurance",
+      "noteTitle": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-insurance",
+      "anchorId": "concept-insurance",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 9,
+      "tags": [
+        "risk",
+        "insurance"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/option",
+      "name": "option",
+      "title": "option",
+      "displayTitle": "option",
+      "subject": "finance",
+      "noteSlug": "derivatives",
+      "noteTitle": "Derivatives",
+      "noteUrl": "/note/finance/derivatives.md#concept-option",
+      "anchorId": "concept-option",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 120,
+      "learningOrder": 5,
+      "tags": [
+        "derivatives",
+        "options",
+        "futures"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/time-value"
+      ],
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
+    },
+    {
+      "id": "finance/portfolio-diversification",
+      "name": "portfolio diversification",
+      "title": "portfolio diversification",
+      "displayTitle": "portfolio diversification",
+      "subject": "finance",
+      "noteSlug": "portfolio-management",
+      "noteTitle": "Portfolio Management",
+      "noteUrl": "/note/finance/portfolio-management.md#concept-portfolio-diversification",
+      "anchorId": "concept-portfolio-diversification",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 60,
+      "learningOrder": 6,
+      "tags": [
+        "portfolio",
+        "funds"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/adverse-selection",
+        "finance/bond",
+        "finance/common-stock",
+        "finance/stock"
+      ],
+      "degree": 5,
+      "weightedDegree": 6,
+      "networkSize": 80
+    },
+    {
+      "id": "finance/portfolio-management",
+      "name": "Portfolio Management",
+      "title": "Portfolio Management",
+      "displayTitle": "Portfolio Management",
+      "subject": "finance",
+      "noteSlug": "portfolio-management",
+      "noteTitle": "Portfolio Management",
+      "noteUrl": "/note/finance/portfolio-management.md#concept-portfolio-management",
+      "anchorId": "concept-portfolio-management",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 60,
+      "learningOrder": 6,
+      "tags": [
+        "portfolio",
+        "funds"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/preferred-stock",
+      "name": "Preferred Stock",
+      "title": "Preferred Stock",
+      "displayTitle": "Preferred Stock",
+      "subject": "finance",
+      "noteSlug": "equity-market",
+      "noteTitle": "Equity Market",
+      "noteUrl": "/note/finance/equity-market.md#concept-preferred-stock",
+      "anchorId": "concept-preferred-stock",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningOrder": 4,
+      "tags": [
+        "equity",
+        "stocks"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/present-value",
+      "name": "present value",
+      "title": "present value",
+      "displayTitle": "present value",
+      "subject": "finance",
+      "noteSlug": "time-value",
+      "noteTitle": "Time Value",
+      "noteUrl": "/note/finance/time-value.md#concept-present-value",
+      "anchorId": "concept-present-value",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningOrder": 8,
+      "tags": [
+        "time-value",
+        "interest-rates"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/rate-of-return",
+      "name": "rate of return",
+      "title": "rate of return",
+      "displayTitle": "rate of return",
+      "subject": "finance",
+      "noteSlug": "basic-definition",
+      "noteTitle": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-rate-of-return",
+      "anchorId": "concept-rate-of-return",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningOrder": 2,
+      "tags": [
+        "foundations",
+        "returns"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/yield"
+      ],
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
+    },
+    {
+      "id": "finance/risk",
+      "name": "risk",
+      "title": "risk",
+      "displayTitle": "risk",
+      "subject": "finance",
+      "noteSlug": "risk-and-insurance",
+      "noteTitle": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-risk",
+      "anchorId": "concept-risk",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 9,
+      "tags": [
+        "risk",
+        "insurance"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/stock"
+      ],
+      "degree": 2,
+      "weightedDegree": 3,
+      "networkSize": 56
+    },
+    {
+      "id": "finance/risk-and-insurance",
+      "name": "Risk and Insurance",
+      "title": "Risk and Insurance",
+      "displayTitle": "Risk and Insurance",
+      "subject": "finance",
+      "noteSlug": "risk-and-insurance",
+      "noteTitle": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-risk-and-insurance",
+      "anchorId": "concept-risk-and-insurance",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 9,
+      "tags": [
+        "risk",
+        "insurance"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/risk-management",
+      "name": "Risk Management",
+      "title": "Risk Management",
+      "displayTitle": "Risk Management",
+      "subject": "finance",
+      "noteSlug": "risk-and-insurance",
+      "noteTitle": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-risk-management",
+      "anchorId": "concept-risk-management",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 9,
+      "tags": [
+        "risk",
+        "insurance"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/risk-neutral-pricing",
+      "name": "Risk-Neutral Pricing",
+      "title": "Risk-Neutral Pricing",
+      "displayTitle": "Risk-Neutral Pricing",
+      "subject": "finance",
+      "noteSlug": "basic-definition",
+      "noteTitle": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-risk-neutral-pricing",
+      "anchorId": "concept-risk-neutral-pricing",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 60,
+      "learningOrder": 2,
+      "tags": [
+        "foundations",
+        "returns"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/rules-of-thumb",
+      "name": "Rules of Thumb",
+      "title": "Rules of Thumb",
+      "displayTitle": "Rules of Thumb",
+      "subject": "finance",
+      "noteSlug": "rules-of-thumb",
+      "noteTitle": "Rules of Thumb",
+      "noteUrl": "/note/finance/rules-of-thumb.md#concept-rules-of-thumb",
+      "anchorId": "concept-rules-of-thumb",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "low",
+      "prerequisites": [],
+      "difficulty": "easy",
+      "difficultyLevel": 1,
+      "estimatedMinutes": 45,
+      "learningOrder": 1,
+      "tags": [
+        "reference",
+        "foundations"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/behavioral-finance"
+      ],
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
+    },
+    {
+      "id": "finance/stock",
+      "name": "stock",
+      "title": "stock",
+      "displayTitle": "stock",
+      "subject": "finance",
+      "noteSlug": "equity-market",
+      "noteTitle": "Equity Market",
+      "noteUrl": "/note/finance/equity-market.md#concept-stock",
+      "anchorId": "concept-stock",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningOrder": 4,
+      "tags": [
+        "equity",
+        "stocks"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/behavioral-finance",
+        "finance/derivatives",
+        "finance/futures",
+        "finance/portfolio-diversification",
+        "finance/risk"
+      ],
+      "degree": 6,
+      "weightedDegree": 9,
+      "networkSize": 88
+    },
+    {
+      "id": "finance/stock-valuation",
+      "name": "Introduction to Stock Valuation",
+      "title": "Introduction to Stock Valuation",
+      "displayTitle": "Introduction to Stock Valuation",
+      "subject": "finance",
+      "noteSlug": "equity-market",
+      "noteTitle": "Equity Market",
+      "noteUrl": "/note/finance/equity-market.md#concept-stock-valuation",
+      "anchorId": "concept-stock-valuation",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningOrder": 4,
+      "tags": [
+        "equity",
+        "stocks"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/time-value",
+      "name": "Time Value of Money",
+      "title": "Time Value of Money",
+      "displayTitle": "Time Value of Money",
+      "subject": "finance",
+      "noteSlug": "time-value",
+      "noteTitle": "Time Value",
+      "noteUrl": "/note/finance/time-value.md#concept-time-value",
+      "anchorId": "concept-time-value",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningOrder": 8,
+      "tags": [
+        "time-value",
+        "interest-rates"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/option"
+      ],
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
+    },
+    {
+      "id": "finance/time-value-of-money",
+      "name": "time value of money",
+      "title": "time value of money",
+      "displayTitle": "time value of money",
+      "subject": "finance",
+      "noteSlug": "time-value",
+      "noteTitle": "Time Value",
+      "noteUrl": "/note/finance/time-value.md#concept-time-value-of-money",
+      "anchorId": "concept-time-value-of-money",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 75,
+      "learningOrder": 8,
+      "tags": [
+        "time-value",
+        "interest-rates"
+      ],
+      "linkedConcepts": [
+        "finance"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "finance/yield",
+      "name": "yield",
+      "title": "yield",
+      "displayTitle": "yield",
+      "subject": "finance",
+      "noteSlug": "fixed-income",
+      "noteTitle": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-yield",
+      "anchorId": "concept-yield",
+      "category": "Finance",
+      "categoryId": "subject-finance",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 2,
+      "estimatedMinutes": 90,
+      "learningOrder": 3,
+      "tags": [
+        "bonds",
+        "fixed-income"
+      ],
+      "linkedConcepts": [
+        "finance",
+        "finance/rate-of-return"
+      ],
+      "degree": 2,
+      "weightedDegree": 2,
+      "networkSize": 56
+    }
+  ],
+  "edges": [
+    {
+      "id": "prereq-0",
+      "from": "finance/arbitrage",
+      "to": "finance/finance-abbreviations",
+      "source": "finance/arbitrage",
+      "target": "finance/finance-abbreviations",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-1",
+      "from": "finance/bond",
+      "to": "finance/arbitrage",
+      "source": "finance/bond",
+      "target": "finance/arbitrage",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-2",
+      "from": "finance/common-stock",
+      "to": "finance/arbitrage",
+      "source": "finance/common-stock",
+      "target": "finance/arbitrage",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-3",
+      "from": "finance/derivatives",
+      "to": "finance/arbitrage",
+      "source": "finance/derivatives",
+      "target": "finance/arbitrage",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-4",
+      "from": "finance/derivatives",
+      "to": "finance/bond",
+      "source": "finance/derivatives",
+      "target": "finance/bond",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-5",
+      "from": "finance/derivatives",
+      "to": "finance/common-stock",
+      "source": "finance/derivatives",
+      "target": "finance/common-stock",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-6",
+      "from": "finance/portfolio-diversification",
+      "to": "finance/bond",
+      "source": "finance/portfolio-diversification",
+      "target": "finance/bond",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-7",
+      "from": "finance/portfolio-diversification",
+      "to": "finance/common-stock",
+      "source": "finance/portfolio-diversification",
+      "target": "finance/common-stock",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-8",
+      "from": "finance/behavioral-finance",
+      "to": "finance/common-stock",
+      "source": "finance/behavioral-finance",
+      "target": "finance/common-stock",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-9",
+      "from": "finance/compounding",
+      "to": "finance/arbitrage",
+      "source": "finance/compounding",
+      "target": "finance/arbitrage",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-10",
+      "from": "finance/adverse-selection",
+      "to": "finance/portfolio-diversification",
+      "source": "finance/adverse-selection",
+      "target": "finance/portfolio-diversification",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-11",
+      "from": "finance/adverse-selection",
+      "to": "finance/compounding",
+      "source": "finance/adverse-selection",
+      "target": "finance/compounding",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-0",
+      "from": "finance/adverse-selection",
+      "to": "finance",
+      "source": "finance/adverse-selection",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-1",
+      "from": "finance/arbitrage",
+      "to": "finance",
+      "source": "finance/arbitrage",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-2",
+      "from": "finance/basic-definition",
+      "to": "finance",
+      "source": "finance/basic-definition",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-3",
+      "from": "finance/basis-points",
+      "to": "finance",
+      "source": "finance/basis-points",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-4",
+      "from": "finance/behavioral-finance",
+      "to": "finance",
+      "source": "finance/behavioral-finance",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-5",
+      "from": "finance/bond",
+      "to": "finance",
+      "source": "finance/bond",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-6",
+      "from": "finance/common-stock",
+      "to": "finance",
+      "source": "finance/common-stock",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-7",
+      "from": "finance/compounding",
+      "to": "finance",
+      "source": "finance/compounding",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-8",
+      "from": "finance/convexity",
+      "to": "finance",
+      "source": "finance/convexity",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-9",
+      "from": "finance/derivatives",
+      "to": "finance",
+      "source": "finance/derivatives",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-10",
+      "from": "finance/duration",
+      "to": "finance",
+      "source": "finance/duration",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-11",
+      "from": "finance/equity-market",
+      "to": "finance",
+      "source": "finance/equity-market",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-12",
+      "from": "finance/finance-abbreviations",
+      "to": "finance",
+      "source": "finance/finance-abbreviations",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-13",
+      "from": "finance/finance-dictionary",
+      "to": "finance",
+      "source": "finance/finance-dictionary",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-14",
+      "from": "finance/fixed-income",
+      "to": "finance",
+      "source": "finance/fixed-income",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-15",
+      "from": "finance/future-value",
+      "to": "finance",
+      "source": "finance/future-value",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-16",
+      "from": "finance/futures",
+      "to": "finance",
+      "source": "finance/futures",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-17",
+      "from": "finance/hazard",
+      "to": "finance",
+      "source": "finance/hazard",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-18",
+      "from": "finance/holding-period-return",
+      "to": "finance",
+      "source": "finance/holding-period-return",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-19",
+      "from": "finance/immunization",
+      "to": "finance",
+      "source": "finance/immunization",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-20",
+      "from": "finance/insurance",
+      "to": "finance",
+      "source": "finance/insurance",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-21",
+      "from": "finance/option",
+      "to": "finance",
+      "source": "finance/option",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-22",
+      "from": "finance/portfolio-diversification",
+      "to": "finance",
+      "source": "finance/portfolio-diversification",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-23",
+      "from": "finance/portfolio-management",
+      "to": "finance",
+      "source": "finance/portfolio-management",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-24",
+      "from": "finance/preferred-stock",
+      "to": "finance",
+      "source": "finance/preferred-stock",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-25",
+      "from": "finance/present-value",
+      "to": "finance",
+      "source": "finance/present-value",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-26",
+      "from": "finance/rate-of-return",
+      "to": "finance",
+      "source": "finance/rate-of-return",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-27",
+      "from": "finance/risk",
+      "to": "finance",
+      "source": "finance/risk",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-28",
+      "from": "finance/risk-and-insurance",
+      "to": "finance",
+      "source": "finance/risk-and-insurance",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-29",
+      "from": "finance/risk-management",
+      "to": "finance",
+      "source": "finance/risk-management",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-30",
+      "from": "finance/risk-neutral-pricing",
+      "to": "finance",
+      "source": "finance/risk-neutral-pricing",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-31",
+      "from": "finance/rules-of-thumb",
+      "to": "finance",
+      "source": "finance/rules-of-thumb",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-32",
+      "from": "finance/stock",
+      "to": "finance",
+      "source": "finance/stock",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-33",
+      "from": "finance/stock-valuation",
+      "to": "finance",
+      "source": "finance/stock-valuation",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-34",
+      "from": "finance/time-value",
+      "to": "finance",
+      "source": "finance/time-value",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-35",
+      "from": "finance/time-value-of-money",
+      "to": "finance",
+      "source": "finance/time-value-of-money",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "belongs-36",
+      "from": "finance/yield",
+      "to": "finance",
+      "source": "finance/yield",
+      "target": "finance",
+      "type": "belongs_to",
+      "label": "Belongs To",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-0",
+      "from": "finance/behavioral-finance",
+      "to": "finance/stock",
+      "source": "finance/behavioral-finance",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-1",
+      "from": "finance/behavioral-finance",
+      "to": "data-science/accuracy",
+      "source": "finance/behavioral-finance",
+      "target": "data-science/accuracy",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-2",
+      "from": "finance/behavioral-finance",
+      "to": "finance/rules-of-thumb",
+      "source": "finance/behavioral-finance",
+      "target": "finance/rules-of-thumb",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-3",
+      "from": "finance/behavioral-finance",
+      "to": "finance/arbitrage",
+      "source": "finance/behavioral-finance",
+      "target": "finance/arbitrage",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-4",
+      "from": "finance/derivatives",
+      "to": "finance/stock",
+      "source": "finance/derivatives",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-5",
+      "from": "finance/futures",
+      "to": "finance/stock",
+      "source": "finance/futures",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-6",
+      "from": "finance/yield",
+      "to": "finance/rate-of-return",
+      "source": "finance/yield",
+      "target": "finance/rate-of-return",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-7",
+      "from": "finance/portfolio-diversification",
+      "to": "finance/stock",
+      "source": "finance/portfolio-diversification",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-8",
+      "from": "finance/risk",
+      "to": "finance/stock",
+      "source": "finance/risk",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-9",
+      "from": "finance/insurance",
+      "to": "python/function",
+      "source": "finance/insurance",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-10",
+      "from": "finance/risk-management",
+      "to": "data-science/data",
+      "source": "finance/risk-management",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-11",
+      "from": "finance/time-value",
+      "to": "finance/option",
+      "source": "finance/time-value",
+      "target": "finance/option",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    }
+  ],
+  "prerequisiteEdges": [
+    {
+      "id": "prereq-0",
+      "from": "finance/arbitrage",
+      "to": "finance/finance-abbreviations",
+      "source": "finance/arbitrage",
+      "target": "finance/finance-abbreviations",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-1",
+      "from": "finance/bond",
+      "to": "finance/arbitrage",
+      "source": "finance/bond",
+      "target": "finance/arbitrage",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-2",
+      "from": "finance/common-stock",
+      "to": "finance/arbitrage",
+      "source": "finance/common-stock",
+      "target": "finance/arbitrage",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-3",
+      "from": "finance/derivatives",
+      "to": "finance/arbitrage",
+      "source": "finance/derivatives",
+      "target": "finance/arbitrage",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-4",
+      "from": "finance/derivatives",
+      "to": "finance/bond",
+      "source": "finance/derivatives",
+      "target": "finance/bond",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-5",
+      "from": "finance/derivatives",
+      "to": "finance/common-stock",
+      "source": "finance/derivatives",
+      "target": "finance/common-stock",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-6",
+      "from": "finance/portfolio-diversification",
+      "to": "finance/bond",
+      "source": "finance/portfolio-diversification",
+      "target": "finance/bond",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-7",
+      "from": "finance/portfolio-diversification",
+      "to": "finance/common-stock",
+      "source": "finance/portfolio-diversification",
+      "target": "finance/common-stock",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-8",
+      "from": "finance/behavioral-finance",
+      "to": "finance/common-stock",
+      "source": "finance/behavioral-finance",
+      "target": "finance/common-stock",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-9",
+      "from": "finance/compounding",
+      "to": "finance/arbitrage",
+      "source": "finance/compounding",
+      "target": "finance/arbitrage",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-10",
+      "from": "finance/adverse-selection",
+      "to": "finance/portfolio-diversification",
+      "source": "finance/adverse-selection",
+      "target": "finance/portfolio-diversification",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "prereq-11",
+      "from": "finance/adverse-selection",
+      "to": "finance/compounding",
+      "source": "finance/adverse-selection",
+      "target": "finance/compounding",
+      "type": "prerequisite",
+      "label": "Prerequisite",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    }
+  ],
+  "networkEdges": [
+    {
+      "id": "related-0",
+      "from": "finance/behavioral-finance",
+      "to": "finance/stock",
+      "source": "finance/behavioral-finance",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-1",
+      "from": "finance/behavioral-finance",
+      "to": "data-science/accuracy",
+      "source": "finance/behavioral-finance",
+      "target": "data-science/accuracy",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-2",
+      "from": "finance/behavioral-finance",
+      "to": "finance/rules-of-thumb",
+      "source": "finance/behavioral-finance",
+      "target": "finance/rules-of-thumb",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-3",
+      "from": "finance/behavioral-finance",
+      "to": "finance/arbitrage",
+      "source": "finance/behavioral-finance",
+      "target": "finance/arbitrage",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-4",
+      "from": "finance/derivatives",
+      "to": "finance/stock",
+      "source": "finance/derivatives",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-5",
+      "from": "finance/futures",
+      "to": "finance/stock",
+      "source": "finance/futures",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-6",
+      "from": "finance/yield",
+      "to": "finance/rate-of-return",
+      "source": "finance/yield",
+      "target": "finance/rate-of-return",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-7",
+      "from": "finance/portfolio-diversification",
+      "to": "finance/stock",
+      "source": "finance/portfolio-diversification",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-8",
+      "from": "finance/risk",
+      "to": "finance/stock",
+      "source": "finance/risk",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-9",
+      "from": "finance/insurance",
+      "to": "python/function",
+      "source": "finance/insurance",
+      "target": "python/function",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-10",
+      "from": "finance/risk-management",
+      "to": "data-science/data",
+      "source": "finance/risk-management",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-11",
+      "from": "finance/time-value",
+      "to": "finance/option",
+      "source": "finance/time-value",
+      "target": "finance/option",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    }
+  ],
+  "learningPath": {
+    "ordered": [
+      "finance/basic-definition",
+      "finance/basis-points",
+      "finance/convexity",
+      "finance/duration",
+      "finance/equity-market",
+      "finance/finance-abbreviations",
+      "finance/finance-dictionary",
+      "finance/fixed-income",
+      "finance/future-value",
+      "finance/futures",
+      "finance/hazard",
+      "finance/holding-period-return",
+      "finance/immunization",
+      "finance/insurance",
+      "finance/option",
+      "finance/portfolio-management",
+      "finance/preferred-stock",
+      "finance/present-value",
+      "finance/rate-of-return",
+      "finance/risk",
+      "finance/risk-and-insurance",
+      "finance/risk-management",
+      "finance/risk-neutral-pricing",
+      "finance/rules-of-thumb",
+      "finance/stock",
+      "finance/stock-valuation",
+      "finance/time-value",
+      "finance/time-value-of-money",
+      "finance/yield",
+      "finance/arbitrage",
+      "finance/bond",
+      "finance/common-stock",
+      "finance/compounding",
+      "finance/behavioral-finance",
+      "finance/derivatives",
+      "finance/portfolio-diversification",
+      "finance/adverse-selection"
+    ],
+    "layers": [
+      [
+        "finance/basic-definition",
+        "finance/basis-points",
+        "finance/convexity",
+        "finance/duration",
+        "finance/equity-market",
+        "finance/finance-abbreviations",
+        "finance/finance-dictionary",
+        "finance/fixed-income",
+        "finance/future-value",
+        "finance/futures",
+        "finance/hazard",
+        "finance/holding-period-return",
+        "finance/immunization",
+        "finance/insurance",
+        "finance/option",
+        "finance/portfolio-management",
+        "finance/preferred-stock",
+        "finance/present-value",
+        "finance/rate-of-return",
+        "finance/risk",
+        "finance/risk-and-insurance",
+        "finance/risk-management",
+        "finance/risk-neutral-pricing",
+        "finance/rules-of-thumb",
+        "finance/stock",
+        "finance/stock-valuation",
+        "finance/time-value",
+        "finance/time-value-of-money",
+        "finance/yield"
+      ],
+      [
+        "finance/arbitrage"
+      ],
+      [
+        "finance/bond",
+        "finance/common-stock",
+        "finance/compounding"
+      ],
+      [
+        "finance/behavioral-finance",
+        "finance/derivatives",
+        "finance/portfolio-diversification"
+      ],
+      [
+        "finance/adverse-selection"
+      ]
+    ],
+    "roots": [
+      "finance/basic-definition",
+      "finance/basis-points",
+      "finance/convexity",
+      "finance/duration",
+      "finance/equity-market",
+      "finance/finance-abbreviations",
+      "finance/finance-dictionary",
+      "finance/fixed-income",
+      "finance/future-value",
+      "finance/futures",
+      "finance/hazard",
+      "finance/holding-period-return",
+      "finance/immunization",
+      "finance/insurance",
+      "finance/option",
+      "finance/portfolio-management",
+      "finance/preferred-stock",
+      "finance/present-value",
+      "finance/rate-of-return",
+      "finance/risk",
+      "finance/risk-and-insurance",
+      "finance/risk-management",
+      "finance/risk-neutral-pricing",
+      "finance/rules-of-thumb",
+      "finance/stock",
+      "finance/stock-valuation",
+      "finance/time-value",
+      "finance/time-value-of-money",
+      "finance/yield"
+    ],
+    "hasCycle": false,
+    "cycleNodes": [],
+    "warnings": []
+  },
+  "relationIndex": {
+    "outgoing": {
+      "finance/arbitrage": [
+        {
+          "to": "finance/finance-abbreviations",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/bond": [
+        {
+          "to": "finance/arbitrage",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/common-stock": [
+        {
+          "to": "finance/arbitrage",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/derivatives": [
+        {
+          "to": "finance/arbitrage",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance/bond",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance/common-stock",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "finance/stock",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "finance/portfolio-diversification": [
+        {
+          "to": "finance/bond",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance/common-stock",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "finance/stock",
+          "type": "related_to",
+          "weight": 2
+        }
+      ],
+      "finance/behavioral-finance": [
+        {
+          "to": "finance/common-stock",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "finance/stock",
+          "type": "related_to",
+          "weight": 2
+        },
+        {
+          "to": "data-science/accuracy",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "finance/rules-of-thumb",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "to": "finance/arbitrage",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "finance/compounding": [
+        {
+          "to": "finance/arbitrage",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/adverse-selection": [
+        {
+          "to": "finance/portfolio-diversification",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance/compounding",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/basic-definition": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/basis-points": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/convexity": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/duration": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/equity-market": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/finance-abbreviations": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/finance-dictionary": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/fixed-income": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/future-value": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/futures": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "finance/stock",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "finance/hazard": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/holding-period-return": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/immunization": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/insurance": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "python/function",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "finance/option": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/portfolio-management": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/preferred-stock": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/present-value": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/rate-of-return": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/risk": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "finance/stock",
+          "type": "related_to",
+          "weight": 2
+        }
+      ],
+      "finance/risk-and-insurance": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/risk-management": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "data-science/data",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "finance/risk-neutral-pricing": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/rules-of-thumb": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/stock": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/stock-valuation": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/time-value": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "finance/option",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "finance/time-value-of-money": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/yield": [
+        {
+          "to": "finance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "to": "finance/rate-of-return",
+          "type": "related_to",
+          "weight": 1
+        }
+      ]
+    },
+    "incoming": {
+      "finance/finance-abbreviations": [
+        {
+          "from": "finance/arbitrage",
+          "type": "prerequisite",
+          "weight": 1
+        }
+      ],
+      "finance/arbitrage": [
+        {
+          "from": "finance/bond",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "from": "finance/common-stock",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "from": "finance/derivatives",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "from": "finance/compounding",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "from": "finance/behavioral-finance",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "finance/bond": [
+        {
+          "from": "finance/derivatives",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "from": "finance/portfolio-diversification",
+          "type": "prerequisite",
+          "weight": 1
+        }
+      ],
+      "finance/common-stock": [
+        {
+          "from": "finance/derivatives",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "from": "finance/portfolio-diversification",
+          "type": "prerequisite",
+          "weight": 1
+        },
+        {
+          "from": "finance/behavioral-finance",
+          "type": "prerequisite",
+          "weight": 1
+        }
+      ],
+      "finance/portfolio-diversification": [
+        {
+          "from": "finance/adverse-selection",
+          "type": "prerequisite",
+          "weight": 1
+        }
+      ],
+      "finance/compounding": [
+        {
+          "from": "finance/adverse-selection",
+          "type": "prerequisite",
+          "weight": 1
+        }
+      ],
+      "finance": [
+        {
+          "from": "finance/adverse-selection",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/arbitrage",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/basic-definition",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/basis-points",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/behavioral-finance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/bond",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/common-stock",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/compounding",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/convexity",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/derivatives",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/duration",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/equity-market",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/finance-abbreviations",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/finance-dictionary",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/fixed-income",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/future-value",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/futures",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/hazard",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/holding-period-return",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/immunization",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/insurance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/option",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/portfolio-diversification",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/portfolio-management",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/preferred-stock",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/present-value",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/rate-of-return",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/risk",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/risk-and-insurance",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/risk-management",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/risk-neutral-pricing",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/rules-of-thumb",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/stock",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/stock-valuation",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/time-value",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/time-value-of-money",
+          "type": "belongs_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/yield",
+          "type": "belongs_to",
+          "weight": 1
+        }
+      ],
+      "finance/stock": [
+        {
+          "from": "finance/behavioral-finance",
+          "type": "related_to",
+          "weight": 2
+        },
+        {
+          "from": "finance/derivatives",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/futures",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "finance/portfolio-diversification",
+          "type": "related_to",
+          "weight": 2
+        },
+        {
+          "from": "finance/risk",
+          "type": "related_to",
+          "weight": 2
+        }
+      ],
+      "data-science/accuracy": [
+        {
+          "from": "finance/behavioral-finance",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "finance/rules-of-thumb": [
+        {
+          "from": "finance/behavioral-finance",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "finance/rate-of-return": [
+        {
+          "from": "finance/yield",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "python/function": [
+        {
+          "from": "finance/insurance",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "data-science/data": [
+        {
+          "from": "finance/risk-management",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "finance/option": [
+        {
+          "from": "finance/time-value",
+          "type": "related_to",
+          "weight": 1
+        }
+      ]
+    }
+  },
+  "notesIndex": [
+    {
+      "slug": "rules-of-thumb",
+      "title": "Rules of Thumb",
+      "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-abbreviations",
+      "learningOrder": 1
+    },
+    {
+      "slug": "rules-of-thumb",
+      "title": "Rules of Thumb",
+      "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-dictionary",
+      "learningOrder": 1
+    },
+    {
+      "slug": "rules-of-thumb",
+      "title": "Rules of Thumb",
+      "noteUrl": "/note/finance/rules-of-thumb.md#concept-rules-of-thumb",
+      "learningOrder": 1
+    },
+    {
+      "slug": "basic-definition",
+      "title": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-arbitrage",
+      "learningOrder": 2
+    },
+    {
+      "slug": "basic-definition",
+      "title": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-basic-definition",
+      "learningOrder": 2
+    },
+    {
+      "slug": "basic-definition",
+      "title": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-basis-points",
+      "learningOrder": 2
+    },
+    {
+      "slug": "basic-definition",
+      "title": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-holding-period-return",
+      "learningOrder": 2
+    },
+    {
+      "slug": "basic-definition",
+      "title": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-rate-of-return",
+      "learningOrder": 2
+    },
+    {
+      "slug": "basic-definition",
+      "title": "Basic Definition",
+      "noteUrl": "/note/finance/basic-definition.md#concept-risk-neutral-pricing",
+      "learningOrder": 2
+    },
+    {
+      "slug": "fixed-income",
+      "title": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-bond",
+      "learningOrder": 3
+    },
+    {
+      "slug": "fixed-income",
+      "title": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-convexity",
+      "learningOrder": 3
+    },
+    {
+      "slug": "fixed-income",
+      "title": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-duration",
+      "learningOrder": 3
+    },
+    {
+      "slug": "fixed-income",
+      "title": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-fixed-income",
+      "learningOrder": 3
+    },
+    {
+      "slug": "fixed-income",
+      "title": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-immunization",
+      "learningOrder": 3
+    },
+    {
+      "slug": "fixed-income",
+      "title": "Fixed Income",
+      "noteUrl": "/note/finance/fixed-income.md#concept-yield",
+      "learningOrder": 3
+    },
+    {
+      "slug": "equity-market",
+      "title": "Equity Market",
+      "noteUrl": "/note/finance/equity-market.md#concept-common-stock",
+      "learningOrder": 4
+    },
+    {
+      "slug": "equity-market",
+      "title": "Equity Market",
+      "noteUrl": "/note/finance/equity-market.md#concept-equity-market",
+      "learningOrder": 4
+    },
+    {
+      "slug": "equity-market",
+      "title": "Equity Market",
+      "noteUrl": "/note/finance/equity-market.md#concept-preferred-stock",
+      "learningOrder": 4
+    },
+    {
+      "slug": "equity-market",
+      "title": "Equity Market",
+      "noteUrl": "/note/finance/equity-market.md#concept-stock",
+      "learningOrder": 4
+    },
+    {
+      "slug": "equity-market",
+      "title": "Equity Market",
+      "noteUrl": "/note/finance/equity-market.md#concept-stock-valuation",
+      "learningOrder": 4
+    },
+    {
+      "slug": "derivatives",
+      "title": "Derivatives",
+      "noteUrl": "/note/finance/derivatives.md#concept-derivatives",
+      "learningOrder": 5
+    },
+    {
+      "slug": "derivatives",
+      "title": "Derivatives",
+      "noteUrl": "/note/finance/derivatives.md#concept-futures",
+      "learningOrder": 5
+    },
+    {
+      "slug": "derivatives",
+      "title": "Derivatives",
+      "noteUrl": "/note/finance/derivatives.md#concept-option",
+      "learningOrder": 5
+    },
+    {
+      "slug": "portfolio-management",
+      "title": "Portfolio Management",
+      "noteUrl": "/note/finance/portfolio-management.md#concept-portfolio-diversification",
+      "learningOrder": 6
+    },
+    {
+      "slug": "portfolio-management",
+      "title": "Portfolio Management",
+      "noteUrl": "/note/finance/portfolio-management.md#concept-portfolio-management",
+      "learningOrder": 6
+    },
+    {
+      "slug": "behavioral-finance",
+      "title": "Behavioral Finance",
+      "noteUrl": "/note/finance/behavioral-finance.md#concept-behavioral-finance",
+      "learningOrder": 7
+    },
+    {
+      "slug": "time-value",
+      "title": "Time Value",
+      "noteUrl": "/note/finance/time-value.md#concept-compounding",
+      "learningOrder": 8
+    },
+    {
+      "slug": "time-value",
+      "title": "Time Value",
+      "noteUrl": "/note/finance/time-value.md#concept-future-value",
+      "learningOrder": 8
+    },
+    {
+      "slug": "time-value",
+      "title": "Time Value",
+      "noteUrl": "/note/finance/time-value.md#concept-present-value",
+      "learningOrder": 8
+    },
+    {
+      "slug": "time-value",
+      "title": "Time Value",
+      "noteUrl": "/note/finance/time-value.md#concept-time-value",
+      "learningOrder": 8
+    },
+    {
+      "slug": "time-value",
+      "title": "Time Value",
+      "noteUrl": "/note/finance/time-value.md#concept-time-value-of-money",
+      "learningOrder": 8
+    },
+    {
+      "slug": "risk-and-insurance",
+      "title": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-adverse-selection",
+      "learningOrder": 9
+    },
+    {
+      "slug": "risk-and-insurance",
+      "title": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-hazard",
+      "learningOrder": 9
+    },
+    {
+      "slug": "risk-and-insurance",
+      "title": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-insurance",
+      "learningOrder": 9
+    },
+    {
+      "slug": "risk-and-insurance",
+      "title": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-risk",
+      "learningOrder": 9
+    },
+    {
+      "slug": "risk-and-insurance",
+      "title": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-risk-and-insurance",
+      "learningOrder": 9
+    },
+    {
+      "slug": "risk-and-insurance",
+      "title": "Risk and Insurance",
+      "noteUrl": "/note/finance/risk-and-insurance.md#concept-risk-management",
+      "learningOrder": 9
+    }
+  ],
+  "layouts": {
+    "radial": {
+      "centerX": 500,
+      "centerY": 400,
+      "mainRadius": 300,
+      "subRadius": 150
+    },
+    "hierarchical": {
+      "direction": "TB",
+      "levelSeparation": 150,
+      "nodeSeparation": 100
+    }
+  },
+  "viewConfigs": {
+    "mindmap": {
+      "defaultLayout": "radial",
+      "showLabels": true,
+      "showEdges": true
+    },
+    "learningPath": {
+      "defaultLayout": "hierarchical",
+      "showPrerequisites": true,
+      "showEstimatedTime": true
+    },
+    "network": {
+      "defaultLayout": "radial",
+      "directed": true,
+      "edgeTypeField": "type",
+      "supportedEdgeTypes": [
+        "prerequisite",
+        "belongs_to",
+        "related_to",
+        "part_of",
+        "has_property",
+        "used_in",
+        "contrasts_with",
+        "equivalent_to",
+        "derives_from",
+        "extends"
+      ],
+      "clusters": [
+        {
+          "id": "note-finance-risk-and-insurance",
+          "label": "Risk and Insurance",
+          "subject": "finance",
+          "color": "#FF7675",
+          "nodeIds": [
+            "finance/adverse-selection",
+            "finance/hazard",
+            "finance/insurance",
+            "finance/risk",
+            "finance/risk-and-insurance",
+            "finance/risk-management"
+          ]
+        },
+        {
+          "id": "note-finance-basic-definition",
+          "label": "Basic Definition",
+          "subject": "finance",
+          "color": "#FF7675",
+          "nodeIds": [
+            "finance/arbitrage",
+            "finance/basic-definition",
+            "finance/basis-points",
+            "finance/holding-period-return",
+            "finance/rate-of-return",
+            "finance/risk-neutral-pricing"
+          ]
+        },
+        {
+          "id": "note-finance-behavioral-finance",
+          "label": "Behavioral Finance",
+          "subject": "finance",
+          "color": "#FF7675",
+          "nodeIds": [
+            "finance/behavioral-finance"
+          ]
+        },
+        {
+          "id": "note-finance-fixed-income",
+          "label": "Fixed Income",
+          "subject": "finance",
+          "color": "#FF7675",
+          "nodeIds": [
+            "finance/bond",
+            "finance/convexity",
+            "finance/duration",
+            "finance/fixed-income",
+            "finance/immunization",
+            "finance/yield"
+          ]
+        },
+        {
+          "id": "note-finance-equity-market",
+          "label": "Equity Market",
+          "subject": "finance",
+          "color": "#FF7675",
+          "nodeIds": [
+            "finance/common-stock",
+            "finance/equity-market",
+            "finance/preferred-stock",
+            "finance/stock",
+            "finance/stock-valuation"
+          ]
+        },
+        {
+          "id": "note-finance-time-value",
+          "label": "Time Value",
+          "subject": "finance",
+          "color": "#FF7675",
+          "nodeIds": [
+            "finance/compounding",
+            "finance/future-value",
+            "finance/present-value",
+            "finance/time-value",
+            "finance/time-value-of-money"
+          ]
+        },
+        {
+          "id": "note-finance-derivatives",
+          "label": "Derivatives",
+          "subject": "finance",
+          "color": "#FF7675",
+          "nodeIds": [
+            "finance/derivatives",
+            "finance/futures",
+            "finance/option"
+          ]
+        },
+        {
+          "id": "note-finance-rules-of-thumb",
+          "label": "Rules of Thumb",
+          "subject": "finance",
+          "color": "#FF7675",
+          "nodeIds": [
+            "finance/finance-abbreviations",
+            "finance/finance-dictionary",
+            "finance/rules-of-thumb"
+          ]
+        },
+        {
+          "id": "note-finance-portfolio-management",
+          "label": "Portfolio Management",
+          "subject": "finance",
+          "color": "#FF7675",
+          "nodeIds": [
+            "finance/portfolio-diversification",
+            "finance/portfolio-management"
+          ]
+        }
+      ],
+      "focusSubject": "finance"
+    }
+  }
+}
