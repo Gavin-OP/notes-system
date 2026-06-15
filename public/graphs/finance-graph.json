@@ -18,7 +18,7 @@
       "derives_from",
       "extends"
     ],
-    "lastGenerated": "2026-06-08T13:27:07.981744+00:00",
+    "lastGenerated": "2026-06-15T07:00:40.442175+00:00",
     "nodeCount": 38,
     "edgeCount": 61,
     "view": "default"
@@ -373,8 +373,8 @@
     },
     {
       "id": "note-finance-rules-of-thumb",
-      "name": "Rules of Thumb",
-      "displayName": "Rules of Thumb",
+      "name": "Finance Notation & Reference",
+      "displayName": "Finance Notation & Reference",
       "color": "#FF7675",
       "order": 8,
       "description": "",
@@ -389,21 +389,21 @@
           "id": "finance/finance-abbreviations",
           "displayName": "Financial Abbreviations",
           "noteSlug": "rules-of-thumb",
-          "noteTitle": "Rules of Thumb",
+          "noteTitle": "Finance Notation & Reference",
           "subject": "finance"
         },
         {
           "id": "finance/finance-dictionary",
           "displayName": "Key Finance Dictionary Terms",
           "noteSlug": "rules-of-thumb",
-          "noteTitle": "Rules of Thumb",
+          "noteTitle": "Finance Notation & Reference",
           "subject": "finance"
         },
         {
           "id": "finance/rules-of-thumb",
-          "displayName": "Rules of Thumb",
+          "displayName": "Finance Notation & Reference",
           "noteSlug": "rules-of-thumb",
-          "noteTitle": "Rules of Thumb",
+          "noteTitle": "Finance Notation & Reference",
           "subject": "finance"
         }
       ]
@@ -883,7 +883,7 @@
       "displayTitle": "Financial Abbreviations",
       "subject": "finance",
       "noteSlug": "rules-of-thumb",
-      "noteTitle": "Rules of Thumb",
+      "noteTitle": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-abbreviations",
       "anchorId": "concept-finance-abbreviations",
       "category": "Finance",
@@ -913,7 +913,7 @@
       "displayTitle": "Key Finance Dictionary Terms",
       "subject": "finance",
       "noteSlug": "rules-of-thumb",
-      "noteTitle": "Rules of Thumb",
+      "noteTitle": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-dictionary",
       "anchorId": "concept-finance-dictionary",
       "category": "Finance",
@@ -1440,12 +1440,12 @@
     },
     {
       "id": "finance/rules-of-thumb",
-      "name": "Rules of Thumb",
-      "title": "Rules of Thumb",
-      "displayTitle": "Rules of Thumb",
+      "name": "Finance Notation & Reference",
+      "title": "Finance Notation & Reference",
+      "displayTitle": "Finance Notation & Reference",
       "subject": "finance",
       "noteSlug": "rules-of-thumb",
-      "noteTitle": "Rules of Thumb",
+      "noteTitle": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-rules-of-thumb",
       "anchorId": "concept-rules-of-thumb",
       "category": "Finance",
@@ -3492,19 +3492,19 @@
   "notesIndex": [
     {
       "slug": "rules-of-thumb",
-      "title": "Rules of Thumb",
+      "title": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-abbreviations",
       "learningOrder": 1
     },
     {
       "slug": "rules-of-thumb",
-      "title": "Rules of Thumb",
+      "title": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-dictionary",
       "learningOrder": 1
     },
     {
       "slug": "rules-of-thumb",
-      "title": "Rules of Thumb",
+      "title": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-rules-of-thumb",
       "learningOrder": 1
     },
@@ -3844,7 +3844,7 @@
         },
         {
           "id": "note-finance-rules-of-thumb",
-          "label": "Rules of Thumb",
+          "label": "Finance Notation & Reference",
           "subject": "finance",
           "color": "#FF7675",
           "nodeIds": [

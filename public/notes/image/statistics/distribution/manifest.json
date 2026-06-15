@@ -1,0 +1,51 @@
+{
+  "subject": "statistics",
+  "topic_slug": "distribution",
+  "provider": "openai_images",
+  "model": "gpt-image-1.5",
+  "prompt_suffix": "Render this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+  "images": [
+    {
+      "slot": "img-001",
+      "prompt": "A bar chart showing the distribution of rolling a fair six-sided die. The x-axis is labeled \"Outcome (1-6)\" and the y-axis is labeled \"Frequency\". Each bar for outcomes 1 through 6 is of equal height, representing an equal frequency or probability, illustrating a uniform distribution.",
+      "prompt_final": "A bar chart showing the distribution of rolling a fair six-sided die. The x-axis is labeled \"Outcome (1-6)\" and the y-axis is labeled \"Frequency\". Each bar for outcomes 1 through 6 is of equal height, representing an equal frequency or probability, illustrating a uniform distribution.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/distribution/img-001.png"
+    },
+    {
+      "slot": "img-002",
+      "prompt": "A two-panel diagram. The left panel shows a discrete probability distribution with a bar chart, x-axis labeled \"Number of Successes (0, 1, 2, 3)\", y-axis \"Probability\". The right panel shows a continuous probability distribution with a smooth bell-shaped curve, x-axis labeled \"Measurement (e.g., Height)\", y-axis \"Probability Density\". Arrows point from \"Discrete\" to the bar chart and \"Continuous\" to the curve.",
+      "prompt_final": "A two-panel diagram. The left panel shows a discrete probability distribution with a bar chart, x-axis labeled \"Number of Successes (0, 1, 2, 3)\", y-axis \"Probability\". The right panel shows a continuous probability distribution with a smooth bell-shaped curve, x-axis labeled \"Measurement (e.g., Height)\", y-axis \"Probability Density\". Arrows point from \"Discrete\" to the bar chart and \"Continuous\" to the curve.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/distribution/img-002.png"
+    },
+    {
+      "slot": "img-003",
+      "prompt": "A bar chart showing a binomial distribution for n=10, p=0.5. The x-axis is labeled \"Number of Successes (0-10)\" and the y-axis is labeled \"Probability\". The bars show a symmetric, bell-shaped pattern, peaking at 5 successes.",
+      "prompt_final": "A bar chart showing a binomial distribution for n=10, p=0.5. The x-axis is labeled \"Number of Successes (0-10)\" and the y-axis is labeled \"Probability\". The bars show a symmetric, bell-shaped pattern, peaking at 5 successes.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/distribution/img-003.png"
+    },
+    {
+      "slot": "img-004",
+      "prompt": "A bar chart showing a Poisson distribution for lambda=3. The x-axis is labeled \"Number of Events (0, 1, 2, ...)\" and the y-axis is labeled \"Probability\". The bars start high at 0 or 1, peak around 3, and then decrease, showing a right-skewed shape.",
+      "prompt_final": "A bar chart showing a Poisson distribution for lambda=3. The x-axis is labeled \"Number of Events (0, 1, 2, ...)\" and the y-axis is labeled \"Probability\". The bars start high at 0 or 1, peak around 3, and then decrease, showing a right-skewed shape.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/distribution/img-004.png"
+    },
+    {
+      "slot": "img-005",
+      "prompt": "A smooth bell-shaped curve representing a normal distribution. The x-axis is labeled \"Value\" and the y-axis is labeled \"Probability Density\". The mean (μ) is marked at the center peak. Standard deviation lines (μ-σ, μ+σ, μ-2σ, μ+2σ, μ-3σ, μ+3σ) are marked on the x-axis, with shaded areas indicating the 68%, 95%, and 99.7% ranges.",
+      "prompt_final": "A smooth bell-shaped curve representing a normal distribution. The x-axis is labeled \"Value\" and the y-axis is labeled \"Probability Density\". The mean (μ) is marked at the center peak. Standard deviation lines (μ-σ, μ+σ, μ-2σ, μ+2σ, μ-3σ, μ+3σ) are marked on the x-axis, with shaded areas indicating the 68%, 95%, and 99.7% ranges.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/distribution/img-005.png"
+    },
+    {
+      "slot": "img-006",
+      "prompt": "A smooth curve showing an exponential distribution. The x-axis is labeled \"Time Until Event\" and the y-axis is labeled \"Probability Density\". The curve starts high at x=0 and rapidly decreases, approaching the x-axis asymptotically, illustrating its right-skewed nature.",
+      "prompt_final": "A smooth curve showing an exponential distribution. The x-axis is labeled \"Time Until Event\" and the y-axis is labeled \"Probability Density\". The curve starts high at x=0 and rapidly decreases, approaching the x-axis asymptotically, illustrating its right-skewed nature.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/distribution/img-006.png"
+    },
+    {
+      "slot": "img-007",
+      "prompt": "A multi-line graph comparing the shapes of the Normal distribution and several Student's t-distributions with different degrees of freedom (e.g., df=1, df=5, df=30). The x-axis is labeled \"Value\" and the y-axis is labeled \"Probability Density\". The Normal distribution is shown as a solid line, and the t-distributions are shown as dashed lines, illustrating how t-distributions have fatter tails than the Normal distribution, especially with lower degrees of freedom, and converge to the Normal as df increases.",
+      "prompt_final": "A multi-line graph comparing the shapes of the Normal distribution and several Student's t-distributions with different degrees of freedom (e.g., df=1, df=5, df=30). The x-axis is labeled \"Value\" and the y-axis is labeled \"Probability Density\". The Normal distribution is shown as a solid line, and the t-distributions are shown as dashed lines, illustrating how t-distributions have fatter tails than the Normal distribution, especially with lower degrees of freedom, and converge to the Normal as df increases.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/distribution/img-007.png"
+    }
+  ]
+}

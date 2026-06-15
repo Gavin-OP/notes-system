@@ -1,0 +1,27 @@
+{
+  "subject": "statistics",
+  "topic_slug": "linear-regression",
+  "provider": "openai_images",
+  "model": "gpt-image-1.5",
+  "prompt_suffix": "Render this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+  "images": [
+    {
+      "slot": "img-001",
+      "prompt": "A scatter plot showing daily temperature on the x-axis and ice cream sales on the y-axis. Multiple data points are scattered across the plot. A straight, upward-sloping line (the regression line) is drawn through the center of the data points. Short, dashed vertical lines connect several data points to the regression line, illustrating the 'residuals' or error terms.",
+      "prompt_final": "A scatter plot showing daily temperature on the x-axis and ice cream sales on the y-axis. Multiple data points are scattered across the plot. A straight, upward-sloping line (the regression line) is drawn through the center of the data points. Short, dashed vertical lines connect several data points to the regression line, illustrating the 'residuals' or error terms.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/linear-regression/img-001.png"
+    },
+    {
+      "slot": "img-002",
+      "prompt": "A scatter plot with several data points and a single regression line. For each data point, a vertical line segment connects the point to the regression line. At the end of each vertical segment, a small square is drawn, representing the squared residual for that point. The pedagogical intent is to visually explain that OLS minimizes the sum of the areas of these squares.",
+      "prompt_final": "A scatter plot with several data points and a single regression line. For each data point, a vertical line segment connects the point to the regression line. At the end of each vertical segment, a small square is drawn, representing the squared residual for that point. The pedagogical intent is to visually explain that OLS minimizes the sum of the areas of these squares.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/linear-regression/img-002.png"
+    },
+    {
+      "slot": "img-003",
+      "prompt": "A 2x2 grid of residual plots. Plot 1 (Top-Left, \"Good\"): A scatter plot of residuals on the y-axis vs. predicted values on the x-axis. Points are randomly scattered around the horizontal line at y=0, forming a roughly rectangular cloud. Plot 2 (Top-Right, \"Bad - Non-linearity\"): A scatter plot of residuals vs. predicted values showing a clear U-shaped pattern, indicating that a linear model is not appropriate. Plot 3 (Bottom-Left, \"Bad - Heteroscedasticity\"): A scatter plot of residuals vs. predicted values showing a funnel shape, where the spread of residuals increases as predicted values increase. Plot 4 (Bottom-Right, \"Bad - Outliers/Influential Points\"): A scatter plot of residuals vs. predicted values with a few points far away from the main cloud, indicating potential outliers.",
+      "prompt_final": "A 2x2 grid of residual plots. Plot 1 (Top-Left, \"Good\"): A scatter plot of residuals on the y-axis vs. predicted values on the x-axis. Points are randomly scattered around the horizontal line at y=0, forming a roughly rectangular cloud. Plot 2 (Top-Right, \"Bad - Non-linearity\"): A scatter plot of residuals vs. predicted values showing a clear U-shaped pattern, indicating that a linear model is not appropriate. Plot 3 (Bottom-Left, \"Bad - Heteroscedasticity\"): A scatter plot of residuals vs. predicted values showing a funnel shape, where the spread of residuals increases as predicted values increase. Plot 4 (Bottom-Right, \"Bad - Outliers/Influential Points\"): A scatter plot of residuals vs. predicted values with a few points far away from the main cloud, indicating potential outliers.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/linear-regression/img-003.png"
+    }
+  ]
+}

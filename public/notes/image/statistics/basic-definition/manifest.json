@@ -1,0 +1,39 @@
+{
+  "subject": "statistics",
+  "topic_slug": "basic-definition",
+  "provider": "openai_images",
+  "model": "gpt-image-1.5",
+  "prompt_suffix": "Render this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+  "images": [
+    {
+      "slot": "img-001",
+      "prompt": "A diagram showing three distinct sample spaces. The first shows a coin with 'H' and 'T' as two branches. The second shows a six-sided die with outcomes 1 through 6 listed in a set. The third shows a tree diagram for two coin flips, branching from a start point to H/T for the first flip, and then H/T for the second flip from each of those, leading to HH, HT, TH, TT outcomes. Each sample space is clearly labeled with 'S = {...}'.",
+      "prompt_final": "A diagram showing three distinct sample spaces. The first shows a coin with 'H' and 'T' as two branches. The second shows a six-sided die with outcomes 1 through 6 listed in a set. The third shows a tree diagram for two coin flips, branching from a start point to H/T for the first flip, and then H/T for the second flip from each of those, leading to HH, HT, TH, TT outcomes. Each sample space is clearly labeled with 'S = {...}'.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/basic-definition/img-001.png"
+    },
+    {
+      "slot": "img-002",
+      "prompt": "A Venn diagram illustrating two overlapping circles labeled 'Event A' and 'Event B' within a larger rectangle labeled 'Sample Space S'. The intersection area is shaded and labeled 'A ∩ B'. The union area (both circles combined) is outlined and labeled 'A ∪ B'. The area outside A but inside S is shaded and labeled 'A^c'.",
+      "prompt_final": "A Venn diagram illustrating two overlapping circles labeled 'Event A' and 'Event B' within a larger rectangle labeled 'Sample Space S'. The intersection area is shaded and labeled 'A ∩ B'. The union area (both circles combined) is outlined and labeled 'A ∪ B'. The area outside A but inside S is shaded and labeled 'A^c'.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/basic-definition/img-002.png"
+    },
+    {
+      "slot": "img-003",
+      "prompt": "A bar chart showing the Probability Mass Function (PMF) for the number of heads in two coin flips. The x-axis is labeled 'Number of Heads (x)' with values 0, 1, 2. The y-axis is labeled 'Probability P(X=x)'. There are bars at x=0 (height 0.25), x=1 (height 0.50), and x=2 (height 0.25).",
+      "prompt_final": "A bar chart showing the Probability Mass Function (PMF) for the number of heads in two coin flips. The x-axis is labeled 'Number of Heads (x)' with values 0, 1, 2. The y-axis is labeled 'Probability P(X=x)'. There are bars at x=0 (height 0.25), x=1 (height 0.50), and x=2 (height 0.25).\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/basic-definition/img-003.png"
+    },
+    {
+      "slot": "img-004",
+      "prompt": "A smooth curve representing a Probability Density Function (PDF) for a continuous random variable X. The x-axis is labeled 'x' and the y-axis is labeled 'f(x)'. A shaded area under the curve between two points 'a' and 'b' on the x-axis is highlighted, representing P(a ≤ X ≤ b). The entire area under the curve from negative infinity to positive infinity is implicitly shown to sum to 1.",
+      "prompt_final": "A smooth curve representing a Probability Density Function (PDF) for a continuous random variable X. The x-axis is labeled 'x' and the y-axis is labeled 'f(x)'. A shaded area under the curve between two points 'a' and 'b' on the x-axis is highlighted, representing P(a ≤ X ≤ b). The entire area under the curve from negative infinity to positive infinity is implicitly shown to sum to 1.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/basic-definition/img-004.png"
+    },
+    {
+      "slot": "img-005",
+      "prompt": "A plot showing a Cumulative Distribution Function (CDF). For a discrete variable, it shows a step function with jumps at integer values, starting at 0 and ending at 1. For a continuous variable, it shows a smooth, S-shaped curve, starting at 0 and asymptotically approaching 1. Both plots are on the same axes, with the x-axis labeled 'x' and the y-axis labeled 'F(x)'.",
+      "prompt_final": "A plot showing a Cumulative Distribution Function (CDF). For a discrete variable, it shows a step function with jumps at integer values, starting at 0 and ending at 1. For a continuous variable, it shows a smooth, S-shaped curve, starting at 0 and asymptotically approaching 1. Both plots are on the same axes, with the x-axis labeled 'x' and the y-axis labeled 'F(x)'.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/basic-definition/img-005.png"
+    }
+  ]
+}

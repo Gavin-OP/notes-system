@@ -25,7 +25,7 @@ Follow a prerequisite-aware topic progression with branching layers.
 
 ## Included Topics
 
-- Rules of Thumb
+- Finance Notation & Reference
 - Basic Definition
 - Fixed Income
 - Equity Market

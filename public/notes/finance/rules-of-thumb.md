@@ -1,5 +1,5 @@
 ---
-title: "Rules of Thumb"
+title: "Finance Notation & Reference"
 slug: rules-of-thumb
 display: true
 order: 1
@@ -8,7 +8,7 @@ tags:
 ---
 
 <a id="concept-rules-of-thumb"></a>
-# Rules of Thumb
+# Finance Notation & Reference
 
 ## Learning Objectives
 - Recognize and understand common financial abbreviations used in the industry.
@@ -18,7 +18,7 @@ tags:
 - Understand the basic terminology associated with bond duration and interest rate sensitivity.
 
 ## Introduction
-Welcome to "Rules of Thumb" – your practical guide to the essential language of finance. As you embark on your journey into the world of finance, you'll quickly discover that it has its own unique vocabulary, filled with specialized terms and abbreviations. This lesson is designed to be a foundational reference, a quick-access glossary that will help you navigate complex financial discussions and documents with confidence.
+Welcome to **Finance Notation & Reference** – your practical guide to the essential language of finance. As you embark on your journey into the world of finance, you'll quickly discover that it has its own unique vocabulary, filled with specialized terms and abbreviations. This lesson is designed to be a foundational reference, a quick-access glossary that will help you navigate complex financial discussions and documents with confidence.
 
 Think of this as your personal finance dictionary and abbreviation guide. We'll start by demystifying common abbreviations, then move on to explaining core financial concepts, building your understanding progressively. By the end, you'll have a solid grasp of the fundamental terms that underpin much of what you'll learn in this course, making future topics much clearer and easier to absorb.
 

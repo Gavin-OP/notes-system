@@ -1,0 +1,27 @@
+{
+  "subject": "statistics",
+  "topic_slug": "time-series",
+  "provider": "openai_images",
+  "model": "gpt-image-1.5",
+  "prompt_suffix": "Render this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.",
+  "images": [
+    {
+      "slot": "img-001",
+      "prompt": "A line plot showing a time series. The x-axis is labeled 'Time (e.g., Day)', and the y-axis is labeled 'Value (e.g., Stock Price)'. The line shows a fluctuating pattern, generally increasing over time, with clear points for each day. The pedagogical intent is to visually define a time series as a sequence of points over time.",
+      "prompt_final": "A line plot showing a time series. The x-axis is labeled 'Time (e.g., Day)', and the y-axis is labeled 'Value (e.g., Stock Price)'. The line shows a fluctuating pattern, generally increasing over time, with clear points for each day. The pedagogical intent is to visually define a time series as a sequence of points over time.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/time-series/img-001.png"
+    },
+    {
+      "slot": "img-002",
+      "prompt": "Two line plots arranged vertically. The top plot shows a stationary time series: a horizontal line representing the mean, with random fluctuations around it, staying within a consistent band. The bottom plot shows a non-stationary time series: a clear upward trend, with the mean increasing over time, and potentially increasing variance (wider fluctuations) as time progresses. The pedagogical intent is to visually contrast stationary and non-stationary behavior.",
+      "prompt_final": "Two line plots arranged vertically. The top plot shows a stationary time series: a horizontal line representing the mean, with random fluctuations around it, staying within a consistent band. The bottom plot shows a non-stationary time series: a clear upward trend, with the mean increasing over time, and potentially increasing variance (wider fluctuations) as time progresses. The pedagogical intent is to visually contrast stationary and non-stationary behavior.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/time-series/img-002.png"
+    },
+    {
+      "slot": "img-003",
+      "prompt": "Two plots side-by-side. The left plot is an Autocorrelation Function (ACF) plot, showing bars extending from 0 for various lags. The first few bars are tall and positive, gradually decaying. The right plot is a Partial Autocorrelation Function (PACF) plot, showing a single tall positive bar at lag 1, and then bars quickly dropping to near zero for subsequent lags. Both plots have a shaded region indicating confidence intervals. The pedagogical intent is to illustrate how ACF and PACF plots visually represent the correlation structure of a time series.",
+      "prompt_final": "Two plots side-by-side. The left plot is an Autocorrelation Function (ACF) plot, showing bars extending from 0 for various lags. The first few bars are tall and positive, gradually decaying. The right plot is a Partial Autocorrelation Function (PACF) plot, showing a single tall positive bar at lag 1, and then bars quickly dropping to near zero for subsequent lags. Both plots have a shaded region indicating confidence intervals. The pedagogical intent is to illustrate how ACF and PACF plots visually represent the correlation structure of a time series.\n\nRender this as an XMind-style mind map diagram, as simple as possible. Keep layout clean and minimal. Use font family preference: Open Sans, Clear Sans, Helvetica Neue, Helvetica, Arial, Segoe UI Emoji, SF Pro, sans-serif.\n\nDiagram must be fully contained within the canvas, centered, scaled down if necessary, with at least 10-15% safe margin on all sides. No text or shapes touching or crossing image boundaries.",
+      "image_rel_path": "output/image/statistics/time-series/img-003.png"
+    }
+  ]
+}

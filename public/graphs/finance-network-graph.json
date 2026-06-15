@@ -21,9 +21,9 @@
     "networkScope": "global",
     "focusSubject": "finance",
     "globalMode": "focus-neighbors",
-    "lastGenerated": "2026-06-08T13:31:46.424014+00:00",
-    "nodeCount": 41,
-    "edgeCount": 61,
+    "lastGenerated": "2026-06-15T07:00:40.506300+00:00",
+    "nodeCount": 45,
+    "edgeCount": 66,
     "view": "network"
   },
   "categories": [
@@ -192,14 +192,14 @@
           "id": "finance/finance-abbreviations",
           "displayName": "Financial Abbreviations",
           "noteSlug": "rules-of-thumb",
-          "noteTitle": "Rules of Thumb",
+          "noteTitle": "Finance Notation & Reference",
           "subject": "finance"
         },
         {
           "id": "finance/finance-dictionary",
           "displayName": "Key Finance Dictionary Terms",
           "noteSlug": "rules-of-thumb",
-          "noteTitle": "Rules of Thumb",
+          "noteTitle": "Finance Notation & Reference",
           "subject": "finance"
         },
         {
@@ -323,9 +323,9 @@
         },
         {
           "id": "finance/rules-of-thumb",
-          "displayName": "Rules of Thumb",
+          "displayName": "Finance Notation & Reference",
           "noteSlug": "rules-of-thumb",
-          "noteTitle": "Rules of Thumb",
+          "noteTitle": "Finance Notation & Reference",
           "subject": "finance"
         },
         {
@@ -383,6 +383,51 @@
           "noteSlug": "functions-in-python",
           "noteTitle": "Functions in Python",
           "subject": "python"
+        }
+      ]
+    },
+    {
+      "id": "subject-statistics",
+      "name": "Statistics",
+      "displayName": "Statistics",
+      "color": "#F6C343",
+      "order": 4,
+      "description": "",
+      "subject": "statistics",
+      "nodes": [
+        "statistics/brownian-motion",
+        "statistics/markov-chain",
+        "statistics/simulation",
+        "statistics/time-series"
+      ],
+      "nodeItems": [
+        {
+          "id": "statistics/brownian-motion",
+          "displayName": "Brownian Motion",
+          "noteSlug": "simulation",
+          "noteTitle": "Simulation",
+          "subject": "statistics"
+        },
+        {
+          "id": "statistics/markov-chain",
+          "displayName": "Markov Chain",
+          "noteSlug": "markov-chain",
+          "noteTitle": "Markov Chain",
+          "subject": "statistics"
+        },
+        {
+          "id": "statistics/simulation",
+          "displayName": "Simulation",
+          "noteSlug": "simulation",
+          "noteTitle": "Simulation",
+          "subject": "statistics"
+        },
+        {
+          "id": "statistics/time-series",
+          "displayName": "Time Series",
+          "noteSlug": "time-series",
+          "noteTitle": "Time Series",
+          "subject": "statistics"
         }
       ]
     }
@@ -503,11 +548,12 @@
         "basics"
       ],
       "linkedConcepts": [
-        "finance/risk-management"
+        "finance/risk-management",
+        "statistics/time-series"
       ],
-      "degree": 1,
-      "weightedDegree": 1,
-      "networkSize": 48
+      "degree": 2,
+      "weightedDegree": 3,
+      "networkSize": 56
     },
     {
       "id": "finance/adverse-selection",
@@ -891,7 +937,7 @@
       "displayTitle": "Financial Abbreviations",
       "subject": "finance",
       "noteSlug": "rules-of-thumb",
-      "noteTitle": "Rules of Thumb",
+      "noteTitle": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-abbreviations",
       "anchorId": "concept-finance-abbreviations",
       "category": "Finance",
@@ -921,7 +967,7 @@
       "displayTitle": "Key Finance Dictionary Terms",
       "subject": "finance",
       "noteSlug": "rules-of-thumb",
-      "noteTitle": "Rules of Thumb",
+      "noteTitle": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-dictionary",
       "anchorId": "concept-finance-dictionary",
       "category": "Finance",
@@ -1450,12 +1496,12 @@
     },
     {
       "id": "finance/rules-of-thumb",
-      "name": "Rules of Thumb",
-      "title": "Rules of Thumb",
-      "displayTitle": "Rules of Thumb",
+      "name": "Finance Notation & Reference",
+      "title": "Finance Notation & Reference",
+      "displayTitle": "Finance Notation & Reference",
       "subject": "finance",
       "noteSlug": "rules-of-thumb",
-      "noteTitle": "Rules of Thumb",
+      "noteTitle": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-rules-of-thumb",
       "anchorId": "concept-rules-of-thumb",
       "category": "Finance",
@@ -1506,11 +1552,15 @@
         "finance/derivatives",
         "finance/futures",
         "finance/portfolio-diversification",
-        "finance/risk"
+        "finance/risk",
+        "statistics/brownian-motion",
+        "statistics/markov-chain",
+        "statistics/simulation",
+        "statistics/time-series"
       ],
-      "degree": 6,
-      "weightedDegree": 9,
-      "networkSize": 88
+      "degree": 10,
+      "weightedDegree": 14,
+      "networkSize": 120
     },
     {
       "id": "finance/stock-valuation",
@@ -1660,6 +1710,123 @@
       "degree": 1,
       "weightedDegree": 1,
       "networkSize": 48
+    },
+    {
+      "id": "statistics/brownian-motion",
+      "name": "Brownian Motion",
+      "title": "Brownian Motion",
+      "displayTitle": "Brownian Motion",
+      "subject": "statistics",
+      "noteSlug": "simulation",
+      "noteTitle": "Simulation",
+      "noteUrl": "/note/statistics/simulation.md#concept-brownian-motion",
+      "anchorId": "concept-brownian-motion",
+      "category": "Statistics",
+      "categoryId": "subject-statistics",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 90,
+      "learningOrder": 13,
+      "tags": [
+        "simulation",
+        "stochastic"
+      ],
+      "linkedConcepts": [
+        "finance/stock"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "statistics/markov-chain",
+      "name": "Markov Chain",
+      "title": "Markov Chain",
+      "displayTitle": "Markov Chain",
+      "subject": "statistics",
+      "noteSlug": "markov-chain",
+      "noteTitle": "Markov Chain",
+      "noteUrl": "/note/statistics/markov-chain.md#concept-markov-chain",
+      "anchorId": "concept-markov-chain",
+      "category": "Statistics",
+      "categoryId": "subject-statistics",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 90,
+      "learningOrder": 8,
+      "tags": [
+        "stochastic",
+        "processes"
+      ],
+      "linkedConcepts": [
+        "finance/stock"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "statistics/simulation",
+      "name": "Simulation",
+      "title": "Simulation",
+      "displayTitle": "Simulation",
+      "subject": "statistics",
+      "noteSlug": "simulation",
+      "noteTitle": "Simulation",
+      "noteUrl": "/note/statistics/simulation.md#concept-simulation",
+      "anchorId": "concept-simulation",
+      "category": "Statistics",
+      "categoryId": "subject-statistics",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 90,
+      "learningOrder": 13,
+      "tags": [
+        "simulation",
+        "stochastic"
+      ],
+      "linkedConcepts": [
+        "finance/stock"
+      ],
+      "degree": 1,
+      "weightedDegree": 1,
+      "networkSize": 48
+    },
+    {
+      "id": "statistics/time-series",
+      "name": "Time Series",
+      "title": "Time Series",
+      "displayTitle": "Time Series",
+      "subject": "statistics",
+      "noteSlug": "time-series",
+      "noteTitle": "Time Series",
+      "noteUrl": "/note/statistics/time-series.md#concept-time-series",
+      "anchorId": "concept-time-series",
+      "category": "Statistics",
+      "categoryId": "subject-statistics",
+      "importance": "medium",
+      "prerequisites": [],
+      "difficulty": "medium",
+      "difficultyLevel": 3,
+      "estimatedMinutes": 75,
+      "learningOrder": 9,
+      "tags": [
+        "time-series",
+        "forecasting"
+      ],
+      "linkedConcepts": [
+        "data-science/data",
+        "finance/stock"
+      ],
+      "degree": 2,
+      "weightedDegree": 4,
+      "networkSize": 56
     }
   ],
   "edges": [
@@ -2394,6 +2561,66 @@
       "weight": 1,
       "frequency": 1,
       "directed": true
+    },
+    {
+      "id": "related-115",
+      "from": "statistics/markov-chain",
+      "to": "finance/stock",
+      "source": "statistics/markov-chain",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-131",
+      "from": "statistics/simulation",
+      "to": "finance/stock",
+      "source": "statistics/simulation",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-134",
+      "from": "statistics/brownian-motion",
+      "to": "finance/stock",
+      "source": "statistics/brownian-motion",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-138",
+      "from": "statistics/time-series",
+      "to": "finance/stock",
+      "source": "statistics/time-series",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-139",
+      "from": "statistics/time-series",
+      "to": "data-science/data",
+      "source": "statistics/time-series",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
     }
   ],
   "prerequisiteEdges": [
@@ -2685,6 +2912,66 @@
       "label": "Related",
       "weight": 1,
       "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-115",
+      "from": "statistics/markov-chain",
+      "to": "finance/stock",
+      "source": "statistics/markov-chain",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-131",
+      "from": "statistics/simulation",
+      "to": "finance/stock",
+      "source": "statistics/simulation",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-134",
+      "from": "statistics/brownian-motion",
+      "to": "finance/stock",
+      "source": "statistics/brownian-motion",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 1,
+      "frequency": 1,
+      "directed": true
+    },
+    {
+      "id": "related-138",
+      "from": "statistics/time-series",
+      "to": "finance/stock",
+      "source": "statistics/time-series",
+      "target": "finance/stock",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
+      "directed": true
+    },
+    {
+      "id": "related-139",
+      "from": "statistics/time-series",
+      "to": "data-science/data",
+      "source": "statistics/time-series",
+      "target": "data-science/data",
+      "type": "related_to",
+      "label": "Related",
+      "weight": 2,
+      "frequency": 2,
       "directed": true
     }
   ],
@@ -3192,6 +3479,39 @@
           "type": "related_to",
           "weight": 1
         }
+      ],
+      "statistics/markov-chain": [
+        {
+          "to": "finance/stock",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "statistics/simulation": [
+        {
+          "to": "finance/stock",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "statistics/brownian-motion": [
+        {
+          "to": "finance/stock",
+          "type": "related_to",
+          "weight": 1
+        }
+      ],
+      "statistics/time-series": [
+        {
+          "to": "finance/stock",
+          "type": "related_to",
+          "weight": 2
+        },
+        {
+          "to": "data-science/data",
+          "type": "related_to",
+          "weight": 2
+        }
       ]
     },
     "incoming": {
@@ -3484,6 +3804,26 @@
           "from": "finance/risk",
           "type": "related_to",
           "weight": 2
+        },
+        {
+          "from": "statistics/markov-chain",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "statistics/simulation",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "statistics/brownian-motion",
+          "type": "related_to",
+          "weight": 1
+        },
+        {
+          "from": "statistics/time-series",
+          "type": "related_to",
+          "weight": 2
         }
       ],
       "data-science/accuracy": [
@@ -3519,6 +3859,11 @@
           "from": "finance/risk-management",
           "type": "related_to",
           "weight": 1
+        },
+        {
+          "from": "statistics/time-series",
+          "type": "related_to",
+          "weight": 2
         }
       ],
       "finance/option": [
@@ -3533,19 +3878,19 @@
   "notesIndex": [
     {
       "slug": "rules-of-thumb",
-      "title": "Rules of Thumb",
+      "title": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-abbreviations",
       "learningOrder": 1
     },
     {
       "slug": "rules-of-thumb",
-      "title": "Rules of Thumb",
+      "title": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-finance-dictionary",
       "learningOrder": 1
     },
     {
       "slug": "rules-of-thumb",
-      "title": "Rules of Thumb",
+      "title": "Finance Notation & Reference",
       "noteUrl": "/note/finance/rules-of-thumb.md#concept-rules-of-thumb",
       "learningOrder": 1
     },
@@ -3857,6 +4202,18 @@
           "color": "#B18CFF",
           "nodeIds": [
             "python/function"
+          ]
+        },
+        {
+          "id": "subject-statistics",
+          "label": "Statistics",
+          "subject": "statistics",
+          "color": "#F6C343",
+          "nodeIds": [
+            "statistics/brownian-motion",
+            "statistics/markov-chain",
+            "statistics/simulation",
+            "statistics/time-series"
           ]
         }
       ],
