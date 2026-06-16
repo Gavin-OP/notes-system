@@ -1,12 +1,3 @@
----
-title: "Finance Notation & Reference"
-slug: rules-of-thumb
-display: true
-order: 1
-tags:
-  - finance
----
-
 <a id="concept-rules-of-thumb"></a>
 # Finance Notation & Reference
 
@@ -18,9 +9,9 @@ tags:
 - Understand the basic terminology associated with bond duration and interest rate sensitivity.
 
 ## Introduction
-Welcome to **Finance Notation & Reference** – your practical guide to the essential language of finance. As you embark on your journey into the world of finance, you'll quickly discover that it has its own unique vocabulary, filled with specialized terms and abbreviations. This lesson is designed to be a foundational reference, a quick-access glossary that will help you navigate complex financial discussions and documents with confidence.
+Welcome to **Finance Notation & Reference** – your practical guide to the essential language of finance. As you embark on your journey into the world of finance, you'll quickly discover that it has its own unique vocabulary, filled with specialized terms and abbreviations. This lesson is designed to be a foundational reference, a quick-access glossary that will help you navigate [complex financial](../finance/rules-of-thumb.md#concept-finance-abbreviations) discussions and documents with confidence.
 
-Think of this as your personal finance dictionary and abbreviation guide. We'll start by demystifying common abbreviations, then move on to explaining core financial concepts, building your understanding progressively. By the end, you'll have a solid grasp of the fundamental terms that underpin much of what you'll learn in this course, making future topics much clearer and easier to absorb.
+Think of this as your personal [finance dictionary](../finance/rules-of-thumb.md#concept-finance-dictionary) and abbreviation guide. We'll start by demystifying common abbreviations, then move on to explaining core financial concepts, building your understanding progressively. By the end, you'll have a solid grasp of the fundamental terms that underpin much of what you'll learn in this course, making future topics much clearer and easier to absorb.
 
 ## Concept Progression
 
@@ -34,12 +25,12 @@ Here are some of the most frequently encountered abbreviations you'll come acros
 | :----------- | :-------- | :---------------- |
 | **APR**      | Annual Percentage Rate | The annual rate charged for borrowing or earned by an investment, including interest and other fees. |
 | **WACC**     | Weighted Average Cost of Capital | The average rate a company expects to pay to finance its assets, considering the proportion of each component of capital (e.g., equity, debt). |
-| **NPV**      | Net Present Value | The difference between the present value of cash inflows and the present value of cash outflows over a period of time, used to evaluate investment profitability. |
+| **NPV**      | Net [Present Value](../finance/time-value.md#concept-present-value) | The difference between the present value of cash inflows and the present value of cash outflows over a period of time, used to evaluate investment profitability. |
 | **ROI**      | Return on Investment | A performance measure used to evaluate the efficiency of an investment or compare the efficiency of several different investments. |
 | **EBITDA**   | Earnings Before Interest, Taxes, Depreciation, and Amortization | A measure of a company's operating performance, often used as a proxy for cash flow. |
-| **IPO**      | Initial Public Offering | The first time a private company offers its stock to the general public, becoming a publicly traded company. |
-| **STIR**     | Short-Term Interest Rate | Refers to interest rates on financial instruments with short maturities, typically less than one year. |
-| **IMM**      | International Monetary Market | A division of the Chicago Mercantile Exchange (CME) where currency and interest rate futures are traded. Often associated with the "IMM Index" for Eurodollar futures, which expresses interest rates as 100 minus the annual interest rate. |
+| **IPO**      | Initial Public Offering | The first time a private company offers its [stock](../finance/equity-market.md#concept-stock) to the general public, becoming a publicly traded company. |
+| **STIR**     | Short-Term Interest Rate | Refers to [interest rates](../finance/fixed-income.md#concept-duration) on financial instruments with short maturities, typically less than one year. |
+| **IMM**      | International Monetary Market | A division of the Chicago Mercantile Exchange (CME) where currency and interest rate [futures](../finance/derivatives.md#concept-futures) are traded. Often associated with the "IMM Index" for Eurodollar futures, which expresses interest rates as 100 minus the annual interest rate. |
 
 These abbreviations are more than just shortcuts; they are gateways to understanding complex financial concepts. For instance, when you see "APR," you immediately know it refers to the total cost of borrowing, including interest and other charges, expressed as an annual rate, without needing to spell out the entire phrase.
 
@@ -49,7 +40,7 @@ These abbreviations are more than just shortcuts; they are gateways to understan
 With a grasp of common abbreviations, let's now expand our vocabulary to include fundamental financial terms. We'll group these terms by related areas to help you build a cohesive and practical understanding.
 
 #### Understanding Risk and Insurance
-Risk is an inherent part of finance, from personal investments to corporate strategies. Insurance is a primary tool for managing and mitigating these risks. Understanding the language of risk and insurance is crucial for protecting assets and making informed decisions.
+Risk is an inherent part of finance, from personal investments to corporate strategies. Insurance is a primary tool for managing and mitigating these risks. Understanding the language of [risk and insurance](../finance/risk-and-insurance.md#concept-risk-and-insurance) is crucial for protecting assets and making informed decisions.
 
 *   **Peril**: At its core, a peril is simply the **cause of a loss**.
     *   **Example**: If your house burns down, **fire** is the peril. If your car is stolen, **theft** is the peril.
@@ -64,15 +55,15 @@ Risk is an inherent part of finance, from personal investments to corporate stra
     *   There should be no catastrophic loss that affects too many insureds at once (e.g., a widespread natural disaster that bankrupts the insurer).
     *   **Example**: Most personal, property, and liability risks (like car accidents or house fires) are insurable because they meet these criteria.
 *   **Non-insurable Risk**: These are risks that are difficult or impossible to insure, often because they don't meet the criteria for insurable risk.
-    *   **Example**: Market risks (like a stock market crash), financial risks, production risks, and political risks are typically non-insurable by traditional insurance policies.
-*   **Reinsurance**: This is essentially "insurance for insurance companies." An insurance company purchases insurance from another insurer (the reinsurer) to reduce its own risk exposure. This helps spread the risk among many insurers and provides access to more financial resources, especially for large or catastrophic claims.
+    *   **Example**: Market risks (like a [stock market](../finance/equity-market.md#concept-equity-market) crash), financial risks, production risks, and political risks are typically non-insurable by traditional insurance policies.
+*   **Reinsurance**: This is essentially "insurance for insurance companies." An [insurance company](../finance/risk-and-insurance.md#concept-insurance) purchases insurance from another insurer (the reinsurer) to reduce its own risk exposure. This helps spread the risk among many insurers and provides access to more financial resources, especially for large or catastrophic claims.
 
 <!-- IMAGE_SLOT: img-001 -->
 ![A simple diagram illustrating the concept of reinsurance. It shows a primary insurance company (Insurer A) selling policies](../../../../../image/finance/rules-of-thumb/img-001.png)
 
 
 *   **Hazards**: These are conditions that increase the chance or severity of a loss.
-    *   **Physical Hazard**: Physical conditions that increase the chance of loss.
+    *   **[Physical Hazard](../finance/risk-and-insurance.md#concept-hazard)**: Physical conditions that increase the chance of loss.
         *   **Example**: Icy roads increasing the chance of a car accident, or defective wiring increasing the chance of a fire.
     *   **Moral Hazard**: Dishonesty or character defects that increase the chance of loss. This often involves intentional actions.
         *   **Example**: Faking an accident to collect insurance money, or intentionally inflating a claim amount.
@@ -84,12 +75,12 @@ Risk is an inherent part of finance, from personal investments to corporate stra
 #### Understanding Stocks and Dividends
 When you invest in stocks, you're buying a piece of a company. Understanding the different types of stocks and how companies distribute profits is fundamental to equity investing.
 
-*   **Stock**: A share of stock represents a claim on the company's assets and earnings, signifying ownership.
-    *   **Common Stock**:
+*   **[Stock](../finance/equity-market.md#concept-stock)**: A share of stock represents a claim on the company's assets and earnings, signifying ownership.
+    *   **[Common Stock](../finance/equity-market.md#concept-common-stock)**:
         *   Represents a **residual claim** on the firm's cash flows, meaning common shareholders get paid after everyone else (creditors, preferred shareholders) in the event of liquidation.
         *   Receive dividends at management's discretion (not guaranteed).
         *   Typically have **voting rights** to elect a board of directors, giving them a say in company management.
-    *   **Preferred Stock**:
+    *   **[Preferred Stock](../finance/equity-market.md#concept-preferred-stock)**:
         *   Receive **fixed dividend payments** before common stockholders. These dividends are often a set percentage of the par value.
         *   Dividends can be skipped, but any skipped dividends must usually be paid in full in the future (cumulative preferred stock) before common shareholders receive anything.
         *   Usually have **no voting rights**.

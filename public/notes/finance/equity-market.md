@@ -1,12 +1,3 @@
----
-title: "Equity Market"
-slug: equity-market
-display: true
-order: 4
-tags:
-  - finance
----
-
 <a id="concept-equity-market"></a>
 # Equity Market
 
@@ -20,7 +11,7 @@ tags:
 ## Introduction
 Imagine you want to start a business, but you don't have enough money yourself. You could ask friends and family, or you could invite many people to become small owners of your company in exchange for their money. This is the core idea behind the **equity market**, also known as the **stock market**. It's a vibrant marketplace where pieces of companies – called **stocks** or **equities** – are bought and sold.
 
-Understanding the equity market is crucial for anyone looking to invest, grow their wealth, or simply comprehend how businesses raise capital and how their value is perceived. In this lesson, we'll break down what stocks are, explore different types of ownership, and touch upon how their value is determined. Let's start by understanding the very foundation: what exactly is a stock?
+Understanding the equity market is crucial for anyone looking to invest, grow their wealth, or simply comprehend how businesses raise capital and how their value is perceived. In this lesson, we'll break down what stocks are, explore different types of ownership, and touch upon how their value is determined. Let's start by understanding the very foundation: what exactly is a [stock](../finance/equity-market.md#concept-stock)?
 
 ## Concept Progression
 
@@ -40,7 +31,7 @@ For example, if a company like "Global Innovations Inc." decides to raise money 
 
 <a id="concept-common-stock"></a>
 ### Common Stock vs. Preferred Stock
-While all stocks represent ownership, not all ownership stakes are created equal. Companies often issue different types of stock, each with distinct rights and features. The two primary types are **common stock** and **preferred stock**.
+While all stocks represent ownership, not all ownership stakes are created equal. Companies often issue different types of stock, each with distinct rights and features. The two primary types are **common stock** and **[preferred stock](../finance/equity-market.md#concept-preferred-stock)**.
 
 #### Common Stock
 This is the most prevalent type of stock and what most people refer to when they talk about "stocks." As a **common stockholder**, you have:
@@ -51,7 +42,7 @@ This is the most prevalent type of stock and what most people refer to when they
 <a id="concept-preferred-stock"></a>
 #### Preferred Stock
 **Preferred stock** offers a different set of benefits and limitations, often appealing to investors seeking more stability:
-*   **Fixed Dividend Payments**: Preferred stockholders receive a fixed dividend payment, which is usually a percentage of the stock's par value. These payments are made *before* any dividends are paid to common stockholders.
+*   **Fixed Dividend Payments**: Preferred stockholders receive a fixed dividend payment, which is usually a percentage of the [stock](../finance/equity-market.md#concept-stock)'s par value. These payments are made *before* any dividends are paid to common stockholders.
 *   **Dividend Priority**: In case of financial difficulty, preferred stockholders have a higher claim on the company's assets and earnings than common stockholders. If dividends are skipped, they often accumulate and must be paid in full before common stockholders receive anything (this is called "cumulative preferred stock").
 *   **No Voting Rights (Usually)**: Preferred stockholders typically do not have voting rights in company decisions. They trade the influence of voting for the stability of fixed, priority dividends.
 
@@ -62,7 +53,7 @@ Think of it like this: Common stockholders are like the main partners in a busin
 
 
 ### Understanding Dividends
-Speaking of sharing profits, let's delve deeper into **dividends**. A dividend is a distribution of a portion of a company's earnings to its shareholders. It's a direct way for companies to share their profits with their owners. It's important to remember that not all companies pay dividends; growth-oriented companies often reinvest all their profits back into the business to fuel further expansion.
+Speaking of sharing profits, let's delve deeper into **dividends**. A dividend is a [distribution](../statistics/distribution.md#concept-distribution) of a portion of a company's earnings to its shareholders. It's a direct way for companies to share their profits with their owners. It's important to remember that not all companies pay dividends; growth-oriented companies often reinvest all their profits back into the business to fuel further expansion.
 
 The process of paying a dividend involves a few key dates that investors need to be aware of:
 1.  **Declaration Date**: This is the date when the company's board of directors officially announces its intention to pay a dividend, specifying the amount per share and the record date.
@@ -102,7 +93,7 @@ Understanding these classifications helps investors build a diversified portfoli
 ### Introduction to Stock Valuation
 Now that we understand what stocks are, their types, and how they pay dividends, a crucial question arises: how do we determine what a stock is *worth*? **Stock valuation** is the process of estimating the intrinsic (true) value of a company's stock. Investors use valuation techniques to determine if a stock is currently trading at a fair price, or if it's undervalued (a potential good buy) or overvalued (potentially a good time to sell).
 
-One theoretical approach is the **Dividend Discount Model (DDM)**. The basic idea behind DDM is that the value of a stock is the present value of all its future dividend payments. If a company is expected to pay high, consistent dividends far into the future, its stock should theoretically be worth more today.
+One theoretical approach is the **Dividend Discount Model (DDM)**. The basic idea behind DDM is that the value of a stock is the [present value](../finance/time-value.md#concept-present-value) of all its future dividend payments. If a company is expected to pay high, consistent dividends far into the future, its stock should theoretically be worth more today.
 
 While DDM is a foundational concept, investors often use a combination of practical metrics to quickly assess a stock's valuation:
 

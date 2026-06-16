@@ -11,9 +11,9 @@ By the end of this lesson, you will be able to:
 - Interpret the R-squared metric to assess the goodness of fit for a regression model.
 
 ## Introduction
-In our previous lesson, we explored the exciting world of supervised learning, where models learn from labeled [data](../data-science/data-fundamentals-and-types.md#concept-data). We saw how classification models predict categories, like "spam" or "not spam." But what if you need to predict a number, rather than a category? What if you want to estimate the price of a house, the temperature tomorrow, or a person's salary?
+In our previous lesson, we explored the exciting world of [supervised learning](../data-science/introduction-to-machine-learning.md#concept-supervised-learning), where models learn from labeled [data](../data-science/data-fundamentals-and-types.md#concept-data). We saw how [classification](../data-science/supervised-learning-classification.md#concept-classification) models predict categories, like "spam" or "not spam." But what if you need to predict a number, rather than a category? What if you want to estimate the price of a house, the temperature tomorrow, or a person's salary?
 
-This is where **regression** comes in! Regression is a powerful type of supervised learning used to predict continuous numerical values. It's like drawing a line (or a more complex curve) through data points to find a pattern that allows us to make educated guesses about new, unseen data. In this lesson, we'll dive into the fundamentals of regression, starting with the simplest yet incredibly useful technique: linear regression.
+This is where **[regression](../data-science/supervised-learning-regression.md#concept-regression-analysis)** comes in! Regression is a powerful type of supervised learning used to predict continuous numerical values. It's like drawing a line (or a more complex curve) through data points to find a pattern that allows us to make educated guesses about new, unseen data. In this lesson, we'll dive into the fundamentals of regression, starting with the simplest yet incredibly useful technique: [linear regression](../data-science/supervised-learning-regression.md#concept-linear-regression).
 
 ## Concept Progression
 
@@ -48,14 +48,14 @@ In the context of linear regression:
 So, our house price prediction model might look like:
 `Predicted Price = (Slope * House Size) + Intercept`
 
-Let's say after analyzing data, our model finds that `m = 150` and `b = 50000`.
+Let's say after [analyzing data](../data-science/introduction-to-data-science.md#concept-data-scientist), our model finds that `m = 150` and `b = 50000`.
 Then, for a house of `1500 sq ft`:
 `Predicted Price = (150 * 1500) + 50000 = 225000 + 50000 = $275,000`
 
 This simple equation allows us to make predictions based on the learned relationship.
 
 ### Finding the "Best Fit" Line: The Challenge
-You might be wondering, how do we find the "best" straight line? There are infinitely many lines we could draw through a scatter plot. The "best fit" line is the one that minimizes the difference between the predicted values and the actual values in our training data.
+You might be wondering, how do we find the "best" straight line? There are infinitely many lines we could draw through a scatter plot. The "best fit" line is the one that minimizes the difference between the predicted values and the actual values in our [training data](../data-science/introduction-to-machine-learning.md#concept-bias-variance-tradeoff).
 
 Consider the actual house prices from our data and the prices our line predicts. For each house, there will be a difference between its actual price and the price our line estimates. We want a line where these differences, on average, are as small as possible. This difference is often called the **error** or **residual**.
 
@@ -65,7 +65,7 @@ Consider the actual house prices from our data and the prices our line predicts.
 
 <a id="concept-mean-squared-error"></a>
 ### Measuring Model Performance: Mean Squared Error (MSE)
-To find the "best fit" line, we need a way to quantify how "bad" a given line is, or how large these errors are. This measure is called a **loss [function](../python/functions-in-python.md#concept-function)** or **cost function**. A common and powerful loss function for regression is the **Mean Squared Error (MSE)**.
+To find the "best fit" line, we need a way to quantify how "bad" a given line is, or how large these errors are. This measure is called a **loss [function](../python/functions-in-python.md#concept-function)** or **cost function**. A common and powerful loss function for [regression](../data-science/supervised-learning-regression.md#concept-regression-analysis) is the **Mean Squared Error (MSE)**.
 
 Here's how MSE works:
 1.  For each data point, calculate the **error** (or **residual**): the difference between the actual value ($y_{actual}$) and the value predicted by our line ($\hat{y}_{predicted}$).
@@ -118,7 +118,7 @@ Here's the intuition:
 
 The "size" of each step is controlled by a parameter called the **learning rate**. A small learning rate means tiny steps, which can be slow but precise. A large learning rate means big steps, which can be faster but might overshoot the minimum or bounce around.
 
-Gradient Descent is a fundamental algorithm not just for linear regression, but for training many machine learning models, especially neural networks.
+Gradient Descent is a fundamental algorithm not just for [linear regression](../data-science/supervised-learning-regression.md#concept-linear-regression), but for training many [machine learning](../data-science/introduction-to-data-science.md#concept-machine-learning) models, especially neural networks.
 
 <a id="concept-multiple-linear-regression"></a>
 ### Multiple Linear Regression: More Features, Better Predictions
@@ -138,13 +138,13 @@ For our house price example:
 
 Each coefficient ($b_1, b_2$, etc.) tells us the estimated impact of its corresponding feature on the predicted price, assuming all other features remain constant. For instance, `Coefficient_Bedrooms` might tell us how much the price increases for each additional bedroom, holding size and age constant.
 
-Multiple linear regression allows our models to capture more complex relationships and often leads to more accurate predictions by leveraging more available data. The process of finding the best coefficients ($b_0, b_1, ..., b_n$) still involves minimizing a loss [function](../python/functions-in-python.md#concept-function) like MSE, typically using algorithms like Gradient Descent, just with more parameters to adjust.
+Multiple linear regression allows our models to capture more complex relationships and often leads to more accurate predictions by leveraging more available data. The process of finding the best coefficients ($b_0, b_1, ..., b_n$) still involves minimizing a loss [function](../python/functions-in-python.md#concept-function) like MSE, typically using algorithms like [Gradient Descent](../data-science/supervised-learning-regression.md#concept-gradient-descent), just with more parameters to adjust.
 
 <a id="concept-r-squared"></a>
 ### Evaluating Regression Models: R-squared
 After all the effort of building and optimizing our regression model, we need a clear way to understand how well it's actually performing. MSE tells us the average squared error, but it's in squared units of our target variable, which can be hard to interpret directly. A more intuitive metric is **R-squared** (also known as the **coefficient of determination**).
 
-R-squared measures the proportion of the variance in the dependent variable (our target, like house price) that is predictable from the independent variables (our features, like house size, bedrooms). In simpler terms, it tells us how well our model explains the variability of the target variable around its mean.
+R-squared measures the proportion of the [variance](../statistics/basic-statistics.md#concept-variance) in the dependent variable (our target, like house price) that is predictable from the independent variables (our features, like house size, bedrooms). In simpler terms, it tells us how well our model explains the variability of the target variable around its mean.
 
 -   **R-squared values typically range from 0 to 1 (or 0% to 100%).**
 -   An R-squared of **0** means our model explains none of the variability of the target variable around its mean. Essentially, our model is no better than simply predicting the average value of the target variable for every input.

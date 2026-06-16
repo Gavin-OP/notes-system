@@ -27,7 +27,7 @@ To formalize this, let's define some basic terms:
 -   **Experiment:** A process that leads to well-defined outcomes (e.g., flipping a coin, rolling a die, observing a customer's purchase decision).
 -   **Outcome:** A single possible result of an experiment (e.g., getting "Heads" when flipping a coin, rolling a 4 on a die).
 -   **Event:** A collection of one or more outcomes (e.g., getting an even number when rolling a die, which includes outcomes 2, 4, or 6; or a customer making a purchase).
--   **Sample Space:** The set of all possible outcomes of an experiment (e.g., for a coin flip, the sample space is {Heads, Tails}; for a standard die roll, it's {1, 2, 3, 4, 5, 6}).
+-   **[Sample Space](../statistics/basic-definition.md#concept-sample-space):** The set of all possible outcomes of an experiment (e.g., for a coin flip, the sample space is {Heads, Tails}; for a standard die roll, it's {1, 2, 3, 4, 5, 6}).
 
 The probability of an event (let's call it A) is calculated as:
 
@@ -64,7 +64,7 @@ Once we have a random variable, a **probability distribution** describes how the
 #### Discrete Probability Distributions
 For discrete random variables, a probability distribution assigns a probability to each possible value. This is often represented by a **Probability Mass [Function](../python/functions-in-python.md#concept-function) (PMF)**. The sum of all these probabilities for all possible values must equal 1.
 
-*   **Binomial Distribution:** This distribution is used to model the number of "successes" in a fixed number of independent trials, where each trial has only two possible outcomes (success or failure) and the probability of success is constant for every trial.
+*   **[Binomial Distribution](../statistics/distribution.md#concept-binomial-distribution):** This [distribution](../statistics/distribution.md#concept-distribution) is used to model the number of "successes" in a fixed number of independent trials, where each trial has only two possible outcomes (success or failure) and the probability of success is constant for every trial.
     *   **Example:** Imagine a marketing team sends out 10 email campaigns, and historically, each campaign has a 30% chance of leading to a sale. The Binomial distribution can tell us the probability of getting exactly 0, 1, 2, ..., up to 10 sales from these 10 campaigns. This helps the team understand the likely range of outcomes for their campaigns.
 
     ```python
@@ -94,7 +94,7 @@ For discrete random variables, a probability distribution assigns a probability 
 #### Continuous Probability Distributions
 For continuous random variables, we can't assign a probability to a single exact value (the probability of any single exact value is technically zero, as there are infinite possibilities). Instead, we talk about the probability of the variable falling within a certain range, using a **probability density function (PDF)**. The area under the PDF curve over a specific range gives the probability for that range.
 
-*   **Normal Distribution (Gaussian Distribution):** This is arguably the most important distribution in statistics and data science. It's often called the "bell curve" because of its symmetrical, bell-shaped graph. Many natural phenomena (like human height, blood pressure, measurement errors, and even the sum of many small random effects) tend to follow a Normal distribution. It's completely characterized by its mean ($\mu$, which determines its center) and standard deviation ($\sigma$, which determines its spread).
+*   **[Normal Distribution](../statistics/distribution.md#concept-normal-distribution) (Gaussian Distribution):** This is arguably the most important distribution in statistics and data science. It's often called the "bell curve" because of its symmetrical, bell-shaped graph. Many natural phenomena (like human height, blood pressure, measurement errors, and even the sum of many small random effects) tend to follow a Normal distribution. It's completely characterized by its mean ($\mu$, which determines its center) and standard deviation ($\sigma$, which determines its spread).
     *   **Example:** The heights of adult males in a country might be normally distributed with a mean of 175 cm and a standard deviation of 7 cm. The Normal distribution allows us to calculate the probability that a randomly selected male is, for instance, between 170 cm and 180 cm tall, or taller than 185 cm. This is incredibly useful for understanding population characteristics.
 
 <!-- IMAGE_SLOT: img-001 -->
@@ -124,7 +124,7 @@ After collecting data from a sample, we often want to test a specific claim or i
 
 The process typically involves setting up two competing statements:
 
-1.  **Null Hypothesis ($H_0$):** This is the statement of no effect, no difference, or no relationship. It represents the status quo, the default assumption, or the claim we are trying to disprove. We assume $H_0$ is true until we have strong statistical evidence against it.
+1.  **[Null Hypothesis](../data-science/statistical-foundations.md#concept-p-value) ($H_0$):** This is the statement of no effect, no difference, or no relationship. It represents the status quo, the default assumption, or the claim we are trying to disprove. We assume $H_0$ is true until we have strong statistical evidence against it.
     *   **Example:** A company claims that the average loading time of their website is 3 seconds. $H_0: \mu = 3$ seconds (where $\mu$ is the true average loading time for all users).
     *   **Example:** A new marketing strategy has no effect on customer conversion rate. $H_0: \text{Conversion Rate}_{\text{new}} = \text{Conversion Rate}_{\text{old}}$.
 
@@ -134,13 +134,13 @@ The process typically involves setting up two competing statements:
 
 The general steps for a typical hypothesis test are:
 1.  **State the Hypotheses:** Clearly define your $H_0$ and $H_1$ based on your research question.
-2.  **Collect Data:** Gather a representative sample from the population.
+2.  **[Collect Data](../data-science/statistical-foundations.md#concept-sampling):** Gather a representative sample from the population.
 3.  **Calculate a Test Statistic:** This is a value derived from your sample data that measures how far your sample results deviate from what you'd expect if the null hypothesis were true.
 4.  **Determine the P-Value:** This quantifies the evidence against the null hypothesis (we'll dive into this next).
 5.  **Make a Decision:** Based on the p-value and a predetermined significance level, decide whether to reject $H_0$ or fail to reject $H_0$.
 
 **Example:**
-A data scientist wants to test if a new algorithm improves the accuracy of a recommendation system.
+A [data scientist](../data-science/introduction-to-data-science.md#concept-data-scientist) wants to test if a new algorithm improves the [accuracy](../data-science/supervised-learning-classification.md#concept-accuracy) of a recommendation system.
 -   $H_0$: The new algorithm has no effect on accuracy (i.e., its accuracy is the same as the old one).
 -   $H_1$: The new algorithm *improves* accuracy.
 They run the new algorithm on a sample of users, measure its accuracy, and then use hypothesis testing to see if the observed improvement is statistically significant or just due to random chance. This structured approach helps avoid making decisions based on mere coincidence.

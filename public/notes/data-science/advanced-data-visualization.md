@@ -9,16 +9,16 @@
 - Combine multiple visualizations into cohesive and informative data dashboards.
 
 ## Introduction
-You've already explored the basics of [data visualization](../data-science/exploratory-data-analysis.md#concept-data-visualization), understanding how simple charts like bar graphs and line plots can help us get a first glance at our data. But what happens when your data is more complex, or when you need to tell a more nuanced story that simple charts can't capture? This is where **advanced data visualization** comes in.
+You've already explored the basics of [data visualization](../data-science/exploratory-data-analysis.md#concept-data-visualization), understanding how simple charts like bar graphs and line plots can help us get a first glance at our [data](../data-science/data-fundamentals-and-types.md#concept-data). But what happens when your data is more complex, or when you need to tell a more nuanced story that simple charts can't capture? This is where **advanced data visualization** comes in.
 
-Advanced visualization moves beyond simple summaries to help you uncover hidden patterns, relationships, and [outliers](../data-science/data-cleaning-preprocessing.md#concept-outliers) that might be invisible in basic charts. It's about transforming raw data into compelling visual narratives that can drive understanding and inform decisions. In this lesson, we'll dive into two powerful Python libraries, [Matplotlib](../python/intro-scientific-computing.md#concept-matplotlib-library) and Seaborn, to equip you with the skills to create sophisticated and impactful visualizations that truly bring your data to life.
+Advanced visualization moves beyond simple summaries to help you uncover hidden patterns, relationships, and [outliers](../data-science/data-cleaning-preprocessing.md#concept-outliers) that might be invisible in basic charts. It's about transforming [raw data](../data-science/data-cleaning-preprocessing.md#concept-data-cleaning-preprocessing) into compelling visual narratives that can drive understanding and inform decisions. In this lesson, we'll dive into two powerful [Python libraries](../data-science/programming-for-data-science-python.md#concept-python-libraries), [Matplotlib](../python/intro-scientific-computing.md#concept-matplotlib-library) and Seaborn, to equip you with the skills to create sophisticated and impactful visualizations that truly bring your data to life.
 
 ## Concept Progression
 
 ### 1. Beyond the Basics: Why Advanced Visualization?
 Imagine you're trying to describe a bustling city. A simple street map (like a basic bar chart) might show you the main roads. But to truly understand the city – its traffic flow, popular neighborhoods, public transport routes, and hidden gems – you'd need a much more detailed, perhaps interactive, map with multiple layers of information.
 
-Advanced data visualization serves a similar purpose for your [data](../data-science/data-fundamentals-and-types.md#concept-data). While basic plots are excellent for initial exploration and answering simple questions, real-world datasets often contain intricate relationships, multiple variables, and subtle trends. Advanced techniques allow us to:
+Advanced data visualization serves a similar purpose for your data. While basic plots are excellent for initial exploration and answering simple questions, real-world datasets often contain intricate relationships, multiple variables, and subtle trends. Advanced techniques allow us to:
 -   **Uncover Deeper Insights:** Reveal correlations, distributions, and anomalies that are not immediately obvious.
 -   **Enhance Storytelling:** Present complex information in a clear, engaging, and persuasive manner.
 -   **Support Decision Making:** Provide comprehensive visual evidence to back up conclusions and guide strategic choices.
@@ -27,7 +27,7 @@ It's about moving from simply showing data to truly understanding and communicat
 
 <a id="concept-matplotlib"></a>
 ### 2. Matplotlib: The Foundation for Customization
-Matplotlib is the grand-daddy of Python plotting libraries. Think of it as a blank canvas and a complete set of high-quality art supplies. You have immense control over every single pixel and element of your plot. This power means you can create almost any static, animated, or interactive visualization imaginable. Because of this granular control, Matplotlib often requires more explicit instructions for common tasks, making it sometimes more verbose. However, its foundational role means that many other plotting libraries, including Seaborn, build directly upon Matplotlib.
+Matplotlib is the grand-daddy of Python plotting libraries. Think of it as a blank canvas and a complete set of high-quality art supplies. You have immense control over every single pixel and element of your plot. This power means you can create almost any static, animated, or interactive visualization imaginable. Because of this granular control, Matplotlib often requires more explicit instructions for common tasks, making it sometimes more verbose. However, its foundational role means that many other plotting libraries, including [Seaborn](../data-science/advanced-data-visualization.md#concept-seaborn), build directly upon Matplotlib.
 
 Let's start by creating a customized scatter plot using [Matplotlib](../python/intro-scientific-computing.md#concept-matplotlib-library). A scatter plot is excellent for visualizing the relationship between two numerical variables.
 
@@ -83,7 +83,7 @@ In this example, we explicitly controlled the figure and axes, set titles and la
 
 <a id="concept-seaborn"></a>
 ### 3. Seaborn: Making Statistical Plots Beautiful and Easy
-While Matplotlib gives you granular control, **Seaborn builds directly on top of Matplotlib** to provide a higher-level interface for drawing attractive and informative statistical graphics. If Matplotlib is your raw canvas and paints, Seaborn is like having a set of specialized brushes and pre-mixed, aesthetically pleasing colors for common statistical visualizations. It simplifies the creation of complex plots and integrates seamlessly with Pandas DataFrames. This means you'll often use Matplotlib functions (like `plt.figure()` or `plt.show()`) alongside Seaborn, as Seaborn leverages Matplotlib for the underlying plotting infrastructure.
+While Matplotlib gives you granular control, **Seaborn builds directly on top of Matplotlib** to provide a higher-level interface for drawing attractive and informative statistical graphics. If Matplotlib is your raw canvas and paints, Seaborn is like having a set of specialized brushes and pre-mixed, aesthetically pleasing colors for common statistical visualizations. It simplifies the creation of complex plots and integrates seamlessly with [Pandas DataFrames](../data-science/programming-for-data-science-python.md#concept-pandas-dataframe). This means you'll often use Matplotlib functions (like `plt.figure()` or `plt.show()`) alongside Seaborn, as Seaborn leverages Matplotlib for the underlying plotting infrastructure.
 
 Let's recreate a similar scatter plot using Seaborn, but this time, we'll add a categorical variable to see how it simplifies grouping and coloring.
 
@@ -136,9 +136,9 @@ Notice how Seaborn automatically picked distinct colors for each `Course Type` a
 Now that you're familiar with the power of Matplotlib and the convenience of Seaborn, let's explore some specific advanced plot types that are invaluable for deeper [data analysis](../python/intro-scientific-computing.md#concept-data-analysis). These plots help us understand distributions, compare groups, and visualize relationships in ways that simple bar or line charts cannot.
 
 #### 4.1 Histograms: Understanding Distributions
-You've likely encountered basic histograms to see the frequency of values in a dataset. Advanced use of histograms often involves comparing distributions or adding a Kernel Density Estimate (KDE) for a smoother representation of the underlying probability distribution.
+You've likely encountered basic histograms to see the frequency of values in a dataset. Advanced use of histograms often involves comparing distributions or adding a Kernel Density Estimate (KDE) for a smoother representation of the underlying [probability distribution](../data-science/statistical-foundations.md#concept-probability).
 
--   **Intuition:** A basic histogram is like counting how many people fall into different height ranges. A histogram with a KDE is like drawing a smooth curve over those counts to guess the general shape of the height distribution in the entire population, even for heights not explicitly measured.
+-   **Intuition:** A basic histogram is like counting how many people fall into different height ranges. A histogram with a KDE is like drawing a smooth curve over those counts to guess the general shape of the height [distribution](../statistics/distribution.md#concept-distribution) in the entire population, even for heights not explicitly measured.
 -   **Deeper Understanding:** Histograms divide the range of a numerical variable into bins and show the count or frequency of observations falling into each bin. A KDE plot estimates the probability density [function](../python/functions-in-python.md#concept-function) of a random variable, providing a continuous curve that can be smoother and more informative than a histogram, especially for smaller datasets or when you want to infer the underlying shape of the distribution.
 
 Let's visualize the distribution of `Exam Score` and overlay a KDE to get a clearer picture of its shape.
@@ -195,7 +195,7 @@ plt.show()
 This makes boxplots invaluable for comparing distributions at a glance, quickly highlighting differences in central tendency, spread, and the presence of extreme values between groups.
 
 #### 4.3 Heatmaps: Visualizing Relationships in Grids
-Heatmaps are powerful for visualizing matrix-like [data](../data-science/data-fundamentals-and-types.md#concept-data), where the intensity of color represents the value in each cell. They are particularly effective for showing [correlation](../data-science/exploratory-data-analysis.md#concept-correlation) matrices, displaying patterns in large tables, or visualizing feature importance in machine learning.
+Heatmaps are powerful for visualizing matrix-like [data](../data-science/data-fundamentals-and-types.md#concept-data), where the intensity of color represents the value in each cell. They are particularly effective for showing [correlation](../data-science/exploratory-data-analysis.md#concept-correlation) matrices, displaying patterns in large tables, or visualizing feature importance in [machine learning](../data-science/introduction-to-data-science.md#concept-machine-learning).
 
 -   **Intuition:** Imagine a table of numbers, but instead of reading each number, you just look at the color of the cell. Darker colors might mean bigger numbers, lighter colors might mean smaller numbers. This helps you quickly spot patterns and relationships without having to scrutinize every single value.
 -   **Deeper Understanding:** In a heatmap, a numerical value is mapped to a color gradient. This allows for quick visual identification of high and low values, and patterns across rows and columns. When applied to a correlation matrix, it immediately highlights strong positive (e.g., dark blue) or negative (e.g., dark red) relationships between variables, making complex interdependencies easy to grasp.

@@ -1,0 +1,124 @@
+{
+  "subject": "statistics",
+  "topic_slug": "distribution",
+  "title": "Distribution",
+  "markdown": "<a id=\"concept-distribution\"></a>\n# Distribution\n\n## Learning Objectives\n- Understand what a probability distribution is and why it's important in data analysis.\n- Differentiate between discrete and continuous probability distributions.\n- Identify the characteristics and common applications of the Bernoulli, Binomial, Poisson, Normal, and Exponential distributions.\n- Recognize the roles of the Chi-squared and Student's t-distributions in statistical inference.\n- Develop an intuitive understanding of how different distributions model real-world phenomena.\n\n## Introduction\nImagine you're tracking something in the world – perhaps the number of heads you get when flipping a coin, the height of students in a class, or the number of cars passing a certain point on a road in an hour. When you collect this [data](../data-science/data-fundamentals-and-types.md#concept-data), you'll inevitably notice patterns. Some values occur more often than others, and some values might be very rare.\n\nA **distribution** is essentially a map that shows you all the possible values a variable can take and how often each value occurs. Think of it as a way to visualize the \"shape\" of your data. Understanding these shapes, or distributions, is fundamental to making sense of data, predicting future outcomes, and drawing meaningful conclusions in statistics and [data science](../data-science/introduction-to-data-science.md#concept-data-science). It helps us answer crucial questions like: \"What's the most likely outcome?\" or \"How spread out are my results?\"\n\nIn this lesson, we'll explore various types of distributions, starting with the most basic concepts and gradually building up to some of the most commonly used distributions in statistics.\n\n## Concept Progression\n\n### What is a Distribution?\nAt its core, a distribution describes the likelihood of different outcomes for a variable. If you were to [collect data](../data-science/statistical-foundations.md#concept-sampling) on a variable, say the scores on a recent exam, and then plot how many students got each score, you'd be visualizing its distribution. Some scores might be very common (e.g., around 70-80%), while others might be rare (e.g., 0% or 100%).\n\nConsider a simple example: rolling a single six-sided die.\nThe possible outcomes are 1, 2, 3, 4, 5, 6.\nIf the die is fair, each outcome has an equal chance of appearing (1/6).\nIf you roll the die many times and record the results, you'd expect to see each number appear roughly the same number of times. This is a **[uniform distribution](../statistics/basic-definition.md#concept-probability-density-function)**, where all outcomes are equally likely.\n\n<!-- IMAGE_SLOT: img-001 -->\n![A bar chart showing the distribution of rolling a fair six-sided die. The x-axis is labeled \"Outcome (1-6)\"](../../../../../image/statistics/distribution/img-001.png)\n\n\nDistributions can be represented in various ways:\n*   **Tables**: Listing each outcome and its frequency/probability.\n*   **Graphs**: Histograms or bar charts for discrete [data](../data-science/data-fundamentals-and-types.md#concept-data), or smooth curves for [continuous data](../data-science/data-fundamentals-and-types.md#concept-quantitative-data).\n*   **Formulas**: Mathematical equations that describe the probability of each outcome.\n\n### Discrete vs. Continuous Distributions\nA crucial first step in understanding distributions is to distinguish between discrete and [continuous variables](../statistics/basic-statistics.md#concept-expectation), as this distinction determines the type of distribution we use to model them.\n\n*   **Discrete Distributions**: These are used for variables that can only take on a finite or countably infinite number of distinct, separate values. Think of things you can *count*.\n    *   **Examples**: The number of heads in 10 coin flips (can be 0, 1, 2, ..., 10), the number of cars passing a point in an hour (can be 0, 1, 2, ...), the number of children in a family. You can't have 2.5 heads or 1.7 cars.\n    *   **Representation**: Often shown with bar charts, where each bar represents the probability of a specific, distinct outcome.\n\n*   **Continuous Distributions**: These are used for variables that can take on any value within a given range. Think of things you *measure*.\n    *   **Examples**: The height of a person (can be 170 cm, 170.5 cm, 170.53 cm, etc.), the temperature of a room, the time it takes to complete a task.\n    *   **Representation**: Often shown with smooth curves. For continuous distributions, we talk about the probability of a value falling within a *range*, rather than the probability of a single exact value (which is technically zero). The area under the curve between two points represents the probability.\n\n<!-- IMAGE_SLOT: img-002 -->\n![A two-panel diagram. The left panel shows a discrete probability distribution with a bar chart, x-axis labeled \"Number](../../../../../image/statistics/distribution/img-002.png)\n\n\n### The Bernoulli Distribution\nLet's start with the simplest discrete distribution. The **Bernoulli distribution** models a single trial of an experiment that has only two possible outcomes: \"success\" or \"failure.\"\n\n*   **Scenario**: Flipping a coin once. It can either be heads (success) or tails (failure).\n*   **Parameters**: It's defined by a single parameter, `p`, which is the probability of success. The probability of failure is then `1 - p`.\n*   **Example**: If you flip a fair coin, `p = 0.5` for getting heads. If you're looking at whether a customer clicks an ad, `p` would be the probability of clicking.\n\n| Outcome | Probability |\n| :------ | :---------- |\n| Success (1) | `p` |\n| Failure (0) | `1 - p` |\n\nThis distribution is the fundamental building block for many other discrete distributions.\n\n<a id=\"concept-binomial-distribution\"></a>\n### The Binomial Distribution\nNow, let's extend the idea of a single Bernoulli trial. The **Binomial distribution** describes the number of successes in a *fixed number* of independent Bernoulli trials.\n\n*   **Scenario**: Instead of flipping a coin once, what if you flip it 10 times? The Binomial distribution tells you the probability of getting, say, exactly 3 heads out of those 10 flips.\n*   **Parameters**: It has two parameters:\n    *   `n`: The number of trials (e.g., 10 coin flips).\n    *   `p`: The probability of success on a single trial (e.g., 0.5 for heads).\n*   **Key Characteristics**:\n    *   A fixed number of trials (`n`).\n    *   Each trial is independent (one flip doesn't affect the next).\n    *   Each trial has only two outcomes (success/failure).\n    *   The probability of success (`p`) is constant for each trial.\n\n**Example**: You're a quality control inspector, and you test 20 items from a production line. Historically, 5% of items are defective (`p = 0.05`). What's the probability that exactly 2 of the 20 items are defective? This is a classic binomial problem.\n\n```python\nfrom scipy.stats import binom\n\nn = 20  # Number of trials (items tested)\np = 0.05 # Probability of success (item being defective)\nk = 2   # Number of successes (2 defective items)\n\n# binom.pmf calculates the Probability Mass Function for discrete distributions\n# It gives the probability of exactly 'k' successes in 'n' trials.\nprobability = binom.pmf(k, n, p)\nprint(f\"The probability of exactly 2 defective items is: {probability:.4f}\")\n# Output: The probability of exactly 2 defective items is: 0.1887\n```\n\n<!-- IMAGE_SLOT: img-003 -->\n![A bar chart showing a binomial distribution for n=10, p=0.5. The x-axis is labeled \"Number of Successes (0-10)\"](../../../../../image/statistics/distribution/img-003.png)\n\n\n<a id=\"concept-poisson-distribution\"></a>\n### The Poisson Distribution\nWhile the [Binomial distribution](../statistics/distribution.md#concept-binomial-distribution) counts successes in a *fixed number of trials*, the **Poisson distribution** helps us count events that happen over a *fixed interval* of time or space, especially when we only know the average rate at which these events occur.\n\n*   **Scenario**: How many phone calls does a customer service center receive in an hour? How many typos are there on a page of a book? How many meteorites hit a certain area in a year?\n*   **Parameters**: It's defined by a single parameter, `λ` (lambda), which represents the average rate of events in the given interval.\n*   **Key Characteristics**:\n    *   Events occur independently.\n    *   The average rate of events (`λ`) is constant over the interval.\n    *   The number of events in one interval does not affect the number of events in another disjoint interval.\n\n**Example**: A call center receives an average of 5 calls per hour (`λ = 5`). What is the probability that they receive exactly 3 calls in the next hour?\n\n```python\nfrom scipy.stats import poisson\n\nlambda_rate = 5 # Average number of calls per hour\nk = 3           # Number of calls we are interested in\n\n# poisson.pmf calculates the Probability Mass Function for discrete distributions\n# It gives the probability of exactly 'k' events occurring given the average rate 'lambda_rate'.\nprobability = poisson.pmf(k, lambda_rate)\nprint(f\"The probability of receiving exactly 3 calls is: {probability:.4f}\")\n# Output: The probability of receiving exactly 3 calls is: 0.1404\n```\n\n<!-- IMAGE_SLOT: img-004 -->\n![A bar chart showing a Poisson distribution for lambda=3. The x-axis is labeled \"Number of Events (0, 1,](../../../../../image/statistics/distribution/img-004.png)\n\n\n<a id=\"concept-normal-distribution\"></a>\n### The Normal Distribution (Gaussian Distribution)\nShifting gears from counting discrete events to measuring continuous phenomena, we encounter the most ubiquitous [distribution](../statistics/distribution.md#concept-distribution) in statistics: the **Normal distribution**, often called the \"bell curve\" or **Gaussian distribution**. It's a continuous distribution that appears naturally in countless real-world scenarios.\n\n*   **Scenario**: Heights of adult males, measurement errors in experiments, blood pressure readings, IQ scores. Many natural processes tend to cluster around an average value, with fewer observations further away.\n*   **Parameters**: It's defined by two parameters:\n    *   `μ` (mu): The mean (average) of the distribution, which also represents the peak of the bell curve.\n    *   `σ` (sigma): The standard deviation, which measures the spread or variability of the data. A smaller `σ` means data points are clustered closer to the mean; a larger `σ` means they are more spread out.\n*   **Key Characteristics**:\n    *   **Symmetric**: The curve is perfectly symmetrical around its mean.\n    *   **Bell-shaped**: It has a distinctive bell shape.\n    *   **Asymptotic**: The tails of the curve approach the x-axis but never quite touch it, meaning theoretically, extreme values are possible, though highly unlikely.\n    *   **Empirical Rule (68-95-99.7 Rule)**: Approximately 68% of data falls within 1 standard deviation of the mean, 95% within 2 standard deviations, and 99.7% within 3 standard deviations.\n\n<!-- IMAGE_SLOT: img-005 -->\n![A smooth bell-shaped curve representing a normal distribution. The x-axis is labeled \"Value\" and the y-axis is labeled](../../../../../image/statistics/distribution/img-005.png)\n\n\nThe Normal distribution is incredibly important because:\n1.  Many natural phenomena inherently follow it.\n2.  The **[Central Limit Theorem](../statistics/probability-theorem.md#concept-central-limit-theorem)** states that the sampling distribution of the sample mean of many independent random variables will be approximately normal, regardless of the original distribution, as long as the sample size is large enough. This makes it crucial for statistical inference, allowing us to make assumptions about sample means even when the underlying population distribution isn't normal.\n\n**Example**: Suppose the heights of adult women are normally distributed with a mean (`μ`) of 163 cm and a standard deviation (`σ`) of 7 cm. What percentage of women are between 156 cm and 170 cm tall? (Notice this range is `μ - σ` to `μ + σ`, so we expect approximately 68% based on the Empirical Rule).\n\n```python\nfrom scipy.stats import norm\n\nmu = 163 # Mean height\nsigma = 7 # Standard deviation of height\n\n# norm.cdf calculates the Cumulative Distribution Function for continuous distributions\n# It gives the probability that a random variable takes a value less than or equal to a given value.\nprob_less_than_170 = norm.cdf(170, mu, sigma) # P(X <= 170)\nprob_less_than_156 = norm.cdf(156, mu, sigma) # P(X <= 156)\n\n# To find P(156 <= X <= 170), we subtract P(X <= 156) from P(X <= 170)\nprobability_range = prob_less_than_170 - prob_less_than_156\nprint(f\"The probability of a woman being between 156cm and 170cm is: {probability_range:.4f}\")\n# Output: The probability of a woman being between 156cm and 170cm is: 0.6827 (approx 68%)\n```\n\n<a id=\"concept-exponential-distribution\"></a>\n### The Exponential Distribution\nWhile the Normal distribution models the distribution of measurements, the **Exponential distribution** is specifically designed to model the *time until an event occurs*. It's a [continuous distribution](../statistics/distribution.md#concept-distribution) often used in scenarios where events happen continuously and independently at a constant average rate, much like the events modeled by the [Poisson distribution](../statistics/distribution.md#concept-poisson-distribution), but here we focus on the *waiting time* between those events.\n\n*   **Scenario**: The time until the next customer arrives at a store, the lifespan of an electronic component, the time between successive calls to a call center.\n*   **Parameters**: It's defined by a single parameter, `λ` (lambda), which is the rate parameter (the average number of events per unit of time). It's the reciprocal of the mean time between events.\n*   **Key Characteristics**:\n    *   **Memoryless Property**: The probability of an event occurring in the future is independent of how much time has already passed. For example, if a component has been working for 10 hours, the probability it will work for another hour is the same as if it were brand new.\n    *   **Right-skewed**: It starts high at 0 and then decreases exponentially, meaning shorter times between events are more likely than longer times.\n\n**Example**: A light bulb has an average lifespan of 1000 hours. This means `λ = 1/1000` (or 0.001 events per hour). What is the probability that a bulb will last less than 500 hours?\n\n```python\nfrom scipy.stats import expon\n\nlambda_rate = 1/1000 # Rate parameter (1/mean lifespan)\ntime_threshold = 500 # Time in hours\n\n# expon.cdf calculates the Cumulative Distribution Function for continuous distributions\n# The 'scale' parameter for expon is 1/lambda (the mean time between events).\nprobability = expon.cdf(time_threshold, scale=1/lambda_rate)\nprint(f\"The probability a bulb lasts less than 500 hours is: {probability:.4f}\")\n# Output: The probability a bulb lasts less than 500 hours is: 0.3935\n```\n\n<!-- IMAGE_SLOT: img-006 -->\n![A smooth curve showing an exponential distribution. The x-axis is labeled \"Time Until Event\" and the y-axis is](../../../../../image/statistics/distribution/img-006.png)\n\n\n<a id=\"concept-students-t-distribution\"></a>\n### Other Key Distributions: Chi-squared and Student's t-Distribution\nSo far, we've looked at distributions that help us describe and model [raw data](../data-science/data-cleaning-preprocessing.md#concept-data-cleaning-preprocessing). Now, let's introduce two distributions that are absolutely critical for *statistical inference* – that is, making educated guesses and drawing conclusions about larger populations based on smaller samples.\n\n*   **Chi-squared Distribution**:\n    *   **Purpose**: This distribution is primarily used in [hypothesis testing](../data-science/statistical-foundations.md#concept-hypothesis-testing), especially for tests involving [categorical data](../data-science/data-fundamentals-and-types.md#concept-quantitative-data) (like the Chi-squared test for independence or goodness-of-fit) and for estimating population variance.\n    *   **Parameters**: It has one parameter: `df` (degrees of freedom), which influences its shape. The degrees of freedom are related to the number of independent pieces of information used to calculate the statistic.\n    *   **Intuition**: It arises when you sum the squares of several independent standard normal random variables. This squaring makes it always positive and right-skewed.\n\n*   **Student's t-Distribution**:\n    *   **Purpose**: The t-distribution is crucial when estimating the mean of a normally distributed population when the sample size is small and the population standard deviation is unknown. It's widely used in t-tests and constructing confidence intervals for means.\n    *   **Parameters**: It also has one parameter: `df` (degrees of freedom), which is typically `n-1` (sample size minus one).\n    *   **Intuition**: It looks similar to the normal distribution but has \"fatter tails,\" meaning it accounts for more uncertainty when dealing with smaller samples. As the degrees of freedom increase (i.e., as sample size increases), the t-distribution approaches the normal distribution.\n\n<!-- IMAGE_SLOT: img-007 -->\n![A multi-line graph comparing the shapes of the Normal distribution and several Student's t-distributions with different degrees of](../../../../../image/statistics/distribution/img-007.png)\n\n\nThese distributions might seem more abstract now, but you'll encounter them frequently when you learn about hypothesis testing and confidence intervals, where they provide the critical values needed to make statistical decisions.\n\n## Wrap-Up\nWe've covered the fundamental concept of a distribution, distinguishing between discrete and continuous types, and explored several key distributions: Bernoulli, Binomial, Poisson, Normal, and Exponential. We also briefly touched upon the Chi-squared and Student's t-distributions, noting their importance in statistical inference.\n\nUnderstanding these distributions is like learning the alphabet of statistical modeling. Each distribution tells a unique story about the data it represents, from simple coin flips to complex natural phenomena. As you continue your journey in statistics, you'll find yourself returning to these foundational concepts again and again, using them to describe, analyze, and make predictions about the world around you. In the next lessons, we'll see how these distributions are applied in real-world scenarios, particularly in the context of sampling and hypothesis testing.",
+  "version": 1781504907,
+  "generated_at": "2026-06-15T06:28:27.464822+00:00",
+  "link_metadata": {
+    "linking": {
+      "format": "markdown_link",
+      "scope": "cross-subject",
+      "max_links_total": 24,
+      "max_links_per_line": 2,
+      "inserted_links_total": 24,
+      "targets": [
+        {
+          "canonical_key": "data-science/categorical-data",
+          "subject": "data-science",
+          "slug": "categorical-data",
+          "title": "categorical data",
+          "count": 1
+        },
+        {
+          "canonical_key": "data-science/collect-data",
+          "subject": "data-science",
+          "slug": "collect-data",
+          "title": "collect data",
+          "count": 1
+        },
+        {
+          "canonical_key": "data-science/continuous-data",
+          "subject": "data-science",
+          "slug": "continuous-data",
+          "title": "continuous data",
+          "count": 1
+        },
+        {
+          "canonical_key": "data-science/data",
+          "subject": "data-science",
+          "slug": "data",
+          "title": "data",
+          "count": 4
+        },
+        {
+          "canonical_key": "data-science/data-science",
+          "subject": "data-science",
+          "slug": "data-science",
+          "title": "Introduction to Data Science",
+          "count": 1
+        },
+        {
+          "canonical_key": "data-science/probability-distribution",
+          "subject": "data-science",
+          "slug": "probability-distribution",
+          "title": "probability distribution",
+          "count": 1
+        },
+        {
+          "canonical_key": "data-science/raw-data",
+          "subject": "data-science",
+          "slug": "raw-data",
+          "title": "raw data",
+          "count": 1
+        },
+        {
+          "canonical_key": "python/data-analysis",
+          "subject": "python",
+          "slug": "data-analysis",
+          "title": "Connecting the Dots",
+          "count": 1
+        },
+        {
+          "canonical_key": "statistics/binomial-distribution",
+          "subject": "statistics",
+          "slug": "binomial-distribution",
+          "title": "binomial distribution",
+          "count": 1
+        },
+        {
+          "canonical_key": "statistics/central-limit-theorem",
+          "subject": "statistics",
+          "slug": "central-limit-theorem",
+          "title": "central limit theorem",
+          "count": 1
+        },
+        {
+          "canonical_key": "statistics/continuous-distribution",
+          "subject": "statistics",
+          "slug": "continuous-distribution",
+          "title": "continuous distributions",
+          "count": 2
+        },
+        {
+          "canonical_key": "statistics/continuous-variable",
+          "subject": "statistics",
+          "slug": "continuous-variable",
+          "title": "continuous variables",
+          "count": 1
+        },
+        {
+          "canonical_key": "statistics/distribution",
+          "subject": "statistics",
+          "slug": "distribution",
+          "title": "Distribution",
+          "count": 6
+        },
+        {
+          "canonical_key": "statistics/poisson-distribution",
+          "subject": "statistics",
+          "slug": "poisson-distribution",
+          "title": "poisson distribution",
+          "count": 1
+        },
+        {
+          "canonical_key": "statistics/uniform-distribution",
+          "subject": "statistics",
+          "slug": "uniform-distribution",
+          "title": "uniform distribution",
+          "count": 1
+        }
+      ]
+    }
+  }
+}

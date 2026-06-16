@@ -1,12 +1,3 @@
----
-title: "Portfolio Management"
-slug: portfolio-management
-display: true
-order: 6
-tags:
-  - finance
----
-
 <a id="concept-portfolio-management"></a>
 # Portfolio Management: Navigating Investment Vehicles
 
@@ -30,7 +21,7 @@ In this lesson, we'll explore three popular types of these pooled investment veh
 ### The Foundation: The Power of Portfolio Diversification
 Before diving into specific investment vehicles, let's understand the core principle that makes them so valuable: **portfolio diversification**.
 
-At its essence, portfolio management is about building and maintaining a collection of investments (your "portfolio") designed to achieve your financial goals. The most fundamental rule in this process is diversification – the strategy of spreading your investments across various asset classes (like stocks, bonds, real estate), different industries, and even different geographical regions.
+At its essence, [portfolio management](../finance/portfolio-management.md#concept-portfolio-management) is about building and maintaining a collection of investments (your "portfolio") designed to achieve your financial goals. The most fundamental rule in this process is diversification – the strategy of spreading your investments across various asset classes (like stocks, bonds, real estate), different industries, and even different geographical regions.
 
 The brilliant idea behind diversification is that not all investments will perform poorly at the same time. When some investments are experiencing a downturn, others might be performing well, helping to balance out your portfolio's overall returns and reduce its total risk.
 
@@ -71,7 +62,7 @@ Let's look at their key characteristics:
 *   **Transparency:** Most ETFs, particularly index-tracking ones, disclose their holdings daily, offering a very high degree of transparency. You can often see exactly what the fund owns at any given time.
 *   **Investor Access:** Like mutual funds, ETFs are highly accessible to all investors through standard brokerage accounts, often with no minimum investment beyond the price of a single share.
 
-**Example:** You believe the broader U.S. stock market will perform well and want to invest in it. Instead of buying all 500 stocks in the S&P 500 individually, you can buy shares of an S&P 500 ETF. If the S&P 500 index rises by 1% during the day, the ETF's price will likely rise by a similar amount. You can buy or sell your ETF shares at any point during market hours, reacting to market movements in real-time.
+**Example:** You believe the broader U.S. [stock market](../finance/equity-market.md#concept-equity-market) will perform well and want to invest in it. Instead of buying all 500 stocks in the S&P 500 individually, you can buy shares of an S&P 500 ETF. If the S&P 500 index rises by 1% during the day, the ETF's price will likely rise by a similar amount. You can buy or sell your ETF shares at any point during market hours, reacting to market movements in real-time.
 
 <!-- IMAGE_SLOT: img-002 -->
 ![A comparison table highlighting the key differences between Mutual Funds and ETFs. Columns: Feature, Mutual Funds, ETFs. Rows:](../../../../../image/finance/portfolio-management/img-002.png)
@@ -81,7 +72,7 @@ Let's look at their key characteristics:
 While mutual funds and ETFs are designed for broad investor access, **hedge funds** represent a very different type of pooled investment vehicle. They are private investment funds that typically employ complex and often aggressive investment strategies, aiming to generate high returns regardless of whether the broader market is rising or falling.
 
 **How they work:**
-Hedge funds pool money from a limited number of investors, often using sophisticated strategies like short selling (betting on a stock's decline), leverage (borrowing money to amplify potential returns), and derivatives (complex financial instruments like options and futures). They have much greater flexibility in their investment choices and strategies compared to the more regulated mutual funds and ETFs.
+Hedge funds pool money from a limited number of investors, often using sophisticated strategies like short selling (betting on a stock's decline), leverage (borrowing money to amplify potential returns), and derivatives ([complex financial](../finance/rules-of-thumb.md#concept-finance-abbreviations) instruments like options and futures). They have much greater flexibility in their investment choices and strategies compared to the more regulated mutual funds and ETFs.
 
 Let's examine their unique characteristics:
 *   **Management Style:** Hedge funds are intensely **actively managed**, often by highly experienced and specialized portfolio managers. They utilize a wide array of sophisticated strategies, such as "long/short equity" (buying some stocks while simultaneously selling others short), "global macro" (making bets on broad economic trends), or "event-driven" (profiting from corporate events like mergers or bankruptcies).
@@ -100,7 +91,7 @@ Understanding the distinct features of mutual funds, ETFs, and hedge funds is cr
 
 
 ## Wrap-Up: Choosing Your Investment Basket
-We've journeyed through three primary types of pooled investment vehicles: mutual funds, ETFs, and hedge funds. Each offers a distinct approach to portfolio management, characterized by varying levels of professional oversight, diversification, cost, and accessibility.
+We've journeyed through three primary types of pooled investment vehicles: mutual funds, ETFs, and hedge funds. Each offers a distinct approach to [portfolio management](../finance/portfolio-management.md#concept-portfolio-management), characterized by varying levels of professional oversight, diversification, cost, and accessibility.
 
 *   **Mutual funds** provide active management and daily NAV pricing, making them a popular choice for long-term investors seeking professional guidance.
 *   **ETFs** offer the flexibility of stock-like trading throughout the day, often with lower costs, especially for passively managed index funds.

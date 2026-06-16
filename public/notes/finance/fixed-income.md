@@ -1,12 +1,3 @@
----
-title: "Fixed Income"
-slug: fixed-income
-display: true
-order: 3
-tags:
-  - finance
----
-
 <a id="concept-fixed-income"></a>
 # Fixed Income
 
@@ -20,9 +11,9 @@ By the end of this lesson, you will be able to:
 - Grasp the concept of portfolio immunization as a strategy to manage interest rate risk.
 
 ## Introduction
-Have you ever wondered how governments build new infrastructure or how large companies fund their expansion projects? Often, they do it by borrowing money directly from investors like you, through something called a **bond**. Bonds are a fundamental part of the financial world, representing a loan made by an investor to a borrower (typically a corporation or government). Unlike stocks, which represent ownership in a company, bonds represent debt. They are often seen as a more stable investment, but they come with their own set of complexities and risks.
+Have you ever wondered how governments build new infrastructure or how large companies fund their expansion projects? Often, they do it by borrowing money directly from investors like you, through something called a **[bond](../finance/fixed-income.md#concept-bond)**. Bonds are a fundamental part of the financial world, representing a loan made by an investor to a borrower (typically a corporation or government). Unlike stocks, which represent ownership in a company, bonds represent debt. They are often seen as a more stable investment, but they come with their own set of complexities and risks.
 
-In this lesson, we'll demystify fixed income securities, starting with the basics of what a bond is, how it pays you, and the factors that influence its value. We'll then explore key concepts like yield, duration, and convexity, which are crucial for understanding how bonds behave and how to manage them effectively in an investment portfolio.
+In this lesson, we'll demystify fixed income securities, starting with the basics of what a bond is, how it pays you, and the factors that influence its value. We'll then explore key concepts like yield, [duration](../finance/fixed-income.md#concept-duration), and [convexity](../finance/fixed-income.md#concept-convexity), which are crucial for understanding how bonds behave and how to manage them effectively in an investment portfolio.
 
 ## Concept Progression
 
@@ -31,16 +22,16 @@ In this lesson, we'll demystify fixed income securities, starting with the basic
 
 At its core, a bond is a formal agreement where a borrower (the **bond issuer**) promises to pay back a lender (the **bondholder**) a specific amount of money (the **principal** or **face value**) on a future date (the **maturity date**), along with regular interest payments (the **coupons**) along the way. Think of it as a structured loan agreement, but instead of borrowing from a bank, the borrower is borrowing from many individual investors.
 
-For example, if a company needs to raise money to expand its operations, instead of issuing new stock, it might issue bonds. Investors buy these bonds, essentially lending money to the company. In return, the company promises to pay interest to the bondholders periodically (e.g., every six months) and return the original amount borrowed when the bond matures.
+For example, if a company needs to raise money to expand its operations, instead of issuing new [stock](../finance/equity-market.md#concept-stock), it might issue bonds. Investors buy these bonds, essentially lending money to the company. In return, the company promises to pay interest to the bondholders periodically (e.g., every six months) and return the original amount borrowed when the bond matures.
 
-Bonds are a massive part of the financial landscape, often dwarfing the stock market in total value. Governments and corporations frequently issue bonds to raise funds, making them a cornerstone of global finance. For investors, high-quality government bonds are often considered a form of insurance during market downturns, providing stability to an investment portfolio.
+Bonds are a massive part of the financial landscape, often dwarfing the [stock market](../finance/equity-market.md#concept-equity-market) in total value. Governments and corporations frequently issue bonds to raise funds, making them a cornerstone of global finance. For investors, high-quality government bonds are often considered a form of insurance during market downturns, providing stability to an investment portfolio.
 
 ### Understanding Bond Payments: Coupons and Principal
 
 To truly understand bonds, let's break down the key terms that define a bond's payments and structure:
 
 *   **Principal (Face Value or Par Value):** This is the original amount of money the bond issuer borrows and promises to repay at maturity. It's typically $1,000, but can vary. This is the amount you get back at the end of the bond's life.
-*   **Coupon Rate:** This is the annual interest rate the issuer pays on the bond's face value. It can be a fixed rate (most common) or a floating rate.
+*   **Coupon Rate:** This is the annual [interest rate](../finance/fixed-income.md#concept-duration) the issuer pays on the bond's face value. It can be a fixed rate (most common) or a floating rate.
 *   **Coupon Payment:** This is the actual dollar amount of interest paid to the bondholder. It's usually paid semi-annually, but can be annual or quarterly. For example, a $1,000 bond with a 5% annual coupon rate would pay $50 per year, often split into two $25 payments every six months.
 *   **Maturity Date:** This is the specific date when the bond issuer repays the principal to the bondholder. Once this date arrives, the bond ceases to exist.
 
@@ -68,7 +59,7 @@ While bonds are often perceived as "safer" than stocks, they are not risk-free. 
 
 ### How Bonds are Valued: Present Value of Future Payments
 
-Now that we understand what bonds are and the risks involved, how do we determine their fair price? The value of any financial asset, including a bond, is fundamentally based on the **present value of its expected future cash flows**. For a bond, these cash flows are the periodic coupon payments and the final principal repayment.
+Now that we understand what bonds are and the risks involved, how do we determine their fair price? The value of any financial asset, including a bond, is fundamentally based on the **[present value](../finance/time-value.md#concept-present-value) of its expected future cash flows**. For a bond, these cash flows are the periodic coupon payments and the final principal repayment.
 
 To calculate a bond's price, we discount each future payment back to today using an appropriate **discount rate**. This discount rate reflects the current market interest rates for similar bonds and the bond's specific risks. The sum of these present values gives us the bond's current market price.
 
@@ -87,9 +78,9 @@ Notice that if the market discount rate (5%) is higher than the bond's coupon ra
 <a id="concept-yield"></a>
 ### The Concept of Yield: Your Return on Investment
 
-When you invest in a bond, you're ultimately interested in the return you'll get. This is where **Yield to Maturity (YTM)** comes in. YTM is the total return an investor can expect to receive if they hold the bond until it matures, assuming all coupon payments are reinvested at the same yield.
+When you invest in a [bond](../finance/fixed-income.md#concept-bond), you're ultimately interested in the return you'll get. This is where **Yield to Maturity (YTM)** comes in. YTM is the [total return](../finance/basic-definition.md#concept-rate-of-return) an investor can expect to receive if they hold the bond until it matures, assuming all coupon payments are reinvested at the same yield.
 
-More formally, the YTM is the annual constant interest rate that makes the present value of all associated future payments (coupons and principal) equal to the current market value of the bond. It's essentially the "internal [rate of return](../finance/basic-definition.md#concept-rate-of-return)" of the bond, taking into account its current market price, coupon payments, and face value.
+More formally, the YTM is the annual constant interest rate that makes the [present value](../finance/time-value.md#concept-present-value) of all associated future payments (coupons and principal) equal to the current market value of the bond. It's essentially the "internal rate of return" of the bond, taking into account its current market price, coupon payments, and face value.
 
 *   **Relationship between YTM and Bond Price:** There's an inverse relationship. If a bond's price goes up, its YTM goes down, and vice-versa. This is because a higher price means you're paying more for the same stream of future payments, thus getting a lower effective return.
 

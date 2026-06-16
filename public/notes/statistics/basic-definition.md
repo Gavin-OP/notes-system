@@ -1,12 +1,3 @@
----
-title: "Basic Definition"
-slug: basic-definition
-display: true
-order: 2
-tags:
-  - statistics
----
-
 <a id="concept-basic-definition"></a>
 # Basic Definition: The Building Blocks of Probability
 
@@ -111,7 +102,7 @@ Random variables are broadly classified into two main types, depending on the na
 2.  **Continuous Random Variables:** These are random variables that can take on any value within a given range or interval. They often arise from *measuring* things.
     *   Examples: The height of a person (e.g., 170.5 cm, 170.51 cm, etc.), temperature (e.g., 25.3 degrees Celsius), the time taken to complete a task (e.g., 3.14 minutes).
 
-Now that we can assign numerical values to outcomes, the next step is to describe the *probability* of these numerical values occurring. This leads us to probability distribution functions.
+Now that we can assign numerical values to outcomes, the next step is to describe the *probability* of these numerical values occurring. This leads us to [probability distribution](../data-science/statistical-foundations.md#concept-probability) functions.
 
 <a id="concept-probability-mass-function"></a>
 ### Probability Mass Function (PMF): For Discrete Random Variables
@@ -125,7 +116,7 @@ The PMF must satisfy two fundamental conditions:
 2.  The sum of all probabilities for all possible values of $x$ must equal 1: $\sum_x P(X=x) = 1$. (The total probability of all possible outcomes must be 1).
 
 Let's return to our two-coin flip example, where $X$ is the number of Heads.
-The sample space is $S = \{HH, HT, TH, TT\}$. Assuming a fair coin, each of these four outcomes has an equal probability of $1/4$.
+The [sample space](../statistics/basic-definition.md#concept-sample-space) is $S = \{HH, HT, TH, TT\}$. Assuming a fair coin, each of these four outcomes has an equal probability of $1/4$.
 *   For $X=0$ (outcome TT): $P(X=0) = 1/4 = 0.25$
 *   For $X=1$ (outcomes HT, TH): $P(X=1) = P(HT) + P(TH) = 1/4 + 1/4 = 2/4 = 1/2 = 0.50$
 *   For $X=2$ (outcome HH): $P(X=2) = 1/4 = 0.25$

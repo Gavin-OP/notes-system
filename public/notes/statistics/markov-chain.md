@@ -1,12 +1,3 @@
----
-title: "Markov Chain"
-slug: markov-chain
-display: true
-order: 8
-tags:
-  - statistics
----
-
 <a id="concept-markov-chain"></a>
 # Markov Chain
 
@@ -19,14 +10,14 @@ By the end of this lesson, you will be able to:
 - Understand the concept of a stationary distribution as the long-term behavior of a Markov chain.
 
 ## Introduction
-Have you ever tried to predict the future? While we can't truly see what's coming, many real-world systems exhibit a fascinating pattern: their next state depends *only* on their current state, not on how they got there. This "memoryless" characteristic is the cornerstone of a powerful mathematical tool called a **Markov Chain**.
+Have you ever tried to predict the future? While we can't truly see what's coming, many real-world systems exhibit a fascinating pattern: their next state depends *only* on their current state, not on how they got there. This "memoryless" characteristic is the cornerstone of a powerful [mathematical tool](../statistics/basic-mathematics-tools.md#concept-basic-mathematics-tools) called a **Markov Chain**.
 
-Imagine predicting tomorrow's weather based solely on today's, modeling [stock](../finance/equity-market.md#concept-stock) prices, understanding customer journeys, or even tracking the movement of molecules. Markov chains provide a robust framework for understanding and forecasting systems that evolve probabilistically over time. In this lesson, we'll start with the fundamental intuition behind these chains and gradually build up to understanding how they work and what profound insights they can offer about the long-term future.
+Imagine predicting tomorrow's weather based solely on today's, modeling [stock](../finance/equity-market.md#concept-stock) prices, understanding customer journeys, or even tracking the movement of molecules. Markov chains provide a robust framework for understanding and forecasting systems that evolve probabilistically [over time](../statistics/time-series.md#concept-stationarity). In this lesson, we'll start with the fundamental intuition behind these chains and gradually build up to understanding how they work and what profound insights they can offer about the long-term future.
 
 ## Concept Progression
 
 ### What is a Stochastic Process?
-Before we delve into the specifics of Markov chains, let's first grasp the broader concept of a **stochastic process**. Simply put, a stochastic process describes any system that changes over time in a way that involves randomness or chance. Think of it as a sequence of random events.
+Before we delve into the specifics of Markov chains, let's first grasp the broader concept of a **[stochastic process](../statistics/simulation.md#concept-stochastic-process)**. Simply put, a stochastic process describes any system that changes over time in a way that involves randomness or chance. Think of it as a sequence of random events.
 
 Consider these everyday examples:
 *   **Weather patterns:** The weather changing from sunny to cloudy to rainy day by day.
@@ -40,7 +31,7 @@ For instance, if we're tracking the weather, $X_t$ could take values like "Sunny
 
 <a id="concept-markov-property"></a>
 ### The Markov Property: The "Memoryless" Rule
-Now, let's introduce the special characteristic that transforms a general stochastic process into a **Markov chain**: the **Markov property**. This property dictates that the future state of the system depends *exclusively* on its current state, and is entirely independent of any states it occupied in the past. In essence, the system has no "memory" of its history; only the present matters for predicting the immediate future.
+Now, let's introduce the special characteristic that transforms a general stochastic process into a **[Markov chain](../statistics/markov-chain.md#concept-markov-chain)**: the **Markov property**. This property dictates that the future state of the system depends *exclusively* on its current state, and is entirely independent of any states it occupied in the past. In essence, the system has no "memory" of its history; only the present matters for predicting the immediate future.
 
 Let's revisit our weather example. If the weather follows the Markov property, then the probability of tomorrow being sunny depends *only* on whether today is sunny, cloudy, or rainy. It doesn't matter if it's been sunny for the past five days, or if there was a storm last week. All that's relevant for tomorrow's forecast is *today's* weather.
 
@@ -112,14 +103,14 @@ Here are the key properties of a transition probability matrix:
 *   **Non-negative Entries:** All entries $p_{ij}$ must be non-negative, as they represent probabilities.
 *   **Row Sums to One:** The sum of probabilities in each row must equal 1. This reflects the certainty that from any given state, the system *must* transition to *some* state (including potentially staying in the same state).
 
-This matrix describes a **time-homogeneous** Markov chain, which means the transition probabilities $p_{ij}$ remain constant over time. The probability of moving from state $i$ to state $j$ is the same whether it's happening from hour 1 to hour 2, or from hour 10 to hour 11. This is a common and simplifying assumption for introductory Markov chain analysis.
+This matrix describes a **time-homogeneous** [Markov chain](../statistics/markov-chain.md#concept-markov-chain), which means the transition probabilities $p_{ij}$ remain constant over time. The probability of moving from state $i$ to state $j$ is the same whether it's happening from hour 1 to hour 2, or from hour 10 to hour 11. This is a common and simplifying assumption for introductory Markov chain analysis.
 
 ### Stepping Through Time: Predicting the Future
 With our transition matrix in hand, we can now predict the probabilities of the system being in different states after multiple time steps.
 
-Let $\pi^{(t)}$ be a row vector representing the probability [distribution](../statistics/distribution.md#concept-distribution) of the system across all states at time $t$. For our student example, if $\pi^{(0)} = \begin{pmatrix} 1 & 0 & 0 \end{pmatrix}$, it means the student is initially 100% in the "Studying" state (and 0% in Procrastinating or Sleeping).
+Let $\pi^{(t)}$ be a row vector representing the [probability distribution](../data-science/statistical-foundations.md#concept-probability) of the system across all states at time $t$. For our student example, if $\pi^{(0)} = \begin{pmatrix} 1 & 0 & 0 \end{pmatrix}$, it means the student is initially 100% in the "Studying" state (and 0% in Procrastinating or Sleeping).
 
-To find the probability distribution after one step (e.g., one hour), we multiply the initial distribution vector by the transition matrix:
+To find the probability distribution after one step (e.g., one hour), we multiply the initial [distribution](../statistics/distribution.md#concept-distribution) vector by the transition matrix:
 $\pi^{(1)} = \pi^{(0)} P$
 
 If our student starts by Studying ($\pi^{(0)} = \begin{pmatrix} 1 & 0 & 0 \end{pmatrix}$):
@@ -141,7 +132,7 @@ Here, $P^n$ (the transition matrix multiplied by itself $n$ times) is known as t
 
 <a id="concept-stationary-distribution"></a>
 ### Stationary Distribution: The Long-Term Balance
-What happens if we let the Markov chain run for a very long time—say, many hours for our student example? Does the probability [distribution](../statistics/distribution.md#concept-distribution) of being in each state eventually settle down and stop changing? For many Markov chains, the answer is a resounding yes! This long-term, stable probability distribution is called the **stationary distribution** (or steady-state distribution).
+What happens if we let the Markov chain run for a very long time—say, many hours for our student example? Does the probability distribution of being in each state eventually settle down and stop changing? For many Markov chains, the answer is a resounding yes! This long-term, stable probability distribution is called the **stationary distribution** (or steady-state distribution).
 
 A stationary distribution, denoted by $\pi$, is a probability distribution over the states such that if the system is currently in this distribution, it will remain in this exact distribution after one more transition. Mathematically, this crucial relationship is expressed as:
 $\pi P = \pi$

@@ -1,12 +1,3 @@
----
-title: "Derivatives"
-slug: derivatives
-display: true
-order: 5
-tags:
-  - finance
----
-
 <a id="concept-derivatives"></a>
 # Derivatives
 
@@ -21,7 +12,7 @@ By the end of this lesson, you will be able to:
 ## Introduction
 Imagine a world where you could secure a price for something you need months from now, protecting yourself from unexpected price hikes. Or, conversely, imagine being able to bet on a future price movement without having to buy the actual item today. This is the fascinating world of **derivatives**.
 
-Derivatives are powerful financial tools whose value is *derived* from an underlying asset, like stocks, bonds, commodities, or even interest rates. They might sound complex, but at their heart, they are simply **contracts** between two parties agreeing to exchange something in the future based on a pre-determined price or condition. Whether you're a farmer trying to secure a price for your harvest, an airline looking to stabilize fuel costs, or an investor seeking to profit from market movements, derivatives offer unique ways to manage risk and pursue opportunities.
+Derivatives are powerful financial tools whose value is *derived* from an underlying asset, like stocks, bonds, commodities, or even [interest rates](../finance/fixed-income.md#concept-duration). They might sound complex, but at their heart, they are simply **contracts** between two parties agreeing to exchange something in the [future](../finance/derivatives.md#concept-futures) based on a pre-determined price or condition. Whether you're a farmer trying to secure a price for your harvest, an airline looking to stabilize fuel costs, or an investor seeking to profit from market movements, derivatives offer unique ways to manage risk and pursue opportunities.
 
 In this lesson, we'll demystify derivatives, starting with the basic intuition and progressively exploring their main types, uses, and key concepts.
 
@@ -66,7 +57,7 @@ They can enter into a forward contract:
 <a id="concept-futures"></a>
 ### Futures: Standardized and Exchange-Traded
 
-While forwards are great for customization, their private nature and counterparty risk can be significant drawbacks. This is where **futures contracts** come in, offering a more standardized and secure alternative.
+While forwards are great for customization, their private nature and counterparty [risk](../finance/risk-and-insurance.md#concept-risk) can be significant drawbacks. This is where **futures contracts** come in, offering a more standardized and secure alternative.
 
 *   **Definition:** A standardized forward contract that is traded on an organized exchange.
 *   **Example:** Instead of finding a specific farmer, the cereal manufacturer could buy a "corn futures contract" on an exchange. This contract would specify a standard quantity (e.g., 5,000 bushels), a standard quality, and a standard delivery month. This standardization makes it easy to trade with anyone, not just a specific counterparty.
@@ -85,7 +76,7 @@ While forwards are great for customization, their private nature and counterpart
 
 Moving beyond simple agreements to buy or sell, **options** offer a unique flexibility: the **right, but not the obligation**, to buy or sell an underlying asset. This "optionality" is what makes them so powerful and widely used.
 
-*   **Definition:** An option contract gives the buyer (holder) the right, but not the obligation, to perform a specific transaction (buy or sell) on or before a particular date (expiration date) at a specified price (strike price). The seller (writer) of the option is obligated to fulfill the contract if the buyer chooses to exercise their right.
+*   **Definition:** An [option](../finance/derivatives.md#concept-option) contract gives the buyer (holder) the right, but not the obligation, to perform a specific transaction (buy or sell) on or before a particular date (expiration date) at a specified price (strike price). The seller (writer) of the option is obligated to fulfill the contract if the buyer chooses to exercise their right.
 
 Let's break down the key terms:
 *   **Holder/Buyer:** The person who buys the option and has the right. They pay a **premium** (the option's price) for this right.
@@ -108,7 +99,7 @@ There are two main types of options:
     *   Buyers of put options typically expect the underlying asset's price to **fall** below the strike price.
     *   **Example:** You own 100 shares of ABC stock currently trading at $100, but you're worried it might drop. You buy a put option with a strike price of $95, expiring in 3 months, for a premium of $3 per share.
         *   If ABC stock falls to $85, you can exercise your right to sell your shares at $95, limiting your loss (minus the $3 premium). This acts as a form of insurance.
-        *   If ABC stays above $95, you let the option expire, losing only your $3 premium.
+        *   If ABC stays above $95, you let the [option](../finance/derivatives.md#concept-option) expire, losing only your $3 premium.
 
 **Option Styles (Exercise Timing):**
 *   **American Option:** Can be exercised at any time up to and including the expiration date.
@@ -136,7 +127,7 @@ There are two main types of options:
 
 *   **Definition:** A derivative contract where two parties agree to exchange a series of future cash flows according to a pre-arranged formula.
 
-The most common type is an **interest rate swap**:
+The most common type is an **[interest rate](../finance/fixed-income.md#concept-duration) swap**:
 *   **Example:** Company A has a loan with a variable interest rate (e.g., tied to LIBOR), meaning its interest payments fluctuate. Company B has a loan with a fixed interest rate. Company A might prefer predictable fixed payments, while Company B might believe variable rates will fall and wants to benefit from that.
     *   They enter into a swap agreement: Company A agrees to pay Company B a fixed interest rate on a **notional principal amount**, and in return, Company B agrees to pay Company A a variable interest rate on the same notional principal.
     *   Crucially, they don't exchange the principal itself, only the interest payments. This allows them to effectively "swap" their interest rate exposures without refinancing their original loans, providing flexibility in managing their debt obligations.
@@ -162,6 +153,7 @@ We touched upon these motivations earlier, but it's crucial to understand them c
 
 
 <a id="concept-option"></a>
+<a id="concept-greeks"></a>
 ### The Greeks: Measuring Option Sensitivity
 
 Options, with their "right, not obligation" feature, can be quite sensitive to various market factors. To help traders and investors understand and manage these sensitivities, a set of measures known as **The Greeks** was developed. Each "Greek" letter represents how an option's price is expected to change in response to a specific factor.

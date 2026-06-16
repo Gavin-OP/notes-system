@@ -1,12 +1,3 @@
----
-title: "Basic Mathematics Tools"
-slug: basic-mathematics-tools
-display: true
-order: 12
-tags:
-  - statistics
----
-
 <a id="concept-basic-mathematics-tools"></a>
 # Basic Mathematics Tools
 
@@ -21,7 +12,7 @@ By the end of this lesson, you will be able to:
 ## Introduction
 Mathematics is often called the language of science and engineering. Just like a carpenter needs a toolbox filled with saws, hammers, and drills, anyone delving into quantitative fields needs a set of fundamental mathematical tools. These tools help us simplify complex problems, make accurate estimations, and understand underlying patterns.
 
-In this lesson, we'll explore four powerful mathematical tools: Taylor expansion, geometric series, exponential identities, and Stirling's formula. Don't worry if these names sound intimidating; we'll break them down step-by-step, starting with simple intuitions and building up to their practical applications. These concepts are not just abstract ideas; they are workhorses that appear everywhere from physics and economics to computer science and statistics. Let's open our mathematical toolbox and see what's inside!
+In this lesson, we'll explore four powerful mathematical tools: Taylor expansion, [geometric series](../statistics/basic-mathematics-tools.md#concept-geometric-series), exponential identities, and Stirling's formula. Don't worry if these names sound intimidating; we'll break them down step-by-step, starting with simple intuitions and building up to their practical applications. These concepts are not just abstract ideas; they are workhorses that appear everywhere from physics and economics to [computer science](../data-science/introduction-to-data-science.md#concept-data-science) and statistics. Let's open our mathematical toolbox and see what's inside!
 
 ## Concept Progression
 
@@ -56,7 +47,7 @@ If we use just the first few terms, we get increasingly better approximations:
 -   $P_1(x) = 1 + x$ (a linear approximation, the tangent line at $x=0$)
 -   $P_2(x) = 1 + x + \frac{x^2}{2}$ (a quadratic approximation, a parabola that closely matches the curve near $x=0$)
 
-You can see how adding more terms makes the polynomial a better fit for $e^x$ near $x=0$. This ability to approximate complex functions with simpler polynomials is incredibly useful in physics, engineering, and computer science for simplifying calculations and understanding local behavior.
+You can see how adding more terms makes the polynomial a better fit for $e^x$ near $x=0$. This ability to approximate complex functions with simpler polynomials is incredibly useful in physics, engineering, and [computer science](../data-science/introduction-to-data-science.md#concept-data-science) for simplifying calculations and understanding local behavior.
 
 <!-- IMAGE_SLOT: img-001 -->
 ![A graph showing the function $f(x) = e^x$ (dark blue curve) and its Taylor polynomial approximations around $x=0$.](../../../../../image/statistics/basic-mathematics-tools/img-001.png)
@@ -155,7 +146,7 @@ These identities are fundamental for solving equations, simplifying complex expr
 
 ### Stirling's Formula: Approximating Factorials
 
-Factorials, denoted by $n!$, mean multiplying all positive integers up to $n$. For example, $5! = 5 \times 4 \times 3 \times 2 \times 1 = 120$. Factorials grow incredibly fast. Calculating $20!$ is already a huge number ($2,432,902,008,176,640,000$). What if you need to calculate $100!$ or even larger? Direct calculation becomes impractical, and even standard calculators struggle. This is where Stirling's formula comes to the rescue.
+Factorials, denoted by $n!$, mean multiplying all positive [integers](../python/python-data-types-operators.md#concept-integer-data-type) up to $n$. For example, $5! = 5 \times 4 \times 3 \times 2 \times 1 = 120$. Factorials grow incredibly fast. Calculating $20!$ is already a huge number ($2,432,902,008,176,640,000$). What if you need to calculate $100!$ or even larger? Direct calculation becomes impractical, and even standard calculators struggle. This is where Stirling's formula comes to the rescue.
 
 **Intuition:** Stirling's formula provides a powerful approximation for factorials of large numbers. Instead of trying to multiply all those numbers, which is computationally impossible for very large $n$, Stirling's formula gives us a way to estimate these massive numbers using a much simpler expression involving powers and roots. This is incredibly useful in probability, statistics, and physics where large factorials often appear, such as in counting arrangements of particles or calculating probabilities of complex events.
 

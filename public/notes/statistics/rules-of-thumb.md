@@ -1,12 +1,3 @@
----
-title: "Statistics Notation & Reference"
-slug: rules-of-thumb
-display: true
-order: 1
-tags:
-  - statistics
----
-
 <a id="concept-rules-of-thumb"></a>
 # Statistics Notation & Reference
 
@@ -37,7 +28,7 @@ Let's look at some of the most common Roman letter abbreviations you'll encounte
 *   **$\bar{x}$ (x-bar):** This is the symbol for the **sample mean**. It's the average value of all the observations in your sample.
     *   *Example:* If your sample of 1,000 adult males has an average height of 175 cm, then $\bar{x}$ = 175 cm.
 *   **s:** This represents the **sample standard deviation**. It measures how spread out the data points are in your sample, indicating the typical distance of observations from the sample mean.
-*   **$s^2$:** This is the **sample variance**, which is simply the square of the sample standard deviation. It also describes the spread of data, but in squared units.
+*   **$s^2$:** This is the **sample [variance](../statistics/basic-statistics.md#concept-variance)**, which is simply the square of the sample standard deviation. It also describes the spread of data, but in squared units.
 
 It's crucial to remember that these Roman letter symbols ($\bar{x}$, s, $s^2$) refer to characteristics calculated *from your sample*. They are specific to the [data](../data-science/data-fundamentals-and-types.md#concept-data) you collected and serve as estimates of the true values in the larger population.
 
@@ -48,7 +39,7 @@ It's crucial to remember that these Roman letter symbols ($\bar{x}$, s, $s^2$) r
 <a id="concept-greek-letters"></a>
 ## The Special Role of Greek Letters: Describing the Population
 
-While Roman letters help us describe our sample, what about the entire population we're interested in? This is where Greek letters come in. Greek letters are typically reserved for **population parameters**. A parameter is a characteristic of the entire population that we are often trying to estimate using our sample data. Using different alphabets helps us immediately distinguish between what we *know* from our sample (sample statistics) and what we are *trying to estimate* about the population (population parameters).
+While Roman letters help us describe our sample, what about the entire population we're interested in? This is where Greek letters come in. Greek letters are typically reserved for **population parameters**. A parameter is a characteristic of the entire population that we are often trying to estimate using our sample data. Using different alphabets helps us immediately distinguish between what we *know* from our sample ([sample statistics](../statistics/rules-of-thumb.md#concept-rules-of-thumb)) and what we are *trying to estimate* about the population (population parameters).
 
 Here are some of the most common Greek letters you'll encounter in statistics:
 
@@ -57,9 +48,9 @@ Here are some of the most common Greek letters you'll encounter in statistics:
 *   **$\sigma$ (sigma):** This represents the **population standard deviation**. It's the true measure of data spread for the entire population. We use `s` from our sample to estimate $\sigma$.
 *   **$\sigma^2$ (sigma squared):** This is the **population variance**, the true variance of the entire population. We use $s^2$ from our sample to estimate $\sigma^2$.
 *   **$\rho$ (rho):** This symbol denotes the **population [correlation](../data-science/exploratory-data-analysis.md#concept-correlation) coefficient**. It measures the strength and direction of a linear relationship between two variables for the entire population.
-*   **$\alpha$ (alpha):** Often used to represent the **significance level** in [hypothesis testing](../data-science/statistical-foundations.md#concept-hypothesis-testing). This is the probability of rejecting a true null hypothesis (a Type I error). Common values are 0.05 or 0.01.
+*   **$\alpha$ (alpha):** Often used to represent the **significance level** in [hypothesis testing](../data-science/statistical-foundations.md#concept-hypothesis-testing). This is the probability of rejecting a true [null hypothesis](../statistics/hypothesis-testing.md#concept-hypothesis-testing) (a Type I error). Common values are 0.05 or 0.01.
 *   **$\beta$ (beta):** Frequently used in [regression analysis](../data-science/supervised-learning-regression.md#concept-regression-analysis) to represent **population regression coefficients**. These describe the relationship between a predictor variable and the response variable in the population.
-*   **$\chi^2$ (chi-squared):** This symbol is used for the **chi-squared distribution**, which is important in tests involving categorical data.
+*   **$\chi^2$ (chi-squared):** This symbol is used for the **chi-squared [distribution](../statistics/distribution.md#concept-distribution)**, which is important in tests involving [categorical data](../data-science/data-fundamentals-and-types.md#concept-quantitative-data).
 
 <!-- IMAGE_SLOT: img-002 -->
 ![A table showing common Greek letters used in statistics. Columns: Greek Letter, Name, Statistical Meaning. Rows for mu,](../../../../../image/statistics/rules-of-thumb/img-002.png)

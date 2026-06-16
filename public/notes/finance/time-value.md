@@ -1,12 +1,3 @@
----
-title: "Time Value of Money"
-slug: time-value
-display: true
-order: 8
-tags:
-  - finance
----
-
 <a id="concept-time-value"></a>
 # Time Value of Money
 
@@ -23,7 +14,7 @@ Imagine a scenario: you've just won a small prize! The organizers present you wi
 1.  Receive $1,000 right now, today.
 2.  Receive $1,000 exactly one year from now.
 
-Which [option](../finance/derivatives.md#concept-option) would you choose? If you're like most people, you'd likely opt for the first choice – taking the money immediately. But why? It's still $1,000 in both cases, isn't it? This seemingly simple decision highlights a core principle in finance: the **Time Value of Money**.
+Which [option](../finance/derivatives.md#concept-option) would you choose? If you're like most people, you'd likely opt for the first choice – taking the money immediately. But why? It's still $1,000 in both cases, isn't it? This seemingly simple decision highlights a core principle in finance: the **[Time Value of Money](../finance/time-value.md#concept-time-value-of-money)**.
 
 This concept is not just an academic idea; it's fundamental to understanding everything from personal savings and loans to complex investments and business valuations. It provides a framework for comparing money received at different points in time, empowering you to make smarter, more informed financial decisions.
 
@@ -38,13 +29,13 @@ Let's break down the key reasons why this principle holds true:
 
 1.  **Opportunity Cost:** If you possess money today, you have the immediate opportunity to invest it, spend it, or use it to generate more wealth. By choosing to receive money in the future, you forgo these immediate opportunities and the potential earnings they could generate. This lost potential is your opportunity cost.
 2.  **Inflation:** Over time, the general price level of goods and services tends to increase. This phenomenon, known as inflation, means that a dollar in the future will typically buy less than a dollar today. Your purchasing power erodes as time passes.
-3.  **Risk and Uncertainty:** The future is inherently uncertain. There's always a risk that you might not receive the money as promised, or unforeseen events could diminish its value. Money you hold today carries less risk than money you are merely promised in the future.
+3.  **[Risk](../finance/risk-and-insurance.md#concept-risk) and Uncertainty:** The future is inherently uncertain. There's always a risk that you might not receive the money as promised, or unforeseen events could diminish its value. Money you hold today carries less risk than money you are merely promised in the future.
 
 To illustrate, consider having $100 today. You could deposit it into a savings account that pays interest. After a year, you would have more than $100. If you instead wait a year to receive that $100, you've missed out on the entire year's worth of potential growth.
 
 ### Interest Rates: The Engine of Time Value
 
-To quantify and measure the time value of money, we use **interest rates**. An interest rate is essentially the "price" of using money over a period of time. It represents the compensation a lender receives for allowing someone else to use their money, or conversely, the cost a borrower pays for the privilege of using someone else's money.
+To quantify and measure the time value of money, we use **[interest rates](../finance/fixed-income.md#concept-duration)**. An interest rate is essentially the "price" of using money over a period of time. It represents the compensation a lender receives for allowing someone else to use their money, or conversely, the cost a borrower pays for the privilege of using someone else's money.
 
 When you save or invest money, the interest rate tells you how quickly your money will grow. When you borrow money, it indicates how much extra you'll need to pay back.
 
@@ -54,7 +45,7 @@ For instance, if a bank offers you a 5% annual interest rate on your savings, it
 <a id="concept-compounding"></a>
 ### Future Value (FV) and Compounding: Growing Your Money Forward
 
-**Future Value (FV)** is the value that an investment or a sum of money will grow to at a specific point in the future, given a certain interest rate. It answers the question: "If I have this much money today, how much will it be worth later?"
+**[Future Value](../finance/time-value.md#concept-future-value) (FV)** is the value that an investment or a sum of money will grow to at a specific point in the future, given a certain interest rate. It answers the question: "If I have this much money today, how much will it be worth later?"
 
 The process of calculating Future Value is called **compounding**. Compounding is a powerful concept where you earn interest not only on your initial principal but also on the accumulated interest from previous periods. It's often described as earning "interest on interest," and it's the engine behind significant wealth growth over time.
 
@@ -72,8 +63,8 @@ $FV = PV \times (1 + r)^n$
 
 Where:
 *   $FV$ = Future Value (the amount you'll have in the future)
-*   $PV$ = Present Value (the initial amount you have today)
-*   $r$ = Annual interest rate (expressed as a decimal, e.g., 5% = 0.05)
+*   $PV$ = [Present Value](../finance/time-value.md#concept-present-value) (the initial amount you have today)
+*   $r$ = Annual [interest rate](../finance/fixed-income.md#concept-duration) (expressed as a decimal, e.g., 5% = 0.05)
 *   $n$ = Number of periods (e.g., years)
 
 Using our example: $FV = \$1,000 \times (1 + 0.05)^3 = \$1,000 \times (1.05)^3 = \$1,000 \times 1.157625 = \$1,157.63$.
@@ -85,9 +76,9 @@ Using our example: $FV = \$1,000 \times (1 + 0.05)^3 = \$1,000 \times (1.05)^3 =
 <a id="concept-present-value"></a>
 ### Present Value (PV) and Discounting: Bringing Future Money to Today
 
-While Future Value helps us understand how money grows, **Present Value (PV)** helps us understand the current worth of money we expect to receive in the future. It answers the question: "How much is a future payment or sum of money worth to me today?"
+While [Future Value](../finance/time-value.md#concept-future-value) helps us understand how money grows, **Present Value (PV)** helps us understand the current worth of money we expect to receive in the future. It answers the question: "How much is a future payment or sum of money worth to me today?"
 
-The process of finding the present value of a future amount is called **discounting**. Discounting is essentially the reverse of compounding. Instead of projecting money forward in time to see its future worth, we're bringing future money backward to its equivalent value today, effectively removing the interest it would have earned over time. The interest rate used for this calculation is often referred to as the **discount rate**.
+The process of finding the present value of a future amount is called **discounting**. Discounting is essentially the reverse of compounding. Instead of projecting money forward in time to see its future worth, we're bringing future money backward to its equivalent value today, effectively removing the interest it would have earned over time. The interest rate used for this calculation is often referred to as the **[discount rate](../finance/fixed-income.md#concept-bond)**.
 
 Let's reverse our previous example. How much would you need to invest today (PV) to accumulate $1,157.63 in 3 years, assuming a 5% annual interest rate?
 

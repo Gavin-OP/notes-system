@@ -12,14 +12,14 @@ By the end of this lesson, you will be able to:
 ## Introduction
 Imagine you're a chef preparing a gourmet meal. You wouldn't just throw raw, unwashed ingredients straight into the pot, would you? You'd meticulously wash the vegetables, trim the meat, chop everything into appropriate sizes, and perhaps even marinate some items to enhance their flavor. [Data](../data-science/data-fundamentals-and-types.md#concept-data) science is very similar! Before you can build powerful models or extract meaningful insights, your raw data needs to be cleaned and prepared.
 
-This crucial process, known as **Data Cleaning and Preprocessing**, is often the most time-consuming part of a data science project, yet it's also one of the most critical. Just like a chef needs good ingredients, a data scientist needs clean, well-[structured data](../data-science/data-fundamentals-and-types.md#concept-structured-data). Without it, even the most sophisticated algorithms can produce misleading or inaccurate results, much like a gourmet dish made with spoiled ingredients.
+This crucial process, known as **Data Cleaning and Preprocessing**, is often the most time-consuming part of a data science project, yet it's also one of the most critical. Just like a chef needs good ingredients, a [data scientist](../data-science/introduction-to-data-science.md#concept-data-scientist) needs clean, well-[structured data](../data-science/data-fundamentals-and-types.md#concept-structured-data). Without it, even the most sophisticated algorithms can produce misleading or inaccurate results, much like a gourmet dish made with spoiled ingredients.
 
 In this lesson, we'll explore the common challenges you'll face with raw data and learn practical techniques to transform it into a pristine, model-ready format. We'll cover everything from handling gaps in your data to making sure all your numbers are on a level playing field.
 
 <a id="concept-outliers"></a>
 ## Understanding Messy Data: Missing Values and Outliers
 
-Raw data rarely arrives in a perfect, ready-to-use state. It often contains imperfections that can severely impact your analysis or machine learning model's performance. Two of the most common and problematic issues are **missing data** and **outliers**. Let's dive into what these mean and why they're such a big deal.
+[Raw data](../data-science/data-cleaning-preprocessing.md#concept-data-cleaning-preprocessing) rarely arrives in a perfect, ready-to-use state. It often contains imperfections that can severely impact your analysis or [machine learning model](../data-science/model-evaluation-deployment.md#concept-model-evaluation-deployment)'s performance. Two of the most common and problematic issues are **[missing data](../data-science/data-cleaning-preprocessing.md#concept-missing-data)** and **outliers**. Let's dive into what these mean and why they're such a big deal.
 
 <a id="concept-missing-data"></a>
 #### Missing Data (Null Values, NaN)
@@ -27,10 +27,10 @@ Raw data rarely arrives in a perfect, ready-to-use state. It often contains impe
 
 Why is missing [data](../data-science/data-fundamentals-and-types.md#concept-data) a problem?
 -   **Bias:** If data is missing systematically (e.g., wealthier people are less likely to report income), it can introduce bias into your analysis, leading to skewed conclusions.
--   **Model Errors:** Many machine learning algorithms are designed to work with complete datasets and cannot handle missing values directly. They will either crash, produce errors, or yield incorrect results if fed incomplete data.
+-   **Model Errors:** Many [machine learning](../data-science/introduction-to-data-science.md#concept-machine-learning) algorithms are designed to work with complete datasets and cannot handle missing values directly. They will either crash, produce errors, or yield incorrect results if fed incomplete data.
 -   **Reduced Information:** Missing data reduces the amount of information available for analysis, making it harder to find significant relationships and reducing the reliability of statistical inferences.
 
-Let's look at a simple example using a Pandas DataFrame to illustrate missing data:
+Let's look at a simple example using a [Pandas DataFrame](../data-science/programming-for-data-science-python.md#concept-pandas-dataframe) to illustrate missing data:
 
 ```python
 import pandas as pd
@@ -50,11 +50,11 @@ print(df)
 In this DataFrame, `Age` for `CustomerID` 3 and `Income` for `CustomerID` 4 are clearly missing, represented by `np.nan`.
 
 #### Outliers (Anomalies)
-**Outliers**, also known as **anomalies**, are data points that significantly differ from other observations in a dataset. They are values that lie an abnormal distance from other values in a random sample from a population. Imagine a group of people whose ages range from 20 to 60, and suddenly there's an age of 150. That's an outlier! Outliers can represent genuine extreme values (e.g., a very wealthy individual in an income dataset), measurement errors, or data entry mistakes.
+**[Outliers](../data-science/data-cleaning-preprocessing.md#concept-outliers)**, also known as **anomalies**, are data points that significantly differ from other observations in a dataset. They are values that lie an abnormal distance from other values in a random sample from a population. Imagine a group of people whose ages range from 20 to 60, and suddenly there's an age of 150. That's an outlier! Outliers can represent genuine extreme values (e.g., a very wealthy individual in an income dataset), measurement errors, or data entry mistakes.
 
 Why are outliers a problem?
 -   **Distorted Statistics:** Outliers can heavily skew statistical measures like the mean (average) and standard deviation, making them unrepresentative of the majority of the data. For instance, a single extremely high income value in a dataset could drastically inflate the calculated average income, making it seem like everyone earns more than they actually do.
--   **Model Sensitivity:** Many machine learning models, especially linear models (e.g., Linear Regression) and distance-based algorithms (e.g., K-Nearest Neighbors, K-Means), are highly sensitive to outliers. Outliers can pull the model's predictions away from the true underlying patterns, leading to poor model performance, inaccurate predictions, or incorrect cluster assignments.
+-   **Model Sensitivity:** Many machine learning models, especially linear models (e.g., [Linear Regression](../data-science/supervised-learning-regression.md#concept-linear-regression)) and distance-based algorithms (e.g., K-Nearest Neighbors, K-Means), are highly sensitive to outliers. Outliers can pull the model's predictions away from the true underlying patterns, leading to poor model performance, inaccurate predictions, or incorrect cluster assignments.
 -   **False Discoveries:** If outliers are due to errors, they can lead to false conclusions or misinterpretations of the underlying data patterns, causing you to draw incorrect insights.
 
 Let's extend our previous DataFrame to include an outlier:
@@ -79,7 +79,7 @@ Here, `Age` 150 for `CustomerID` 6 is clearly an outlier, as it's an unrealistic
 <a id="concept-data-imputation"></a>
 ## Handling Missing Data: Data Imputation
 
-Once you've identified missing data, the next crucial step is to decide how to handle it. This process is called **data imputation**, and its goal is to fill in the missing values with substitute values, allowing you to use the complete dataset for analysis and modeling. Choosing the right method is key, as an inappropriate choice can introduce new biases or distort your data.
+Once you've identified [missing data](../data-science/data-cleaning-preprocessing.md#concept-missing-data), the next crucial step is to decide how to handle it. This process is called **data imputation**, and its goal is to fill in the missing values with substitute values, allowing you to use the complete dataset for analysis and modeling. Choosing the right method is key, as an inappropriate choice can introduce new biases or distort your data.
 
 There are several strategies for data imputation, ranging from simple to more complex:
 

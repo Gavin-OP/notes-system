@@ -1,12 +1,3 @@
----
-title: "Distribution"
-slug: distribution
-display: true
-order: 4
-tags:
-  - statistics
----
-
 <a id="concept-distribution"></a>
 # Distribution
 
@@ -20,19 +11,19 @@ tags:
 ## Introduction
 Imagine you're tracking something in the world – perhaps the number of heads you get when flipping a coin, the height of students in a class, or the number of cars passing a certain point on a road in an hour. When you collect this [data](../data-science/data-fundamentals-and-types.md#concept-data), you'll inevitably notice patterns. Some values occur more often than others, and some values might be very rare.
 
-A **distribution** is essentially a map that shows you all the possible values a variable can take and how often each value occurs. Think of it as a way to visualize the "shape" of your data. Understanding these shapes, or distributions, is fundamental to making sense of data, predicting future outcomes, and drawing meaningful conclusions in statistics and data science. It helps us answer crucial questions like: "What's the most likely outcome?" or "How spread out are my results?"
+A **distribution** is essentially a map that shows you all the possible values a variable can take and how often each value occurs. Think of it as a way to visualize the "shape" of your data. Understanding these shapes, or distributions, is fundamental to making sense of data, predicting future outcomes, and drawing meaningful conclusions in statistics and [data science](../data-science/introduction-to-data-science.md#concept-data-science). It helps us answer crucial questions like: "What's the most likely outcome?" or "How spread out are my results?"
 
 In this lesson, we'll explore various types of distributions, starting with the most basic concepts and gradually building up to some of the most commonly used distributions in statistics.
 
 ## Concept Progression
 
 ### What is a Distribution?
-At its core, a distribution describes the likelihood of different outcomes for a variable. If you were to collect data on a variable, say the scores on a recent exam, and then plot how many students got each score, you'd be visualizing its distribution. Some scores might be very common (e.g., around 70-80%), while others might be rare (e.g., 0% or 100%).
+At its core, a distribution describes the likelihood of different outcomes for a variable. If you were to [collect data](../data-science/statistical-foundations.md#concept-sampling) on a variable, say the scores on a recent exam, and then plot how many students got each score, you'd be visualizing its distribution. Some scores might be very common (e.g., around 70-80%), while others might be rare (e.g., 0% or 100%).
 
 Consider a simple example: rolling a single six-sided die.
 The possible outcomes are 1, 2, 3, 4, 5, 6.
 If the die is fair, each outcome has an equal chance of appearing (1/6).
-If you roll the die many times and record the results, you'd expect to see each number appear roughly the same number of times. This is a **uniform distribution**, where all outcomes are equally likely.
+If you roll the die many times and record the results, you'd expect to see each number appear roughly the same number of times. This is a **[uniform distribution](../statistics/basic-definition.md#concept-probability-density-function)**, where all outcomes are equally likely.
 
 <!-- IMAGE_SLOT: img-001 -->
 ![A bar chart showing the distribution of rolling a fair six-sided die. The x-axis is labeled "Outcome (1-6)"](../../../../../image/statistics/distribution/img-001.png)
@@ -40,11 +31,11 @@ If you roll the die many times and record the results, you'd expect to see each 
 
 Distributions can be represented in various ways:
 *   **Tables**: Listing each outcome and its frequency/probability.
-*   **Graphs**: Histograms or bar charts for discrete [data](../data-science/data-fundamentals-and-types.md#concept-data), or smooth curves for continuous data.
+*   **Graphs**: Histograms or bar charts for discrete [data](../data-science/data-fundamentals-and-types.md#concept-data), or smooth curves for [continuous data](../data-science/data-fundamentals-and-types.md#concept-quantitative-data).
 *   **Formulas**: Mathematical equations that describe the probability of each outcome.
 
 ### Discrete vs. Continuous Distributions
-A crucial first step in understanding distributions is to distinguish between discrete and continuous variables, as this distinction determines the type of distribution we use to model them.
+A crucial first step in understanding distributions is to distinguish between discrete and [continuous variables](../statistics/basic-statistics.md#concept-expectation), as this distinction determines the type of distribution we use to model them.
 
 *   **Discrete Distributions**: These are used for variables that can only take on a finite or countably infinite number of distinct, separate values. Think of things you can *count*.
     *   **Examples**: The number of heads in 10 coin flips (can be 0, 1, 2, ..., 10), the number of cars passing a point in an hour (can be 0, 1, 2, ...), the number of children in a family. You can't have 2.5 heads or 1.7 cars.
@@ -108,7 +99,7 @@ print(f"The probability of exactly 2 defective items is: {probability:.4f}")
 
 <a id="concept-poisson-distribution"></a>
 ### The Poisson Distribution
-While the Binomial distribution counts successes in a *fixed number of trials*, the **Poisson distribution** helps us count events that happen over a *fixed interval* of time or space, especially when we only know the average rate at which these events occur.
+While the [Binomial distribution](../statistics/distribution.md#concept-binomial-distribution) counts successes in a *fixed number of trials*, the **Poisson distribution** helps us count events that happen over a *fixed interval* of time or space, especially when we only know the average rate at which these events occur.
 
 *   **Scenario**: How many phone calls does a customer service center receive in an hour? How many typos are there on a page of a book? How many meteorites hit a certain area in a year?
 *   **Parameters**: It's defined by a single parameter, `λ` (lambda), which represents the average rate of events in the given interval.
@@ -138,7 +129,7 @@ print(f"The probability of receiving exactly 3 calls is: {probability:.4f}")
 
 <a id="concept-normal-distribution"></a>
 ### The Normal Distribution (Gaussian Distribution)
-Shifting gears from counting discrete events to measuring continuous phenomena, we encounter the most ubiquitous distribution in statistics: the **Normal distribution**, often called the "bell curve" or **Gaussian distribution**. It's a continuous distribution that appears naturally in countless real-world scenarios.
+Shifting gears from counting discrete events to measuring continuous phenomena, we encounter the most ubiquitous [distribution](../statistics/distribution.md#concept-distribution) in statistics: the **Normal distribution**, often called the "bell curve" or **Gaussian distribution**. It's a continuous distribution that appears naturally in countless real-world scenarios.
 
 *   **Scenario**: Heights of adult males, measurement errors in experiments, blood pressure readings, IQ scores. Many natural processes tend to cluster around an average value, with fewer observations further away.
 *   **Parameters**: It's defined by two parameters:
@@ -156,7 +147,7 @@ Shifting gears from counting discrete events to measuring continuous phenomena, 
 
 The Normal distribution is incredibly important because:
 1.  Many natural phenomena inherently follow it.
-2.  The **Central Limit Theorem** states that the sampling distribution of the sample mean of many independent random variables will be approximately normal, regardless of the original distribution, as long as the sample size is large enough. This makes it crucial for statistical inference, allowing us to make assumptions about sample means even when the underlying population distribution isn't normal.
+2.  The **[Central Limit Theorem](../statistics/probability-theorem.md#concept-central-limit-theorem)** states that the sampling distribution of the sample mean of many independent random variables will be approximately normal, regardless of the original distribution, as long as the sample size is large enough. This makes it crucial for statistical inference, allowing us to make assumptions about sample means even when the underlying population distribution isn't normal.
 
 **Example**: Suppose the heights of adult women are normally distributed with a mean (`μ`) of 163 cm and a standard deviation (`σ`) of 7 cm. What percentage of women are between 156 cm and 170 cm tall? (Notice this range is `μ - σ` to `μ + σ`, so we expect approximately 68% based on the Empirical Rule).
 
@@ -179,7 +170,7 @@ print(f"The probability of a woman being between 156cm and 170cm is: {probabilit
 
 <a id="concept-exponential-distribution"></a>
 ### The Exponential Distribution
-While the Normal distribution models the distribution of measurements, the **Exponential distribution** is specifically designed to model the *time until an event occurs*. It's a continuous distribution often used in scenarios where events happen continuously and independently at a constant average rate, much like the events modeled by the Poisson distribution, but here we focus on the *waiting time* between those events.
+While the Normal distribution models the distribution of measurements, the **Exponential distribution** is specifically designed to model the *time until an event occurs*. It's a [continuous distribution](../statistics/distribution.md#concept-distribution) often used in scenarios where events happen continuously and independently at a constant average rate, much like the events modeled by the [Poisson distribution](../statistics/distribution.md#concept-poisson-distribution), but here we focus on the *waiting time* between those events.
 
 *   **Scenario**: The time until the next customer arrives at a store, the lifespan of an electronic component, the time between successive calls to a call center.
 *   **Parameters**: It's defined by a single parameter, `λ` (lambda), which is the rate parameter (the average number of events per unit of time). It's the reciprocal of the mean time between events.
@@ -208,10 +199,10 @@ print(f"The probability a bulb lasts less than 500 hours is: {probability:.4f}")
 
 <a id="concept-students-t-distribution"></a>
 ### Other Key Distributions: Chi-squared and Student's t-Distribution
-So far, we've looked at distributions that help us describe and model raw data. Now, let's introduce two distributions that are absolutely critical for *statistical inference* – that is, making educated guesses and drawing conclusions about larger populations based on smaller samples.
+So far, we've looked at distributions that help us describe and model [raw data](../data-science/data-cleaning-preprocessing.md#concept-data-cleaning-preprocessing). Now, let's introduce two distributions that are absolutely critical for *statistical inference* – that is, making educated guesses and drawing conclusions about larger populations based on smaller samples.
 
 *   **Chi-squared Distribution**:
-    *   **Purpose**: This distribution is primarily used in [hypothesis testing](../data-science/statistical-foundations.md#concept-hypothesis-testing), especially for tests involving categorical data (like the Chi-squared test for independence or goodness-of-fit) and for estimating population [variance](../statistics/basic-statistics.md#concept-variance).
+    *   **Purpose**: This distribution is primarily used in [hypothesis testing](../data-science/statistical-foundations.md#concept-hypothesis-testing), especially for tests involving [categorical data](../data-science/data-fundamentals-and-types.md#concept-quantitative-data) (like the Chi-squared test for independence or goodness-of-fit) and for estimating population variance.
     *   **Parameters**: It has one parameter: `df` (degrees of freedom), which influences its shape. The degrees of freedom are related to the number of independent pieces of information used to calculate the statistic.
     *   **Intuition**: It arises when you sum the squares of several independent standard normal random variables. This squaring makes it always positive and right-skewed.
 

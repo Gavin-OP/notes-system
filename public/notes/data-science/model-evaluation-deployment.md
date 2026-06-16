@@ -13,7 +13,7 @@ By the end of this lesson, you will be able to:
 ## Introduction
 You've successfully trained a machine learning model, and it seems to be performing well on the [data](../data-science/data-fundamentals-and-types.md#concept-data) you used to teach it. That's a great start! But before you can truly celebrate, two critical questions arise:
 
-1.  **How do you know your model will perform just as well on *new*, unseen data in the real world?** A model that only works on its training data isn't very useful.
+1.  **How do you know your model will perform just as well on *new*, unseen data in the real world?** A model that only works on its [training data](../data-science/introduction-to-machine-learning.md#concept-bias-variance-tradeoff) isn't very useful.
 2.  **Once you're confident in its performance, how do you actually make it available for others to use, beyond just running it on your own computer?**
 
 This lesson is designed to answer these essential questions. We'll move beyond the initial training phase to explore the rigorous process of evaluating a model's true capabilities and then making it accessible for practical applications. Without proper evaluation, your model might be a house of cards, and without deployment, it's just a piece of code. Let's learn how to build robust models and put them to work!
@@ -22,7 +22,7 @@ This lesson is designed to answer these essential questions. We'll move beyond t
 
 <a id="concept-model-evaluation"></a>
 ### Model Evaluation: Beyond Simple Accuracy
-When you train a machine learning model, its primary goal is to learn general patterns from your data. However, a common trap is for the model to simply memorize the training data instead of understanding the underlying relationships. This problem is known as **overfitting**. An overfit model will perform exceptionally well on the data it has seen during training but poorly on any new, unseen data.
+When you train a [machine learning model](../data-science/model-evaluation-deployment.md#concept-model-evaluation-deployment), its primary goal is to learn general patterns from your data. However, a common trap is for the model to simply memorize the training data instead of understanding the underlying relationships. This problem is known as **overfitting**. An overfit model will perform exceptionally well on the data it has seen during training but poorly on any new, unseen data.
 
 Imagine a student who memorizes every answer to a specific practice test. They might ace that test, but if given a slightly different test on the same subject, they might fail because they didn't truly grasp the concepts. Your model can do the same!
 
@@ -75,7 +75,7 @@ y_pred = model.predict(X_test)
 test_accuracy = accuracy_score(y_test, y_pred)
 print(f"Model accuracy on the test set: {test_accuracy:.2f}")
 ```
-In this output, `test_accuracy` gives us an indication of how well our spam classifier might perform on new emails it hasn't seen during training. If we had only looked at the [accuracy](../data-science/supervised-learning-classification.md#concept-accuracy) on the training data, we might have gotten a misleadingly high score, especially if the model overfit.
+In this output, `test_accuracy` gives us an indication of how well our spam classifier might perform on new emails it hasn't seen during training. If we had only looked at the [accuracy](../data-science/supervised-learning-classification.md#concept-accuracy) on the [training data](../data-science/introduction-to-machine-learning.md#concept-bias-variance-tradeoff), we might have gotten a misleadingly high score, especially if the model overfit.
 
 ![A flowchart showing the process of splitting a dataset. Start with a large "Full Dataset" box. An arrow points to two smaller boxes: "Training Set" and "Test Set". The "Training Set" box has an arrow pointing to a "Train Model" box. The "Train Model" box has an arrow pointing to an "Evaluate Model" box. The "Test Set" box also has an arrow pointing to the "Evaluate Model" box. Labels should clearly indicate the purpose of each split.](https://i.imgur.com/example_split.png)
 
@@ -127,10 +127,10 @@ Here, `cv_scores` will show you the accuracy for each of the 3 different train-t
 
 <a id="concept-hyperparameter-tuning"></a>
 ### Hyperparameter Tuning: Optimizing Your Model's Settings
-Every machine learning model has two types of "settings" or "parameters":
+Every [machine learning model](../data-science/model-evaluation-deployment.md#concept-model-evaluation-deployment) has two types of "settings" or "parameters":
 
 1.  **Model Parameters**: These are values that the model *learns directly from the data* during the training process. For example, the weights and biases in a [linear regression](../data-science/supervised-learning-regression.md#concept-linear-regression) model or the split points in a decision tree are model parameters. You don't set these; the algorithm figures them out.
-2.  **Hyperparameters**: These are settings that are *not learned from the data*. Instead, you, the data scientist, must set them *before* the training process begins. They control the learning process itself or the structure of the model. Examples include the learning rate in a neural network, the number of neighbors in K-Nearest Neighbors, or the regularization strength in [logistic regression](../data-science/supervised-learning-classification.md#concept-logistic-regression).
+2.  **Hyperparameters**: These are settings that are *not learned from the data*. Instead, you, the [data scientist](../data-science/introduction-to-data-science.md#concept-data-scientist), must set them *before* the training process begins. They control the learning process itself or the structure of the model. Examples include the learning rate in a neural network, the number of neighbors in K-Nearest Neighbors, or the regularization strength in [logistic regression](../data-science/supervised-learning-classification.md#concept-logistic-regression).
 
 Choosing the right hyperparameters can significantly impact your model's performance. Just like adjusting the settings on a camera (aperture, ISO, shutter speed) to get the best photo, **hyperparameter tuning** (or optimization) is the process of finding the best combination of these settings for your specific model and dataset.
 

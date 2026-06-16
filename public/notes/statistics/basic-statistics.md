@@ -1,12 +1,3 @@
----
-title: "Basic Statistics"
-slug: basic-statistics
-display: true
-order: 3
-tags:
-  - statistics
----
-
 <a id="concept-basic-statistics"></a>
 # Basic Statistics: Understanding Your Data
 
@@ -42,7 +33,7 @@ To find your average (expectation) score:
 
 So, your average (expectation) quiz score is 86.6. This single value provides a concise summary of your performance across all quizzes.
 
-While the example above shows how to calculate the mean for a sample of [data](../data-science/data-fundamentals-and-types.md#concept-data), the concept of expectation applies more broadly. For a random variable $X$ (which represents the outcome of a random phenomenon), its expectation, denoted as $E[X]$ or $\mu$ (the Greek letter mu), is formally defined based on its probability distribution:
+While the example above shows how to calculate the mean for a sample of [data](../data-science/data-fundamentals-and-types.md#concept-data), the concept of expectation applies more broadly. For a random variable $X$ (which represents the outcome of a random phenomenon), its expectation, denoted as $E[X]$ or $\mu$ (the [Greek letter](../statistics/rules-of-thumb.md#concept-greek-letters) mu), is formally defined based on its [probability distribution](../data-science/statistical-foundations.md#concept-probability):
 -   For **discrete variables** (countable outcomes): $E[X] = \sum x \cdot P(X=x)$ (the sum of each possible value multiplied by its probability).
 -   For **continuous variables** (outcomes that can take any value in a range): $E[X] = \int x \cdot f(x) dx$ (the integral of x times its [probability density function](../statistics/basic-definition.md#concept-probability-density-function)).
 
@@ -55,7 +46,7 @@ $\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i$
 
 <a id="concept-variance"></a>
 ### Variance (Measuring Data Spread)
-The expectation gives us a great sense of the "center" of our data, but it doesn't tell the whole story. What if two different datasets have the same average but look very different?
+The [expectation](../statistics/basic-statistics.md#concept-expectation) gives us a great sense of the "center" of our data, but it doesn't tell the whole story. What if two different datasets have the same average but look very different?
 
 Consider these two groups of students and their exam scores:
 *   **Group A scores:** 80, 85, 90, 95, 100 (Mean = 90)
@@ -108,7 +99,7 @@ The variance of your quiz scores is 29.8. This number tells us about the spread.
 ### Quantiles (Median, Percentiles: Robust Measures of Position)
 While the mean is a powerful measure of central tendency, it has a vulnerability: it can be heavily skewed by extreme values, often called **[outliers](../data-science/data-cleaning-preprocessing.md#concept-outliers)**. For example, if you're looking at house prices in a neighborhood, a single very expensive mansion could drastically inflate the average price, making the neighborhood seem more expensive than it truly is for most residents.
 
-**Quantiles** offer an alternative, more robust way to understand the distribution of data. They divide an ordered dataset into segments, each containing an equal proportion of the data. Because they focus on position rather than exact values, quantiles are much less sensitive to outliers than the mean.
+**Quantiles** offer an alternative, more robust way to understand the [distribution](../statistics/distribution.md#concept-distribution) of data. They divide an ordered dataset into segments, each containing an equal proportion of the data. Because they focus on position rather than exact values, quantiles are much less sensitive to outliers than the mean.
 
 The most common and intuitive quantile is the **median**. The median is simply the middle value in a dataset when all the data points are arranged in order from smallest to largest.
 *   If there's an odd number of data points, the median is the single value exactly in the middle.

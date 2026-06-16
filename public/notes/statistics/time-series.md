@@ -1,12 +1,3 @@
----
-title: "Time Series"
-slug: time-series
-display: true
-order: 9
-tags:
-  - statistics
----
-
 <a id="concept-time-series"></a>
 # Time Series
 
@@ -18,7 +9,7 @@ tags:
 - Gain an intuitive understanding of how time series models are used for forecasting.
 
 ## Introduction
-Imagine tracking the daily temperature in your city, the [stock](../finance/equity-market.md#concept-stock) price of your favorite company, or the number of customers visiting a store each hour. What do these all have in common? They are sequences of [data](../data-science/data-fundamentals-and-types.md#concept-data) points collected over time, in a specific order. This type of data is called a **time series**.
+Imagine tracking the daily temperature in your city, the [stock](../finance/equity-market.md#concept-stock) price of your favorite company, or the number of customers visiting a store each hour. What do these all have in common? They are sequences of [data](../data-science/data-fundamentals-and-types.md#concept-data) points collected [over time](../statistics/time-series.md#concept-stationarity), in a specific order. This type of data is called a **time series**.
 
 Unlike data where each observation is independent (like a random sample of people's heights or survey responses), time series data has a built-in structure: the past often influences the future. This temporal dependence makes time series analysis a unique and powerful field, allowing us to understand patterns, predict future values, and make informed decisions.
 
@@ -49,7 +40,7 @@ Time series [data](../data-science/data-fundamentals-and-types.md#concept-data) 
 -   **Economics:** GDP growth, inflation rates, unemployment figures.
 -   **Finance:** [Stock](../finance/equity-market.md#concept-stock) prices, exchange rates, trading volumes.
 -   **Meteorology:** Temperature, rainfall, wind speed.
--   **Healthcare:** Patient heart rates, disease incidence over time.
+-   **Healthcare:** Patient heart rates, disease incidence [over time](../statistics/time-series.md#concept-stationarity).
 -   **Retail:** Monthly sales, website traffic, inventory levels.
 
 The key characteristic that unites all these examples is that the order of observations matters significantly, as it often reveals underlying processes and relationships.
@@ -59,11 +50,11 @@ The most distinguishing feature of time series data is that observations are typ
 
 Imagine trying to predict tomorrow's temperature. You wouldn't just guess randomly; you'd likely consider today's temperature, yesterday's, and perhaps the general trend for the season. This is because temperature exhibits dependence over time – today's weather is a strong predictor of tomorrow's.
 
-Some stochastic processes, like a **Markov process**, exhibit a specific, simplified type of dependence. In a Markov process, the future state depends *only* on the current state, and is conditionally independent of past states given the current state. This is often referred to as the "memoryless" property. For example, if you know the current weather (sunny), predicting tomorrow's weather might only require knowing it's sunny today, not whether it was rainy two days ago. While this property simplifies modeling, many real-world time series have a longer memory, where values from several periods ago can still influence the present. Understanding this dependence, whether short-term or long-term, is crucial because it dictates how we analyze and model the data. We can't simply treat each data point as an isolated event; we must account for its relationship with the past.
+Some [stochastic processes](../statistics/simulation.md#concept-simulation), like a **Markov process**, exhibit a specific, simplified type of dependence. In a Markov process, the future state depends *only* on the current state, and is conditionally independent of past states given the current state. This is often referred to as the "memoryless" property. For example, if you know the current weather (sunny), predicting tomorrow's weather might only require knowing it's sunny today, not whether it was rainy two days ago. While this property simplifies modeling, many real-world time series have a longer memory, where values from several periods ago can still influence the present. Understanding this dependence, whether short-term or long-term, is crucial because it dictates how we analyze and model the data. We can't simply treat each data point as an isolated event; we must account for its relationship with the past.
 
 <a id="concept-stationarity"></a>
 ### Stationarity: A Stable Foundation
-To effectively model the dependence within a time series, we often look for a particular characteristic called **stationarity**. Intuitively, a stationary time series is one whose statistical properties – like its mean, [variance](../statistics/basic-statistics.md#concept-variance), and the way it correlates with its past values – do not change over time. It means that if you take any segment of the series, it should look statistically similar to any other segment of the same length. More formally, we often refer to *weak-sense stationarity*, where the mean, variance, and autocovariance (which determines autocorrelation) are constant over time.
+To effectively model the dependence within a [time series](../statistics/time-series.md#concept-time-series), we often look for a particular characteristic called **stationarity**. Intuitively, a stationary time series is one whose statistical properties – like its mean, variance, and the way it correlates with its past values – do not change over time. It means that if you take any segment of the series, it should look statistically similar to any other segment of the same length. More formally, we often refer to *weak-sense stationarity*, where the mean, variance, and autocovariance (which determines [autocorrelation](../statistics/time-series.md#concept-autocorrelation)) are constant over time.
 
 **Why is stationarity important?**
 Imagine trying to predict the future behavior of a system that is constantly changing its fundamental characteristics. It would be incredibly difficult! Stationarity provides a stable basis for forecasting. If a series is stationary, we can assume that the patterns and relationships observed in the past will continue into the future. This allows us to build models based on historical data that remain valid for future predictions. Without stationarity, any patterns we identify might just be temporary, making our forecasts unreliable.
@@ -79,7 +70,7 @@ Imagine trying to predict the future behavior of a system that is constantly cha
 Common types of non-stationarity include:
 -   **Trend:** A long-term increase or decrease in the mean of the series (e.g., population growth over decades).
 -   **Seasonality:** Regular, predictable patterns that repeat over a fixed period (e.g., higher retail sales during holidays each year).
--   **Changing [Variance](../statistics/basic-statistics.md#concept-variance):** The spread of the data points changes over time (also known as heteroscedasticity), meaning the fluctuations become larger or smaller.
+-   **Changing Variance:** The spread of the data points changes over time (also known as heteroscedasticity), meaning the fluctuations become larger or smaller.
 
 Many techniques exist to transform non-stationary series into stationary ones, most commonly involving **differencing** (calculating the difference between consecutive observations to remove trends or seasonality).
 

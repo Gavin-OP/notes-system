@@ -1,12 +1,3 @@
----
-title: "Probability Theorem"
-slug: probability-theorem
-display: true
-order: 5
-tags:
-  - statistics
----
-
 <a id="concept-probability-theorem"></a>
 # Probability Theorems: Unlocking the Language of Uncertainty
 
@@ -24,7 +15,7 @@ Our world is inherently uncertain. From predicting the weather to understanding 
 
 Imagine you're trying to decide if you need an umbrella today. You know the general chance of rain, but what if you also know the sky is heavily cloudy? This new piece of information changes your assessment. Probability theorems help us formalize this kind of thinking, allowing us to update our beliefs, understand how sample [data](../data-science/data-fundamentals-and-types.md#concept-data) relates to a larger population, and even make predictions with a certain level of confidence.
 
-In this lesson, we'll explore some of the most important probability theorems that form the bedrock of statistics and data science. We'll start with intuitive ideas and gradually build towards more powerful concepts, seeing how each theorem helps us better understand and navigate uncertainty.
+In this lesson, we'll explore some of the most important probability theorems that form the bedrock of statistics and [data science](../data-science/introduction-to-data-science.md#concept-data-science). We'll start with intuitive ideas and gradually build towards more powerful concepts, seeing how each theorem helps us better understand and navigate uncertainty.
 
 ## Concept Progression
 
@@ -77,7 +68,7 @@ This result makes intuitive sense: after drawing one blue marble, you have 9 mar
 <a id="concept-bayes-formula"></a>
 ### Bayes' Formula: Updating Your Beliefs with New Evidence
 
-Building directly on the concept of conditional probability, **Bayes' Formula** (or Bayes' Theorem) is a remarkably powerful tool. It provides a systematic way to update the probability of a hypothesis (our initial belief) when we receive new evidence. This theorem is fundamental to how we learn from [data](../data-science/data-fundamentals-and-types.md#concept-data) and is widely used in fields like medical diagnosis, spam filtering, and machine learning.
+Building directly on the concept of [conditional probability](../statistics/probability-theorem.md#concept-conditional-probability), **Bayes' Formula** (or Bayes' Theorem) is a remarkably powerful tool. It provides a systematic way to update the probability of a hypothesis (our initial belief) when we receive new evidence. This theorem is fundamental to how we learn from [data](../data-science/data-fundamentals-and-types.md#concept-data) and is widely used in fields like medical diagnosis, spam filtering, and [machine learning](../data-science/introduction-to-data-science.md#concept-machine-learning).
 
 The formula is:
 
@@ -86,7 +77,7 @@ $P(H|E) = \frac{P(E|H) \times P(H)}{P(E)}$
 Let's break down each term to understand its role:
 - $P(H|E)$: This is the **posterior probability**. It's the probability of our hypothesis (H) being true *after* we've considered the new evidence (E). This is often what we want to find – our updated belief.
 - $P(E|H)$: This is the **likelihood**. It's the probability of observing the evidence (E) *if* our hypothesis (H) is true. How likely is the evidence if our theory is correct?
-- $P(H)$: This is the **prior probability**. It's our initial belief about the probability of the hypothesis (H) being true *before* we see any new evidence.
+- $P(H)$: This is the **prior probability**. It's our [initial belief](../statistics/bayesian-learning.md#concept-bayesian-learning) about the probability of the hypothesis (H) being true *before* we see any new evidence.
 - $P(E)$: This is the **marginal probability of evidence**. It's the overall probability of observing the evidence (E), regardless of whether our hypothesis is true or not. This term acts as a normalizing factor and can often be calculated by considering all possible ways the evidence could occur: $P(E) = P(E|H)P(H) + P(E|\neg H)P(\neg H)$, where $\neg H$ means "not H" (the complement of H).
 
 **Intuitive Example: Is Alex Home?**
@@ -159,7 +150,7 @@ Furthermore, the CLT specifies the characteristics of this normal distribution o
 - Its standard deviation (which we call the **standard error**) will be $\sigma / \sqrt{n}$, where $\sigma$ is the population standard deviation and $n$ is the sample size.
 
 **Why is this theorem so important?**
-Many statistical tests and methods rely on the assumption that data is normally distributed. The CLT allows us to apply these powerful tools to sample means, even when we're dealing with data from populations that are *not* normally distributed, as long as our sample sizes are large enough. This makes it incredibly useful for making inferences and drawing conclusions about population means from sample data.
+Many statistical tests [and methods](../python/object-oriented-programming-python.md#concept-inheritance) rely on the assumption that data is normally distributed. The CLT allows us to apply these powerful tools to sample means, even when we're dealing with data from populations that are *not* normally distributed, as long as our sample sizes are large enough. This makes it incredibly useful for making inferences and drawing conclusions about population means from sample data.
 
 **Example: Bus Stop Waiting Times**
 Imagine a population of people's waiting times at a bus stop. This distribution might be very skewed, with many short waits and a few very long waits (definitely not a normal distribution).
@@ -177,7 +168,7 @@ According to the CLT, this histogram of sample means will look like a normal dis
 
 Sometimes, we don't know the exact [distribution](../statistics/distribution.md#concept-distribution) of our data, or we might not have a sufficiently large sample size for the CLT to apply. In such cases, we still might want to say something about how likely it is for a value to be far from the mean. This is where **Chebyshev's Inequality** comes in handy. It provides a *guaranteed minimum probability* that a random variable will fall within a certain distance from its mean, or conversely, a *guaranteed maximum probability* that it will fall outside that distance.
 
-The remarkable aspect of Chebyshev's Inequality is that it applies to *any* probability distribution, as long as it has a defined mean ($\mu$) and finite variance ($\sigma^2$). You don't need to know if it's normal, uniform, skewed, or anything else – it's a universal bound.
+The remarkable aspect of Chebyshev's Inequality is that it applies to *any* [probability distribution](../data-science/statistical-foundations.md#concept-probability), as long as it has a defined mean ($\mu$) and finite variance ($\sigma^2$). You don't need to know if it's normal, uniform, skewed, or anything else – it's a universal bound.
 
 The inequality states:
 

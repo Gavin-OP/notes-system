@@ -1,12 +1,3 @@
----
-title: "Simulation"
-slug: simulation
-display: true
-order: 13
-tags:
-  - statistics
----
-
 <a id="concept-simulation"></a>
 # Simulation
 
@@ -19,9 +10,9 @@ By the end of this lesson, you will be able to:
 - Recognize the importance of these processes in modeling phenomena with inherent randomness over time.
 
 ## Introduction
-Have you ever tried to predict the exact path of a tiny pollen grain jiggling in water, or the precise fluctuations of a [stock](../finance/equity-market.md#concept-stock) price over the next hour? These aren't simple, predictable movements; they involve an element of randomness that evolves and changes over time. This is precisely where the concept of **simulation** becomes incredibly powerful, especially when we're dealing with **stochastic processes**.
+Have you ever tried to predict the exact path of a tiny pollen grain jiggling in water, or the precise fluctuations of a [stock](../finance/equity-market.md#concept-stock) price over the next hour? These aren't simple, predictable movements; they involve an element of randomness that evolves and changes [over time](../statistics/time-series.md#concept-stationarity). This is precisely where the concept of **simulation** becomes incredibly powerful, especially when we're dealing with **stochastic processes**.
 
-Simulation allows us to create models that mimic real-world systems, incorporating this inherent randomness to understand their behavior, predict potential outcomes, and test hypotheses without having to observe the actual, often complex, system directly. In this lesson, we'll embark on a journey to understand the fundamental building blocks of simulating such random, time-evolving phenomena. We'll start with the basic idea of a stochastic process and progressively build up to more sophisticated models like the Wiener and Itô processes. These powerful tools are indispensable in fields ranging from finance and physics to biology and engineering, helping us make sense of an unpredictable world.
+Simulation allows us to create models that mimic real-world systems, incorporating this inherent randomness to understand their behavior, predict potential outcomes, and test hypotheses without having to observe the actual, often complex, system directly. In this lesson, we'll embark on a journey to understand the fundamental building blocks of simulating such random, time-evolving phenomena. We'll start with the basic idea of a [stochastic process](../statistics/simulation.md#concept-stochastic-process) and progressively build up to more sophisticated models like the Wiener and Itô processes. These powerful tools are indispensable in fields ranging from finance and physics to biology and engineering, helping us make sense of an unpredictable world.
 
 ## Concept Progression
 
@@ -41,9 +32,9 @@ A special and very important type of stochastic process is a **Markov process**.
 
 <a id="concept-brownian-motion"></a>
 ### Brownian Motion: The Erratic Dance of Particles
-Building on the idea of a stochastic process, let's explore one of its most famous and intuitive examples: **Brownian motion**. First observed by botanist Robert Brown in 1827, it describes the seemingly erratic, random movement of microscopic particles suspended in a fluid. Imagine tiny pollen grains suspended in water, constantly being bombarded by invisible water molecules. Each collision gives the pollen grain a tiny, random push, causing it to jiggle and drift in an unpredictable, zigzagging path.
+Building on the idea of a [stochastic process](../statistics/simulation.md#concept-stochastic-process), let's explore one of its most famous and intuitive examples: **Brownian motion**. First observed by botanist Robert Brown in 1827, it describes the seemingly erratic, random movement of microscopic particles suspended in a fluid. Imagine tiny pollen grains suspended in water, constantly being bombarded by invisible water molecules. Each collision gives the pollen grain a tiny, random push, causing it to jiggle and drift in an unpredictable, zigzagging path.
 
-This continuous, random jiggling is what we call Brownian motion. It's a perfect illustration of a stochastic process where randomness unfolds continuously over time.
+This continuous, random jiggling is what we call Brownian motion. It's a perfect illustration of a stochastic process where randomness unfolds continuously [over time](../statistics/time-series.md#concept-stationarity).
 
 Key characteristics that define this intuitive movement:
 1.  **Continuous Path**: The particle's movement is continuous; it doesn't suddenly disappear from one spot and reappear in another. It traces an unbroken path.
@@ -58,7 +49,7 @@ Brownian motion isn't just a scientific curiosity; it's a powerful model for man
 
 <a id="concept-wiener-process"></a>
 ### Wiener Process: The Mathematical Blueprint of Brownian Motion
-While Brownian motion describes the physical phenomenon of random particle movement, the **Wiener process** (often denoted as $W_t$ or $B_t$) is its rigorous mathematical model. It's a specific type of continuous-time stochastic process that precisely formalizes the properties we observed in Brownian motion. It's named after Norbert Wiener, who provided its mathematical construction, making it a cornerstone for quantitative analysis.
+While [Brownian motion](../statistics/simulation.md#concept-brownian-motion) describes the physical phenomenon of random particle movement, the **Wiener process** (often denoted as $W_t$ or $B_t$) is its rigorous mathematical model. It's a specific type of continuous-time stochastic process that precisely formalizes the properties we observed in Brownian motion. It's named after Norbert Wiener, who provided its mathematical construction, making it a cornerstone for quantitative analysis.
 
 A standard Wiener process $W_t$ has the following key mathematical properties:
 1.  **Starts at Zero**: $W_0 = 0$. By convention, the process begins at a known starting point, typically zero. This is just a reference point; we can always shift it to any starting value.
@@ -72,7 +63,7 @@ The Wiener process is the cornerstone for modeling many continuous-time random p
 
 <a id="concept-ito-process"></a>
 ### Itô Process: Generalizing Randomness for Real-World Complexity
-While the Wiener process is incredibly useful, many real-world systems exhibit more complex behavior. For instance, a stock price might have an average tendency to rise (a "drift"), and its volatility (the intensity of its random fluctuations) might change depending on its current price level. This is where the **Itô process** comes in. It's a powerful generalization of the Wiener process, allowing for more realistic modeling where the "drift" (average direction) and "diffusion" (randomness or volatility) can change over time and depend on the current state of the process itself. It's named after Kiyosi Itô, who developed Itô calculus, the mathematical framework needed to work with such processes.
+While the [Wiener process](../statistics/simulation.md#concept-wiener-process) is incredibly useful, many real-world systems exhibit more complex behavior. For instance, a stock price might have an average tendency to rise (a "drift"), and its volatility (the intensity of its random fluctuations) might change depending on its current price level. This is where the **Itô process** comes in. It's a powerful generalization of the Wiener process, allowing for more realistic modeling where the "drift" (average direction) and "diffusion" (randomness or volatility) can change over time and depend on the current state of the process itself. It's named after Kiyosi Itô, who developed Itô calculus, the mathematical framework needed to work with such processes.
 
 An Itô process $X_t$ is typically defined by a stochastic differential equation (SDE) of the form:
 $dX_t = \mu(X_t, t) dt + \sigma(X_t, t) dW_t$
@@ -83,7 +74,7 @@ Let's break down this equation, which describes how the process changes over an 
 -   $\sigma(X_t, t) dW_t$: This is the **diffusion term** (or volatility term). It represents the random part of the change, driven by the Wiener process $dW_t$. The function $\sigma$ (sigma) can also depend on $X_t$ and $t$, meaning the intensity of the randomness (how much it "jiggles") can vary. For example, a stock might become more volatile when its price is very high or during periods of market uncertainty.
 
 Think of it this way:
--   A simple Wiener process has a constant drift (zero) and constant diffusion (one). It's like a particle moving randomly with no preferred direction and a constant, unchanging amount of jiggle.
+-   A simple [Wiener process](../statistics/simulation.md#concept-wiener-process) has a constant drift (zero) and constant diffusion (one). It's like a particle moving randomly with no preferred direction and a constant, unchanging amount of jiggle.
 -   An Itô process allows the particle to have a preferred direction that might change (e.g., a stock price tending to rise, but the rate of rise might depend on its current value) and for its jiggling to become more or less intense depending on its current state or time (e.g., a stock becoming more volatile when its price is very high).
 
 <!-- IMAGE_SLOT: img-003 -->

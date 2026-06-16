@@ -1,12 +1,3 @@
----
-title: "Basic Definitions in Finance"
-slug: basic-definition
-display: true
-order: 2
-tags:
-  - finance
----
-
 <a id="concept-basic-definition"></a>
 # Basic Definitions in Finance
 
@@ -26,7 +17,7 @@ In this lesson, we'll demystify some crucial concepts that are vital for anyone 
 
 <a id="concept-basis-points"></a>
 ### Basis Points (bp)
-Imagine discussing very small changes in interest rates, bond yields, or other financial percentages. Saying "0.01 percent" repeatedly can become cumbersome and prone to error. This is precisely where **basis points** come in handy. A basis point is a standardized, precise unit of measure for these tiny shifts.
+Imagine discussing very small changes in [interest rates](../finance/fixed-income.md#concept-duration), [bond](../finance/fixed-income.md#concept-bond) yields, or other financial percentages. Saying "0.01 percent" repeatedly can become cumbersome and prone to error. This is precisely where **basis points** come in handy. A basis point is a standardized, precise unit of measure for these tiny shifts.
 
 One basis point (often abbreviated as "bp") is equal to one-hundredth of a percentage point.
 - **1 basis point (bp) = 0.01%**
@@ -72,14 +63,14 @@ Your investment in Company A generated a 12% rate of return over that year.
 
 <a id="concept-holding-period-return"></a>
 ### Holding Period Return (HPR)
-Building directly on the concept of the rate of return, the **holding period return (HPR)** is a specific application of this measure. It refers to the total return earned on an asset *during the particular period you held it*. Essentially, it's the rate of return calculated for the exact duration you owned the investment, whether that's a few days, months, or years.
+Building directly on the concept of the [rate of return](../finance/basic-definition.md#concept-rate-of-return), the **holding period return (HPR)** is a specific application of this measure. It refers to the total return earned on an asset *during the particular period you held it*. Essentially, it's the rate of return calculated for the exact duration you owned the investment, whether that's a few days, months, or years.
 
 While the general rate of return can refer to any specified period (e.g., annual return, quarterly return), HPR explicitly focuses on *your* personal holding period. The formula remains the same as the general rate of return, but the "beginning" and "ending" values, along with any cash flows, are specific to your ownership duration.
 
 $$ \text{Holding Period Return (HPR)} = \frac{(\text{Ending Price} - \text{Beginning Price} + \text{Cash Flow Received})}{\text{Beginning Price}} $$
 
 **Example:**
-You purchase a corporate bond for \$980. You hold this bond for six months. During these six months, the bond pays you an interest payment of \$20. At the end of the six-month period, you decide to sell the bond for \$1010.
+You purchase a [corporate bond](../finance/fixed-income.md#concept-yield) for \$980. You hold this [bond](../finance/fixed-income.md#concept-bond) for six months. During these six months, the bond pays you an interest payment of \$20. At the end of the six-month period, you decide to sell the bond for \$1010.
 
 Let's calculate your holding period return:
 -   Beginning Price = \$980
@@ -120,16 +111,16 @@ You started with \$1,000 and, through these simultaneous transactions, ended wit
 
 <a id="concept-risk-neutral-pricing"></a>
 ### Risk-Neutral Pricing
-In the real world, investors demand higher returns for taking on more risk. This is a fundamental principle of finance. However, for certain valuation tasks, particularly with complex financial instruments like derivatives, it's incredibly useful to imagine a theoretical world where investors are indifferent to risk. This theoretical framework is known as **risk-neutral pricing**.
+In the real world, investors demand higher returns for taking on more risk. This is a fundamental principle of finance. However, for certain valuation tasks, particularly with [complex financial](../finance/rules-of-thumb.md#concept-finance-abbreviations) instruments like [derivatives](../finance/derivatives.md#concept-derivatives), it's incredibly useful to imagine a theoretical world where investors are indifferent to risk. This theoretical framework is known as **risk-neutral pricing**.
 
-**Risk-neutral pricing** is a powerful mathematical method used to value assets, especially derivatives (financial contracts whose value is derived from an underlying asset), by assuming that investors do not require a risk premium for holding risky assets. In this hypothetical "risk-neutral world," all assets are expected to earn the risk-free rate of return.
+**Risk-neutral pricing** is a powerful mathematical method used to value assets, especially derivatives (financial contracts whose value is derived from an underlying asset), by assuming that investors do not require a risk premium for holding risky assets. In this hypothetical "risk-neutral world," all assets are expected to earn the risk-free [rate of return](../finance/basic-definition.md#concept-rate-of-return).
 
 Why is this theoretical construct so valuable?
 -   **Simplification:** It removes the complexities of individual risk preferences and varying expected returns, making pricing models more straightforward and universal.
 -   **Consistency:** It provides a consistent framework for pricing derivatives relative to their underlying assets and the prevailing risk-free rate.
 -   **Mathematical Convenience:** It allows for the use of powerful mathematical tools (like risk-neutral probabilities) to calculate the expected future payoffs of an asset and then discount them back to the present using the risk-free rate.
 
-It's crucial to understand that risk-neutral pricing doesn't imply that risk disappears in the real world, nor does it mean investors are actually risk-neutral. Instead, it's a clever mathematical trick. The "risk-neutral probabilities" used in these calculations are not the actual probabilities of events happening in the real world. Rather, they are *adjusted* probabilities that effectively incorporate the market's collective risk aversion. By embedding the risk premium into these adjusted probabilities, we can then use the simpler risk-free rate to discount future cash flows, arriving at a fair present value that is consistent with real-world market prices.
+It's crucial to understand that risk-neutral pricing doesn't imply that risk disappears in the real world, nor does it mean investors are actually risk-neutral. Instead, it's a clever mathematical trick. The "risk-neutral probabilities" used in these calculations are not the actual probabilities of events happening in the real world. Rather, they are *adjusted* probabilities that effectively incorporate the market's collective risk aversion. By embedding the risk premium into these adjusted probabilities, we can then use the simpler risk-free rate to discount future cash flows, arriving at a fair [present value](../finance/time-value.md#concept-present-value) that is consistent with real-world market prices.
 
 <!-- IMAGE_SLOT: img-002 -->
 ![A conceptual diagram comparing "Real World" vs. "Risk-Neutral World" for asset pricing. On the "Real World" side, show](../../../../../image/finance/basic-definition/img-002.png)

@@ -1,12 +1,3 @@
----
-title: "Linear Regression"
-slug: linear-regression
-display: true
-order: 7
-tags:
-  - statistics
----
-
 <a id="concept-linear-regression"></a>
 # Linear Regression
 
@@ -21,7 +12,7 @@ By the end of this lesson, you will be able to:
 ## Introduction
 Have you ever wondered if there's a predictable pattern between two things? For example, does the amount of advertising a company does affect its sales? Or does the size of a house influence its price? In the world of [data](../data-science/data-fundamentals-and-types.md#concept-data), we often encounter situations where we want to understand and quantify such relationships. This is precisely where **[Linear Regression](../data-science/supervised-learning-regression.md#concept-linear-regression)** comes in.
 
-Linear regression is a foundational statistical and machine learning technique that helps us model the relationship between a **dependent variable** (the outcome we want to predict) and one or more **independent variables** (the factors we think influence the outcome). It's called "linear" because it assumes this relationship can be best described by a straight line. This powerful tool allows us to make predictions and understand how different factors might be connected, making it invaluable across fields like business, economics, science, and engineering.
+Linear regression is a foundational statistical and [machine learning](../data-science/introduction-to-data-science.md#concept-machine-learning) technique that helps us model the relationship between a **dependent variable** (the outcome we want to predict) and one or more **independent variables** (the factors we think influence the outcome). It's called "linear" because it assumes this relationship can be best described by a straight line. This powerful tool allows us to make predictions and understand how different factors might be connected, making it invaluable across fields like business, economics, science, and engineering.
 
 Let's dive into how we can uncover these linear relationships.
 
@@ -57,7 +48,7 @@ But how do we determine which line is the "best" fit among all possible lines? T
 <a id="concept-ordinary-least-squares"></a>
 ### Finding the Best Line: Ordinary Least Squares (OLS)
 
-There are infinitely many lines we could draw through a set of data points. So, how do we objectively find the single "best-fit" line for our simple linear regression model? The most common and widely used method is called **Ordinary Least Squares (OLS)**.
+There are infinitely many lines we could draw through a set of data points. So, how do we objectively find the single "best-fit" line for our [simple linear regression](../statistics/linear-regression.md#concept-linear-regression) model? The most common and widely used method is called **Ordinary Least Squares (OLS)**.
 
 The core idea behind OLS is to minimize the sum of the squared differences between the actual observed values of Y and the values predicted by our line. These differences are precisely those error terms, or residuals, we talked about ($\epsilon$).
 
@@ -69,7 +60,7 @@ The OLS method finds the unique values for $\beta_0$ and $\beta_1$ that result i
 ![A scatter plot with several data points and a single regression line. For each data point, a vertical](../../../../../image/statistics/linear-regression/img-002.png)
 
 
-Once we've found our specific $\beta_0$ and $\beta_1$ values using OLS, we have our concrete regression equation. For example, if our analysis yields:
+Once we've found our specific $\beta_0$ and $\beta_1$ values using OLS, we have our concrete [regression](../data-science/supervised-learning-regression.md#concept-regression-analysis) equation. For example, if our analysis yields:
 
 $$ \text{Ice Cream Sales} = 10 + 2 \times \text{Temperature} $$
 
@@ -81,7 +72,7 @@ While simple linear regression is excellent for understanding one-to-one relatio
 
 ### Expanding to Multiple Factors: Multiple Linear Regression
 
-While simple linear regression is great for understanding how one factor influences an outcome, real-world phenomena are rarely that simple. For instance, a house's price isn't just determined by its size; it also depends on the number of bedrooms, bathrooms, location, age, and many other attributes. This is where **[Multiple Linear Regression](../data-science/supervised-learning-regression.md#concept-multiple-linear-regression)** becomes essential.
+While [simple linear regression](../statistics/linear-regression.md#concept-linear-regression) is great for understanding how one factor influences an outcome, real-world phenomena are rarely that simple. For instance, a house's price isn't just determined by its size; it also depends on the number of bedrooms, bathrooms, location, age, and many other attributes. This is where **Multiple Linear Regression** becomes essential.
 
 Multiple linear regression extends the simple model by allowing for two or more independent variables to predict a single dependent variable. The equation expands to include additional independent variables and their respective slopes:
 
@@ -105,7 +96,7 @@ Let's interpret these coefficients:
 *   **Bedrooms (15,000):** For every additional bedroom, the house price is predicted to increase by $15,000, *assuming square footage and age remain the same*.
 *   **Age (-5,000):** For every additional year of age, the house price is predicted to decrease by $5,000, *assuming square footage and bedrooms remain the same*.
 
-[Multiple linear regression](../data-science/supervised-learning-regression.md#concept-multiple-linear-regression) allows us to build more comprehensive and realistic models by accounting for the combined influence of several factors, giving us a richer understanding of complex relationships.
+Multiple linear regression allows us to build more comprehensive and realistic models by accounting for the combined influence of several factors, giving us a richer understanding of complex relationships.
 
 <a id="concept-residual-analysis"></a>
 ### Checking Our Model: Residual Analysis
@@ -126,7 +117,7 @@ A good residual plot will show a cloud of points randomly scattered around the h
 
 **What a "Bad" Residual Plot Looks Like:**
 If you see patterns in your residual plot, it's a red flag that your model might have issues:
-*   **A U-shape or inverted U-shape:** This suggests that the relationship between your variables might not be linear, and a different type of model (e.g., polynomial regression) might be more appropriate.
+*   **A U-shape or inverted U-shape:** This suggests that the relationship between your variables might not be linear, and a different type of model (e.g., polynomial [regression](../data-science/supervised-learning-regression.md#concept-regression-analysis)) might be more appropriate.
 *   **A funnel shape (widening or narrowing spread):** This indicates **heteroscedasticity**, meaning the variance of the errors is not constant. This violates an assumption of OLS and can affect the reliability of your coefficient estimates and their statistical significance.
 *   **[Clustering](../data-science/unsupervised-learning-clustering.md#concept-clustering) or distinct groups:** This might suggest there are unobserved variables influencing the relationship or that the data comes from different populations, implying your model is missing important information.
 
@@ -134,7 +125,7 @@ If you see patterns in your residual plot, it's a red flag that your model might
 ![A 2x2 grid of residual plots. Plot 1 (Top-Left, "Good"): A scatter plot of residuals on the y-axis](../../../../../image/statistics/linear-regression/img-003.png)
 
 
-Analyzing residuals is a critical diagnostic step. It helps us understand if our linear model is truly capturing the underlying relationship in the data or if we need to consider alternative models, data transformations, or additional variables to improve its accuracy and validity.
+Analyzing residuals is a critical diagnostic step. It helps us understand if our linear model is truly capturing the underlying relationship in the data or if we need to consider alternative models, data transformations, or additional variables to improve its [accuracy](../data-science/supervised-learning-classification.md#concept-accuracy) and validity.
 
 ## Wrap-Up
 

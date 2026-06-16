@@ -1,12 +1,3 @@
----
-title: "Bayesian Learning"
-slug: bayesian-learning
-display: true
-order: 14
-tags:
-  - statistics
----
-
 <a id="concept-bayesian-learning"></a>
 # Bayesian Learning
 
@@ -38,7 +29,7 @@ This process is formalized by **Bayes' Theorem**, which provides a mathematical 
 <a id="concept-prior-distribution"></a>
 ### Prior Distribution – Our Initial Belief
 
-The **prior [distribution](../statistics/distribution.md#concept-distribution)** represents our initial beliefs or knowledge about an unknown parameter *before* we observe any data. It's expressed as a probability distribution over all possible values of that parameter.
+The **prior distribution** represents our initial beliefs or knowledge about an unknown parameter *before* we observe any data. It's expressed as a [probability distribution](../data-science/statistical-foundations.md#concept-probability) over all possible values of that parameter.
 
 Let's return to our coin example: we want to know if a coin is fair. The parameter we're interested in is `p`, the probability of getting heads.
 *   If we have no strong reason to believe the coin is biased, we might assume `p` could be any value between 0 and 1 with equal likelihood. This would be represented by a **uniform prior distribution** over the interval `[0, 1]`. This is an example of a *non-informative prior*, meaning it expresses minimal prior knowledge and lets the [data](../data-science/data-fundamentals-and-types.md#concept-data) speak for itself.
@@ -52,7 +43,7 @@ The choice of prior is crucial. It allows us to incorporate domain expertise, pr
 
 ### Likelihood – The Evidence from Data
 
-Once we have our prior belief, the next step in Bayesian learning is to gather data. The **likelihood** measures how probable our observed data is, *given a specific value of the parameter*. It's important to note that the likelihood is a [function](../python/functions-in-python.md#concept-function) of the parameter, not a probability [distribution](../statistics/distribution.md#concept-distribution) over the parameter itself. It tells us how well a particular parameter value explains the data we've seen.
+Once we have our prior belief, the next step in [Bayesian learning](../statistics/bayesian-learning.md#concept-bayesian-learning) is to gather data. The **likelihood** measures how probable our observed data is, *given a specific value of the parameter*. It's important to note that the likelihood is a [function](../python/functions-in-python.md#concept-function) of the parameter, not a probability distribution over the parameter itself. It tells us how well a particular parameter value explains the data we've seen.
 
 Let's continue with our coin example. Suppose we flip the coin 10 times and observe 7 heads.
 *   If we assume the coin is fair (`p = 0.5`), what's the probability of getting 7 heads in 10 flips? This is a specific binomial probability.
@@ -73,18 +64,18 @@ $$ P(\theta | D) = \frac{P(D | \theta) \cdot P(\theta)}{P(D)} $$
 Let's break down each term:
 *   $P(\theta | D)$: This is the **posterior distribution**. It's the probability of the parameter ($\theta$) given the data ($D$). This is what we want to find – our updated belief about the parameter.
 *   $P(D | \theta)$: This is the **likelihood**. It's the probability of observing the data ($D$) given a specific value of the parameter ($\theta$). This is the evidence from our experiment.
-*   $P(\theta)$: This is the **prior distribution**. It's our initial belief about the parameter ($\theta$) before seeing any data.
+*   $P(\theta)$: This is the **[prior distribution](../statistics/bayesian-learning.md#concept-prior-distribution)**. It's our [initial belief](../statistics/bayesian-learning.md#concept-bayesian-learning) about the parameter ($\theta$) before seeing any data.
 *   $P(D)$: This is the **evidence** or **marginal likelihood**. It's the total probability of observing the data ($D$) across all possible values of $\theta$. For parameter estimation, this term often acts as a normalizing constant, ensuring the posterior distribution integrates to 1.
 
 In essence, the posterior is directly proportional to the likelihood multiplied by the prior:
 $$ P(\theta | D) \propto P(D | \theta) \cdot P(\theta) $$
 
-This means that values of $\theta$ that were highly probable under our prior *and* also make the observed data highly likely will have a high posterior probability. The data "pulls" the prior towards values that are more consistent with the evidence.
+This means that values of $\theta$ that were highly probable under our prior *and* also make the observed data highly likely will have a high [posterior probability](../statistics/probability-theorem.md#concept-bayes-formula). The data "pulls" the prior towards values that are more consistent with the evidence.
 
 **Example: Coin Flips Revisited**
-Suppose our prior belief for the coin's fairness (`p`) was a uniform distribution (meaning all `p` values from 0 to 1 were equally likely). We then flip the coin 10 times and get 7 heads.
+Suppose our prior belief for the coin's fairness (`p`) was a [uniform distribution](../statistics/basic-definition.md#concept-probability-density-function) (meaning all `p` values from 0 to 1 were equally likely). We then flip the coin 10 times and get 7 heads.
 *   Our uniform prior gives equal weight to all `p`.
-*   The likelihood function will peak around `p = 0.7` (since 7 out of 10 is 0.7), indicating that `p=0.7` makes our observed data most probable.
+*   The likelihood [function](../python/functions-in-python.md#concept-function) will peak around `p = 0.7` (since 7 out of 10 is 0.7), indicating that `p=0.7` makes our observed data most probable.
 *   When we multiply these two, the posterior distribution will now be concentrated around `p = 0.7`, but it will also reflect the influence of the prior. If we had started with a very strong prior belief that `p = 0.5`, the posterior might still be centered closer to 0.5, but shifted towards 0.7, showing a compromise between our initial belief and the new data.
 
 <!-- IMAGE_SLOT: img-002 -->

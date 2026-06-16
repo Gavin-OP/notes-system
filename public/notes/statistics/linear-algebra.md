@@ -1,12 +1,3 @@
----
-title: "Linear Algebra"
-slug: linear-algebra
-display: true
-order: 11
-tags:
-  - statistics
----
-
 <a id="concept-linear-algebra"></a>
 # Linear Algebra
 
@@ -20,7 +11,7 @@ By the end of this lesson, you will be able to:
 - Grasp the basic concept of matrix differentiation and its role in optimization.
 
 ## Introduction
-Welcome to the fascinating world of Linear Algebra! You might be wondering why a topic that sounds so mathematical is crucial for fields like [data](../data-science/data-fundamentals-and-types.md#concept-data) science, machine learning, and statistics. The truth is, linear algebra is the language of data. Whether you're working with images, text, or numerical datasets, they are often represented and manipulated as **matrices** and **vectors**.
+Welcome to the fascinating world of Linear Algebra! You might be wondering why a topic that sounds so mathematical is crucial for fields like [data](../data-science/data-fundamentals-and-types.md#concept-data) science, [machine learning](../data-science/introduction-to-data-science.md#concept-machine-learning), and statistics. The truth is, linear algebra is the language of data. Whether you're working with images, text, or numerical datasets, they are often represented and manipulated as **matrices** and **vectors**.
 
 Understanding linear algebra isn't just about solving equations; it's about developing an intuition for how data transforms, how relationships between variables are expressed, and how complex problems can be simplified. From training machine learning models to analyzing large datasets, the tools of linear algebra are indispensable. This lesson will introduce you to the core concepts, starting with the basics and progressively building your understanding.
 
@@ -60,12 +51,12 @@ Just like with regular numbers, we can perform operations on matrices. These ini
 
     Then $c \cdot A = 3 \cdot \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix} = \begin{bmatrix} 3 \cdot 1 & 3 \cdot 2 \\ 3 \cdot 3 & 3 \cdot 4 \end{bmatrix} = \begin{bmatrix} 3 & 6 \\ 9 & 12 \end{bmatrix}$
 
-These basic operations are straightforward and intuitive, much like operations with single numbers. However, matrix multiplication introduces a new set of rules.
+These basic operations are straightforward and intuitive, much like operations with single numbers. However, [matrix multiplication](../statistics/linear-algebra.md#concept-matrix-multiplication) introduces a new set of rules.
 
 <a id="concept-matrix-multiplication"></a>
 ### Matrix Multiplication
 
-Matrix multiplication is where things get a bit more interesting and less intuitive than simple element-wise operations. It's a fundamental operation with wide-ranging applications in transforming [data](../data-science/data-fundamentals-and-types.md#concept-data), solving systems of equations, and powering machine learning algorithms.
+Matrix multiplication is where things get a bit more interesting and less intuitive than simple element-wise operations. It's a fundamental operation with wide-ranging applications in transforming [data](../data-science/data-fundamentals-and-types.md#concept-data), solving systems of equations, and powering [machine learning](../data-science/introduction-to-data-science.md#concept-machine-learning) algorithms.
 
 **Rules for Matrix Multiplication:**
 For two matrices, `A` and `B`, to be multiplied to form `C = A * B`, there's a crucial dimension compatibility rule: the number of columns in the first matrix (`A`) must be equal to the number of rows in the second matrix (`B`).
@@ -104,7 +95,7 @@ Let $C = A \cdot B = \begin{bmatrix} c_{11} & c_{12} \\ c_{21} & c_{22} \end{bma
 
 So, the result is: $A \cdot B = \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix}$
 
-**Important Note**: Matrix multiplication is generally **not commutative**, meaning $A \cdot B \neq B \cdot A$. This is a key difference from scalar multiplication. Try calculating $B \cdot A$ yourself to see the difference!
+**Important Note**: Matrix multiplication is generally **not commutative**, meaning $A \cdot B \neq B \cdot A$. This is a key difference from [scalar multiplication](../statistics/linear-algebra.md#concept-linear-algebra). Try calculating $B \cdot A$ yourself to see the difference!
 
 <!-- IMAGE_SLOT: img-001 -->
 ![A diagram illustrating matrix multiplication. Show two matrices A (2x2) and B (2x2) side-by-side. Use arrows to visually](../../../../../image/statistics/linear-algebra/img-001.png)
@@ -160,7 +151,7 @@ The transpose is particularly useful in many areas, such as converting row vecto
 
 **2. Trace of a Matrix**
 
-The **trace** of a square matrix (a matrix with the same number of rows and columns) is simply the sum of the elements on its **main diagonal** (the elements running from the top-left corner to the bottom-right corner). The trace is only defined for square matrices.
+The **trace** of a [square matrix](../statistics/markov-chain.md#concept-transition-probability-matrix) (a matrix with the same number of rows and columns) is simply the sum of the elements on its **main diagonal** (the elements running from the top-left corner to the bottom-right corner). The trace is only defined for square matrices.
 
 If $A = \begin{bmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{bmatrix}$
 
@@ -223,7 +214,7 @@ print(det_A)
 
 ### Inverse of a Matrix
 
-Building on the concept of the determinant, the **inverse** of a square matrix `A`, denoted as $A^{-1}$, is another matrix that, when multiplied by `A`, yields the **identity matrix** `I`. The identity matrix is a special square matrix that acts like the number '1' in scalar multiplication; it has ones on its main diagonal and zeros everywhere else.
+Building on the concept of the determinant, the **inverse** of a [square matrix](../statistics/markov-chain.md#concept-transition-probability-matrix) `A`, denoted as $A^{-1}$, is another matrix that, when multiplied by `A`, yields the **identity matrix** `I`. The identity matrix is a special square matrix that acts like the number '1' in [scalar multiplication](../statistics/linear-algebra.md#concept-linear-algebra); it has ones on its main diagonal and zeros everywhere else.
 
 For example, a `2 x 2` identity matrix is $I = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$.
 

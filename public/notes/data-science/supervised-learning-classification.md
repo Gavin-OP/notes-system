@@ -10,9 +10,9 @@ By the end of this lesson, you will be able to:
 - Recognize when to use different evaluation metrics based on the problem's context.
 
 ## Introduction
-In our previous lesson on [supervised learning](../data-science/supervised-learning-regression.md#concept-supervised-learning-regression), we explored **regression**, where our goal was to predict a continuous numerical value, such as forecasting house prices or predicting tomorrow's temperature. But what if your prediction isn't a number, but rather a category or a label? For instance, you might want to decide if an email is "spam" or "not spam," or identify whether a customer will "churn" (leave) or "stay."
+In our previous lesson on [supervised learning](../data-science/supervised-learning-regression.md#concept-supervised-learning-regression), we explored **[regression](../data-science/supervised-learning-regression.md#concept-regression-analysis)**, where our goal was to predict a continuous numerical value, such as forecasting house prices or predicting tomorrow's temperature. But what if your prediction isn't a number, but rather a category or a label? For instance, you might want to decide if an email is "spam" or "not spam," or identify whether a customer will "churn" (leave) or "stay."
 
-This is precisely where **classification** comes into play. Classification is the other major pillar of supervised learning, focusing on predicting discrete categories or classes. It's a fundamental task in machine learning with widespread applications, from medical diagnosis and image recognition to fraud detection. In this lesson, we'll dive deep into what classification entails, explore some popular algorithms used to perform it, and learn how to effectively evaluate how well our classification models are performing.
+This is precisely where **[classification](../data-science/supervised-learning-classification.md#concept-classification)** comes into play. Classification is the other major pillar of [supervised learning](../data-science/introduction-to-machine-learning.md#concept-supervised-learning), focusing on predicting discrete categories or classes. It's a fundamental task in [machine learning](../data-science/introduction-to-data-science.md#concept-machine-learning) with widespread applications, from medical diagnosis and image recognition to fraud detection. In this lesson, we'll dive deep into what classification entails, explore some popular algorithms used to perform it, and learn how to effectively evaluate how well our classification models are performing.
 
 ## Concept Progression
 
@@ -29,7 +29,7 @@ Let's consider a practical example: predicting if a loan applicant will default 
 -   **Output (Target Variable):** This is what we want to predict: `Default` or `No Default`. Since this is a choice between distinct categories, it's a classic classification problem.
 
 Classification problems can be further categorized based on the number of possible outcomes:
--   **Binary Classification:** There are only two possible output classes (e.g., `spam` or `not spam`, `malignant` or `benign`, `pass` or `fail`).
+-   **[Binary Classification](../data-science/supervised-learning-classification.md#concept-logistic-regression):** There are only two possible output classes (e.g., `spam` or `not spam`, `malignant` or `benign`, `pass` or `fail`).
 -   **Multi-class Classification:** There are more than two possible output classes (e.g., identifying `cat`, `dog`, or `bird` in an image, or classifying car colors as `red`, `green`, or `blue`).
 
 <!-- IMAGE_SLOT: img-001 -->
@@ -38,11 +38,11 @@ Classification problems can be further categorized based on the number of possib
 
 <a id="concept-logistic-regression"></a>
 ### Logistic Regression: Classifying with Probabilities
-Despite its name, **Logistic Regression** is a fundamental and widely used algorithm for **binary classification**. The "regression" part of its name comes from the fact that it models the *probability* of an instance belonging to a particular class, and probabilities are continuous values between 0 and 1. However, the ultimate goal is to classify, not to predict a continuous value directly.
+Despite its name, **Logistic Regression** is a fundamental and widely used algorithm for **binary classification**. The "[regression](../data-science/supervised-learning-regression.md#concept-regression-analysis)" part of its name comes from the fact that it models the *probability* of an instance belonging to a particular class, and probabilities are continuous values between 0 and 1. However, the ultimate goal is to classify, not to predict a continuous value directly.
 
-Imagine you're trying to predict if a student will pass an exam based on the number of hours they studied. A simple [linear regression](../data-science/supervised-learning-regression.md#concept-linear-regression) might predict a score, but we need a `Pass` or `Fail` outcome. Logistic Regression works by taking a linear combination of input features (similar to linear regression) and then passing this result through a special function called the **sigmoid function**.
+Imagine you're trying to predict if a student will pass an exam based on the number of hours they studied. A simple [linear regression](../data-science/supervised-learning-regression.md#concept-linear-regression) might predict a score, but we need a `Pass` or `Fail` outcome. Logistic Regression works by taking a linear combination of input features (similar to linear regression) and then passing this result through a special [function](../python/functions-in-python.md#concept-function) called the **sigmoid function**.
 
-The sigmoid [function](../python/functions-in-python.md#concept-function) "squashes" any real-valued number into a value between 0 and 1. This output can then be interpreted as the probability of the input belonging to the positive class. If this probability is above a certain threshold (commonly 0.5), we classify it as the positive class (e.g., `Pass`); otherwise, it's classified as the negative class (e.g., `Fail`).
+The sigmoid function "squashes" any real-valued number into a value between 0 and 1. This output can then be interpreted as the probability of the input belonging to the positive class. If this probability is above a certain threshold (commonly 0.5), we classify it as the positive class (e.g., `Pass`); otherwise, it's classified as the negative class (e.g., `Fail`).
 
 **Example:**
 Let's say we're predicting if an email is spam (1) or not spam (0) based on the number of suspicious words it contains.
@@ -134,7 +134,7 @@ print(f"Predicted class for new flower: {iris.target_names[predicted_class[0]]}"
 
 <a id="concept-support-vector-machine"></a>
 ### Support Vector Machines (SVM): Finding the Optimal Separator
-**Support Vector Machines (SVMs)** are powerful and versatile classification algorithms that aim to find the "best" possible boundary to separate different classes in your data. This boundary is called a **hyperplane**.
+**Support Vector Machines (SVMs)** are powerful and versatile [classification](../data-science/supervised-learning-classification.md#concept-classification) algorithms that aim to find the "best" possible boundary to separate different classes in your data. This boundary is called a **hyperplane**.
 
 Imagine you have two types of data points (e.g., apples and oranges) scattered on a table. An SVM tries to draw a line (or a plane in higher dimensions) that separates the apples from the oranges. But it doesn't just draw *any* line; it draws the line that maximizes the distance to the nearest data points of each class. These nearest data points are crucial and are called **support vectors**, and the region between them and the hyperplane is called the **margin**.
 
@@ -239,7 +239,7 @@ print(cm)
 
 
 ### Accuracy: The Simplest Metric (and its Pitfalls)
-**Accuracy** is perhaps the most straightforward and commonly understood metric. It simply tells you the proportion of the total predictions that were correct.
+**[Accuracy](../data-science/supervised-learning-classification.md#concept-accuracy)** is perhaps the most straightforward and commonly understood metric. It simply tells you the proportion of the total predictions that were correct.
 
 **Formula:**
 Accuracy = (Number of Correct Predictions) / (Total Number of Predictions)

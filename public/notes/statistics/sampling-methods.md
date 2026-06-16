@@ -1,12 +1,3 @@
----
-title: "Sampling Methods"
-slug: sampling-methods
-display: true
-order: 10
-tags:
-  - statistics
----
-
 <a id="concept-sampling-methods"></a>
 # Sampling Methods
 
@@ -27,7 +18,7 @@ Choosing the right way to select this sample is absolutely crucial. A poorly cho
 
 <a id="concept-simple-random-sampling"></a>
 ### Simple Random Sampling (SRS)
-Simple Random Sampling (SRS) is the bedrock of all sampling methods. Its core principle is **fairness and equal opportunity**: every single unit in the population has an equal and known chance of being selected for the sample. Think of it as the ultimate lottery, where everyone has the same odds of winning. This ensures that, on average, your sample will be a miniature, representative version of the larger population.
+Simple Random Sampling (SRS) is the bedrock of all [sampling methods](../statistics/sampling-methods.md#concept-sampling-methods). Its core principle is **fairness and equal opportunity**: every single unit in the population has an equal and known chance of being selected for the sample. Think of it as the ultimate lottery, where everyone has the same odds of winning. This ensures that, on average, your sample will be a miniature, representative version of the larger population.
 
 Let's say you have a population of `N` individuals, and you want to select a sample of `n` individuals. In SRS without replacement (meaning once a unit is chosen, it can't be chosen again), every possible group of `n` individuals has the exact same probability of being chosen.
 
@@ -73,7 +64,7 @@ Here are a few practical ways to perform SRS:
 
 <a id="concept-systematic-sampling"></a>
 ### Systematic Sampling
-While Simple Random Sampling is theoretically ideal, sometimes a more practical and logistically simpler approach is needed, especially when dealing with long lists or physically ordered [data](../data-science/data-fundamentals-and-types.md#concept-data). This is where **Systematic Sampling** comes in. It still aims for randomness but follows a specific, easy-to-implement pattern.
+While [Simple Random Sampling](../statistics/sampling-methods.md#concept-simple-random-sampling) is theoretically ideal, sometimes a more practical and logistically simpler approach is needed, especially when dealing with long lists or physically ordered [data](../data-science/data-fundamentals-and-types.md#concept-data). This is where **Systematic Sampling** comes in. It still aims for randomness but follows a specific, easy-to-implement pattern.
 
 Here's how it works:
 1.  **Determine the sampling interval (k):** Divide the total population size (`N`) by the desired sample size (`n`).
@@ -99,7 +90,7 @@ Here's how it works:
 ### Stratified Random Sampling
 What if your population isn't uniform? What if it's made up of distinct subgroups that you know might behave very differently or have different characteristics? For example, a university population isn't just one homogeneous group; it includes undergraduate students, graduate students, and faculty, each with potentially unique opinions or attributes. If we simply use SRS on the entire university, we might accidentally over- or under-represent one of these crucial groups.
 
-**Stratified Random Sampling** is designed to address this. It involves dividing the entire population into these distinct, non-overlapping subgroups, called **strata** (singular: stratum). The key is that units *within* each stratum should be as similar as possible to each other (homogeneous), while units *between* different strata should be as different as possible (heterogeneous). Once the strata are defined, a Simple Random Sample is drawn independently from *each* stratum.
+**Stratified Random Sampling** is designed to address this. It involves dividing the entire population into these distinct, non-overlapping subgroups, called **strata** (singular: stratum). The key is that units *within* each stratum should be as similar as possible to each other (homogeneous), while units *between* different strata should be as different as possible (heterogeneous). Once the strata are defined, a [Simple Random](../statistics/sampling-methods.md#concept-simple-random-sampling) Sample is drawn independently from *each* stratum.
 
 Here's the step-by-step process:
 1.  **Define Strata:** Partition the entire population into `L` non-overlapping groups (strata). Every unit in the population must belong to exactly one stratum. For example, in a company, strata could be "Management," "Sales," "Engineering," and "Support."
@@ -112,7 +103,7 @@ Here's the step-by-step process:
 
 **Benefits of Stratified Sampling:**
 *   **Guaranteed Representation:** It ensures that each important subgroup is represented in the sample, preventing the chance that SRS might accidentally miss a crucial group or under-represent it.
-*   **More Precise Estimates:** If the units within each stratum are very similar to each other (low variance within strata), but different across strata (high variance between strata), stratified sampling can produce more precise estimates (i.e., estimates with lower variance) than SRS of the same total sample size.
+*   **More Precise Estimates:** If the units within each stratum are very similar to each other ([low variance](../statistics/basic-statistics.md#concept-variance) within strata), but different across strata (high variance between strata), stratified sampling can produce more precise estimates (i.e., estimates with lower variance) than SRS of the same total sample size.
 *   **Comparison Among Sub-groups:** It allows you to collect enough data from each stratum to make reliable comparisons between the different subgroups, which might be a primary research objective.
 *   **Improved Logistical Efficiency:** Sometimes, it's cheaper or easier to sample within specific subgroups, especially if they are geographically clustered or easily identifiable.
 
@@ -134,7 +125,7 @@ Why would we intentionally introduce unequal probabilities?
 The crucial aspect of unequal probability sampling is that even though the probabilities are unequal, they are **known** for each unit. This knowledge is vital because it allows us to adjust our calculations (typically using inverse probability weights) to ensure that our estimates for the population are still unbiased and accurate, despite the non-uniform selection process. This method is generally more complex than SRS or stratified sampling and requires careful design and analysis.
 
 ### Double Sampling
-Sometimes, getting all the necessary information in one go is too expensive, too difficult, or simply not feasible. This is where **Double [Sampling](../data-science/statistical-foundations.md#concept-sampling)**, also known as two-phase sampling, proves incredibly useful. It's a technique where information is collected in two distinct stages:
+Sometimes, getting all the necessary information in one go is too expensive, too difficult, or simply not feasible. This is where **Double Sampling**, also known as two-phase [sampling](../data-science/statistical-foundations.md#concept-sampling), proves incredibly useful. It's a technique where information is collected in two distinct stages:
 
 1.  **Phase 1:** A large initial sample is drawn from the population. In this phase, we collect some relatively inexpensive or easy-to-obtain **auxiliary information**. This information isn't our primary data of interest, but it helps us refine our sampling strategy for the next phase.
 2.  **Phase 2:** A smaller, more detailed sample is then drawn *from* the first sample. In this second phase, we collect the primary, more expensive, or harder-to-obtain data that we are truly interested in.
@@ -153,7 +144,7 @@ Let's look at a common scenario: **Stratification when stratum sizes are unknown
 *   **Phase 2:** You then take a smaller, targeted follow-up sample specifically from the non-respondents. For this group, you might use more intensive and costly methods (like phone calls, in-person visits, or incentives) to try and get their responses. This helps you estimate the characteristics of the non-response group and adjust your overall population estimates to account for potential bias introduced by those who didn't initially respond.
 
 ### Ratio and Regression Estimators
-So far, we've focused on *how* to select a sample. But once you have your sample, *how* do you make the best possible estimate from it? What if you have extra, readily available information about your population that isn't part of your primary data collection but is related to what you're trying to measure? This leads us to **Ratio and Regression Estimators**. These are not sampling *methods* themselves, but rather powerful **estimation techniques** used *after* a sample has been collected, often in conjunction with methods like SRS or stratified sampling, to improve the precision of your estimates.
+So far, we've focused on *how* to select a sample. But once you have your sample, *how* do you make the best possible estimate from it? What if you have extra, readily available information about your population that isn't part of your primary data collection but is related to what you're trying to measure? This leads us to **Ratio and [Regression](../data-science/supervised-learning-regression.md#concept-regression-analysis) Estimators**. These are not sampling *methods* themselves, but rather powerful **estimation techniques** used *after* a sample has been collected, often in conjunction with methods like SRS or stratified sampling, to improve the precision of your estimates.
 
 The key to these estimators is the availability of **auxiliary information**. This is additional data (let's call it `X`) that is:
 1.  **Correlated:** It has a strong relationship with the variable you're trying to estimate (let's call it `Y`).

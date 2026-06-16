@@ -10,9 +10,9 @@ By the end of this lesson, you will be able to:
 - Understand the basic implications of different data types for data analysis.
 
 ## Introduction
-Imagine you're a detective trying to solve a mystery. You'd gather clues: fingerprints, witness statements, security footage, timestamps. Each of these pieces of information, in its raw form, is **data**. In the world of data science, data is our raw material – the essential foundation upon which all insights, predictions, and decisions are built.
+Imagine you're a detective trying to solve a mystery. You'd gather clues: fingerprints, witness statements, security footage, timestamps. Each of these pieces of information, in its raw form, is **[data](../data-science/data-fundamentals-and-types.md#concept-data)**. In the world of data science, data is our raw material – the essential foundation upon which all insights, predictions, and decisions are built.
 
-Just like a chef needs to know the different types of ingredients (vegetables, spices, meats) and how they behave to cook a great meal, a data scientist needs to understand the different types of data available. Knowing whether your data is a list of numbers, a collection of images, or a mix of both will dictate how you collect, store, clean, analyze, and ultimately extract value from it. This lesson will introduce you to the fundamental concepts of data and its various forms, setting the stage for your journey into data science.
+Just like a chef needs to know the different types of ingredients (vegetables, spices, meats) and how they behave to cook a great meal, a [data scientist](../data-science/introduction-to-data-science.md#concept-data-scientist) needs to understand the different types of data available. Knowing whether your data is a list of numbers, a collection of images, or a mix of both will dictate how you collect, store, clean, analyze, and ultimately extract value from it. This lesson will introduce you to the fundamental concepts of data and its various forms, setting the stage for your journey into data science.
 
 ## Concept Progression
 
@@ -37,7 +37,7 @@ Data doesn't just exist; it exists in different *structures*. Understanding thes
 
 <a id="concept-structured-data"></a>
 #### Structured Data
-**Structured data** is highly organized and follows a predefined format. Think of it as data that fits perfectly into a table, like a spreadsheet or a database. Each piece of data has a specific place, fitting into a designated field or column. This rigid structure makes it incredibly easy for computers to process, search, and query.
+**Structured data** is highly organized and follows a predefined format. Think of it as [data](../data-science/data-fundamentals-and-types.md#concept-data) that fits perfectly into a table, like a spreadsheet or a database. Each piece of data has a specific place, fitting into a designated field or column. This rigid structure makes it incredibly easy for computers to process, search, and query.
 
 Imagine a library where every book has a specific place on a shelf, categorized by genre, author, and publication date. You know exactly where to look for a specific book because everything is neatly organized. That's the essence of structured data.
 
@@ -57,14 +57,14 @@ In this table, each column has a clear, consistent purpose (e.g., "Name" always 
 
 <a id="concept-unstructured-data"></a>
 #### Unstructured Data
-**Unstructured data** is the complete opposite of structured data. It lacks any predefined format or organization, meaning it doesn't fit neatly into rows and columns. This type of data is often text-heavy and can be challenging for traditional databases and analytical tools to process directly without specialized techniques.
+**Unstructured data** is the complete opposite of [structured data](../data-science/data-fundamentals-and-types.md#concept-structured-data). It lacks any predefined format or organization, meaning it doesn't fit neatly into rows and columns. This type of data is often text-heavy and can be challenging for traditional databases and analytical tools to process directly without specialized techniques.
 
 Think of our library analogy again, but this time all the books are just piled randomly on the floor, with no labels, no order, and no system. Finding a specific book would be a monumental task, requiring you to sift through everything. That's unstructured data.
 
 **Examples:**
 -   **Text documents:** Emails, social media posts, customer reviews, articles, books, memos.
 -   **Media files:** Images, audio recordings, videos.
--   **Sensor data:** Raw data streams from IoT devices (before any processing or organization).
+-   **Sensor data:** [Raw data](../data-science/data-cleaning-preprocessing.md#concept-data-cleaning-preprocessing) streams from IoT devices (before any processing or organization).
 
 Consider a collection of customer reviews:
 -   "This product is amazing! I love the features and it was so easy to set up."
@@ -79,16 +79,16 @@ Extracting specific information like the overall "sentiment" (positive, negative
 
 <a id="concept-semi-structured-data"></a>
 #### Semi-Structured Data
-**Semi-structured data** sits in a middle ground between structured and unstructured data. It doesn't conform to the rigid, tabular format of structured data, but it does contain organizational properties like tags or markers. These properties provide a hierarchy or a way to group related data, making it easier to parse and analyze than completely unstructured data.
+**Semi-structured data** sits in a middle ground between structured and [unstructured data](../data-science/data-fundamentals-and-types.md#concept-unstructured-data). It doesn't conform to the rigid, tabular format of structured data, but it does contain organizational properties like tags or markers. These properties provide a hierarchy or a way to group related data, making it easier to parse and analyze than completely unstructured data.
 
 Going back to our library, imagine books are in piles, but each pile has a sticky note indicating its general genre (e.g., "Fiction," "Science," "History"). It's not perfectly organized by author and date, but there's some helpful information that gives it a partial structure.
 
 **Examples:**
 -   **JSON (JavaScript Object Notation):** A popular format for web data exchange.
 -   **XML (Extensible Markup Language):** Another common format for data exchange, especially in older systems.
--   **NoSQL databases:** Many modern NoSQL databases store data in a semi-structured format, offering flexibility.
+-   **[NoSQL databases](../data-science/data-acquisition-and-storage.md#concept-sql):** Many modern NoSQL databases store data in a semi-structured format, offering flexibility.
 
-Here's an example of semi-structured data in JSON format for a customer:
+Here's an example of semi-[structured data](../data-science/data-fundamentals-and-types.md#concept-structured-data) in JSON format for a customer:
 
 ```json
 {
@@ -122,7 +122,7 @@ Notice how `customer_id`, `name`, and `contact` are clearly labeled, similar to 
 <a id="concept-qualitative-data"></a>
 ### Quantitative vs. Qualitative Data
 
-Beyond their structure, data can also be classified by the *type of information* they represent. This classification is fundamental because it helps us understand what kind of statistical analysis we can perform and what insights we can derive.
+Beyond their structure, data can also be classified by the *type of information* they represent. This [classification](../data-science/supervised-learning-classification.md#concept-classification) is fundamental because it helps us understand what kind of statistical analysis we can perform and what insights we can derive.
 
 <a id="concept-quantitative-data"></a>
 #### Quantitative Data
@@ -142,7 +142,7 @@ Quantitative data can be further divided into:
 -   **Continuous data:** Can take any value within a given range and are often measurements. For example, height, weight, or temperature can be measured with increasing precision (e.g., 175.3 cm, 68.12 inches).
 
 #### Qualitative Data
-**Qualitative data**, also known as **categorical data**, describes qualities or characteristics that cannot be measured numerically. Instead, it represents categories, groups, or descriptive attributes. You cannot perform mathematical operations on qualitative data in the same way you would with quantitative data.
+**[Qualitative data](../data-science/data-fundamentals-and-types.md#concept-qualitative-data)**, also known as **categorical data**, describes qualities or characteristics that cannot be measured numerically. Instead, it represents categories, groups, or descriptive attributes. You cannot perform mathematical operations on qualitative data in the same way you would with quantitative data.
 
 Think of anything you can describe, categorize, or label.
 

@@ -1,12 +1,3 @@
----
-title: "Hypothesis Testing"
-slug: hypothesis-testing
-display: true
-order: 6
-tags:
-  - statistics
----
-
 <a id="concept-hypothesis-testing"></a>
 # Hypothesis Testing
 
@@ -27,7 +18,7 @@ This is where **[Hypothesis Testing](../data-science/statistical-foundations.md#
 
 ## The Core Idea: Challenging Assumptions with Data
 
-At its heart, hypothesis testing is about making a decision. We begin with an assumption about a population (e.g., "the average plant height is 15 cm," or "the new fertilizer has no effect"). Then, we collect data and see if that data provides enough evidence to challenge or reject our initial assumption.
+At its heart, hypothesis testing is about making a decision. We begin with an assumption about a population (e.g., "the average plant height is 15 cm," or "the new fertilizer has no effect"). Then, we [collect data](../data-science/statistical-foundations.md#concept-sampling) and see if that data provides enough evidence to challenge or reject our initial assumption.
 
 To better understand this, let's use an analogy: a court trial. In a legal system, a person is presumed innocent until proven guilty. The burden of proof is on the prosecution to provide enough compelling evidence to reject the assumption of innocence. In statistics, we operate similarly: we assume a "status quo" (the null hypothesis) and look for strong evidence from our data to overturn it.
 
@@ -99,7 +90,7 @@ The **p-value** is the probability of observing a test statistic as extreme as, 
 - If p-value $> \alpha$: Fail to reject $H_0$.
 
 **Example:**
-Suppose we are testing $H_0: \mu = 10$ vs. $H_1: \mu \neq 10$ with a significance level $\alpha = 0.05$. We collect data, calculate a test statistic, and find a p-value of 0.02.
+Suppose we are testing $H_0: \mu = 10$ vs. $H_1: \mu \neq 10$ with a significance level $\alpha = 0.05$. We [collect data](../data-science/statistical-foundations.md#concept-sampling), calculate a test statistic, and find a p-value of 0.02.
 Since 0.02 $\le$ 0.05, we reject $H_0$. This means there's only a 2% chance of observing our data (or more extreme) if the true mean were 10. This is considered strong evidence that the true mean is not 10.
 
 ## Steps of a Hypothesis Test: A Structured Approach

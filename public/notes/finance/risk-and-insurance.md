@@ -1,12 +1,3 @@
----
-title: "Risk and Insurance"
-slug: risk-and-insurance
-display: true
-order: 9
-tags:
-  - finance
----
-
 <a id="concept-risk-and-insurance"></a>
 # Risk and Insurance
 
@@ -19,9 +10,9 @@ By the end of this lesson, you will be able to:
 - Understand the process and objectives of effective risk management.
 
 ## Introduction
-Every day, we navigate a world filled with uncertainties. From the moment we wake up, we face potential challenges – a sudden illness, a car accident, or even a natural disaster. These uncertainties represent **risk**. While we can't eliminate all risks, we can certainly manage them, and one of the most powerful tools for doing so is **insurance**.
+Every day, we navigate a world filled with uncertainties. From the moment we wake up, we face potential challenges – a sudden illness, a car accident, or even a natural disaster. These uncertainties represent **[risk](../finance/risk-and-insurance.md#concept-risk)**. While we can't eliminate all risks, we can certainly manage them, and one of the most powerful tools for doing so is **insurance**.
 
-Imagine a world without insurance. Every unexpected event could lead to financial ruin, leaving individuals and businesses vulnerable. Insurance acts as a crucial safety net, allowing us to protect ourselves from the financial consequences of unforeseen events. In this lesson, we'll embark on a journey to understand what risk truly means, how insurance works as a mechanism to handle it, and the broader strategies of risk management that empower us to face an uncertain future with greater confidence.
+Imagine a world without insurance. Every unexpected event could lead to financial ruin, leaving individuals and businesses vulnerable. Insurance acts as a crucial safety net, allowing us to protect ourselves from the financial consequences of unforeseen events. In this lesson, we'll embark on a journey to understand what risk truly means, how insurance works as a mechanism to handle it, and the broader strategies of [risk management](../finance/risk-and-insurance.md#concept-risk-management) that empower us to face an uncertain future with greater confidence.
 
 ## Concept Progression
 
@@ -51,7 +42,7 @@ Next, we look at how widely a risk impacts people or entities:
 #### Financial Risk
 
 Building on the idea of loss, **financial risk** is a specific type of risk that involves the uncertainty of loss due to adverse changes in financial variables.
-*   **Examples:** This could include fluctuations in commodity prices, interest rates, foreign exchange rates, or the overall value of money. Businesses constantly face financial risks in their operations, from managing inventory costs to borrowing money.
+*   **Examples:** This could include fluctuations in commodity prices, [interest rates](../finance/fixed-income.md#concept-duration), foreign exchange rates, or the overall [value of money](../finance/time-value.md#concept-time-value). Businesses constantly face financial risks in their operations, from managing inventory costs to borrowing money.
 
 #### Insurable vs. Non-insurable Risk
 
@@ -70,7 +61,7 @@ Risks that do not meet these criteria are often considered **non-insurable risks
 <a id="concept-hazard"></a>
 #### Hazard: Increasing the Chance of Loss
 
-While risk is the uncertainty of loss, a **hazard** is a condition that increases the chance of loss or the severity of loss. Think of hazards as factors that make a risky event more likely or more damaging. There are typically three types of hazards:
+While [risk](../finance/risk-and-insurance.md#concept-risk) is the uncertainty of loss, a **hazard** is a condition that increases the chance of loss or the severity of loss. Think of hazards as factors that make a risky event more likely or more damaging. There are typically three types of hazards:
 
 *   **Physical Hazard:** A physical condition that increases the chance of loss.
     *   **Example:** Faulty wiring in a house is a physical hazard that increases the risk of fire. Icy roads are a physical hazard that increases the risk of a car accident.
@@ -87,7 +78,7 @@ Having understood the various facets of risk, we can now turn our attention to *
 Let's look at the core characteristics that make insurance work effectively:
 
 1.  **Pooling of Losses:** This is the fundamental principle of insurance. It means spreading the losses incurred by a few over an entire group. Instead of one person bearing a huge, unpredictable loss, many people contribute small, predictable amounts, and the fund covers the losses of the unfortunate few.
-    *   **Example:** Imagine a community where each homeowner contributes a small, affordable amount to a central fund. If one house burns down, the fund pays for the damage. This way, no single homeowner bears the full financial burden alone. This concept is powered by the **Law of Large Numbers**, which states that as the number of exposure units (e.g., insured homes) increases, the actual loss experience will more closely approximate the expected loss experience, making losses more predictable for the insurer.
+    *   **Example:** Imagine a community where each homeowner contributes a small, affordable amount to a central fund. If one house burns down, the fund pays for the damage. This way, no single homeowner bears the full financial burden alone. This concept is powered by the **[Law of Large Numbers](../statistics/probability-theorem.md#concept-law-of-large-numbers)**, which states that as the number of exposure units (e.g., insured homes) increases, the actual loss experience will more closely approximate the expected loss experience, making losses more predictable for the insurer.
 
     <!-- IMAGE_SLOT: img-001 -->
 ![A diagram illustrating the concept of pooling of losses. On the left, individual houses with a small chance](../../../../../image/finance/risk-and-insurance/img-001.png)
@@ -186,7 +177,7 @@ Effective risk management follows a structured, cyclical process to ensure all p
     *   **Risk Financing:** Aims to provide for the payment of losses after they occur.
         *   **Retention:** The firm or individual retains part or all of the financial consequences of loss. This can be active (consciously deciding to pay for losses) or passive (unaware of the risk).
             *   **Example:** Paying for small damages out of pocket, using a deductible on an insurance policy (where you pay the first portion of a loss), or a large corporation self-insuring certain risks.
-        *   **Noninsurance Transfers:** Transferring risk to another party through contracts or other means, without using an insurance company.
+        *   **Noninsurance Transfers:** Transferring risk to another party through contracts or other means, without using an [insurance company](../finance/risk-and-insurance.md#concept-insurance).
             *   **Example:** A hold-harmless clause in a contract where one party agrees to take on the liability of another, or hedging financial risks using derivatives.
         *   **Insurance:** Transferring pure risk to an insurer in exchange for a premium. This is the most common and effective way to finance large, unpredictable pure risks.
 

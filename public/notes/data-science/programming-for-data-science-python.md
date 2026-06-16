@@ -12,7 +12,7 @@ By the end of this lesson, you will be able to:
 ## Introduction
 Welcome to the exciting world of [data](../data-science/data-fundamentals-and-types.md#concept-data) science! In an era where data is a crucial resource, Python stands out as the essential tool for extracting valuable insights. Its simplicity, extensive ecosystem of specialized libraries, and robust community support have made it the [programming language](../python/getting-started-with-python.md#concept-python-programming-language) of choice for data scientists worldwide.
 
-Whether your goal is to clean messy datasets, build powerful predictive models, or visualize complex patterns, Python provides the comprehensive toolkit you need. This lesson will equip you with the foundational Python programming skills necessary to embark on your data science journey. We'll begin with the very basics of writing Python code and progressively move towards understanding powerful [data structures](../python/python-data-structures.md#concept-python-data-structures) and essential libraries that are indispensable for any data professional.
+Whether your goal is to clean messy datasets, build powerful predictive models, or visualize complex patterns, Python provides the comprehensive toolkit you need. This lesson will equip you with the foundational [Python programming](../data-science/programming-for-data-science-python.md#concept-python-programming) skills necessary to embark on your data science journey. We'll begin with the very basics of writing Python code and progressively move towards understanding powerful [data structures](../python/python-data-structures.md#concept-python-data-structures) and essential libraries that are indispensable for any data professional.
 
 ## Concept Progression
 
@@ -249,7 +249,7 @@ Functions make your code modular, easier to read, and simpler to debug. They are
 ### Python Libraries
 One of Python's greatest strengths for data science lies in its rich collection of **libraries** (also known as packages or modules). A library is essentially a collection of pre-written code (functions, classes, etc.) that you can import and use in your own programs. This means you don't have to "reinvent the wheel" for common, complex tasks; instead, you can leverage code that others have already written and optimized.
 
-For data science, two libraries stand out as absolutely essential: **NumPy** and **Pandas**.
+For data science, two libraries stand out as absolutely essential: **NumPy** and **[Pandas](../python/intro-scientific-computing.md#concept-pandas-library)**.
 
 To use a library, you first need to `import` it into your Python script. It's common practice to import these libraries with shorter aliases for convenience.
 
@@ -260,9 +260,9 @@ import pandas as pd # 'pd' is the conventional alias for Pandas
 Once imported, you can access the library's functions and tools using its alias (e.g., `np.array()` or `pd.DataFrame()`).
 
 ### NumPy Arrays
-**NumPy** (Numerical Python) is the fundamental package for numerical computation in Python. Its most important feature is the `ndarray` (N-dimensional array) object, which is a powerful and efficient way to store and manipulate large sets of numerical data. Think of it as a super-powered list specifically designed for numbers, capable of handling anything from simple lists to complex matrices.
+**[NumPy](../python/intro-scientific-computing.md#concept-numpy-library)** (Numerical Python) is the fundamental package for numerical computation in Python. Its most important feature is the `ndarray` (N-dimensional array) object, which is a powerful and efficient way to store and manipulate large sets of numerical data. Think of it as a super-powered list specifically designed for numbers, capable of handling anything from simple lists to complex matrices.
 
-Why use NumPy arrays instead of standard Python lists for numerical data?
+Why use NumPy arrays instead of standard Python [lists](../data-science/programming-for-data-science-python.md#concept-data-structures-python) for numerical data?
 1.  **Speed:** NumPy operations are often much faster because they are implemented in highly optimized C code behind the scenes.
 2.  **Memory Efficiency:** NumPy arrays consume significantly less memory than Python lists for the same amount of numerical data, which is crucial for large datasets.
 3.  **Functionality:** NumPy provides a vast array of mathematical functions that can operate on entire arrays at once, without needing explicit loops.
@@ -293,7 +293,7 @@ print("\nElement-wise sum:", sum_array) # Output: [5 7 9]
 scaled_array = numpy_array_1d * 2 # Multiplies each element by 2
 print("Scaled array:", scaled_array) # Output: [ 20  40  60  80 100]
 ```
-NumPy arrays are the backbone for many data science operations, especially when dealing with numerical data for statistical analysis, scientific computing, or machine learning algorithms.
+NumPy arrays are the backbone for many data science operations, especially when dealing with numerical data for statistical analysis, scientific computing, or [machine learning](../data-science/introduction-to-data-science.md#concept-machine-learning) algorithms.
 
 <!-- IMAGE_SLOT: img-003 -->
 ![A visual representation of a 2D NumPy array (matrix). It shows a grid of numbers, clearly labeled with](../../../../../image/data_science/programming-for-data-science-python/img-003.png)

@@ -10,9 +10,9 @@ By the end of this lesson, you will be able to:
 - Differentiate between data science, artificial intelligence (AI), and machine learning (ML).
 
 ## Introduction
-In our modern world, we're constantly generating and interacting with vast amounts of information. From the steps your smartwatch tracks to the personalized recommendations on your favorite streaming service, data is everywhere. But raw data, by itself, isn't very useful. This is where **Data Science** steps in. It's an exciting and rapidly growing field dedicated to transforming this raw data into valuable insights and intelligent solutions, helping businesses, governments, and even individuals make smarter, more informed decisions.
+In our modern world, we're constantly generating and interacting with vast amounts of information. From the steps your smartwatch tracks to the personalized recommendations on your favorite streaming service, [data](../data-science/data-fundamentals-and-types.md#concept-data) is everywhere. But [raw data](../data-science/data-cleaning-preprocessing.md#concept-data-cleaning-preprocessing), by itself, isn't very useful. This is where **[Data Science](../data-science/introduction-to-data-science.md#concept-data-science)** steps in. It's an exciting and rapidly growing field dedicated to transforming this raw data into valuable insights and intelligent solutions, helping businesses, governments, and even individuals make smarter, more informed decisions.
 
-This lesson will introduce you to the fundamental concepts of data science. We'll explore what data science truly is, the diverse role of a data scientist, how data science projects are typically structured, and how this field connects with other popular areas like Artificial Intelligence and Machine Learning. Let's begin our journey into understanding the power of data!
+This lesson will introduce you to the fundamental concepts of data science. We'll explore what data science truly is, the diverse role of a [data scientist](../data-science/introduction-to-data-science.md#concept-data-scientist), how data science projects are typically structured, and how this field connects with other popular areas like [Artificial Intelligence](../data-science/introduction-to-data-science.md#concept-artificial-intelligence) and [Machine Learning](../data-science/introduction-to-data-science.md#concept-machine-learning). Let's begin our journey into understanding the power of data!
 
 ## Concept Progression
 
@@ -23,12 +23,12 @@ At its heart, **Data Science** is about extracting meaningful knowledge and acti
 *   **Computer Science:** For programming, managing large datasets, and building efficient algorithms.
 *   **Domain-Specific Knowledge:** Understanding the particular industry or area the data comes from (e.g., healthcare, finance, retail) to interpret results correctly and ask relevant questions.
 
-Let's consider a large online clothing store. They collect data on everything: what customers browse, what they buy, how much they spend, popular colors, and even items left in shopping carts. Without data science, this is just a massive pile of numbers and text. A data scientist, however, can use this data to answer crucial questions like:
+Let's consider a large online clothing store. They [collect data](../data-science/statistical-foundations.md#concept-sampling) on everything: what customers browse, what they buy, how much they spend, popular colors, and even items left in shopping carts. Without data science, this is just a massive pile of numbers and text. A data scientist, however, can use this data to answer crucial questions like:
 - "Which products are most likely to be bought together, so we can offer bundles?"
 - "What's the best time to send promotional emails to maximize open rates?"
 - "Are there any trends in customer returns that we can address to improve product quality or descriptions?"
 
-By answering these questions, the store can optimize its inventory, personalize marketing campaigns, and ultimately improve customer satisfaction and sales. This entire process of turning raw data into actionable intelligence is the essence of data science.
+By answering these questions, the store can optimize its inventory, personalize marketing campaigns, and ultimately improve customer satisfaction and sales. This entire process of turning raw [data](../data-science/data-fundamentals-and-types.md#concept-data) into actionable intelligence is the essence of data science.
 
 <a id="concept-data-scientist"></a>
 ### The Role of a Data Scientist
@@ -38,7 +38,7 @@ So, what does a data scientist actually do day-to-day? Their tasks are varied bu
 1.  **Asking the Right Questions:** This is crucial. They work with stakeholders to understand the business problem and translate it into specific questions that can be answered with data.
 2.  **Collecting and Cleaning Data:** Gathering data from various sources and preparing it for analysis. This often involves "data wrangling" – handling missing values, correcting inconsistencies, and fixing errors. This can be the most time-consuming part of a project!
 3.  **Analyzing Data:** Using statistical methods and programming languages (like Python or R) to explore patterns, trends, and relationships within the data. This is often called "exploratory [data analysis](../python/intro-scientific-computing.md#concept-data-analysis)."
-4.  **Building Models:** Developing predictive models or algorithms (often using machine learning techniques) to forecast future outcomes or classify data into categories.
+4.  **Building Models:** Developing predictive models or algorithms (often using [machine learning](../data-science/introduction-to-data-science.md#concept-machine-learning) techniques) to forecast future outcomes or classify data into categories.
 5.  **Interpreting and Communicating Results:** Translating complex analytical findings into clear, understandable insights for non-technical stakeholders, often through compelling data visualizations and presentations.
 
 Imagine a data scientist working for a streaming service. They might analyze user viewing habits, ratings, and search queries. Their role would involve:
@@ -93,6 +93,7 @@ Consider a city planning department deciding where to build a new bus route:
 Data-driven insights empower organizations to optimize operations, identify new opportunities, mitigate risks, and personalize experiences for their customers, ultimately leading to better results across the board.
 
 <a id="concept-artificial-intelligence"></a>
+<a id="concept-machine-learning"></a>
 ### Data Science, AI, and Machine Learning
 These terms are often used interchangeably, leading to confusion. However, they represent distinct yet interconnected concepts. Understanding their relationship is key to grasping the broader landscape of modern technology.
 

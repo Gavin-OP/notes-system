@@ -1,12 +1,3 @@
----
-title: "Behavioral Finance"
-slug: behavioral-finance
-display: true
-order: 7
-tags:
-  - finance
----
-
 <a id="concept-behavioral-finance"></a>
 # Behavioral Finance
 
@@ -70,12 +61,12 @@ These cognitive biases are powerful forces that can subtly steer our financial d
 
 ### Heuristics: Mental Shortcuts and Their Pitfalls
 
-While cognitive biases are systematic errors in thinking, **heuristics** are the mental shortcuts or "[rules of thumb](../finance/rules-of-thumb.md#concept-rules-of-thumb)" our brains use to make decisions quickly and efficiently. They are incredibly useful in everyday life, helping us navigate a complex world without overthinking every single choice. However, when applied to complex financial situations, these shortcuts can sometimes lead to the very biases and poor judgments we just discussed.
+While cognitive biases are systematic errors in thinking, **heuristics** are the mental shortcuts or "[rules of thumb](../finance/rules-of-thumb.md#concept-rules-of-thumb)" our brains use to make decisions quickly and efficiently. They are incredibly useful in everyday life, helping us navigate a complex world without overthinking every single choice. However, when applied to [complex financial](../finance/rules-of-thumb.md#concept-finance-abbreviations) situations, these shortcuts can sometimes lead to the very biases and poor judgments we just discussed.
 
 Let's look at a couple of prominent heuristics:
 
 *   **Availability Heuristic:** This occurs when we overestimate the likelihood of events that are more easily recalled or vivid in our memory. If something is easy to remember or has been recently in the news, we tend to assume it's more common or probable.
-    *   **Example:** After hearing numerous news stories about a particular stock market crash or a major corporate scandal, an investor might become overly cautious and avoid investing altogether, even if the long-term outlook is positive. The vivid memory of the negative event makes them perceive future negative events as more likely.
+    *   **Example:** After hearing numerous news stories about a particular [stock market](../finance/equity-market.md#concept-equity-market) crash or a major corporate scandal, an investor might become overly cautious and avoid investing altogether, even if the long-term outlook is positive. The vivid memory of the negative event makes them perceive future negative events as more likely.
 *   **Representativeness Heuristic:** This involves judging the probability of an event by how similar it is to a stereotype or a previously formed mental prototype, often ignoring base rates or statistical probabilities. We judge based on how well something "fits" a category.
     *   **Example:** An investor might see a company with a flashy new product, a charismatic CEO, and a trendy name, and immediately assume it's a "growth stock" destined for success. They might invest heavily simply because it "looks like" other successful tech companies, without thoroughly analyzing its financials or market position. They are judging by representativeness rather than actual probability or fundamental value.
 

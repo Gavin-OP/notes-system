@@ -10,26 +10,26 @@ By the end of this lesson, you will be able to:
 - Grasp the necessity of dimensionality reduction and how Principal Component Analysis (PCA) helps simplify complex datasets.
 
 ## Introduction
-In your journey through machine learning, you've likely encountered **[supervised learning](../data-science/supervised-learning-classification.md#concept-supervised-learning-classification)**. This powerful paradigm involves training models on [data](../data-science/data-fundamentals-and-types.md#concept-data) that comes with clear labels – for instance, predicting house prices using features like size and location, alongside their actual selling prices, or classifying emails as spam or not spam based on labeled examples. But what happens when your data lacks these convenient labels? What if you're faced with a vast ocean of information, seeking to uncover hidden structures or natural groupings without any prior guidance?
+In your journey through [machine learning](../data-science/introduction-to-data-science.md#concept-machine-learning), you've likely encountered **[supervised learning](../data-science/supervised-learning-classification.md#concept-supervised-learning-classification)**. This powerful paradigm involves training models on [data](../data-science/data-fundamentals-and-types.md#concept-data) that comes with clear labels – for instance, predicting house prices using features like size and location, alongside their actual selling prices, or classifying emails as spam or not spam based on labeled examples. But what happens when your data lacks these convenient labels? What if you're faced with a vast ocean of information, seeking to uncover hidden structures or natural groupings without any prior guidance?
 
-This is precisely where **unsupervised learning** steps in. Imagine yourself as an explorer venturing into uncharted territory, tasked with making sense of the landscape without a pre-drawn map. Instead of predicting a specific outcome, unsupervised learning aims to discover inherent patterns, structures, or relationships within the data itself. One of the most powerful and widely used techniques in this domain is **clustering**, which helps us group similar data points together.
+This is precisely where **[unsupervised learning](../data-science/introduction-to-machine-learning.md#concept-unsupervised-learning)** steps in. Imagine yourself as an explorer venturing into uncharted territory, tasked with making sense of the landscape without a pre-drawn map. Instead of predicting a specific outcome, unsupervised learning aims to discover inherent patterns, structures, or relationships within the data itself. One of the most powerful and widely used techniques in this domain is **[clustering](../data-science/unsupervised-learning-clustering.md#concept-clustering)**, which helps us group similar data points together.
 
 Consider a practical scenario: you have a large dataset detailing customer purchasing habits, but no one has provided categories for these customers. Clustering can automatically identify distinct groups of customers who exhibit similar behaviors, enabling highly targeted marketing strategies. Similarly, if you're analyzing genetic data, clustering can reveal natural groupings of genes that behave in similar ways. These are just a few examples of where clustering proves invaluable.
 
-In this lesson, we'll dive deep into the world of clustering, exploring popular algorithms like K-Means and hierarchical clustering. We'll also learn how to effectively evaluate these groupings and tackle the common challenge of high-dimensional data using powerful techniques like Principal Component Analysis (PCA).
+In this lesson, we'll dive deep into the world of clustering, exploring popular algorithms like K-Means and [hierarchical clustering](../data-science/unsupervised-learning-clustering.md#concept-hierarchical-clustering). We'll also learn how to effectively evaluate these groupings and tackle the common challenge of high-dimensional data using powerful techniques like [Principal Component Analysis](../data-science/unsupervised-learning-clustering.md#concept-principal-component-analysis) (PCA).
 
 ## Concept Progression
 
 ### What is Unsupervised Learning?
 At its heart, **unsupervised learning** is about finding patterns and structures in data without the benefit of pre-labeled examples. To illustrate, think about teaching a child to sort toys. In a [supervised learning](../data-science/supervised-learning-classification.md#concept-supervised-learning-classification) scenario, you'd show them a pile of toys and explicitly say, "These are cars, these are blocks, and these are dolls." The child learns by associating your labels with the toys. In contrast, with unsupervised learning, you'd simply give them the pile of toys and ask them to sort them into groups that make sense to *them*. They might group by color, by size, or by type, discovering these categories entirely on their own.
 
-The fundamental difference from supervised learning lies in the absence of a "target" or "output" variable. We aren't trying to predict a specific value or category; instead, our goal is to understand the inherent organization and underlying relationships within the [data](../data-science/data-fundamentals-and-types.md#concept-data) itself.
+The fundamental difference from [supervised learning](../data-science/introduction-to-machine-learning.md#concept-supervised-learning) lies in the absence of a "target" or "output" variable. We aren't trying to predict a specific value or category; instead, our goal is to understand the inherent organization and underlying relationships within the [data](../data-science/data-fundamentals-and-types.md#concept-data) itself.
 
-One of the most common and intuitive applications of unsupervised learning is **clustering**.
+One of the most common and intuitive applications of [unsupervised learning](../data-science/introduction-to-machine-learning.md#concept-unsupervised-learning) is **clustering**.
 
 <a id="concept-clustering"></a>
 ### Clustering: Grouping Similar Data
-**Clustering**, also known as cluster analysis, is the task of dividing a dataset into distinct groups, called clusters. The core principle is that data points within the same cluster should be more similar to each other than to data points in other clusters. The ultimate goal is to uncover natural groupings or underlying structures that might not be immediately obvious in the raw data.
+**Clustering**, also known as cluster analysis, is the task of dividing a dataset into distinct groups, called clusters. The core principle is that data points within the same cluster should be more similar to each other than to data points in other clusters. The ultimate goal is to uncover natural groupings or underlying structures that might not be immediately obvious in the [raw data](../data-science/data-cleaning-preprocessing.md#concept-data-cleaning-preprocessing).
 
 Let's consider a simple example. Imagine you have a dataset containing various fruits, described by features such as their color, size, and sweetness. Without any explicit labels like "apple" or "banana," a clustering algorithm could group all the red, medium-sized, sweet fruits together, and all the yellow, long, very sweet fruits together. It identifies these meaningful groups based purely on the features you provide.
 
@@ -41,7 +41,7 @@ The "similarity" between data points is typically quantified using a **distance 
 
 <a id="concept-k-means-clustering"></a>
 ### K-Means Clustering: The Centroid Approach
-**K-Means clustering** stands out as one of the most popular and straightforward clustering algorithms. Its name directly reflects its core mechanics: "K" represents the number of clusters you aim to find, and "Means" refers to the average position (or **centroid**) of the data points within each cluster.
+**K-Means [clustering](../data-science/unsupervised-learning-clustering.md#concept-clustering)** stands out as one of the most popular and straightforward clustering algorithms. Its name directly reflects its core mechanics: "K" represents the number of clusters you aim to find, and "Means" refers to the average position (or **centroid**) of the data points within each cluster.
 
 Here's a step-by-step breakdown of how the K-Means algorithm works:
 
