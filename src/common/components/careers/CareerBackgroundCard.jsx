@@ -23,7 +23,51 @@ const SKILL_OPTIONS = [
 const TOOL_OPTIONS = ["Python", "SQL", "Pandas", "PyTorch", "Tableau", "Power BI"];
 
 function toSelectOptions(values = []) {
-  return values.map((value) => ({ label: value, value }));
+  return dedupeValues(values).map((value) => ({ label: value, value }));
+}
+
+function dedupeValues(values = []) {
+  const seen = new Set();
+  const result = [];
+  values.forEach((value) => {
+    const label = String(value || "").trim();
+    const key = label.toLowerCase();
+    if (!label || seen.has(key)) return;
+    seen.add(key);
+    result.push(label);
+  });
+  return result.sort((a, b) => a.localeCompare(b));
+}
+
+function buildTaxonomyOptions(taxonomy = [], normalized = {}, inferredKnowledge = []) {
+  const profiles = Array.isArray(taxonomy) ? taxonomy : [];
+  const degreeFields = profiles.flatMap((profile) =>
+    (profile.degree_requirements || profile.degreeRequirements || []).flatMap(
+      (requirement) => requirement.fields || [],
+    ),
+  );
+  return {
+    knowledge: dedupeValues([
+      ...KNOWLEDGE_OPTIONS,
+      ...degreeFields,
+      ...inferredKnowledge,
+      ...(normalized.knowledgeAreas || []),
+    ]),
+    skills: dedupeValues([
+      ...SKILL_OPTIONS,
+      ...profiles.flatMap((profile) => profile.hard_skills || profile.hardSkills || []),
+      ...(normalized.skills || []),
+    ]),
+    tools: dedupeValues([
+      ...TOOL_OPTIONS,
+      ...profiles.flatMap((profile) => profile.tools || []),
+      ...(normalized.tools || []),
+    ]),
+    careers: dedupeValues([
+      ...profiles.map((profile) => profile.title),
+      ...(normalized.careerInterests || []),
+    ]),
+  };
 }
 
 function normalizeBackground(background = {}) {
@@ -44,8 +88,8 @@ function CareerBackgroundCard({
   disabled = false,
 }) {
   const normalized = normalizeBackground(background);
-  const careerOptions = taxonomy.map((profile) => profile.title).filter(Boolean);
   const inferredKnowledge = learningTracks.map((track) => track.title).filter(Boolean);
+  const taxonomyOptions = buildTaxonomyOptions(taxonomy, normalized, inferredKnowledge);
 
   return (
     <Form
@@ -66,7 +110,7 @@ function CareerBackgroundCard({
           <Select
             mode="tags"
             placeholder="Add knowledge areas"
-            options={toSelectOptions(KNOWLEDGE_OPTIONS)}
+            options={toSelectOptions(taxonomyOptions.knowledge)}
             disabled={disabled}
           />
         </Form.Item>
@@ -74,7 +118,7 @@ function CareerBackgroundCard({
           <Select
             mode="tags"
             placeholder="Add skills"
-            options={toSelectOptions(SKILL_OPTIONS)}
+            options={toSelectOptions(taxonomyOptions.skills)}
             disabled={disabled}
           />
         </Form.Item>
@@ -82,7 +126,7 @@ function CareerBackgroundCard({
           <Select
             mode="tags"
             placeholder="Add tools"
-            options={toSelectOptions(TOOL_OPTIONS)}
+            options={toSelectOptions(taxonomyOptions.tools)}
             disabled={disabled}
           />
         </Form.Item>
@@ -90,7 +134,7 @@ function CareerBackgroundCard({
           <Select
             mode="tags"
             placeholder="Add career interests"
-            options={toSelectOptions(careerOptions)}
+            options={toSelectOptions(taxonomyOptions.careers)}
             disabled={disabled}
           />
         </Form.Item>

@@ -234,6 +234,12 @@
   border-radius: 8px;
 }
 
+.career-recommendations-list .ant-list-items {
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
 .career-recommendation-card.is-active {
   background: rgba(22, 119, 255, 0.08);
 }

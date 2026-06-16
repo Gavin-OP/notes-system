@@ -45,6 +45,8 @@ import "./UserProfilePage.css";
 
 const { Title, Text, Paragraph } = Typography;
 const CONTRIBUTION_TOTAL_WEEKS = 52;
+const CAREER_MATCH_MIN_SCORE = 20;
+const CAREER_RECOMMENDATION_LIMIT = 50;
 
 function normalizeDate(rawValue) {
   if (!rawValue) return "";
@@ -388,7 +390,10 @@ function UserProfilePage() {
       setCareerErrorText("");
       try {
         const [recommendationsPayload, backgroundPayload, taxonomyPayload] = await Promise.all([
-          getMyCareerRecommendations(5),
+          getMyCareerRecommendations({
+            limit: CAREER_RECOMMENDATION_LIMIT,
+            minimumMatchScore: CAREER_MATCH_MIN_SCORE,
+          }),
           getMyCareerBackground(),
           getCareerTaxonomy(),
         ]);
@@ -455,22 +460,6 @@ function UserProfilePage() {
     return map;
   }, [notesIndex]);
 
-  const decoratedRecentNotes = useMemo(() => {
-    return recentNotes.map((note) => {
-      const normalizedUrl = typeof note.noteUrl === "string" ? note.noteUrl.split("#")[0] : "";
-      const fallbackTitle = toReadableLabel(note.title);
-      const displayTitle = (normalizedUrl && noteLabelByUrl.get(normalizedUrl)) || fallbackTitle;
-      const rawSubject =
-        note.subject ||
-        (normalizedUrl.startsWith("/note/") ? normalizedUrl.replace(/^\/note\//, "").split("/")[0] : "");
-      return {
-        ...note,
-        displayTitle,
-        displaySubject: slugToSubjectTitle(rawSubject),
-      };
-    });
-  }, [noteLabelByUrl, recentNotes]);
-
   const decoratedCompletedNotes = useMemo(() => {
     return completedNotes.map((item) => {
       const normalizedUrl = typeof item.noteUrl === "string" ? item.noteUrl.split("#")[0] : "";
@@ -532,21 +521,29 @@ function UserProfilePage() {
     };
   }, [careerBackground, decoratedCompletedNotes, learningTracks, recentNotes]);
 
+  const visibleCareerRecommendations = useMemo(
+    () =>
+      careerRecommendations.filter(
+        (item) => formatScore(item?.match_score ?? item?.matchScore) >= CAREER_MATCH_MIN_SCORE,
+      ),
+    [careerRecommendations],
+  );
+
   const selectedCareerRecommendation = useMemo(
-    () => careerRecommendations.find((item) => item?.title === selectedCareerRole),
-    [careerRecommendations, selectedCareerRole],
+    () => visibleCareerRecommendations.find((item) => item?.title === selectedCareerRole),
+    [selectedCareerRole, visibleCareerRecommendations],
   );
 
   useEffect(() => {
-    if (!careerRecommendations.length) {
+    if (!visibleCareerRecommendations.length) {
       setSelectedCareerRole("");
       return;
     }
-    const exists = careerRecommendations.some((item) => item?.title === selectedCareerRole);
+    const exists = visibleCareerRecommendations.some((item) => item?.title === selectedCareerRole);
     if (!exists) {
-      setSelectedCareerRole(careerRecommendations[0]?.title || "");
+      setSelectedCareerRole(visibleCareerRecommendations[0]?.title || "");
     }
-  }, [careerRecommendations, selectedCareerRole]);
+  }, [selectedCareerRole, visibleCareerRecommendations]);
 
   const continueLearningPath = useMemo(() => {
     const FALLBACK_NOTE = "/note/disclaimer.md";
@@ -594,7 +591,10 @@ function UserProfilePage() {
     setCareerSaving(true);
     try {
       const nextBackground = await updateMyCareerBackground(values);
-      const recommendationsPayload = await getMyCareerRecommendations(5);
+      const recommendationsPayload = await getMyCareerRecommendations({
+        limit: CAREER_RECOMMENDATION_LIMIT,
+        minimumMatchScore: CAREER_MATCH_MIN_SCORE,
+      });
       setCareerBackground(nextBackground || {});
       setCareerRecommendations(recommendationsPayload?.recommendations || []);
       message.success("Career background updated.");
@@ -1021,10 +1021,11 @@ function UserProfilePage() {
                     <Col xs={24} lg={13}>
                       <div className="user-profile-page__career-pane">
                         <CareerRecommendationsCard
-                          recommendations={careerRecommendations}
+                          recommendations={visibleCareerRecommendations}
                           loading={careerLoading}
                           errorText={careerErrorText}
                           selectedTitle={selectedCareerRole}
+                          minimumScore={CAREER_MATCH_MIN_SCORE}
                           onSelect={(roleTitle) => setSelectedCareerRole(roleTitle)}
                         />
                       </div>
@@ -1099,7 +1100,7 @@ function UserProfilePage() {
                       <Divider style={{ margin: "4px 0" }} />
                       <Text strong>Skill Gap</Text>
                       <CareerSkillGapPanel
-                        recommendations={careerRecommendations.filter(
+                        recommendations={visibleCareerRecommendations.filter(
                           (item) => item?.title === selectedCareerRole,
                         )}
                       />

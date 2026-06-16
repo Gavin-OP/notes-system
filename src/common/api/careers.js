@@ -60,8 +60,12 @@ async function careerApiRequest(path, init = {}) {
   return payload;
 }
 
-export function getMyCareerRecommendations(limit = 5) {
-  return careerApiRequest(`/api/v1/users/me/career-recommendations?limit=${encodeURIComponent(limit)}`);
+export function getMyCareerRecommendations({ limit = 50, minimumMatchScore = 20 } = {}) {
+  const params = new URLSearchParams({
+    limit: String(limit),
+    minimum_match_score: String(minimumMatchScore),
+  });
+  return careerApiRequest(`/api/v1/users/me/career-recommendations?${params.toString()}`);
 }
 
 export function getCareerTaxonomy() {

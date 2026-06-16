@@ -13,6 +13,7 @@ function CareerRecommendationsCard({
   loading = false,
   errorText = "",
   selectedTitle = "",
+  minimumScore = 20,
   onSelect,
 }) {
   if (errorText) {
@@ -21,8 +22,16 @@ function CareerRecommendationsCard({
 
   return (
     <List
+      className="career-recommendations-list"
       loading={loading}
       dataSource={recommendations}
+      header={
+        recommendations.length ? (
+          <Text type="secondary">
+            Showing {recommendations.length} roles with at least {minimumScore}% match.
+          </Text>
+        ) : null
+      }
       locale={{ emptyText: <Empty description="No career matches yet." /> }}
       renderItem={(item) => {
         const matchScore = formatScore(item.match_score ?? item.matchScore);
