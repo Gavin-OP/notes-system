@@ -25,9 +25,11 @@ import {
   convertToHierarchicalFormat,
 } from "./utils/graphLoader";
 import { calculateOrthogonalMindmapLayout, DEFAULT_MINDMAP_LAYOUT_CONFIG } from "./utils/layoutUtils";
-import MindmapToolbar, { MINDMAP_TYPES } from "./MindmapToolbar";
+import MindmapToolbar from "./MindmapToolbar";
+import { MINDMAP_TYPES } from "./MindmapTypes";
 import RadialMindmapView from "./RadialMindmapView";
 import NetworkMindmapView from "./NetworkMindmapView";
+import SphereNetworkView from "./SphereNetworkView";
 import "./nodes/nodes.css";
 import "./MindmapView.css";
 
@@ -57,8 +59,7 @@ const MindmapView = ({ subjectId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // Store measured node dimensions and graph data for 2-pass layout
-  const [nodeDimensions, setNodeDimensions] = useState(null);
+  // Store graph data for 2-pass layout
   const [graphData, setGraphData] = useState(null);
   const [networkGraphData, setNetworkGraphData] = useState(null);
   const [needsRelayout, setNeedsRelayout] = useState(false);
@@ -167,7 +168,6 @@ const MindmapView = ({ subjectId }) => {
 
         setNodes(flowNodes);
         setEdges(flowEdges);
-        setNodeDimensions(dimensions);
       }
 
       setNeedsRelayout(false);
@@ -237,6 +237,19 @@ const MindmapView = ({ subjectId }) => {
       return (
         <div className="mindmap-view__canvas">
           <NetworkMindmapView
+            graphData={networkGraphData}
+            subjectId={subjectId}
+            onOpenNote={handleOpenNote}
+          />
+        </div>
+      );
+    }
+
+    if (viewType === MINDMAP_TYPES.SPHERE) {
+      // 3D Sphere View (WebGL, rotatable concept globe)
+      return (
+        <div className="mindmap-view__canvas">
+          <SphereNetworkView
             graphData={networkGraphData}
             subjectId={subjectId}
             onOpenNote={handleOpenNote}

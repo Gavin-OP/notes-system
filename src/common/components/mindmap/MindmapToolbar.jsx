@@ -3,17 +3,15 @@
  * Provides navigation and view switching controls
  */
 import { useNavigate } from "react-router-dom";
-import { ArrowLeftOutlined, AppstoreOutlined, BranchesOutlined, ClusterOutlined } from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  BranchesOutlined,
+  ClusterOutlined,
+  GlobalOutlined,
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
+import { MINDMAP_TYPES } from "./MindmapTypes";
 import "./MindmapToolbar.css";
-
-/**
- * Mindmap view types
- */
-export const MINDMAP_TYPES = {
-  HIERARCHICAL: "hierarchical",  // Type 1: Clear hierarchical structure
-  RADIAL: "radial",              // Type 2: Radial grouped layout
-  NETWORK: "network",            // Type 3: Network relationship graph
-};
 
 /**
  * MindmapToolbar Component
@@ -50,6 +48,13 @@ const MindmapToolbar = ({ subjectId, currentType, onTypeChange, subjectName }) =
       label: "Network",
       description: "Concept relationship network, suitable for deep understanding",
       disabled: false,  // Implemented
+    },
+    {
+      type: MINDMAP_TYPES.SPHERE,
+      icon: <GlobalOutlined />,
+      label: "3D Sphere",
+      description: "Rotatable concept sphere for spatial exploration",
+      disabled: false,
     },
   ];
 

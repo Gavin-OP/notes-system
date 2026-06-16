@@ -7,6 +7,8 @@
 export { default as MindmapView } from "./MindmapView";
 export { default as RadialMindmapView } from "./RadialMindmapView";
 export { default as NetworkMindmapView } from "./NetworkMindmapView";
+export { default as SphereNetworkView } from "./SphereNetworkView";
+export { MINDMAP_TYPES } from "./MindmapTypes";
 
 // Node components (for React Flow)
 export { CenterNode, CategoryNode, ConceptNode, NetworkNode } from "./nodes";

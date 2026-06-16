@@ -45,6 +45,7 @@
     "jsonrepair": "^3.13.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-force-graph-3d": "^1.29.1",
     "react-ga4": "^2.1.0",
     "react-markdown": "^10.1.0",
     "react-markdown-mermaid": "^0.0.3",
@@ -60,6 +61,8 @@
     "remark-mark-plus": "^1.0.21",
     "remark-math": "^6.0.0",
     "remark-slug": "^7.0.1",
+    "three": "^0.184.0",
+    "three-spritetext": "^1.10.0",
     "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
