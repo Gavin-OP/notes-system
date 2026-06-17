@@ -251,6 +251,12 @@
   gap: 8px;
 }
 
+.user-profile-page__career-gaps {
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin: -8px -10px 0;
+}
+
 .user-profile-page__contrib-tooltip {
   max-width: 280px;
   font-size: 12px;

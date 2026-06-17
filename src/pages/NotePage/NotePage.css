@@ -24,6 +24,16 @@
   background: linear-gradient(135deg, #9254de, #4096ff);
 }
 
+.note-page__header-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.note-page__subject-nav,
 .note-page__version-tools {
   display: flex;
   flex-wrap: wrap;
@@ -39,9 +49,25 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
+.note-page__subject-nav-label,
 .note-page__version-label {
   font-size: 13px;
   font-weight: 600;
+}
+
+.note-page__subject-nav-btn {
+  border: 1px solid #1677ff;
+  border-radius: 6px;
+  padding: 5px 10px;
+  background: #fff;
+  color: #1677ff;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.note-page__subject-nav-btn:hover {
+  background: #e6f4ff;
 }
 
 .note-page__version-select-wrap {
@@ -129,11 +155,22 @@
   background: linear-gradient(135deg, #642ab5, #1668dc);
 }
 
+[data-theme="dark"] .note-page__subject-nav,
 [data-theme="dark"] .note-page__version-tools {
   border-color: #424242;
   background: #1f1f1f;
   color: rgba(255, 255, 255, 0.88);
   box-shadow: none;
+}
+
+[data-theme="dark"] .note-page__subject-nav-btn {
+  border-color: #1668dc;
+  background: #141414;
+  color: #69b1ff;
+}
+
+[data-theme="dark"] .note-page__subject-nav-btn:hover {
+  background: #111a2c;
 }
 
 [data-theme="dark"] .note-page__version-select-label {

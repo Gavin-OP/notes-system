@@ -1,7 +1,7 @@
 ---
 title: "Python Knowledge System"
 slug: "index"
-display: true
+display: false
 order: 0
 tags:
   - python

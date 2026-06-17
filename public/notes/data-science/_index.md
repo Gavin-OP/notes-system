@@ -1,7 +1,7 @@
 ---
 title: "Data Science Knowledge System"
 slug: "index"
-display: true
+display: false
 order: 0
 tags:
   - data-science

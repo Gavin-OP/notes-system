@@ -113,11 +113,32 @@ function normalizeDisplayTitle(rawValue, fallbackValue) {
   return slugLike ? toReadableTitle(candidate) : candidate;
 }
 
+function isNavigableSubjectSlug(subjectSlug) {
+  const slug = String(subjectSlug || "").trim().toLowerCase();
+  if (!slug) return false;
+  return !["disclaimer", "mindmap", "test", "image"].includes(slug);
+}
+
+function findSubjectFolder(data, subjectId) {
+  if (!Array.isArray(data) || !subjectId) return null;
+  const targetUrl = normalizeUrl(`/note/${subjectId}`);
+  return findMeta(data, targetUrl);
+}
+
+function getFirstSubjectTopicUrl(data, subjectId) {
+  const subjectFolder = findSubjectFolder(data, subjectId);
+  if (!subjectFolder || !Array.isArray(subjectFolder.children)) return null;
+  const menuItems = buildMenuItems(subjectFolder.children);
+  if (menuItems.length === 0) return null;
+  return menuItems[0]?.key || null;
+}
+
 function buildMenuItems(data) {
   if (!data) return [];
   return data
     .filter((item) => item.display !== false)
     .filter((item) => !shouldHideFromSidebarMenu(item))
+    .filter((item) => !isIndexNoteItem(item))
     .sort((a, b) => {
       const aDisc = isDisclaimerNoteItem(a);
       const bDisc = isDisclaimerNoteItem(b);
@@ -281,15 +302,7 @@ function replaceSubjectFolderWithGraphNotes(baseNotesIndex = [], subjectId, grap
       graphByUrl.set(normalizeUrl(child.url), child);
     });
 
-    const preservedIndexItems = baseChildren.filter(
-      (child) =>
-        child &&
-        typeof child === "object" &&
-        isIndexNoteItem(child) &&
-        !graphByUrl.has(normalizeUrl(child.url))
-    );
-
-    return [...preservedIndexItems, ...graphChildren];
+    return [...graphChildren];
   };
 
   const replaceFolder = (items) =>
@@ -372,6 +385,9 @@ export {
   normalizeUrl,
   normalizeNoteRoute,
   isConcreteNoteRoute,
+  isIndexNoteItem,
+  isNavigableSubjectSlug,
+  getFirstSubjectTopicUrl,
   findMeta,
   buildMenuItems,
   buildNotesIndexFromGraphNotes,

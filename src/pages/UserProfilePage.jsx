@@ -280,6 +280,15 @@ function formatScore(value) {
   return Number.isFinite(numeric) ? Math.round(numeric) : 0;
 }
 
+function normalizeCareerBackgroundForForm(background = {}) {
+  return {
+    knowledgeAreas: background.knowledge_areas || background.knowledgeAreas || [],
+    skills: background.skills || [],
+    tools: background.tools || [],
+    careerInterests: background.career_interests || background.careerInterests || [],
+  };
+}
+
 const PREVIEW_USER = {
   id: "preview-user",
   email: "preview@local",
@@ -318,6 +327,7 @@ function UserProfilePage() {
   const [careerTaxonomy, setCareerTaxonomy] = useState([]);
   const [careerLoading, setCareerLoading] = useState(false);
   const [careerSaving, setCareerSaving] = useState(false);
+  const [careerGoalSaving, setCareerGoalSaving] = useState(false);
   const [careerErrorText, setCareerErrorText] = useState("");
   const [previewMode, setPreviewMode] = useState(false);
   const [previewNotice, setPreviewNotice] = useState("");
@@ -529,10 +539,21 @@ function UserProfilePage() {
     [careerRecommendations],
   );
 
+  const careerGoals = useMemo(
+    () => normalizeCareerBackgroundForForm(careerBackground).careerInterests,
+    [careerBackground],
+  );
+
   const selectedCareerRecommendation = useMemo(
     () => visibleCareerRecommendations.find((item) => item?.title === selectedCareerRole),
     [selectedCareerRole, visibleCareerRecommendations],
   );
+
+  const selectedCareerIsGoal = useMemo(() => {
+    return careerGoals.some(
+      (item) => String(item || "").trim().toLowerCase() === selectedCareerRole.toLowerCase(),
+    );
+  }, [careerGoals, selectedCareerRole]);
 
   useEffect(() => {
     if (!visibleCareerRecommendations.length) {
@@ -602,6 +623,39 @@ function UserProfilePage() {
       message.error(error instanceof Error ? error.message : "Failed to update career background.");
     } finally {
       setCareerSaving(false);
+    }
+  };
+
+  const handleAddCareerGoal = async () => {
+    if (previewMode) {
+      message.info("Preview mode cannot save career goals.");
+      return;
+    }
+    if (!selectedCareerRecommendation?.title) return;
+    if (selectedCareerIsGoal) {
+      message.info(`${selectedCareerRecommendation.title} is already in your career goals.`);
+      return;
+    }
+
+    const normalized = normalizeCareerBackgroundForForm(careerBackground);
+    const nextCareerInterests = [...normalized.careerInterests, selectedCareerRecommendation.title];
+    setCareerGoalSaving(true);
+    try {
+      const nextBackground = await updateMyCareerBackground({
+        ...normalized,
+        careerInterests: nextCareerInterests,
+      });
+      const recommendationsPayload = await getMyCareerRecommendations({
+        limit: CAREER_RECOMMENDATION_LIMIT,
+        minimumMatchScore: CAREER_MATCH_MIN_SCORE,
+      });
+      setCareerBackground(nextBackground || {});
+      setCareerRecommendations(recommendationsPayload?.recommendations || []);
+      message.success(`${selectedCareerRecommendation.title} added as a career goal.`);
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Failed to add career goal.");
+    } finally {
+      setCareerGoalSaving(false);
     }
   };
 
@@ -1000,6 +1054,22 @@ function UserProfilePage() {
                 </div>
               </Space>
             </Card>
+            <Card type="inner" title="My Career Goal" className="user-profile-page__section">
+              {careerGoals.length > 0 ? (
+                <div className="user-profile-page__tag-wall">
+                  {careerGoals.map((goal) => (
+                    <Tag key={`career-goal-${goal}`} color="green">
+                      {goal}
+                    </Tag>
+                  ))}
+                </div>
+              ) : (
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description="No career goals yet. Add one from Career Matches."
+                />
+              )}
+            </Card>
             <Divider />
             <Row gutter={[16, 16]}>
               <Col xs={24} lg={17}>
@@ -1098,18 +1168,23 @@ function UserProfilePage() {
                         ))}
                       </Space>
                       <Divider style={{ margin: "4px 0" }} />
-                      <Text strong>Skill Gap</Text>
-                      <CareerSkillGapPanel
-                        recommendations={visibleCareerRecommendations.filter(
-                          (item) => item?.title === selectedCareerRole,
-                        )}
-                      />
+                      <div className="user-profile-page__career-gaps">
+                        <Text strong>Skill Gap</Text>
+                        <CareerSkillGapPanel
+                          recommendations={visibleCareerRecommendations.filter(
+                            (item) => item?.title === selectedCareerRole,
+                          )}
+                        />
+                      </div>
                       <Space wrap>
-                        <Button size="small" type="link">
-                          View learning gaps
-                        </Button>
-                        <Button size="small" type="link">
-                          Add as career goal
+                        <Button
+                          size="small"
+                          type="link"
+                          loading={careerGoalSaving}
+                          disabled={previewMode || selectedCareerIsGoal}
+                          onClick={handleAddCareerGoal}
+                        >
+                          {selectedCareerIsGoal ? "Career goal added" : "Add as career goal"}
                         </Button>
                       </Space>
                     </Space>

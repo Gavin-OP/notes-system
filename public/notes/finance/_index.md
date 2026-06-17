@@ -1,7 +1,7 @@
 ---
 title: "Finance Knowledge System"
 slug: "index"
-display: true
+display: false
 order: 0
 tags:
   - finance

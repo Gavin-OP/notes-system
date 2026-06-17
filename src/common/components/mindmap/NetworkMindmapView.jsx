@@ -34,6 +34,9 @@ const nodeTypes = {
   networkNode: NetworkNode,
 };
 
+const INITIAL_LAYOUT_TICKS = 140;
+const LIVE_LAYOUT_UPDATE_INTERVAL_MS = 48;
+
 function buildInitialPositions(
   networkNodes,
   clusters,
@@ -52,7 +55,7 @@ function buildInitialPositions(
   );
 
   const clusterCenters = new Map();
-  safeClusters.forEach((cluster, index) => {
+  safeClusters.forEach((cluster) => {
     if (!cluster?.id) return;
     if (cluster.subject === focusSubject) {
       clusterCenters.set(cluster.id, { x: centerX, y: centerY });
@@ -140,8 +143,7 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
   const releaseFixRef = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [isSimulationRunning, setIsSimulationRunning] = useState(true);
-  const [activeClusterSubject, setActiveClusterSubject] = useState(null);
+  const [activeClusterSubjectOverride, setActiveClusterSubjectOverride] = useState(null);
   const { fitView } = useReactFlow();
 
   // Convert graph data to network format
@@ -154,6 +156,9 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
     () => networkData?.metadata?.clusters ?? [],
     [networkData]
   );
+
+  const activeClusterSubject =
+    activeClusterSubjectOverride ?? networkData?.metadata?.focusSubject ?? null;
 
   const clearReleaseTimer = useCallback(() => {
     if (releaseFixRef.current) {
@@ -176,9 +181,7 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
     const relatedEdges = networkEdges.filter(
       (edge) => edge.edgeKind !== "hierarchy" && edge.type !== metadata?.hierarchyEdgeType
     );
-    const initialFocusSubject = metadata?.focusSubject ?? null;
-    setActiveClusterSubject(initialFocusSubject);
-    activeClusterSubjectRef.current = initialFocusSubject;
+    activeClusterSubjectRef.current = metadata?.focusSubject ?? null;
     
     // Get container dimensions
     const rect = containerRef.current.getBoundingClientRect();
@@ -283,31 +286,30 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
 
     simulationRef.current = simulation;
 
-    // Update React Flow nodes on each tick
-    simulation.on("tick", () => {
-      setNodes((prevNodes) =>
-        {
-          const prevById = new Map(prevNodes.map((node) => [node.id, node]));
-          const conceptNodes = simNodes.map((simNode) => {
-            const prevNode = prevById.get(simNode.id);
-            const isActiveClusterNode =
-              activeClusterSubjectRef.current &&
-              simNode.data?.subject === activeClusterSubjectRef.current;
-            return {
-              ...(prevNode ?? simNode),
-              position: { x: simNode.x, y: simNode.y },
-              zIndex: isActiveClusterNode ? 20 : 6,
-            };
-          });
-          return conceptNodes;
-        }
-      );
-    });
+    let lastTickUpdate = 0;
+    let pendingFrame = null;
+    const focusIds = extractFocusNodeIds(networkData);
 
-    // When simulation ends
-    simulation.on("end", () => {
-      setIsSimulationRunning(false);
-      const focusIds = extractFocusNodeIds(networkData);
+    const buildFlowNodes = (prevNodes = []) => {
+      const prevById = new Map(prevNodes.map((node) => [node.id, node]));
+      return simNodes.map((simNode) => {
+        const prevNode = prevById.get(simNode.id);
+        const isActiveClusterNode =
+          activeClusterSubjectRef.current &&
+          simNode.data?.subject === activeClusterSubjectRef.current;
+        return {
+          ...(prevNode ?? simNode),
+          position: { x: simNode.x, y: simNode.y },
+          zIndex: isActiveClusterNode ? 20 : 6,
+        };
+      });
+    };
+
+    const updateFlowNodes = () => {
+      setNodes((prevNodes) => buildFlowNodes(prevNodes));
+    };
+
+    const fitInitialView = () => {
       setTimeout(() => {
         if (focusIds.length > 0) {
           fitView({
@@ -320,21 +322,40 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
           fitView({ padding: 0.2 });
         }
       }, 100);
+    };
+
+    // ReactFlow nodes are DOM-heavy, so throttle live simulation updates.
+    simulation.on("tick", () => {
+      const now = performance.now();
+      if (now - lastTickUpdate < LIVE_LAYOUT_UPDATE_INTERVAL_MS || pendingFrame) {
+        return;
+      }
+      lastTickUpdate = now;
+      pendingFrame = requestAnimationFrame(() => {
+        pendingFrame = null;
+        updateFlowNodes();
+      });
     });
 
-    // Initialize React Flow nodes and edges
-    const flowNodes = simNodes.map((node) => ({
-      ...node,
-      position: { x: node.x, y: node.y },
-    }));
+    simulation.on("end", () => {
+      updateFlowNodes();
+    });
+
     const flowEdges = convertEdgesToReactFlow(networkEdges);
 
-    setNodes(flowNodes);
+    simulation.stop();
+    simulation.tick(INITIAL_LAYOUT_TICKS);
+
+    setNodes(buildFlowNodes());
     setEdges(flowEdges);
+    fitInitialView();
 
     // Cleanup
     return () => {
       clearReleaseTimer();
+      if (pendingFrame) {
+        cancelAnimationFrame(pendingFrame);
+      }
       simulation.stop();
     };
   }, [networkData, setNodes, setEdges, fitView, clearReleaseTimer]);
@@ -397,7 +418,7 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
         node.fy = targetY;
       });
 
-      setActiveClusterSubject(cluster.subject ?? null);
+      setActiveClusterSubjectOverride(cluster.subject ?? null);
       activeClusterSubjectRef.current = cluster.subject ?? null;
 
       setNodes((prevNodes) =>
@@ -600,11 +621,6 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
               </button>
             );
           })}
-        </div>
-      )}
-      {isSimulationRunning && (
-        <div className="network-mindmap-view__loading">
-          <span>Calculating layout...</span>
         </div>
       )}
       <ReactFlow

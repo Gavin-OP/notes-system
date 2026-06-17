@@ -1,12 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { getFirstSubjectTopicUrl } from "../../../utils/notesIndexUtils";
 import "./LearningPathToolbar.css";
 
 const LearningPathToolbar = ({ subjectId, subjectName }) => {
   const navigate = useNavigate();
+  const notesIndex = useSelector((state) => state.notesIndex.data);
 
   const handleBack = () => {
-    navigate(`/note/${subjectId}/index`);
+    const firstTopicUrl = getFirstSubjectTopicUrl(notesIndex, subjectId);
+    navigate(firstTopicUrl || `/note/${subjectId}`);
   };
 
   return (

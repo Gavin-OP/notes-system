@@ -172,7 +172,7 @@ const SphereNetworkView = ({ graphData, subjectId, onOpenNote }) => {
       label.material.opacity = isConnected ? 0.94 : 0.18;
       label.material.depthWrite = false;
       label.material.depthTest = false;
-      label.position.set(0, 0, radius * 0.72);
+      label.position.set(0, 0, 0);
 
       group.add(mesh);
       group.add(label);

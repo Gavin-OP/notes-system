@@ -13,7 +13,7 @@ import {
 } from "../../redux/notesIndexSlice";
 
 import MarkdownRenderer from "./components/MarkdownRenderer";
-import { findMeta } from "../../utils/notesIndexUtils";
+import { findMeta, getFirstSubjectTopicUrl, isIndexNoteItem, isNavigableSubjectSlug } from "../../utils/notesIndexUtils";
 import { getOutline } from "../../utils/markdownUtils";
 import {
   getNoteVersionContent,
@@ -149,7 +149,7 @@ function NotePage() {
 
   const versionHeaderAddon =
     noteVersions.length > 0 ? (
-      <div className="note-page__version-tools">
+      <>
         <span className="note-page__version-label">Note version</span>
         <label className="note-page__version-select-wrap">
           <span className="note-page__version-select-label">View</span>
@@ -181,6 +181,39 @@ function NotePage() {
             {restoreCandidates.length} candidates ready to review
           </span>
         ) : null}
+      </>
+    ) : null;
+
+  const subjectHeaderAddon =
+    isNavigableSubjectSlug(subjectSlug) ? (
+      <>
+        <span className="note-page__subject-nav-label">Explore</span>
+        <button
+          type="button"
+          className="note-page__subject-nav-btn"
+          onClick={() => navigate(`/subject/${subjectSlug}/mindmap`)}
+        >
+          Mindmap
+        </button>
+        <button
+          type="button"
+          className="note-page__subject-nav-btn"
+          onClick={() => navigate(`/subject/${subjectSlug}/learning-path`)}
+        >
+          Learning Path
+        </button>
+      </>
+    ) : null;
+
+  const headerAddon =
+    subjectHeaderAddon || versionHeaderAddon ? (
+      <div className="note-page__header-tools">
+        {subjectHeaderAddon ? (
+          <div className="note-page__subject-nav">{subjectHeaderAddon}</div>
+        ) : null}
+        {versionHeaderAddon ? (
+          <div className="note-page__version-tools">{versionHeaderAddon}</div>
+        ) : null}
       </div>
     ) : null;
 
@@ -204,6 +237,17 @@ function NotePage() {
     if (!Array.isArray(notesIndex) || notesIndex.length === 0) return;
     navigate("/note/disclaimer.md", { replace: true });
   }, [noteSlugTrimmed, notesIndex, navigate]);
+
+  useEffect(() => {
+    if (!notesIndex || !noteSlugTrimmed) return;
+    const url = `/note/${noteSlugTrimmed.split("#")[0].replace(/^\/+/, "")}`;
+    const meta = findMeta(notesIndex, url);
+    if (!meta || !isIndexNoteItem(meta) || !subjectSlug) return;
+    const firstTopicUrl = getFirstSubjectTopicUrl(notesIndex, subjectSlug);
+    if (firstTopicUrl) {
+      navigate(firstTopicUrl, { replace: true });
+    }
+  }, [notesIndex, noteSlugTrimmed, subjectSlug, navigate]);
 
   useEffect(() => {
     if (currentSubjectId) {
@@ -382,7 +426,7 @@ function NotePage() {
               searchMatchText={searchMatchText}
               onCreateQuoteFromSelection={onCreateQuoteFromSelection}
               onAskWithSelectedText={onAskWithSelectedText}
-              headerAddon={versionHeaderAddon}
+              headerAddon={headerAddon}
             />
             <div className="note-page__complete-footer">
               {showMicroCourseLink ? (
