@@ -72,6 +72,11 @@ export function getCareerTaxonomy() {
   return careerApiRequest("/api/v1/careers/taxonomy");
 }
 
+export function getCareerJobDetail(jobId) {
+  const encodedJobId = encodeURIComponent(String(jobId || "").trim());
+  return careerApiRequest(`/api/v1/careers/jobs/${encodedJobId}`);
+}
+
 export function getSubjectJobMatches() {
   return careerApiRequest("/api/v1/careers/subject-job-matches");
 }

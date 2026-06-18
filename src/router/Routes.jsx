@@ -9,6 +9,8 @@ import SubjectEntry from "../pages/NotePage/SubjectEntry";
 import SubjectMindmap from "../pages/NotePage/SubjectEntry/SubjectMindmap";
 import UserLoginPage from "../pages/UserLoginPage";
 import UserProfilePage from "../pages/UserProfilePage";
+import ExploreCareersPage from "../pages/ExploreCareersPage";
+import CareerJobDetailPage from "../pages/CareerJobDetailPage";
 import MicroCourseDemoPage from "../pages/MicroCourseDemoPage";
 import DataCleaningMicroCoursePage from "../pages/DataCleaningMicroCoursePage";
 import SearchResultsPage from "../pages/SearchResultsPage";
@@ -74,6 +76,10 @@ function RoutesWithTracking() {
       <Route path="user/login" element={<UserLoginPage />} />
       <Route path="user/profile" element={<UserProfilePage />} />
       <Route path="user" element={<Navigate to="/user/login" replace />} />
+
+      {/* Careers */}
+      <Route path="careers" element={<ExploreCareersPage />} />
+      <Route path="careers/:jobId" element={<CareerJobDetailPage />} />
 
       {/* Search */}
       <Route path="search" element={<SearchResultsPage />} />

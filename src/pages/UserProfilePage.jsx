@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
   Avatar,
@@ -24,6 +24,7 @@ import {
 import {
   BookOutlined,
   CommentOutlined,
+  DownOutlined,
   EditOutlined,
   LogoutOutlined,
   UserOutlined,
@@ -39,6 +40,8 @@ import {
 import CareerBackgroundCard from "../common/components/careers/CareerBackgroundCard";
 import CareerRecommendationsCard from "../common/components/careers/CareerRecommendationsCard";
 import CareerSkillGapPanel from "../common/components/careers/CareerSkillGapPanel";
+import AchievementsPanel, { normalizeAchievements } from "../common/components/achievements/AchievementsPanel";
+import { extractSubjectsFromNotesIndex } from "../common/components/achievements/achievementCatalog";
 import { isConcreteNoteRoute, normalizeNoteRoute } from "../utils/notesIndexUtils";
 import AppFeatureTour from "../common/components/guide/AppFeatureTour";
 
@@ -340,6 +343,8 @@ const PREVIEW_PROFILE = {
   overview: {
     completed_lessons: 0,
     current_streak: 0,
+    max_streak: 0,
+    total_learning_days: 0,
     assistant_sessions: 0,
     notes_saved: 0,
   },
@@ -347,6 +352,7 @@ const PREVIEW_PROFILE = {
   assistant_conversations: [],
   saved_notes: [],
   completed_notes: [],
+  achievements: [],
   learning_history: [],
 };
 
@@ -374,9 +380,17 @@ function UserProfilePage() {
   const [previewNotice, setPreviewNotice] = useState("");
   const [activeDashboard, setActiveDashboard] = useState("learning");
   const [selectedCareerRole, setSelectedCareerRole] = useState("");
+  const [achievementsViewAllOpen, setAchievementsViewAllOpen] = useState(false);
+  const location = useLocation();
   const profileLearningRef = useRef(null);
   const profileCareerRef = useRef(null);
   const profileRecordsRef = useRef(null);
+
+  useEffect(() => {
+    if (location.state?.dashboard === "career") {
+      setActiveDashboard("career");
+    }
+  }, [location.state]);
 
   useEffect(() => {
     let mounted = true;
@@ -483,6 +497,15 @@ function UserProfilePage() {
     () => normalizeCompletedNotes(profileInfo),
     [profileInfo],
   );
+  const achievements = useMemo(
+    () => normalizeAchievements(profileInfo),
+    [profileInfo],
+  );
+  const achievementSubjects = useMemo(
+    () => extractSubjectsFromNotesIndex(notesIndex),
+    [notesIndex],
+  );
+  const profileOverview = profileInfo.overview || {};
 
   useEffect(() => {
     if (!recentChats.length) return;
@@ -729,9 +752,9 @@ function UserProfilePage() {
 
   const profileGuideSteps = [
     {
-      title: "Learning Progress",
+      title: "Achievements",
       description:
-        "Review completed notes and subject progress here. This supports learners who mainly want a clear study record.",
+        "Track trophies for completed subjects, learning streaks, and milestone goals instead of a plain completed-notes list.",
       target: () => profileLearningRef.current,
       placement: "bottom",
     },
@@ -884,27 +907,22 @@ function UserProfilePage() {
                         </Card>
                       </Col>
                       <Col xs={24} lg={12}>
-                        <Card type="inner" title="Completed Notes">
-                          {decoratedCompletedNotes.length > 0 ? (
-                            <List
-                              dataSource={decoratedCompletedNotes}
-                              renderItem={(item) => (
-                                <List.Item>
-                                  <List.Item.Meta
-                                    title={item.displayTitle}
-                                    description={
-                                      item.displaySubject
-                                        ? `${item.displaySubject}${item.completedAt ? ` · ${item.completedAt}` : ""}`
-                                        : item.completedAt || "Marked as completed"
-                                    }
-                                  />
-                                  <Tag color="green">Completed</Tag>
-                                </List.Item>
-                              )}
-                            />
-                          ) : (
-                            <Empty description="No completed notes yet." />
-                          )}
+                        <Card
+                          type="inner"
+                          title="Achievements"
+                          extra={
+                            <Button type="link" onClick={() => setAchievementsViewAllOpen(true)}>
+                              View all
+                            </Button>
+                          }
+                        >
+                          <AchievementsPanel
+                            achievements={achievements}
+                            overview={profileOverview}
+                            subjects={achievementSubjects}
+                            viewAllOpen={achievementsViewAllOpen}
+                            onViewAllClose={() => setAchievementsViewAllOpen(false)}
+                          />
                         </Card>
                       </Col>
                       <Col xs={24}>
@@ -1276,6 +1294,30 @@ function UserProfilePage() {
                         <Button
                           size="small"
                           type="link"
+                          onClick={() => {
+                            const jobId =
+                              selectedCareerRecommendation.job_id ||
+                              selectedCareerRecommendation.jobId ||
+                              "";
+                            if (jobId) {
+                              navigate(`/careers/${encodeURIComponent(jobId)}`);
+                              return;
+                            }
+                            const matchedProfile = careerTaxonomy.find(
+                              (item) => item?.title === selectedCareerRecommendation.title,
+                            );
+                            if (matchedProfile?.job_id || matchedProfile?.jobId) {
+                              navigate(
+                                `/careers/${encodeURIComponent(matchedProfile.job_id || matchedProfile.jobId)}`,
+                              );
+                            }
+                          }}
+                        >
+                          Open full role profile
+                        </Button>
+                        <Button
+                          size="small"
+                          type="link"
                           loading={careerGoalSaving}
                           disabled={previewMode || selectedCareerIsGoal}
                           onClick={handleAddCareerGoal}
@@ -1290,6 +1332,14 @@ function UserProfilePage() {
                 </Card>
               </Col>
             </Row>
+            <button
+              type="button"
+              className="user-profile-page__explore-careers"
+              onClick={() => navigate("/careers")}
+            >
+              <span className="user-profile-page__explore-careers-label">Explore Careers</span>
+              <DownOutlined className="user-profile-page__explore-careers-arrow" aria-hidden="true" />
+            </button>
           </Card>
         </div>
         ) : null}
