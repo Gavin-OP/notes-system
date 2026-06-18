@@ -304,7 +304,8 @@ const NoteLayout = () => {
   const themeValue = useSelector((state) => state.preference.theme);
   const language = useSelector((state) => state.preference.language);
   const isMobile = useSelector((state) => state.preference.isMobile);
-  const notesIndex = useSelector((state) => state.notesIndex.data) || [];
+  const rawNotesIndex = useSelector((state) => state.notesIndex.data);
+  const notesIndex = useMemo(() => rawNotesIndex || [], [rawNotesIndex]);
   const currentMeta = useSelector((state) => state.currentNote.meta);
   const outline = useSelector((state) => state.currentNote.outline);
   const currentNoteContent = useSelector((state) => state.currentNote.content);
@@ -963,44 +964,50 @@ const NoteLayout = () => {
 
   const noteGuideSteps = [
     {
-      title: "Notes Area",
+      title: "Three Ways to Learn",
       description:
-        "This is your main reading canvas. Focus here to absorb concepts and mark progress as you learn.",
+        "The workspace is built around three equal paths: read Notes deeply, explore ideas visually in Mindmap, and optionally connect learning to Career goals.",
+      placement: "bottom",
+    },
+    {
+      title: "Notes: Deep Reading",
+      description:
+        "Use the note canvas for focused study. Read concepts, save useful passages, ask the assistant, and mark notes completed as you go.",
       target: () => noteAreaRef.current,
       placement: "right",
     },
     {
-      title: "Directory Area",
+      title: "Notes: Course Order",
       description:
-        "Use this sidebar like your learning map: switch subjects and jump to the next note in one click.",
+        "The sidebar still gives a clean course sequence for learners who simply want to progress through a subject step by step.",
       target: () => directoryAreaRef.current,
       placement: "right",
     },
     {
-      title: "Current Note Outline",
+      title: "Mindmap: Explore Connections",
       description:
-        "Need a quick structure check? Open Outline to scan sections before deep reading.",
-      target: () => outlineTabRef.current,
-      placement: "left",
+        "Use Explore > Mindmap when you want a visual map of concepts and relationships instead of a linear course list.",
+      target: () => document.querySelector(".note-page__subject-nav"),
+      placement: "bottom",
     },
     {
-      title: "AI Assistant Workspace",
+      title: "Learning Support",
       description:
-        "Your AI learning companion lives here: ask Q&A, jot ideas in Scratchpad, and test yourself with Quiz.",
+        "The assistant area supports both structured learners and explorers: ask Q&A, build personal notes, and test yourself with Quiz.",
       target: () => assistantAreaRef.current,
       placement: "left",
     },
     {
-      title: "Play Note Narration",
+      title: "Optional Audio Review",
       description:
-        "Prefer audio learning? Play narration to review the note hands-free while keeping your place.",
+        "Prefer audio learning? Play narration to review a note hands-free while keeping your place.",
       target: () => narrationGuideRef.current,
       placement: "bottom",
     },
     {
-      title: "User Profile",
+      title: "Career: Goal Path",
       description:
-        "Track your growth in User Profile. You are all set now, start your learning journey and enjoy the momentum!",
+        "Career tools are optional but powerful: add goals, compare matches, and turn skill gaps into a concrete learning path when you want direction.",
       target: () => profileGuideRef.current,
       placement: "bottom",
     },

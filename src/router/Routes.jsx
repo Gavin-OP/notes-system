@@ -7,7 +7,6 @@ import NotePage from "../pages/NotePage";
 import HomePage from "../pages/HomePage";
 import SubjectEntry from "../pages/NotePage/SubjectEntry";
 import SubjectMindmap from "../pages/NotePage/SubjectEntry/SubjectMindmap";
-import SubjectLearningPath from "../pages/NotePage/SubjectEntry/SubjectLearningPath";
 import UserLoginPage from "../pages/UserLoginPage";
 import UserProfilePage from "../pages/UserProfilePage";
 import MicroCourseDemoPage from "../pages/MicroCourseDemoPage";
@@ -45,13 +44,11 @@ function RoutesWithTracking() {
       {/* Legacy redirects for old URLs */}
       <Route path="data-science/mindmap" element={<Navigate to="../subject/data-science/mindmap" replace />} />
       <Route path="python/mindmap" element={<Navigate to="../subject/python/mindmap" replace />} />
-      <Route path="python/learning-path" element={<Navigate to="../subject/python/learning-path" replace />} />
 
-      {/* Subject-specific routes (mindmap, learning-path) */}
+      {/* Subject-specific routes (mindmap) */}
       {/* Dynamic routing: /subject/:subjectId/mindmap */}
       <Route path="subject/:subjectId" element={<SubjectEntry />}>
         <Route path="mindmap" element={<SubjectMindmap />} />
-        <Route path="learning-path" element={<SubjectLearningPath />} />
       </Route>
 
       {/* Note content routes */}

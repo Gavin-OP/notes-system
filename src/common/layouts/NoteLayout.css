@@ -76,21 +76,40 @@
   font-size: 14px;
 }
 
+.note-layout__menu .ant-menu-item,
+.note-layout__menu .ant-menu-submenu-title {
+  height: auto !important;
+  line-height: 1.4 !important;
+  white-space: normal !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  overflow: visible !important;
+}
+
+.note-layout__menu .ant-menu-title-content {
+  white-space: normal !important;
+  overflow: visible !important;
+}
+
 .note-layout__menu-note-label {
-  display: inline-flex;
-  align-items: center;
+  display: flex;
+  align-items: stretch;
   gap: 8px;
   min-width: 0;
+  width: 100%;
 }
 
 .note-layout__menu-note-marker-wrap {
   position: relative;
   width: 16px;
-  height: 20px;
-  display: inline-flex;
-  align-items: center;
+  align-self: stretch;
+  min-height: 20px;
+  display: flex;
+  align-items: flex-start;
   justify-content: center;
   flex-shrink: 0;
+  padding-top: 2px;
+  box-sizing: border-box;
 }
 
 .note-layout__menu-note-marker-wrap::before,
@@ -100,17 +119,17 @@
   left: 50%;
   transform: translateX(-50%);
   width: 2px;
-  background: var(--line-top-color, #d9d9d9);
 }
 
 .note-layout__menu-note-marker-wrap::before {
-  top: -10px;
-  height: 10px;
+  top: -8px;
+  height: calc(8px + 2px + 5px);
+  background: var(--line-top-color, #d9d9d9);
 }
 
 .note-layout__menu-note-marker-wrap::after {
-  bottom: -10px;
-  height: 10px;
+  top: calc(2px + 5px);
+  bottom: -8px;
   background: var(--line-bottom-color, #d9d9d9);
 }
 
@@ -123,12 +142,15 @@
 }
 
 .note-layout__menu-note-marker {
+  position: relative;
+  z-index: 1;
   width: 10px;
   height: 10px;
   border-radius: 50%;
   border: 2px solid #d9d9d9;
   background: #fff;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .note-layout__menu-note-label--done .note-layout__menu-note-marker {
@@ -148,9 +170,13 @@
 
 .note-layout__menu-note-text {
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  flex: 1;
+  align-self: flex-start;
+  padding-top: 2px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
 }
 
 .note-layout__search-option {

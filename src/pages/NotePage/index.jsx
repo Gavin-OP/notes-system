@@ -88,7 +88,10 @@ function NotePage() {
   const activeQuoteId = noteSearchParams.get("quoteId") || "";
   const searchQuery = noteSearchParams.get("search") || "";
   const searchMatchText = noteSearchParams.get("match") || "";
-  const noteQuotes = Array.isArray(outletContext.noteQuotes) ? outletContext.noteQuotes : [];
+  const noteQuotes = useMemo(
+    () => (Array.isArray(outletContext.noteQuotes) ? outletContext.noteQuotes : []),
+    [outletContext.noteQuotes],
+  );
   const onToggleCurrentNoteCompletion =
     typeof outletContext.onToggleCurrentNoteCompletion === "function"
       ? outletContext.onToggleCurrentNoteCompletion
@@ -194,13 +197,6 @@ function NotePage() {
           onClick={() => navigate(`/subject/${subjectSlug}/mindmap`)}
         >
           Mindmap
-        </button>
-        <button
-          type="button"
-          className="note-page__subject-nav-btn"
-          onClick={() => navigate(`/subject/${subjectSlug}/learning-path`)}
-        >
-          Learning Path
         </button>
       </>
     ) : null;

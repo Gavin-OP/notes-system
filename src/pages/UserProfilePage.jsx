@@ -33,6 +33,7 @@ import {
   getCareerTaxonomy,
   getMyCareerBackground,
   getMyCareerRecommendations,
+  getSubjectJobMatches,
   updateMyCareerBackground,
 } from "../common/api/careers";
 import CareerBackgroundCard from "../common/components/careers/CareerBackgroundCard";
@@ -280,6 +281,45 @@ function formatScore(value) {
   return Number.isFinite(numeric) ? Math.round(numeric) : 0;
 }
 
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9+#.\s-]+/g, " ")
+    .replace(/[-_/]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function uniqueValues(values = []) {
+  return [
+    ...new Set(
+      values
+        .map((value) => String(value || "").trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
+function getCareerSkillGaps(recommendation) {
+  return (recommendation?.skill_gaps || recommendation?.skillGaps || []).filter(Boolean);
+}
+
+function getMatchJobTitle(match) {
+  return match?.job_title || match?.jobTitle || "";
+}
+
+function getMatchSubjectSlug(match) {
+  return match?.subject_slug || match?.subjectSlug || match?.subject_id || match?.subjectId || "";
+}
+
+function getMatchSubjectTitle(match) {
+  return match?.subject_title || match?.subjectTitle || slugToSubjectTitle(getMatchSubjectSlug(match));
+}
+
+function getMatchTerms(match) {
+  return (match?.matched_terms || match?.matchedTerms || []).filter(Boolean);
+}
+
 function normalizeCareerBackgroundForForm(background = {}) {
   return {
     knowledgeAreas: background.knowledge_areas || background.knowledgeAreas || [],
@@ -325,6 +365,7 @@ function UserProfilePage() {
   const [careerRecommendations, setCareerRecommendations] = useState([]);
   const [careerBackground, setCareerBackground] = useState({});
   const [careerTaxonomy, setCareerTaxonomy] = useState([]);
+  const [subjectJobMatches, setSubjectJobMatches] = useState([]);
   const [careerLoading, setCareerLoading] = useState(false);
   const [careerSaving, setCareerSaving] = useState(false);
   const [careerGoalSaving, setCareerGoalSaving] = useState(false);
@@ -399,18 +440,20 @@ function UserProfilePage() {
       setCareerLoading(true);
       setCareerErrorText("");
       try {
-        const [recommendationsPayload, backgroundPayload, taxonomyPayload] = await Promise.all([
+        const [recommendationsPayload, backgroundPayload, taxonomyPayload, subjectMatchesPayload] = await Promise.all([
           getMyCareerRecommendations({
             limit: CAREER_RECOMMENDATION_LIMIT,
             minimumMatchScore: CAREER_MATCH_MIN_SCORE,
           }),
           getMyCareerBackground(),
           getCareerTaxonomy(),
+          getSubjectJobMatches(),
         ]);
         if (!mounted) return;
         setCareerRecommendations(recommendationsPayload?.recommendations || []);
         setCareerBackground(backgroundPayload || {});
         setCareerTaxonomy(taxonomyPayload?.profiles || []);
+        setSubjectJobMatches(subjectMatchesPayload?.matches || []);
       } catch (error) {
         if (!mounted) return;
         setCareerErrorText(error instanceof Error ? error.message : "Failed to load career data.");
@@ -549,6 +592,31 @@ function UserProfilePage() {
     [selectedCareerRole, visibleCareerRecommendations],
   );
 
+  const selectedRoleSubjectMatches = useMemo(() => {
+    const normalizedRole = normalizeText(selectedCareerRole);
+    if (!normalizedRole) return [];
+    return subjectJobMatches
+      .filter((match) => normalizeText(getMatchJobTitle(match)) === normalizedRole)
+      .sort((a, b) => (b.score || 0) - (a.score || 0));
+  }, [selectedCareerRole, subjectJobMatches]);
+
+  const selectedCareerSubjects = useMemo(
+    () => selectedRoleSubjectMatches.map((match) => ({
+      title: getMatchSubjectTitle(match),
+      slug: getMatchSubjectSlug(match),
+      score: formatScore((match.score || 0) * 100),
+    })),
+    [selectedRoleSubjectMatches],
+  );
+
+  const selectedCareerSkills = useMemo(
+    () => uniqueValues([
+      ...getCareerSkillGaps(selectedCareerRecommendation).map((gap) => gap.skill),
+      ...selectedRoleSubjectMatches.flatMap((match) => getMatchTerms(match)),
+    ]),
+    [selectedCareerRecommendation, selectedRoleSubjectMatches],
+  );
+
   const selectedCareerIsGoal = useMemo(() => {
     return careerGoals.some(
       (item) => String(item || "").trim().toLowerCase() === selectedCareerRole.toLowerCase(),
@@ -566,7 +634,7 @@ function UserProfilePage() {
     }
   }, [selectedCareerRole, visibleCareerRecommendations]);
 
-  const continueLearningPath = useMemo(() => {
+  const continueLearningUrl = useMemo(() => {
     const FALLBACK_NOTE = "/note/disclaimer.md";
 
     const tried = [];
@@ -661,23 +729,23 @@ function UserProfilePage() {
 
   const profileGuideSteps = [
     {
-      title: "Learning Records",
+      title: "Learning Progress",
       description:
-        "Review subject progress, completed notes, and your learning timeline in one place.",
+        "Review completed notes and subject progress here. This supports learners who mainly want a clear study record.",
       target: () => profileLearningRef.current,
       placement: "bottom",
     },
     {
-      title: "Interaction Records",
+      title: "Exploration Records",
       description:
-        "Revisit recent AI conversations and saved notes from your study workflow.",
+        "Revisit AI conversations and saved note passages. This is the memory layer for open-ended exploration.",
       target: () => profileRecordsRef.current,
       placement: "right",
     },
     {
-      title: "Career Planning",
+      title: "Career Goals",
       description:
-        "Maintain your background, compare career matches, and identify skill gaps to close.",
+        "Career planning is optional: add goals when you want the system to turn skill gaps into a practical learning path.",
       target: () => profileCareerRef.current,
       placement: "left",
     },
@@ -763,7 +831,7 @@ function UserProfilePage() {
                 <Button type="primary" icon={<EditOutlined />} disabled={previewMode}>
                   Edit profile
                 </Button>
-                <Button icon={<BookOutlined />} onClick={() => navigate(continueLearningPath)}>
+                <Button icon={<BookOutlined />} onClick={() => navigate(continueLearningUrl)}>
                   Continue learning
                 </Button>
                 <Button icon={<LogoutOutlined />} onClick={handleLogout} disabled={previewMode}>
@@ -1155,6 +1223,34 @@ function UserProfilePage() {
                         {selectedCareerRecommendation.reasoning ||
                           "This role has partial overlap with your learning record."}
                       </Paragraph>
+                      <div className="user-profile-page__role-related">
+                        <Text strong>Related Subjects</Text>
+                        <div className="user-profile-page__tag-wall">
+                          {selectedCareerSubjects.length > 0 ? (
+                            selectedCareerSubjects.map((subject) => (
+                              <Tag key={`role-subject-${subject.slug}`} color="blue">
+                                {subject.title} {subject.score ? `${subject.score}%` : ""}
+                              </Tag>
+                            ))
+                          ) : (
+                            <Text type="secondary">No subject links yet.</Text>
+                          )}
+                        </div>
+                      </div>
+                      <div className="user-profile-page__role-related">
+                        <Text strong>Related Skills</Text>
+                        <div className="user-profile-page__tag-wall">
+                          {selectedCareerSkills.length > 0 ? (
+                            selectedCareerSkills.slice(0, 12).map((skill) => (
+                              <Tag key={`role-skill-${skill}`} color="purple">
+                                {skill}
+                              </Tag>
+                            ))
+                          ) : (
+                            <Text type="secondary">No related skills yet.</Text>
+                          )}
+                        </div>
+                      </div>
                       <Space wrap size={[8, 8]}>
                         {(selectedCareerRecommendation.skill_gaps ||
                           selectedCareerRecommendation.skillGaps ||

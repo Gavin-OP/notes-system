@@ -257,6 +257,12 @@
   margin: -8px -10px 0;
 }
 
+.user-profile-page__role-related {
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: rgba(22, 119, 255, 0.04);
+}
+
 .user-profile-page__contrib-tooltip {
   max-width: 280px;
   font-size: 12px;
@@ -341,6 +347,11 @@
 
 [data-theme="dark"] .career-recommendation-card.is-active {
   background: rgba(22, 119, 255, 0.2);
+}
+
+[data-theme="dark"] .user-profile-page__role-related {
+  border-color: rgba(22, 119, 255, 0.32);
+  background: rgba(22, 119, 255, 0.12);
 }
 
 .user-profile-page .ant-card {

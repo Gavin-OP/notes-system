@@ -137,10 +137,10 @@ function NoteHeader({
         </span>
         {Array.isArray(notesGuideSteps) && notesGuideSteps.length > 0 ? (
           <AppFeatureTour
-            guideKey="notes_page"
+            guideKey="product_pillars_v1"
             steps={notesGuideSteps}
             iconOnly
-            buttonAriaLabel="Open notes guide"
+            buttonAriaLabel="Open product guide"
             triggerClassName="note-header__guide-trigger"
           />
         ) : null}
