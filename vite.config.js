@@ -26,5 +26,31 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (!id.includes("node_modules")) return undefined;
+            if (id.includes("/mermaid/")) return "mermaid";
+            if (
+              id.includes("/react-force-graph") ||
+              id.includes("/3d-force-graph") ||
+              id.includes("/three/") ||
+              id.includes("/three-spritetext") ||
+              id.includes("/d3-force-3d")
+            ) {
+              return "graph-3d";
+            }
+            if (id.includes("/antd/") || id.includes("/antd-mobile/") || id.includes("/@ant-design/")) {
+              return "antd";
+            }
+            if (id.includes("/react/") || id.includes("/react-dom/") || id.includes("/react-router-dom/")) {
+              return "react-vendor";
+            }
+            return "vendor";
+          },
+        },
+      },
+    },
   };
 });

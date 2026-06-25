@@ -1,6 +1,7 @@
 import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
+import DOMPurify from "dompurify";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
@@ -8,8 +9,6 @@ import remarkSlug from "remark-slug";
 import rehypeRaw from "rehype-raw";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
-import { rehypeMermaid, MermaidBlock } from "react-markdown-mermaid";
-import Mermaid from "react-mermaid2";
 
 import "katex/dist/katex.min.css";
 
@@ -27,6 +26,64 @@ const themeCssMap = {
 };
 
 const MARKDOWN_REMARK_PLUGINS = [remarkGfm, remarkMath, remarkHighlightMark, remarkSlug];
+
+const MARKDOWN_HTML_ALLOWLIST = {
+  ALLOWED_TAGS: ["a", "br", "span", "sub", "sup", "kbd"],
+  ALLOWED_ATTR: ["id", "name", "href", "title", "class"],
+  ALLOW_DATA_ATTR: false,
+};
+
+function sanitizeMarkdownContent(content) {
+  return DOMPurify.sanitize(String(content || ""), MARKDOWN_HTML_ALLOWLIST);
+}
+
+function MermaidDiagram({ chart }) {
+  const idRef = useRef(`mermaid-${Math.random().toString(36).slice(2)}`);
+  const [svg, setSvg] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    async function renderDiagram() {
+      setSvg("");
+      setError("");
+      try {
+        const { default: mermaid } = await import("mermaid");
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: "strict",
+          theme: "default",
+          flowchart: { useMaxWidth: true },
+        });
+        const { svg: renderedSvg } = await mermaid.render(idRef.current, chart);
+        if (cancelled) return;
+        setSvg(DOMPurify.sanitize(renderedSvg, { USE_PROFILES: { svg: true, svgFilters: true } }));
+      } catch {
+        if (cancelled) return;
+        setError("Unable to render Mermaid diagram.");
+      }
+    }
+    renderDiagram();
+    return () => {
+      cancelled = true;
+    };
+  }, [chart]);
+
+  if (error) {
+    return <pre className="md-fences">{chart}</pre>;
+  }
+
+  if (!svg) {
+    return <div className="markdown-mermaid-placeholder" aria-label="Loading diagram" />;
+  }
+
+  return (
+    <div
+      className="markdown-mermaid"
+      dangerouslySetInnerHTML={{ __html: svg }}
+    />
+  );
+}
 
 function MarkdownImage({ finalSrc, style, src: _discardSrc, ...imgRest }) {
   const imgStyle = {
@@ -336,12 +393,11 @@ const HeadingWithCopy = ({
 const MarkdownContent = memo(function MarkdownContent({
   content,
   components,
-  rehypePlugins,
 }) {
   return (
     <ReactMarkdown
       remarkPlugins={MARKDOWN_REMARK_PLUGINS}
-      rehypePlugins={rehypePlugins}
+      rehypePlugins={[rehypeRaw, [rehypeKatex, { strict: false }], rehypeHighlight]}
       components={components}
     >
       {content}
@@ -370,6 +426,7 @@ const MarkdownRenderer = ({
   const noteDirectory = useSelector(
     (state) => state.currentNote.meta?.directory,
   );
+  const safeContent = useMemo(() => sanitizeMarkdownContent(content), [content]);
 
   const confirmedQuotes = useMemo(
     () => (Array.isArray(noteQuotes) ? noteQuotes.filter((quote) => quote?.selected_text || quote?.selectedText) : []),
@@ -724,12 +781,27 @@ const MarkdownRenderer = ({
       },
 
       // code block formatting
-      pre({ node, ...props }) {
-        return <pre className="md-fences" {...props} />;
+      pre({ children, ...props }) {
+        if (children?.type === MermaidDiagram) {
+          return children;
+        }
+        return <pre className="md-fences" {...props}>{children}</pre>;
+      },
+
+      code({ children, className, ...props }) {
+        const codeText = String(children || "").replace(/\n$/, "");
+        if (/\blanguage-mermaid\b/.test(className || "")) {
+          return <MermaidDiagram chart={codeText} />;
+        }
+        return (
+          <code className={className} {...props}>
+            {children}
+          </code>
+        );
       },
 
       // table styling
-      table({ node, ...props }) {
+      table(props) {
         return <table className="markdown-table" {...props} />;
       },
 
@@ -751,27 +823,8 @@ const MarkdownRenderer = ({
         return <li {...props}>{children}</li>;
       },
 
-      MermaidBlock: MermaidBlock,
     }),
     [completionPending, headerAddon, isCompleted, noteDirectory, onMarkComplete],
-  );
-
-  const rehypePlugins = useMemo(
-    () => [
-      [rehypeRaw],
-      [rehypeKatex, { strict: false }],
-      [rehypeHighlight],
-      [
-        rehypeMermaid,
-        {
-          mermaidConfig: {
-            theme: theme === "dark" ? "dark" : "default",
-            flowchart: { useMaxWidth: true },
-          },
-        },
-      ],
-    ],
-    [theme],
   );
 
   return (
@@ -781,7 +834,7 @@ const MarkdownRenderer = ({
       onPointerDownCapture={handleSelectionPointerDownCapture}
       onMouseUp={handleSelectionMouseUp}
     >
-      <MarkdownContent content={content} components={components} rehypePlugins={rehypePlugins} />
+      <MarkdownContent content={safeContent} components={components} />
       {selectionToolbar ? (
         <div
           className="note-selection-toolbar"

@@ -334,7 +334,7 @@ export async function loadConceptReviewContent(concept, options = {}) {
 }
 
 export async function generateConceptQuiz(concept, noteContent, sectionText) {
-  const { context, section, mentionSnippets } = buildReviewContext(concept, noteContent);
+  const { context, mentionSnippets } = buildReviewContext(concept, noteContent);
   const quizContext = sectionText || context || mentionSnippets.join("\n\n") || noteContent.slice(0, 12000);
 
   const response = await requestAssistantQuiz({

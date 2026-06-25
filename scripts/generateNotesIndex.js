@@ -24,7 +24,6 @@ import { execSync } from "child_process";
 import yaml from "js-yaml";
 import matter from "gray-matter";
 import { fileURLToPath } from "url";
-import { url } from "inspector";
 
 const imageExts = [
   ".png",
@@ -54,8 +53,8 @@ function logError(message) {
 function formatSlug(str) {
   // replace space with -, remove /, all lower case
   let slug = str.replace(/\s+/g, "-").replace(/\/+/, "").toLowerCase();
-  slug = slug.replace(/^[\.]+/, ""); // remove leading dots
-  slug = slug.replace(/^[\-]+/, ""); // remove leading hyphens
+  slug = slug.replace(/^\.+/, ""); // remove leading dots
+  slug = slug.replace(/^-+/, ""); // remove leading hyphens
   return slug;
 }
 
@@ -72,7 +71,7 @@ function getGitInfo(filePath) {
       },
     ).trim();
     return { name, time };
-  } catch (e) {
+  } catch {
     return { name: "", time: "" };
   }
 }
@@ -208,7 +207,7 @@ function collectUsedImages(notesDir) {
         // 匹配 ![alt](path) 和 <img src="path">
         const mdLinks = [...content.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)];
         const htmlLinks = [
-          ...content.matchAll(/<img[^>]*src=[\"']([^\"']+)[\"']/g),
+          ...content.matchAll(/<img[^>]*src=["']([^"']+)["']/g),
         ];
         for (const m of mdLinks) {
           // 统一为相对于 notesDir 的路径
@@ -238,7 +237,7 @@ function processImageMeta(fullPath, notesDir, parentSlugs, urlSet, usedImages) {
     .replace(/\s+/g, "-")
     .replace(/\/+/, "")
     .toLowerCase()
-    .replace(/^[\\.\\-]+/, "");
+    .replace(/^[.-]+/, "");
   const url = "/note/" + [...parentSlugs, slug].filter(Boolean).join("/");
   if (urlSet.has(url)) {
     logError(`Duplicate url detected: ${url}`);

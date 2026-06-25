@@ -37,7 +37,6 @@ function SearchResultsPage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
-  const initialSubject = searchParams.get("subject") || "";
   const [queryInput, setQueryInput] = useState(initialQuery);
   const [payload, setPayload] = useState(null);
   const [results, setResults] = useState([]);

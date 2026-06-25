@@ -154,7 +154,7 @@ async function fetchSubjectGraphData(subjectId) {
       const response = await fetch(path);
       if (!response.ok) return null;
       return await response.json();
-    } catch (error) {
+    } catch {
       return null;
     }
   };
@@ -212,7 +212,7 @@ export const fetchNotesIndex = createAsyncThunk(
           if (graphNotesIndex.length > 0) {
             subjectNotesOverrides[subjectId] = graphNotesIndex;
           }
-        } catch (error) {
+        } catch {
           // Ignore per-subject graph failure at boot, keep base notes-index visible.
         }
       })

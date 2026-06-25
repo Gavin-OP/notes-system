@@ -10,7 +10,7 @@ async function tryFetchJson(url) {
     const response = await fetch(url);
     if (!response.ok) return null;
     return await response.json();
-  } catch (error) {
+  } catch {
     return null;
   }
 }

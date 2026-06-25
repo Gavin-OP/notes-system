@@ -52,7 +52,7 @@ const RadialMindmapView = ({
   );
 
   // Handle chart ready event
-  const onChartReady = useCallback((echartInstance) => {
+  const onChartReady = useCallback(() => {
     // Optional: Store reference for external control
     console.log("Radial mindmap chart ready");
   }, []);
@@ -81,4 +81,3 @@ const RadialMindmapView = ({
 };
 
 export default RadialMindmapView;
-

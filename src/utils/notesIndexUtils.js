@@ -295,7 +295,7 @@ function replaceSubjectFolderWithGraphNotes(baseNotesIndex = [], subjectId, grap
     return baseNotesIndex;
   }
 
-  const mergeChildrenPreservingIndex = (baseChildren = [], graphChildren = []) => {
+  const mergeChildrenPreservingIndex = (_baseChildren = [], graphChildren = []) => {
     const graphByUrl = new Map();
     graphChildren.forEach((child) => {
       if (!child || typeof child !== "object") return;

@@ -2,6 +2,14 @@ function getAssistantBaseUrl() {
   return (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
 }
 
+const ASSISTANT_LIMITS = {
+  questionChars: 2000,
+  noteContentChars: 50000,
+  references: 10,
+  attachments: 5,
+  attachmentBytes: 10 * 1024 * 1024,
+};
+
 function buildAssistantUrl(path) {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   const baseUrl = getAssistantBaseUrl();
@@ -45,6 +53,66 @@ function resolveErrorMessage(payload, fallback) {
   return fallback;
 }
 
+function textLength(value) {
+  return String(value || "").length;
+}
+
+function validateTextLength(value, maxLength, label) {
+  if (textLength(value) > maxLength) {
+    throw new Error(`${label} must be ${maxLength} characters or fewer.`);
+  }
+}
+
+function validateAssistantContext(payload) {
+  validateTextLength(payload?.currentNote?.content, ASSISTANT_LIMITS.noteContentChars, "Current note content");
+  const references = Array.isArray(payload?.references) ? payload.references : [];
+  if (references.length > ASSISTANT_LIMITS.references) {
+    throw new Error(`Please select at most ${ASSISTANT_LIMITS.references} reference notes.`);
+  }
+  references.forEach((reference, index) => {
+    validateTextLength(
+      reference?.content,
+      ASSISTANT_LIMITS.noteContentChars,
+      `Reference ${index + 1} content`,
+    );
+  });
+}
+
+function validateAssistantQaPayload(payload) {
+  validateTextLength(payload?.question, ASSISTANT_LIMITS.questionChars, "Question");
+  validateAssistantContext(payload);
+}
+
+function validateAssistantQuizPayload(payload) {
+  validateTextLength(payload?.objective, ASSISTANT_LIMITS.questionChars, "Quiz objective");
+  validateTextLength(payload?.customInstruction, ASSISTANT_LIMITS.questionChars, "Quiz instruction");
+  validateAssistantContext(payload);
+}
+
+function validateAssistantQuizEvaluationPayload(payload) {
+  validateTextLength(payload?.userAnswer, ASSISTANT_LIMITS.questionChars, "Quiz answer");
+  validateAssistantContext(payload);
+}
+
+function buildAttachmentMeta(images, attachments) {
+  return {
+    images: images.map((file) => ({ name: file.name || "", size: file.size, type: file.type || "" })),
+    attachments: attachments.map((file) => ({ name: file.name || "", size: file.size, type: file.type || "" })),
+  };
+}
+
+function validateAssistantFiles(images, attachments) {
+  const allFiles = [...images, ...attachments];
+  if (allFiles.length > ASSISTANT_LIMITS.attachments) {
+    throw new Error(`Please attach at most ${ASSISTANT_LIMITS.attachments} files.`);
+  }
+  allFiles.forEach((file) => {
+    if (typeof file.size === "number" && file.size > ASSISTANT_LIMITS.attachmentBytes) {
+      throw new Error("Each attached file must be 10MB or smaller.");
+    }
+  });
+}
+
 async function assistantRequest(path, init = {}) {
   const headers = new Headers(init.headers || {});
   const isFormData = typeof FormData !== "undefined" && init.body instanceof FormData;
@@ -55,6 +123,7 @@ async function assistantRequest(path, init = {}) {
   const response = await fetch(buildAssistantUrl(path), {
     ...init,
     headers,
+    credentials: "include",
   });
 
   const rawText = await response.text();
@@ -69,10 +138,16 @@ export function requestAssistantQa(payload, files = {}) {
   const images = Array.isArray(files.images) ? files.images : [];
   const attachments = Array.isArray(files.attachments) ? files.attachments : [];
   const hasFiles = images.length > 0 || attachments.length > 0;
+  validateAssistantFiles(images, attachments);
+  const safePayload = {
+    ...payload,
+    attachmentMeta: buildAttachmentMeta(images, attachments),
+  };
+  validateAssistantQaPayload(safePayload);
 
   if (hasFiles) {
     const formData = new FormData();
-    formData.append("payload", JSON.stringify(payload));
+    formData.append("payload", JSON.stringify(safePayload));
     images.forEach((file) => formData.append("images[]", file));
     attachments.forEach((file) => formData.append("attachments[]", file));
     return assistantRequest("/api/v1/assistant/qa", {
@@ -83,11 +158,12 @@ export function requestAssistantQa(payload, files = {}) {
 
   return assistantRequest("/api/v1/assistant/qa", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify(safePayload),
   });
 }
 
 export function requestAssistantQuiz(payload) {
+  validateAssistantQuizPayload(payload);
   return assistantRequest("/api/v1/assistant/quiz", {
     method: "POST",
     body: JSON.stringify(payload),
@@ -95,6 +171,7 @@ export function requestAssistantQuiz(payload) {
 }
 
 export function requestAssistantQuizEvaluate(payload) {
+  validateAssistantQuizEvaluationPayload(payload);
   return assistantRequest("/api/v1/assistant/quiz/evaluate", {
     method: "POST",
     body: JSON.stringify(payload),
