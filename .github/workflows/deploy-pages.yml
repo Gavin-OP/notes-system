@@ -19,16 +19,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+
       - run: npm install --no-audit --no-fund
+
       - run: npm run generate:notes
-      - run: npm run build
-      # SPA 路由直刷兜底（很重要）
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+
+      # SPA 路由直刷兜底
       - run: cp dist/index.html dist/404.html
+
       - run: touch dist/.nojekyll
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
