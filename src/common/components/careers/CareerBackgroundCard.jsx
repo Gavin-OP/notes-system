@@ -1,5 +1,7 @@
 import { Button, Empty, Form, Select, Space, Tag, Typography } from "antd";
 
+import { formatCareerRoleLabel } from "../../utils/careerDisplayUtils";
+
 const { Text } = Typography;
 
 const KNOWLEDGE_OPTIONS = [
@@ -64,7 +66,12 @@ function buildTaxonomyOptions(taxonomy = [], normalized = {}, inferredKnowledge 
       ...(normalized.tools || []),
     ]),
     careers: dedupeValues([
-      ...profiles.map((profile) => profile.title),
+      ...profiles.map((profile) =>
+        formatCareerRoleLabel(
+          profile.title,
+          profile.experience_level || profile.experienceLevel,
+        ),
+      ),
       ...(normalized.careerInterests || []),
     ]),
   };

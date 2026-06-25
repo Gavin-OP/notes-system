@@ -54,6 +54,27 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
+  min-width: 0;
+}
+
+.career-job-detail-page__degree-list {
+  width: 100%;
+}
+
+.career-job-detail-page__degree-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.career-job-detail-page__degree-level {
+  display: block;
+}
+
+.career-job-detail-page__degree-row .career-job-detail-page__tag-wall {
+  margin-top: 0;
 }
 
 .career-job-detail-page__subject-card {

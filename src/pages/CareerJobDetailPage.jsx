@@ -16,23 +16,33 @@ import {
 import { ArrowLeftOutlined, BookOutlined } from "@ant-design/icons";
 
 import { getCareerJobDetail } from "../common/api/careers";
+import {
+  formatCareerRoleLabel,
+  formatExperienceLevel,
+  getExperienceLevelTagColor,
+  normalizeDegreeRequirements,
+} from "../common/utils/careerDisplayUtils";
 
 import "./CareerJobDetailPage.css";
 
 const { Paragraph, Text, Title } = Typography;
 
 function normalizeProfile(profile = {}) {
+  const title = profile.title || "Career role";
+  const rawExperienceLevel = profile.experience_level || profile.experienceLevel || "unspecified";
   return {
     jobId: profile.job_id || profile.jobId || "",
-    title: profile.title || "Career role",
+    title,
+    roleLabel: formatCareerRoleLabel(title, rawExperienceLevel),
     description: profile.description || "",
     responsibilities: profile.responsibilities || [],
     hardSkills: profile.hard_skills || profile.hardSkills || [],
     softSkills: profile.soft_skills || profile.softSkills || [],
     tools: profile.tools || [],
-    experienceLevel: profile.experience_level || profile.experienceLevel || "unspecified",
+    rawExperienceLevel,
+    experienceLevel: formatExperienceLevel(rawExperienceLevel),
+    experienceLevelColor: getExperienceLevelTagColor(rawExperienceLevel),
     degreeRequirements: profile.degree_requirements || profile.degreeRequirements || [],
-    sourceCompanies: profile.source_companies || profile.sourceCompanies || [],
   };
 }
 
@@ -84,16 +94,10 @@ function CareerJobDetailPage() {
     };
   }, [decodedJobId]);
 
-  const degreeLabels = useMemo(() => {
-    return (profile?.degreeRequirements || []).map((item, index) => {
-      const level = item.level || "unspecified";
-      const fields = item.fields || [];
-      return {
-        id: `${level}-${index}`,
-        label: fields.length ? `${level}: ${fields.join(", ")}` : level,
-      };
-    });
-  }, [profile]);
+  const degreeRequirements = useMemo(
+    () => normalizeDegreeRequirements(profile?.degreeRequirements || []),
+    [profile],
+  );
 
   if (loading) {
     return (
@@ -131,10 +135,7 @@ function CareerJobDetailPage() {
                 {profile.title}
               </Title>
               <Space wrap>
-                <Tag color="blue">{profile.experienceLevel}</Tag>
-                {profile.sourceCompanies.slice(0, 3).map((company) => (
-                  <Tag key={company}>{company}</Tag>
-                ))}
+                <Tag color={profile.experienceLevelColor}>{profile.experienceLevel}</Tag>
               </Space>
               <Paragraph className="career-job-detail-page__description">{profile.description}</Paragraph>
             </Space>
@@ -204,10 +205,23 @@ function CareerJobDetailPage() {
               </Card>
 
               <Card title="Degree Requirements" className="career-job-detail-page__section">
-                {degreeLabels.length ? (
-                  <Space wrap>
-                    {degreeLabels.map((item) => (
-                      <Tag key={item.id}>{item.label}</Tag>
+                {degreeRequirements.length ? (
+                  <Space direction="vertical" size={12} className="career-job-detail-page__degree-list">
+                    {degreeRequirements.map((item) => (
+                      <div key={item.level} className="career-job-detail-page__degree-row">
+                        <Text strong className="career-job-detail-page__degree-level">
+                          {item.level}
+                        </Text>
+                        {item.fields.length ? (
+                          <div className="career-job-detail-page__tag-wall">
+                            {item.fields.map((field) => (
+                              <Tag key={`${item.level}-${field}`}>{field}</Tag>
+                            ))}
+                          </div>
+                        ) : (
+                          <Text type="secondary">No specific fields listed.</Text>
+                        )}
+                      </div>
                     ))}
                   </Space>
                 ) : (

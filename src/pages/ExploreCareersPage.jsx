@@ -4,6 +4,11 @@ import { Alert, Button, Card, Col, Empty, Input, Row, Space, Spin, Tag, Typograp
 import { SearchOutlined, UpOutlined } from "@ant-design/icons";
 
 import { getCareerTaxonomy } from "../common/api/careers";
+import {
+  formatCareerRoleLabel,
+  formatExperienceLevel,
+  getExperienceLevelTagColor,
+} from "../common/utils/careerDisplayUtils";
 
 import "./ExploreCareersPage.css";
 
@@ -12,17 +17,23 @@ const { Paragraph, Text, Title } = Typography;
 function normalizeProfiles(payload) {
   const profiles = payload?.profiles || [];
   if (!Array.isArray(profiles)) return [];
-  return profiles.map((profile) => ({
-    jobId: profile.job_id || profile.jobId || "",
-    title: profile.title || "Untitled role",
-    description: profile.description || "",
-    responsibilities: profile.responsibilities || [],
-    hardSkills: profile.hard_skills || profile.hardSkills || [],
-    softSkills: profile.soft_skills || profile.softSkills || [],
-    tools: profile.tools || [],
-    experienceLevel: profile.experience_level || profile.experienceLevel || "unspecified",
-    sourceCompanies: profile.source_companies || profile.sourceCompanies || [],
-  }));
+  return profiles.map((profile) => {
+    const rawExperienceLevel = profile.experience_level || profile.experienceLevel || "unspecified";
+    const title = profile.title || "Untitled role";
+    return {
+      jobId: profile.job_id || profile.jobId || "",
+      title,
+      roleLabel: formatCareerRoleLabel(title, rawExperienceLevel),
+      description: profile.description || "",
+      responsibilities: profile.responsibilities || [],
+      hardSkills: profile.hard_skills || profile.hardSkills || [],
+      softSkills: profile.soft_skills || profile.softSkills || [],
+      tools: profile.tools || [],
+      rawExperienceLevel,
+      experienceLevel: formatExperienceLevel(rawExperienceLevel),
+      experienceLevelColor: getExperienceLevelTagColor(rawExperienceLevel),
+    };
+  });
 }
 
 function ExploreCareersPage() {
@@ -60,6 +71,7 @@ function ExploreCareersPage() {
     return profiles.filter((profile) => {
       const haystack = [
         profile.title,
+        profile.roleLabel,
         profile.description,
         profile.experienceLevel,
         ...profile.hardSkills,
@@ -127,7 +139,7 @@ function ExploreCareersPage() {
                         <Text strong className="explore-careers-page__card-title">
                           {profile.title}
                         </Text>
-                        <Tag color="blue">{profile.experienceLevel}</Tag>
+                        <Tag color={profile.experienceLevelColor}>{profile.experienceLevel}</Tag>
                       </div>
                       <Paragraph
                         type="secondary"
