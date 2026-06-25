@@ -41,13 +41,7 @@ export default defineConfig(({ mode }) => {
             ) {
               return "graph-3d";
             }
-            if (id.includes("/antd/") || id.includes("/antd-mobile/") || id.includes("/@ant-design/")) {
-              return "antd";
-            }
-            if (id.includes("/react/") || id.includes("/react-dom/") || id.includes("/react-router-dom/")) {
-              return "react-vendor";
-            }
-            return "vendor";
+            return undefined;
           },
         },
       },
