@@ -25,5 +25,6 @@ dist-ssr
 
 # other files
 .history
-.env
+.env*
+!.env.example
 public/notes-index.json
