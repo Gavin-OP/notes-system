@@ -17,7 +17,8 @@ function getOutline(markdown) {
 
   const outline = [];
   function collectText(n) {
-    if (n.type === "text") return n.value ?? "";
+    if (!n) return "";
+    if (n.type === "text" || n.type === "inlineCode") return n.value ?? "";
     if (n.type === "link" || n.type === "image") {
       return (n.children ?? []).map(collectText).join("") || n.alt || "";
     }

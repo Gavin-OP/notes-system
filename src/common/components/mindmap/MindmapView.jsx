@@ -30,6 +30,8 @@ import { MINDMAP_TYPES } from "./MindmapTypes";
 import RadialMindmapView from "./RadialMindmapView";
 import NetworkMindmapView from "./NetworkMindmapView";
 import SphereNetworkView from "./SphereNetworkView";
+import ConceptReviewModal from "./ConceptReviewModal";
+import { normalizeConceptPayload, migrateConceptReviewCaches } from "../../utils/conceptReviewUtils";
 import "./nodes/nodes.css";
 import "./MindmapView.css";
 
@@ -66,6 +68,12 @@ const MindmapView = ({ subjectId }) => {
   
   // Mindmap view type state
   const [viewType, setViewType] = useState(MINDMAP_TYPES.HIERARCHICAL);
+  const [selectedConcept, setSelectedConcept] = useState(null);
+  const [conceptModalOpen, setConceptModalOpen] = useState(false);
+
+  useEffect(() => {
+    migrateConceptReviewCaches();
+  }, []);
 
   // Load graph data
   useEffect(() => {
@@ -181,22 +189,42 @@ const MindmapView = ({ subjectId }) => {
     setViewType(newType);
   }, []);
   
-  // Handle note navigation from RadialMindmapView
-  const handleOpenNote = useCallback((noteUrl) => {
-    if (noteUrl) {
-      navigate(noteUrl);
-    }
-  }, [navigate]);
+  const handleConceptClick = useCallback((rawConcept = {}) => {
+    const concept = normalizeConceptPayload(rawConcept);
+    if (!concept.label && !concept.id) return;
+    setSelectedConcept(concept);
+    setConceptModalOpen(true);
+  }, []);
 
-  // Handle node click - navigate to the note (only for concept nodes)
+  const handleGoToNotes = useCallback(
+    (concept) => {
+      if (concept?.noteUrl) {
+        navigate(concept.noteUrl);
+      }
+      setConceptModalOpen(false);
+    },
+    [navigate],
+  );
+
+  const handleCloseConceptModal = useCallback(() => {
+    setConceptModalOpen(false);
+  }, []);
+
+  // Handle node click - open concept action modal (only for concept nodes)
   const onNodeClick = useCallback(
     (event, node) => {
-      const noteUrl = node.data?.noteUrl;
-      if (noteUrl) {
-        navigate(noteUrl);
-      }
+      if (node.type !== "conceptNode") return;
+      handleConceptClick({
+        id: node.id,
+        label: node.data?.label,
+        noteUrl: node.data?.noteUrl,
+        noteTitle: node.data?.noteTitle,
+        anchorId: node.data?.anchorId,
+        categoryId: node.data?.categoryId,
+        conceptType: node.data?.conceptType,
+      });
     },
-    [navigate]
+    [handleConceptClick],
   );
 
   if (loading) {
@@ -225,7 +253,7 @@ const MindmapView = ({ subjectId }) => {
           <RadialMindmapView
             graphData={graphData}
             subjectId={subjectId}
-            onOpenNote={handleOpenNote}
+            onConceptClick={handleConceptClick}
             isDarkMode={false} // TODO: Get from theme context
           />
         </div>
@@ -239,7 +267,7 @@ const MindmapView = ({ subjectId }) => {
           <NetworkMindmapView
             graphData={networkGraphData}
             subjectId={subjectId}
-            onOpenNote={handleOpenNote}
+            onConceptClick={handleConceptClick}
           />
         </div>
       );
@@ -252,7 +280,7 @@ const MindmapView = ({ subjectId }) => {
           <SphereNetworkView
             graphData={networkGraphData}
             subjectId={subjectId}
-            onOpenNote={handleOpenNote}
+            onConceptClick={handleConceptClick}
           />
         </div>
       );
@@ -317,6 +345,13 @@ const MindmapView = ({ subjectId }) => {
       
       {/* Render the selected mindmap view */}
       {renderMindmapContent()}
+
+      <ConceptReviewModal
+        open={conceptModalOpen}
+        concept={selectedConcept}
+        onClose={handleCloseConceptModal}
+        onGoToNotes={handleGoToNotes}
+      />
     </div>
   );
 };

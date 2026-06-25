@@ -11,13 +11,13 @@ import "./RadialMindmapView.css";
  * RadialMindmapView Component
  * @param {Object} graphData - The graph data from JSON
  * @param {string} subjectId - Subject identifier
- * @param {Function} onOpenNote - Callback when a concept node is clicked
+ * @param {Function} onConceptClick - Callback when a concept node is clicked
  * @param {boolean} isDarkMode - Whether dark mode is enabled
  */
 const RadialMindmapView = ({ 
   graphData, 
   subjectId, 
-  onOpenNote,
+  onConceptClick,
   isDarkMode = false,
 }) => {
   // Convert graph data to ECharts tree format and generate options
@@ -37,13 +37,18 @@ const RadialMindmapView = ({
   const onEvents = useMemo(
     () => ({
       click: (params) => {
-        const noteUrl = params?.data?.noteUrl;
-        if (noteUrl && onOpenNote) {
-          onOpenNote(noteUrl);
-        }
+        const data = params?.data;
+        if (!data?.noteUrl && !data?.name) return;
+        onConceptClick?.({
+          id: data?.id || data?.conceptId,
+          label: data?.name || data?.label,
+          noteUrl: data?.noteUrl,
+          noteTitle: data?.noteTitle,
+          anchorId: data?.anchorId,
+        });
       },
     }),
-    [onOpenNote]
+    [onConceptClick]
   );
 
   // Handle chart ready event

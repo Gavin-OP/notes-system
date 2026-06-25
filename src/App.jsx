@@ -40,6 +40,11 @@ function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, [dispatch]);
 
+  // sync theme to document for custom CSS ([data-theme="dark"] selectors)
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", themeMode || "light");
+  }, [themeMode]);
+
   // preference tracking
   useEffect(() => {
     if (!isLocalhost()) {

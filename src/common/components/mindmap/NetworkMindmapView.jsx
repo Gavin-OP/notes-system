@@ -134,9 +134,9 @@ function extractFocusNodeIds(networkData) {
  * NetworkMindmapView Component
  * @param {Object} graphData - The graph data from JSON
  * @param {string} subjectId - Subject identifier
- * @param {Function} onOpenNote - Callback when a concept node is clicked
+ * @param {Function} onConceptClick - Callback when a concept node is clicked
  */
-const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
+const NetworkMindmapView = ({ graphData, subjectId, onConceptClick }) => {
   const containerRef = useRef(null);
   const simulationRef = useRef(null);
   const activeClusterSubjectRef = useRef(null);
@@ -583,16 +583,21 @@ const NetworkMindmapView = ({ graphData, subjectId, onOpenNote }) => {
     );
   }, [networkData, setNodes, setEdges]);
 
-  // Handle node click - navigate to note
+  // Handle node click - open concept action modal
   const onNodeClick = useCallback(
     (event, node) => {
       if (node.type !== "networkNode") return;
-      const noteUrl = node.data?.noteUrl;
-      if (noteUrl && onOpenNote) {
-        onOpenNote(noteUrl);
-      }
+      onConceptClick?.({
+        id: node.id,
+        label: node.data?.label,
+        noteUrl: node.data?.noteUrl,
+        noteTitle: node.data?.noteTitle,
+        anchorId: node.data?.anchorId,
+        categoryId: node.data?.categoryId,
+        conceptType: node.data?.conceptType,
+      });
     },
-    [onOpenNote]
+    [onConceptClick],
   );
 
   if (!graphData) {

@@ -77,7 +77,8 @@ print(f"Model accuracy on the test set: {test_accuracy:.2f}")
 ```
 In this output, `test_accuracy` gives us an indication of how well our spam classifier might perform on new emails it hasn't seen during training. If we had only looked at the [accuracy](../data-science/supervised-learning-classification.md#concept-accuracy) on the [training data](../data-science/introduction-to-machine-learning.md#concept-bias-variance-tradeoff), we might have gotten a misleadingly high score, especially if the model overfit.
 
-![A flowchart showing the process of splitting a dataset. Start with a large "Full Dataset" box. An arrow points to two smaller boxes: "Training Set" and "Test Set". The "Training Set" box has an arrow pointing to a "Train Model" box. The "Train Model" box has an arrow pointing to an "Evaluate Model" box. The "Test Set" box also has an arrow pointing to the "Evaluate Model" box. Labels should clearly indicate the purpose of each split.](https://i.imgur.com/example_split.png)
+<!-- IMAGE_SLOT: img-001 -->
+![A flowchart showing the process of splitting a dataset. Start with a large "Full Dataset" box. An arrow points to two smaller boxes: "Training Set" and "Test Set". The "Training Set" box has an arrow pointing to a "Train Model" box. The "Train Model" box has an arrow pointing to an "Evaluate Model" box. The "Test Set" box also has an arrow pointing to the "Evaluate Model" box. Labels should clearly indicate the purpose of each split.](../../../../../image/data_science/model-evaluation-deployment/img-001.png)
 
 <a id="concept-cross-validation"></a>
 ### Cross-Validation: Getting a More Reliable Estimate
@@ -123,7 +124,8 @@ print(f"Standard deviation of accuracy across all folds: {np.std(cv_scores):.2f}
 ```
 Here, `cv_scores` will show you the accuracy for each of the 3 different train-test splits. The mean accuracy provides a much better, more generalized idea of the model's expected performance than a single split. The standard deviation tells you how much the performance varied between different folds, indicating the stability of your model. A low standard deviation suggests more consistent performance.
 
-![A diagram illustrating 5-fold cross-validation. Show a long rectangular bar representing the full dataset, divided into 5 equal segments (folds). Below this, show 5 rows, each representing an iteration. In each row, one segment is highlighted as the "Test Fold" (e.g., red), and the remaining four segments are highlighted as "Training Folds" (e.g., blue). Arrows should indicate the flow from splitting to training and testing in each iteration.](https://i.imgur.com/example_kfold.png)
+<!-- IMAGE_SLOT: img-002 -->
+![A diagram illustrating 5-fold cross-validation. Show a long rectangular bar representing the full dataset, divided into 5 equal segments (folds). Below this, show 5 rows, each representing an iteration. In each row, one segment is highlighted as the "Test Fold" (e.g., red), and the remaining four segments are highlighted as "Training Folds" (e.g., blue). Arrows should indicate the flow from splitting to training and testing in each iteration.](../../../../../image/data_science/model-evaluation-deployment/img-002.png)
 
 <a id="concept-hyperparameter-tuning"></a>
 ### Hyperparameter Tuning: Optimizing Your Model's Settings
@@ -180,7 +182,8 @@ print(f"The best model is: {best_model}")
 ```
 It's crucial to remember that hyperparameter tuning should be performed using only your training data (often with an internal cross-validation loop, as `GridSearchCV` does). The final, truly unseen test set should be held back and used only once, after the model and its hyperparameters have been fully selected, to provide an unbiased estimate of the model's performance on truly new data. While Grid Search is effective, it can be computationally expensive. Other methods like Random Search or more advanced Bayesian Optimization exist for more efficient tuning, especially with many hyperparameters.
 
-![A 2D grid representing hyperparameter tuning. One axis is labeled "Hyperparameter 1 Value" (e.g., C), and the other is "Hyperparameter 2 Value" (e.g., max_iter). Each intersection point on the grid represents a unique combination of hyperparameter values. A color gradient or numerical labels within each cell indicates the model's performance (e.g., accuracy) for that combination, with the "best" combination clearly highlighted.](https://i.imgur.com/example_gridsearch.png)
+<!-- IMAGE_SLOT: img-003 -->
+![A 2D grid representing hyperparameter tuning. One axis is labeled "Hyperparameter 1 Value" (e.g., C), and the other is "Hyperparameter 2 Value" (e.g., max_iter). Each intersection point on the grid represents a unique combination of hyperparameter values. A color gradient or numerical labels within each cell indicates the model's performance (e.g., accuracy) for that combination, with the "best" combination clearly highlighted.](../../../../../image/data_science/model-evaluation-deployment/img-003.png)
 
 <a id="concept-model-deployment"></a>
 ### Model Deployment: Bringing Your Model to Life

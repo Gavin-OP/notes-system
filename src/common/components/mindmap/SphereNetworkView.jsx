@@ -93,6 +93,9 @@ function buildSphereGraph(graphData, subjectId) {
       subject,
       color: getNodeColor({ color: node.data?.color, subject }, focusSubject),
       noteUrl: node.data?.noteUrl,
+      noteTitle: node.data?.noteTitle,
+      anchorId: node.data?.anchorId,
+      conceptType: node.data?.conceptType,
       val: size,
       categoryId: node.data?.categoryId,
       clusterLabel: node.data?.clusterLabel,
@@ -125,7 +128,7 @@ function buildSphereGraph(graphData, subjectId) {
   };
 }
 
-const SphereNetworkView = ({ graphData, subjectId, onOpenNote }) => {
+const SphereNetworkView = ({ graphData, subjectId, onConceptClick }) => {
   const graphRef = useRef(null);
   const [hoveredNode, setHoveredNode] = useState(null);
 
@@ -196,11 +199,17 @@ const SphereNetworkView = ({ graphData, subjectId, onOpenNote }) => {
 
   const handleNodeClick = useCallback(
     (node) => {
-      if (node?.noteUrl) {
-        onOpenNote(node.noteUrl);
-      }
+      onConceptClick?.({
+        id: node?.id,
+        label: node?.name,
+        noteUrl: node?.noteUrl,
+        noteTitle: node?.noteTitle,
+        anchorId: node?.anchorId,
+        categoryId: node?.categoryId,
+        conceptType: node?.conceptType,
+      });
     },
-    [onOpenNote]
+    [onConceptClick],
   );
 
   if (!sphereGraph.nodes.length) {

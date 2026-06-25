@@ -177,6 +177,9 @@ export function convertToHierarchicalFormat(graphData, layoutResult) {
         color: concept.categoryColor,
         importance: concept.importance,
         noteUrl: concept.noteUrl,
+        noteTitle: concept.noteTitle ?? "",
+        anchorId: concept.anchorId ?? "",
+        conceptType: concept.conceptType ?? "",
       },
       draggable: false,
     });

@@ -55,6 +55,36 @@ function isSkippableHighlightNode(node) {
   return Boolean(element.closest("pre, code, script, style, textarea, button, .note-selection-toolbar"));
 }
 
+const SELECTION_TOOLBAR_EXCLUDE_SELECTORS = [
+  ".markdown-h1-addon",
+  ".markdown-complete-btn",
+  ".note-page__header-tools",
+  ".note-page__subject-nav",
+  ".note-page__version-tools",
+  ".note-page__complete-footer",
+  ".note-page__complete-btn",
+].join(", ");
+
+function isSelectionInExcludedChrome(selection) {
+  if (!selection || selection.rangeCount === 0) return false;
+
+  const range = selection.getRangeAt(0);
+  const nodesToCheck = [
+    range.commonAncestorContainer,
+    selection.anchorNode,
+    selection.focusNode,
+  ];
+
+  return nodesToCheck.some((node) => {
+    const element = node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
+    return Boolean(element?.closest?.(SELECTION_TOOLBAR_EXCLUDE_SELECTORS));
+  });
+}
+
+function isPointerInExcludedChrome(target) {
+  return Boolean(target?.closest?.(SELECTION_TOOLBAR_EXCLUDE_SELECTORS));
+}
+
 function unwrapExistingQuoteHighlights(root) {
   root.querySelectorAll(".note-quote-highlight").forEach((element) => {
     const textNode = document.createTextNode(element.textContent || "");
@@ -503,6 +533,11 @@ const MarkdownRenderer = ({
       selectionRangeRef.current = null;
       return;
     }
+    if (isSelectionInExcludedChrome(selection)) {
+      setSelectionToolbar(null);
+      selectionRangeRef.current = null;
+      return;
+    }
     const selectedText = selection.toString().replace(/\s+/g, " ").trim();
     if (!selectedText) {
       setSelectionToolbar(null);
@@ -529,6 +564,10 @@ const MarkdownRenderer = ({
 
   const handleSelectionPointerDownCapture = (event) => {
     if (event.target?.closest?.(".note-selection-toolbar")) return;
+    if (isPointerInExcludedChrome(event.target)) {
+      selectionStartedInBodyRef.current = false;
+      return;
+    }
     selectionStartedInBodyRef.current = true;
   };
 

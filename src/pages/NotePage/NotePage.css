@@ -155,6 +155,11 @@
   background: linear-gradient(135deg, #642ab5, #1668dc);
 }
 
+[data-theme="dark"] .note-page__subject-nav-label,
+[data-theme="dark"] .note-page__version-label {
+  color: rgba(255, 255, 255, 0.88);
+}
+
 [data-theme="dark"] .note-page__subject-nav,
 [data-theme="dark"] .note-page__version-tools {
   border-color: #424242;
