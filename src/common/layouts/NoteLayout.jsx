@@ -47,8 +47,16 @@ import {
 import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncompleteMyNote, updateMyGuideState } from "../api/user";
 
 import "./NoteLayout.css";
+import "../components/LearningSupportPanel.css";
 
 const { Header, Sider, Content } = Layout;
+
+const LEARNING_SUPPORT_TABS = [
+  { id: "outline", label: "Outline" },
+  { id: "qa", label: "Q&A", tool: "qa" },
+  { id: "notes", label: "Notes", tool: "notes" },
+  { id: "quiz", label: "Quiz", tool: "quiz" },
+];
 
 // convert icon type to icon
 const getIcon = (iconType) => {
@@ -1227,77 +1235,68 @@ const NoteLayout = () => {
                 {assistantCollapsed ? (
                   <button
                     type="button"
-                    className="note-layout__assistant-collapsed-trigger"
+                    className="learning-support-panel__expand-trigger"
                     onClick={() => setAssistantCollapsed(false)}
-                    aria-label="Expand assistant panel"
-                    title="Expand assistant panel"
+                    aria-label="Expand learning support panel"
+                    title="Expand learning support panel"
                   >
                     <LeftOutlined />
                   </button>
                 ) : (
                   <>
                     <div
-                      className="note-layout__assistant-resizer"
+                      className="learning-support-panel__resizer"
                       onMouseDown={startDockResize}
                       role="separator"
-                      aria-label="Resize assistant panel"
+                      aria-label="Resize learning support panel"
                     />
                     <aside
-                      className="note-layout__assistant-dock"
+                      className="learning-support-panel note-layout__assistant-dock"
                       style={{ width: `${assistantDockWidth}px` }}
+                      aria-label="Learning support"
                     >
-                      <div className="note-layout__assistant-dock-header">
-                        <Button
-                          size="small"
-                          type="text"
-                          className="note-layout__assistant-collapse-btn"
-                          icon={<RightOutlined />}
+                      <header className="learning-support-panel__header">
+                        <button
+                          type="button"
+                          className="learning-support-panel__collapse"
                           onClick={() => setAssistantCollapsed(true)}
-                          aria-label="Collapse assistant panel"
-                          title="Collapse assistant panel"
-                        />
-                        <Space size={6} wrap>
-                          <Button
-                            size="small"
-                            type={assistantDockTab === "outline" ? "primary" : "default"}
-                            onClick={() => setAssistantDockTab("outline")}
-                            ref={outlineTabRef}
-                          >
-                            Outline
-                          </Button>
-                          <Button
-                            size="small"
-                            type={assistantDockTab === "qa" ? "primary" : "default"}
-                            onClick={() => {
-                              setAssistantDockTab("qa");
-                              setAssistantTool("qa");
-                            }}
-                          >
-                            Q&A
-                          </Button>
-                          <Button
-                            size="small"
-                            type={assistantDockTab === "notes" ? "primary" : "default"}
-                            onClick={() => {
-                              setAssistantDockTab("notes");
-                              setAssistantTool("notes");
-                            }}
-                          >
-                            Notes
-                          </Button>
-                          <Button
-                            size="small"
-                            type={assistantDockTab === "quiz" ? "primary" : "default"}
-                            onClick={() => {
-                              setAssistantDockTab("quiz");
-                              setAssistantTool("quiz");
-                            }}
-                          >
-                            Quiz
-                          </Button>
-                        </Space>
-                      </div>
-                      <div className="note-layout__assistant-dock-body" ref={assistantAreaRef}>
+                          aria-label="Collapse learning support panel"
+                          title="Collapse panel"
+                        >
+                          <RightOutlined aria-hidden="true" />
+                        </button>
+                        <nav
+                          className="learning-support-panel__tabs"
+                          role="tablist"
+                          aria-label="Learning support views"
+                        >
+                          {LEARNING_SUPPORT_TABS.map((tab) => {
+                            const isActive = assistantDockTab === tab.id;
+                            return (
+                              <button
+                                key={tab.id}
+                                type="button"
+                                role="tab"
+                                aria-selected={isActive}
+                                className={`learning-support-panel__tab ${isActive ? "is-active" : ""}`}
+                                ref={tab.id === "outline" ? outlineTabRef : undefined}
+                                onClick={() => {
+                                  setAssistantDockTab(tab.id);
+                                  if (tab.tool) setAssistantTool(tab.tool);
+                                }}
+                              >
+                                {tab.label}
+                              </button>
+                            );
+                          })}
+                        </nav>
+                      </header>
+                      <div
+                        className={`learning-support-panel__body ${
+                          assistantDockTab === "outline" ? "learning-support-panel__body--outline" : ""
+                        }`}
+                        ref={assistantAreaRef}
+                      >
                         {assistantDockTab === "outline" ? (
                           <OutlineSider outline={outline} collapsed={false} hideHeader />
                         ) : (

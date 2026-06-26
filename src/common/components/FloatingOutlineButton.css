@@ -1,7 +1,9 @@
-/* FloatingOutlineButton - Mobile floating outline button */
+/* FloatingOutlineButton — mobile outline access */
 
 .floating-outline-button {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity var(--ns-duration-normal) var(--ns-ease-out),
+    transform var(--ns-duration-normal) var(--ns-ease-out);
   opacity: 1;
   transform: translateY(0);
 }
@@ -12,18 +14,34 @@
   pointer-events: none;
 }
 
-/* Drawer styles for mobile outline */
 .floating-outline-drawer .ant-drawer-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid #f0f0f0;
+  padding: var(--ns-space-4) var(--ns-space-5);
+  border-bottom: 1px solid var(--ns-color-border-secondary);
+  background: var(--ns-color-bg-spotlight);
+}
+
+.floating-outline-drawer .ant-drawer-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ns-color-text);
 }
 
 .floating-outline-drawer .ant-drawer-body {
-  padding: 16px 0 0 0;
+  padding: var(--ns-space-3) var(--ns-space-4) var(--ns-space-4);
+  background: var(--ns-color-bg-container);
 }
 
-/* Dark theme support */
 [data-theme="dark"] .floating-outline-drawer .ant-drawer-header {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: var(--ns-color-border);
+  background: var(--ns-color-bg-spotlight);
 }
 
+[data-theme="dark"] .floating-outline-drawer .ant-drawer-body {
+  background: var(--ns-color-bg-container);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-outline-button {
+    transition: none;
+  }
+}

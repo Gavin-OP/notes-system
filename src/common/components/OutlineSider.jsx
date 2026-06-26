@@ -26,7 +26,7 @@ function buildAnchorItems(outline) {
   }
   function dropEmptyChildren(arr) {
     return arr.map(({ children, ...rest }) =>
-      children?.length ? { ...rest, children: dropEmptyChildren(children) } : rest
+      children?.length ? { ...rest, children: dropEmptyChildren(children) } : rest,
     );
   }
   return dropEmptyChildren(stack[0].children);
@@ -34,48 +34,58 @@ function buildAnchorItems(outline) {
 
 const OutlineSider = ({ outline, collapsed, onCollapse, hideHeader = false }) => {
   const language = useSelector((state) => state.preference.language);
-  
+
   const outlineTitle = language === "cn" ? "大纲" : "Outline";
-  const collapseTitle = language === "cn" ? "收起大纲" : "Collapse Outline";
-  const expandTitle = language === "cn" ? "展开大纲" : "Expand Outline";
-  
-  // Show compact trigger button when collapsed
+  const collapseTitle = language === "cn" ? "收起大纲" : "Collapse outline";
+  const expandTitle = language === "cn" ? "展开大纲" : "Expand outline";
+  const emptyLabel =
+    language === "cn" ? "此页暂无标题大纲。" : "No headings on this page yet.";
+
   if (collapsed) {
     return (
       <div className="outline-sider-wrapper outline-sider-wrapper--collapsed">
-        <div className="outline-sider__trigger">
-          <LeftOutlined 
-            className="outline-sider__trigger-icon"
-            onClick={onCollapse}
-            title={expandTitle}
-          />
+        <button
+          type="button"
+          className="outline-sider__trigger"
+          onClick={onCollapse}
+          aria-label={expandTitle}
+          title={expandTitle}
+        >
+          <LeftOutlined className="outline-sider__trigger-icon" aria-hidden="true" />
           <span className="outline-sider__trigger-text">{outlineTitle}</span>
-        </div>
+        </button>
       </div>
     );
   }
-  
-  // Show full outline when expanded
+
+  const anchorItems = buildAnchorItems(outline);
+
   return (
-    <div className={`outline-sider-wrapper ${hideHeader ? 'outline-sider-wrapper--no-header' : ''}`}>
-      {/* Header with collapse button - hide in drawer mode */}
+    <div className={`outline-sider-wrapper ${hideHeader ? "outline-sider-wrapper--no-header" : ""}`}>
       {!hideHeader && (
         <div className="outline-sider__header">
           <span className="outline-sider__title">{outlineTitle}</span>
-          <RightOutlined 
-            className="outline-sider__collapse-icon"
+          <button
+            type="button"
+            className="outline-sider__collapse-btn"
             onClick={onCollapse}
+            aria-label={collapseTitle}
             title={collapseTitle}
-          />
+          >
+            <RightOutlined aria-hidden="true" />
+          </button>
         </div>
       )}
-      
-      {/* Outline content - use nested structure so all heading levels (incl. h3) display */}
-      <Anchor
-        affix={true}
-        className="outline-sider__anchor"
-        items={buildAnchorItems(outline)}
-      />
+
+      {anchorItems.length === 0 ? (
+        <p className="outline-sider__empty">{emptyLabel}</p>
+      ) : (
+        <Anchor
+          affix={true}
+          className="outline-sider__anchor"
+          items={anchorItems}
+        />
+      )}
     </div>
   );
 };
