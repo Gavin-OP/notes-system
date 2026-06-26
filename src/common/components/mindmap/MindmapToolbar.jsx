@@ -3,7 +3,6 @@
  * Provides navigation and view switching controls
  */
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import {
   AppstoreOutlined,
   BranchesOutlined,
@@ -11,7 +10,6 @@ import {
   GlobalOutlined,
   ArrowLeftOutlined,
 } from "@ant-design/icons";
-import { getFirstSubjectTopicUrl } from "../../../utils/notesIndexUtils";
 import { MINDMAP_TYPES } from "./MindmapTypes";
 import "./MindmapToolbar.css";
 
@@ -24,11 +22,9 @@ import "./MindmapToolbar.css";
  */
 const MindmapToolbar = ({ subjectId, currentType, onTypeChange, subjectName }) => {
   const navigate = useNavigate();
-  const notesIndex = useSelector((state) => state.notesIndex.data);
 
   const handleBack = () => {
-    const firstTopicUrl = getFirstSubjectTopicUrl(notesIndex, subjectId);
-    navigate(firstTopicUrl || `/note/${subjectId}`);
+    navigate(`/note/${subjectId}/overview`);
   };
 
   const viewOptions = [

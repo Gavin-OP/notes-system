@@ -1,0 +1,663 @@
+{
+  "subjectId": "statistics",
+  "summary": "This comprehensive Statistics subject provides a robust foundation in probability theory and statistical inference, progressing from fundamental definitions and descriptive statistics to advanced analytical techniques. Learners will explore various probability distributions, master core theorems, and apply these concepts to practical problems such as hypothesis testing, linear regression, and time series analysis. The curriculum is designed to equip individuals with the tools to understand, analyze, and interpret data, make informed decisions, and model complex systems under uncertainty.",
+  "outcomes": [
+    "Define and apply fundamental statistical concepts including sample spaces, random variables, and measures of central tendency and variability.",
+    "Utilize a range of probability distributions (e.g., Bernoulli, Normal, Poisson) and apply key probability theorems such as Bayes' formula and the Central Limit Theorem.",
+    "Perform hypothesis tests, construct confidence intervals, and interpret their results to draw statistically sound conclusions from data.",
+    "Develop and interpret linear regression models to analyze relationships between variables and make predictions.",
+    "Understand and apply concepts from Markov chains and time series analysis to model sequential and time-dependent data.",
+    "Implement various sampling methods and understand their impact on data collection, estimation, and inference.",
+    "Apply Bayesian principles to update beliefs and make inferences, contrasting with frequentist approaches."
+  ],
+  "level": "Upon completion of this subject, learners will achieve an intermediate to advanced proficiency in statistical theory and application. The curriculum covers both the theoretical underpinnings of statistical methods and their practical implementation, enabling learners to tackle complex data analysis, inferential reasoning, and predictive modeling challenges with confidence.",
+  "prerequisites": [
+    "A solid understanding of high school level algebra, including solving equations and working with functions.",
+    "Basic familiarity with calculus concepts, specifically differentiation and integration.",
+    "Foundational knowledge of set theory and logical reasoning."
+  ],
+  "whyLearn": "Mastering statistics is crucial for navigating and succeeding in any data-intensive field, from scientific research and engineering to finance and business analytics. This subject empowers learners to move beyond intuition, enabling them to rigorously interpret data, quantify uncertainty, build predictive models, and make evidence-based decisions. These skills are indispensable for careers in data science, machine learning, quantitative analysis, and any role requiring critical thinking about data.",
+  "whoItsFor": [
+    "Aspiring data scientists, machine learning engineers, and quantitative analysts seeking a strong theoretical and practical foundation.",
+    "Researchers and academics across various disciplines who need to design experiments, analyze data, and draw valid conclusions.",
+    "Business and finance professionals looking to enhance their analytical capabilities for market analysis, risk assessment, and strategic decision-making.",
+    "Anyone interested in developing a deep, rigorous understanding of probability, statistical inference, and data modeling principles."
+  ],
+  "conceptGroups": [
+    {
+      "id": "rules-of-thumb",
+      "title": "Statistics Notation & Reference",
+      "topicOrder": 0,
+      "concepts": [
+        {
+          "id": "concept:statistics/statistics-abbreviations",
+          "label": "statistics abbreviations",
+          "slug": "statistics-abbreviations",
+          "noteSlug": "rules-of-thumb",
+          "noteUrl": "/note/statistics/rules-of-thumb.md",
+          "anchorId": "concept-statistics-abbreviations",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/greek-letters",
+          "label": "Greek letters in statistics",
+          "slug": "greek-letters",
+          "noteSlug": "rules-of-thumb",
+          "noteUrl": "/note/statistics/rules-of-thumb.md",
+          "anchorId": "concept-greek-letters",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "basic-definition",
+      "title": "Basic Definition",
+      "topicOrder": 1,
+      "concepts": [
+        {
+          "id": "concept:statistics/sample-space",
+          "label": "sample space",
+          "slug": "sample-space",
+          "noteSlug": "basic-definition",
+          "noteUrl": "/note/statistics/basic-definition.md",
+          "anchorId": "concept-sample-space",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/random-variable",
+          "label": "random variable",
+          "slug": "random-variable",
+          "noteSlug": "basic-definition",
+          "noteUrl": "/note/statistics/basic-definition.md",
+          "anchorId": "concept-random-variable",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/probability-mass-function",
+          "label": "PMF",
+          "slug": "probability-mass-function",
+          "noteSlug": "basic-definition",
+          "noteUrl": "/note/statistics/basic-definition.md",
+          "anchorId": "concept-probability-mass-function",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/probability-density-function",
+          "label": "PDF",
+          "slug": "probability-density-function",
+          "noteSlug": "basic-definition",
+          "noteUrl": "/note/statistics/basic-definition.md",
+          "anchorId": "concept-probability-density-function",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/cumulative-distribution-function",
+          "label": "CDF",
+          "slug": "cumulative-distribution-function",
+          "noteSlug": "basic-definition",
+          "noteUrl": "/note/statistics/basic-definition.md",
+          "anchorId": "concept-cumulative-distribution-function",
+          "importance": "medium"
+        }
+      ]
+    },
+    {
+      "id": "basic-statistics",
+      "title": "Basic Statistics",
+      "topicOrder": 2,
+      "concepts": [
+        {
+          "id": "concept:statistics/expectation",
+          "label": "expectation",
+          "slug": "expectation",
+          "noteSlug": "basic-statistics",
+          "noteUrl": "/note/statistics/basic-statistics.md",
+          "anchorId": "concept-expectation",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/variance",
+          "label": "variance",
+          "slug": "variance",
+          "noteSlug": "basic-statistics",
+          "noteUrl": "/note/statistics/basic-statistics.md",
+          "anchorId": "concept-variance",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/covariance",
+          "label": "covariance",
+          "slug": "covariance",
+          "noteSlug": "basic-statistics",
+          "noteUrl": "/note/statistics/basic-statistics.md",
+          "anchorId": "concept-covariance",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/correlation",
+          "label": "correlation",
+          "slug": "correlation",
+          "noteSlug": "basic-statistics",
+          "noteUrl": "/note/statistics/basic-statistics.md",
+          "anchorId": "concept-correlation",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/quantile",
+          "label": "quantile",
+          "slug": "quantile",
+          "noteSlug": "basic-statistics",
+          "noteUrl": "/note/statistics/basic-statistics.md",
+          "anchorId": "concept-quantile",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "distribution",
+      "title": "Distribution",
+      "topicOrder": 3,
+      "concepts": [
+        {
+          "id": "concept:statistics/normal-distribution",
+          "label": "normal distribution",
+          "slug": "normal-distribution",
+          "noteSlug": "distribution",
+          "noteUrl": "/note/statistics/distribution.md",
+          "anchorId": "concept-normal-distribution",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/binomial-distribution",
+          "label": "binomial distribution",
+          "slug": "binomial-distribution",
+          "noteSlug": "distribution",
+          "noteUrl": "/note/statistics/distribution.md",
+          "anchorId": "concept-binomial-distribution",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/poisson-distribution",
+          "label": "Poisson distribution",
+          "slug": "poisson-distribution",
+          "noteSlug": "distribution",
+          "noteUrl": "/note/statistics/distribution.md",
+          "anchorId": "concept-poisson-distribution",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/exponential-distribution",
+          "label": "exponential distribution",
+          "slug": "exponential-distribution",
+          "noteSlug": "distribution",
+          "noteUrl": "/note/statistics/distribution.md",
+          "anchorId": "concept-exponential-distribution",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/chi-squared-distribution",
+          "label": "chi-squared distribution",
+          "slug": "chi-squared-distribution",
+          "noteSlug": "distribution",
+          "noteUrl": "/note/statistics/distribution.md",
+          "anchorId": "concept-chi-squared-distribution",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/students-t-distribution",
+          "label": "Student's t distribution",
+          "slug": "students-t-distribution",
+          "noteSlug": "distribution",
+          "noteUrl": "/note/statistics/distribution.md",
+          "anchorId": "concept-students-t-distribution",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "probability-theorem",
+      "title": "Probability Theorem",
+      "topicOrder": 4,
+      "concepts": [
+        {
+          "id": "concept:statistics/conditional-probability",
+          "label": "conditional probability",
+          "slug": "conditional-probability",
+          "noteSlug": "probability-theorem",
+          "noteUrl": "/note/statistics/probability-theorem.md",
+          "anchorId": "concept-conditional-probability",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/bayes-formula",
+          "label": "Bayes formula",
+          "slug": "bayes-formula",
+          "noteSlug": "probability-theorem",
+          "noteUrl": "/note/statistics/probability-theorem.md",
+          "anchorId": "concept-bayes-formula",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/law-of-large-numbers",
+          "label": "law of large numbers",
+          "slug": "law-of-large-numbers",
+          "noteSlug": "probability-theorem",
+          "noteUrl": "/note/statistics/probability-theorem.md",
+          "anchorId": "concept-law-of-large-numbers",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/central-limit-theorem",
+          "label": "central limit theorem",
+          "slug": "central-limit-theorem",
+          "noteSlug": "probability-theorem",
+          "noteUrl": "/note/statistics/probability-theorem.md",
+          "anchorId": "concept-central-limit-theorem",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/chebyshev-inequality",
+          "label": "Chebyshev inequality",
+          "slug": "chebyshev-inequality",
+          "noteSlug": "probability-theorem",
+          "noteUrl": "/note/statistics/probability-theorem.md",
+          "anchorId": "concept-chebyshev-inequality",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "hypothesis-testing",
+      "title": "Hypothesis Testing",
+      "topicOrder": 5,
+      "concepts": [
+        {
+          "id": "concept:statistics/hypothesis-testing",
+          "label": "hypothesis testing",
+          "slug": "hypothesis-testing",
+          "noteSlug": "hypothesis-testing",
+          "noteUrl": "/note/statistics/hypothesis-testing.md",
+          "anchorId": "concept-hypothesis-testing",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/confidence-interval",
+          "label": "confidence interval",
+          "slug": "confidence-interval",
+          "noteSlug": "hypothesis-testing",
+          "noteUrl": "/note/statistics/hypothesis-testing.md",
+          "anchorId": "concept-confidence-interval",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/z-test",
+          "label": "Z test",
+          "slug": "z-test",
+          "noteSlug": "hypothesis-testing",
+          "noteUrl": "/note/statistics/hypothesis-testing.md",
+          "anchorId": "concept-z-test",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/t-test",
+          "label": "t test",
+          "slug": "t-test",
+          "noteSlug": "hypothesis-testing",
+          "noteUrl": "/note/statistics/hypothesis-testing.md",
+          "anchorId": "concept-t-test",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/chi-squared-test",
+          "label": "chi-squared test",
+          "slug": "chi-squared-test",
+          "noteSlug": "hypothesis-testing",
+          "noteUrl": "/note/statistics/hypothesis-testing.md",
+          "anchorId": "concept-chi-squared-test",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/maximum-likelihood-estimation",
+          "label": "maximum likelihood estimation",
+          "slug": "maximum-likelihood-estimation",
+          "noteSlug": "hypothesis-testing",
+          "noteUrl": "/note/statistics/hypothesis-testing.md",
+          "anchorId": "concept-maximum-likelihood-estimation",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "linear-regression",
+      "title": "Linear Regression",
+      "topicOrder": 6,
+      "concepts": [
+        {
+          "id": "concept:statistics/linear-regression",
+          "label": "linear regression",
+          "slug": "linear-regression",
+          "noteSlug": "linear-regression",
+          "noteUrl": "/note/statistics/linear-regression.md",
+          "anchorId": "concept-linear-regression",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/ordinary-least-squares",
+          "label": "ordinary least squares",
+          "slug": "ordinary-least-squares",
+          "noteSlug": "linear-regression",
+          "noteUrl": "/note/statistics/linear-regression.md",
+          "anchorId": "concept-ordinary-least-squares",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/residual-analysis",
+          "label": "residual analysis",
+          "slug": "residual-analysis",
+          "noteSlug": "linear-regression",
+          "noteUrl": "/note/statistics/linear-regression.md",
+          "anchorId": "concept-residual-analysis",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/anova",
+          "label": "ANOVA",
+          "slug": "anova",
+          "noteSlug": "linear-regression",
+          "noteUrl": "/note/statistics/linear-regression.md",
+          "anchorId": "concept-anova",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "markov-chain",
+      "title": "Markov Chain",
+      "topicOrder": 7,
+      "concepts": [
+        {
+          "id": "concept:statistics/markov-chain",
+          "label": "Markov chain",
+          "slug": "markov-chain",
+          "noteSlug": "markov-chain",
+          "noteUrl": "/note/statistics/markov-chain.md",
+          "anchorId": "concept-markov-chain",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/markov-property",
+          "label": "Markov property",
+          "slug": "markov-property",
+          "noteSlug": "markov-chain",
+          "noteUrl": "/note/statistics/markov-chain.md",
+          "anchorId": "concept-markov-property",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/transition-probability-matrix",
+          "label": "transition probability matrix",
+          "slug": "transition-probability-matrix",
+          "noteSlug": "markov-chain",
+          "noteUrl": "/note/statistics/markov-chain.md",
+          "anchorId": "concept-transition-probability-matrix",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/stationary-distribution",
+          "label": "stationary distribution",
+          "slug": "stationary-distribution",
+          "noteSlug": "markov-chain",
+          "noteUrl": "/note/statistics/markov-chain.md",
+          "anchorId": "concept-stationary-distribution",
+          "importance": "medium"
+        }
+      ]
+    },
+    {
+      "id": "time-series",
+      "title": "Time Series",
+      "topicOrder": 8,
+      "concepts": [
+        {
+          "id": "concept:statistics/time-series",
+          "label": "time series",
+          "slug": "time-series",
+          "noteSlug": "time-series",
+          "noteUrl": "/note/statistics/time-series.md",
+          "anchorId": "concept-time-series",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/stationarity",
+          "label": "stationarity",
+          "slug": "stationarity",
+          "noteSlug": "time-series",
+          "noteUrl": "/note/statistics/time-series.md",
+          "anchorId": "concept-stationarity",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/autocorrelation",
+          "label": "autocorrelation",
+          "slug": "autocorrelation",
+          "noteSlug": "time-series",
+          "noteUrl": "/note/statistics/time-series.md",
+          "anchorId": "concept-autocorrelation",
+          "importance": "medium"
+        }
+      ]
+    },
+    {
+      "id": "sampling-methods",
+      "title": "Sampling Methods",
+      "topicOrder": 9,
+      "concepts": [
+        {
+          "id": "concept:statistics/simple-random-sampling",
+          "label": "simple random sampling",
+          "slug": "simple-random-sampling",
+          "noteSlug": "sampling-methods",
+          "noteUrl": "/note/statistics/sampling-methods.md",
+          "anchorId": "concept-simple-random-sampling",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/stratified-sampling",
+          "label": "stratified random sampling",
+          "slug": "stratified-sampling",
+          "noteSlug": "sampling-methods",
+          "noteUrl": "/note/statistics/sampling-methods.md",
+          "anchorId": "concept-stratified-sampling",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/systematic-sampling",
+          "label": "systematic sampling",
+          "slug": "systematic-sampling",
+          "noteSlug": "sampling-methods",
+          "noteUrl": "/note/statistics/sampling-methods.md",
+          "anchorId": "concept-systematic-sampling",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/ratio-estimator",
+          "label": "ratio estimator",
+          "slug": "ratio-estimator",
+          "noteSlug": "sampling-methods",
+          "noteUrl": "/note/statistics/sampling-methods.md",
+          "anchorId": "concept-ratio-estimator",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "linear-algebra",
+      "title": "Linear Algebra",
+      "topicOrder": 10,
+      "concepts": [
+        {
+          "id": "concept:statistics/matrix-multiplication",
+          "label": "matrix multiplication",
+          "slug": "matrix-multiplication",
+          "noteSlug": "linear-algebra",
+          "noteUrl": "/note/statistics/linear-algebra.md",
+          "anchorId": "concept-matrix-multiplication",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/matrix-determinant",
+          "label": "determinant",
+          "slug": "matrix-determinant",
+          "noteSlug": "linear-algebra",
+          "noteUrl": "/note/statistics/linear-algebra.md",
+          "anchorId": "concept-matrix-determinant",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/matrix-inverse",
+          "label": "matrix inverse",
+          "slug": "matrix-inverse",
+          "noteSlug": "linear-algebra",
+          "noteUrl": "/note/statistics/linear-algebra.md",
+          "anchorId": "concept-matrix-inverse",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/matrix-differentiation",
+          "label": "matrix differentiation",
+          "slug": "matrix-differentiation",
+          "noteSlug": "linear-algebra",
+          "noteUrl": "/note/statistics/linear-algebra.md",
+          "anchorId": "concept-matrix-differentiation",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "basic-mathematics-tools",
+      "title": "Basic Mathematics Tools",
+      "topicOrder": 11,
+      "concepts": [
+        {
+          "id": "concept:statistics/taylor-expansion",
+          "label": "Taylor expansion",
+          "slug": "taylor-expansion",
+          "noteSlug": "basic-mathematics-tools",
+          "noteUrl": "/note/statistics/basic-mathematics-tools.md",
+          "anchorId": "concept-taylor-expansion",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/geometric-series",
+          "label": "geometric series",
+          "slug": "geometric-series",
+          "noteSlug": "basic-mathematics-tools",
+          "noteUrl": "/note/statistics/basic-mathematics-tools.md",
+          "anchorId": "concept-geometric-series",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/stirling-formula",
+          "label": "Stirling formula",
+          "slug": "stirling-formula",
+          "noteSlug": "basic-mathematics-tools",
+          "noteUrl": "/note/statistics/basic-mathematics-tools.md",
+          "anchorId": "concept-stirling-formula",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "simulation",
+      "title": "Simulation",
+      "topicOrder": 12,
+      "concepts": [
+        {
+          "id": "concept:statistics/stochastic-process",
+          "label": "stochastic process",
+          "slug": "stochastic-process",
+          "noteSlug": "simulation",
+          "noteUrl": "/note/statistics/simulation.md",
+          "anchorId": "concept-stochastic-process",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/brownian-motion",
+          "label": "Brownian motion",
+          "slug": "brownian-motion",
+          "noteSlug": "simulation",
+          "noteUrl": "/note/statistics/simulation.md",
+          "anchorId": "concept-brownian-motion",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/wiener-process",
+          "label": "Wiener process",
+          "slug": "wiener-process",
+          "noteSlug": "simulation",
+          "noteUrl": "/note/statistics/simulation.md",
+          "anchorId": "concept-wiener-process",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/ito-process",
+          "label": "Itô process",
+          "slug": "ito-process",
+          "noteSlug": "simulation",
+          "noteUrl": "/note/statistics/simulation.md",
+          "anchorId": "concept-ito-process",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "bayesian-learning",
+      "title": "Bayesian Learning",
+      "topicOrder": 13,
+      "concepts": [
+        {
+          "id": "concept:statistics/bayesian-learning",
+          "label": "Bayesian learning",
+          "slug": "bayesian-learning",
+          "noteSlug": "bayesian-learning",
+          "noteUrl": "/note/statistics/bayesian-learning.md",
+          "anchorId": "concept-bayesian-learning",
+          "importance": "high"
+        },
+        {
+          "id": "concept:statistics/prior-distribution",
+          "label": "prior distribution",
+          "slug": "prior-distribution",
+          "noteSlug": "bayesian-learning",
+          "noteUrl": "/note/statistics/bayesian-learning.md",
+          "anchorId": "concept-prior-distribution",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/posterior-distribution",
+          "label": "posterior distribution",
+          "slug": "posterior-distribution",
+          "noteSlug": "bayesian-learning",
+          "noteUrl": "/note/statistics/bayesian-learning.md",
+          "anchorId": "concept-posterior-distribution",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:statistics/conjugate-prior",
+          "label": "conjugate prior",
+          "slug": "conjugate-prior",
+          "noteSlug": "bayesian-learning",
+          "noteUrl": "/note/statistics/bayesian-learning.md",
+          "anchorId": "concept-conjugate-prior",
+          "importance": "medium"
+        }
+      ]
+    }
+  ],
+  "generatedAt": "2026-06-26T14:50:38.678136+00:00",
+  "meta": {
+    "topicCount": 14,
+    "conceptCount": 59,
+    "missingTopicSlugs": []
+  }
+}

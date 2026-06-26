@@ -119,6 +119,49 @@ function isNavigableSubjectSlug(subjectSlug) {
   return !["disclaimer", "mindmap", "test", "image"].includes(slug);
 }
 
+const SUBJECT_OVERVIEW_SEGMENT = "overview";
+
+function extractSubjectIdFromMenuKey(key) {
+  const match = String(key || "").match(/^\/note\/([^/]+)$/);
+  return match ? match[1] : "";
+}
+
+function getSubjectOverviewUrl(subjectId) {
+  return normalizeUrl(`/note/${subjectId}/${SUBJECT_OVERVIEW_SEGMENT}`);
+}
+
+function isSubjectOverviewPath(notePath) {
+  const clean = String(notePath || "")
+    .split("#")[0]
+    .replace(/^\/+/, "")
+    .replace(/^note\//, "");
+  const parts = clean.split("/").filter(Boolean);
+  return parts.length === 2 && parts[1] === SUBJECT_OVERVIEW_SEGMENT;
+}
+
+function injectSubjectOverviewMenuItems(menuItems) {
+  if (!Array.isArray(menuItems)) return [];
+  return menuItems.map((item) => {
+    const subjectId = extractSubjectIdFromMenuKey(item.key);
+    if (item.children && subjectId && isNavigableSubjectSlug(subjectId)) {
+      const overviewEntry = {
+        key: getSubjectOverviewUrl(subjectId),
+        label: "Overview",
+        iconType: "overview",
+      };
+      const injectedChildren = injectSubjectOverviewMenuItems(item.children);
+      return {
+        ...item,
+        children: [overviewEntry, ...injectedChildren],
+      };
+    }
+    if (item.children) {
+      return { ...item, children: injectSubjectOverviewMenuItems(item.children) };
+    }
+    return item;
+  });
+}
+
 function findSubjectFolder(data, subjectId) {
   if (!Array.isArray(data) || !subjectId) return null;
   const targetUrl = normalizeUrl(`/note/${subjectId}`);
@@ -387,6 +430,9 @@ export {
   isConcreteNoteRoute,
   isIndexNoteItem,
   isNavigableSubjectSlug,
+  getSubjectOverviewUrl,
+  isSubjectOverviewPath,
+  injectSubjectOverviewMenuItems,
   getFirstSubjectTopicUrl,
   findMeta,
   buildMenuItems,

@@ -22,6 +22,7 @@ import {
   FileTextOutlined,
   InfoCircleOutlined,
   ReadOutlined,
+  AppstoreOutlined,
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
@@ -36,7 +37,7 @@ import {
   prepareNoteTourStep,
 } from "../components/guide/productTours";
 
-import { buildMenuItems } from "../../utils/notesIndexUtils";
+import { buildMenuItems, injectSubjectOverviewMenuItems, isSubjectOverviewPath } from "../../utils/notesIndexUtils";
 import { setTheme, setLanguage } from "../../redux/preferenceSlice";
 import {
   requestAssistantQa,
@@ -60,6 +61,8 @@ const getIcon = (iconType) => {
       return <FolderOutlined />;
     case "file":
       return <FileTextOutlined />;
+    case "overview":
+      return <AppstoreOutlined />;
     default:
       return null;
   }
@@ -173,6 +176,22 @@ function decorateMenuItemsWithProgress(items, options, inSubjectFolder = false) 
     const nextChildren = item.children
       ? decorateMenuItemsWithProgress(item.children, options, nextInSubjectFolder)
       : undefined;
+
+    if (inSubjectFolder && item.iconType === "overview") {
+      const normalizedKey = normalizeMenuKey(item.key);
+      const isCurrent = normalizedKey === currentNoteUrl;
+      return {
+        ...item,
+        children: nextChildren,
+        label: (
+          <div
+            className={`note-layout__menu-overview-label ${isCurrent ? "note-layout__menu-overview-label--current" : ""}`}
+          >
+            <span className="note-layout__menu-overview-text">{item.label}</span>
+          </div>
+        ),
+      };
+    }
 
     if (inSubjectFolder && isFile) {
       const normalizedKey = normalizeMenuKey(item.key);
@@ -455,7 +474,10 @@ const NoteLayout = () => {
   }, [isMobile]);
 
   // menu contents & icons
-  const plainMenuItems = useMemo(() => buildMenuItems(notesIndex), [notesIndex]);
+  const plainMenuItems = useMemo(
+    () => injectSubjectOverviewMenuItems(buildMenuItems(notesIndex)),
+    [notesIndex],
+  );
   const iconMenuItems = useMemo(() => addIconsToMenuItems(plainMenuItems), [plainMenuItems]);
   const searchItems = useMemo(() => flattenSearchItems(plainMenuItems), [plainMenuItems]);
   const searchOptions = useMemo(
@@ -539,7 +561,8 @@ const NoteLayout = () => {
     () => normalizeMenuKey(currentMeta?.url || ""),
     [currentMeta?.url],
   );
-  const isCurrentNoteCompleted = currentNoteUrlNormalized
+  const isOverviewPage = isSubjectOverviewPath(currentNoteUrlNormalized);
+  const isCurrentNoteCompleted = !isOverviewPage && currentNoteUrlNormalized
     ? completedNoteUrls.has(currentNoteUrlNormalized)
     : false;
 
@@ -570,7 +593,7 @@ const NoteLayout = () => {
   useEffect(() => {
     let mounted = true;
     async function loadNoteQuotes() {
-      if (!currentNoteUrlNormalized) {
+      if (!currentNoteUrlNormalized || isSubjectOverviewPath(currentNoteUrlNormalized)) {
         setNoteQuotes([]);
         return;
       }
@@ -1182,7 +1205,7 @@ const NoteLayout = () => {
                 assistantActive={assistantPanelActive}
                 isCurrentNoteCompleted={isCurrentNoteCompleted}
                 completePending={completeNotePending}
-                onToggleCompletion={handleToggleCurrentNoteCompletion}
+                onToggleCompletion={isOverviewPage ? undefined : handleToggleCurrentNoteCompletion}
                 workspaceMeta={workspaceMeta}
                 onExploreMindmap={handleExploreMindmap}
                 isMobile={isMobile}

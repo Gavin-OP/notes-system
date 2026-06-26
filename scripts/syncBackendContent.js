@@ -126,6 +126,22 @@ function main() {
     imageCount = copyDirRecursive(backendImageDir, frontendImageDir);
   }
 
+  const backendOverviewPath = path.join(
+    backendRoot,
+    "output",
+    "content",
+    "subjects",
+    subjectFs,
+    "overview",
+    "syllabus.json",
+  );
+  let overviewCopied = 0;
+  if (fs.existsSync(backendOverviewPath)) {
+    const frontendOverviewDir = path.join(FRONTEND_ROOT, "public", "subjects", subjectRoute);
+    copyFile(backendOverviewPath, path.join(frontendOverviewDir, "syllabus.json"));
+    overviewCopied = 1;
+  }
+
   console.log(
     JSON.stringify(
       {
@@ -134,6 +150,7 @@ function main() {
         notesCopied: noteCount,
         graphsCopied: graphCount,
         imagesCopied: imageCount,
+        overviewCopied,
       },
       null,
       2,

@@ -1,0 +1,690 @@
+{
+  "subjectId": "python",
+  "summary": "This subject provides a comprehensive introduction to Python programming, guiding learners from foundational concepts to advanced techniques. It begins with setting up the Python environment and understanding core syntax, data types, and control flow. The curriculum then progresses to structuring code using functions, data structures, modules, and packages, ensuring modularity and reusability. Learners will also master robust programming practices through file and exception handling, and delve into object-oriented programming principles. The subject culminates with an exploration of advanced Python features and an introduction to its powerful applications in scientific computing and data analysis.",
+  "outcomes": [
+    "Set up a Python development environment and execute basic Python scripts.",
+    "Construct Python programs using fundamental data types, operators, and control flow statements.",
+    "Design and implement functions, modules, and packages to create modular and reusable code.",
+    "Effectively utilize Python's built-in data structures for organizing and manipulating data.",
+    "Implement robust error handling and file input/output operations in Python applications.",
+    "Apply object-oriented programming principles to develop structured and maintainable Python code.",
+    "Leverage advanced Python features to write more efficient and expressive programs.",
+    "Begin exploring Python's capabilities for scientific computing and data analysis using core libraries."
+  ],
+  "level": "This subject is designed for learners with little to no prior programming experience and aims to bring them to an intermediate proficiency level in Python. Upon completion, learners will possess a strong foundational understanding of Python's syntax, paradigms, and best practices, enabling them to write functional, organized, and robust applications. While it introduces advanced concepts and scientific computing, it provides a solid groundwork rather than deep specialization in these areas.",
+  "prerequisites": [
+    "Basic computer literacy, including file system navigation and text editing.",
+    "Familiarity with common operating system operations (e.g., installing software).",
+    "A willingness to learn logical thinking and problem-solving."
+  ],
+  "whyLearn": "Learning Python is an invaluable investment for anyone looking to enter the world of programming or enhance their technical skill set. Its versatility makes it a dominant language across diverse fields, including web development, data science, artificial intelligence, machine learning, and automation. Mastering Python equips you with the ability to solve complex problems, automate repetitive tasks, analyze data, and build robust applications, opening doors to numerous career opportunities and fostering a powerful problem-solving mindset.",
+  "whoItsFor": [
+    "Absolute beginners with no prior programming experience.",
+    "Individuals aspiring to pursue careers in data science, web development, automation, or software engineering.",
+    "Professionals from other fields looking to acquire programming skills for data analysis, scripting, or process automation.",
+    "Anyone interested in understanding how to build software and solve problems using a widely-used and powerful language."
+  ],
+  "conceptGroups": [
+    {
+      "id": "getting-started-with-python",
+      "title": "Getting Started with Python",
+      "topicOrder": 0,
+      "concepts": [
+        {
+          "id": "concept:python/python-programming-language",
+          "label": "Python",
+          "slug": "python-programming-language",
+          "noteSlug": "getting-started-with-python",
+          "noteUrl": "/note/python/getting-started-with-python.md",
+          "anchorId": "concept-python-programming-language",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/python-interpreter",
+          "label": "interpreter",
+          "slug": "python-interpreter",
+          "noteSlug": "getting-started-with-python",
+          "noteUrl": "/note/python/getting-started-with-python.md",
+          "anchorId": "concept-python-interpreter",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/code-editor",
+          "label": "IDE",
+          "slug": "code-editor",
+          "noteSlug": "getting-started-with-python",
+          "noteUrl": "/note/python/getting-started-with-python.md",
+          "anchorId": "concept-code-editor",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/hello-world-program",
+          "label": "first program",
+          "slug": "hello-world-program",
+          "noteSlug": "getting-started-with-python",
+          "noteUrl": "/note/python/getting-started-with-python.md",
+          "anchorId": "concept-hello-world-program",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/zen-of-python",
+          "label": "zen of python",
+          "slug": "zen-of-python",
+          "noteSlug": "getting-started-with-python",
+          "noteUrl": "/note/python/getting-started-with-python.md",
+          "anchorId": "concept-zen-of-python",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "python-data-types-operators",
+      "title": "Python Fundamentals: Data Types and Operators",
+      "topicOrder": 1,
+      "concepts": [
+        {
+          "id": "concept:python/data-type",
+          "label": "type",
+          "slug": "data-type",
+          "noteSlug": "python-data-types-operators",
+          "noteUrl": "/note/python/python-data-types-operators.md",
+          "anchorId": "concept-data-type",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/integer-data-type",
+          "label": "int",
+          "slug": "integer-data-type",
+          "noteSlug": "python-data-types-operators",
+          "noteUrl": "/note/python/python-data-types-operators.md",
+          "anchorId": "concept-integer-data-type",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/float-data-type",
+          "label": "floating-point number",
+          "slug": "float-data-type",
+          "noteSlug": "python-data-types-operators",
+          "noteUrl": "/note/python/python-data-types-operators.md",
+          "anchorId": "concept-float-data-type",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/string-data-type",
+          "label": "character string",
+          "slug": "string-data-type",
+          "noteSlug": "python-data-types-operators",
+          "noteUrl": "/note/python/python-data-types-operators.md",
+          "anchorId": "concept-string-data-type",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/boolean-data-type",
+          "label": "boolean value",
+          "slug": "boolean-data-type",
+          "noteSlug": "python-data-types-operators",
+          "noteUrl": "/note/python/python-data-types-operators.md",
+          "anchorId": "concept-boolean-data-type",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/arithmetic-operators",
+          "label": "mathematical operators",
+          "slug": "arithmetic-operators",
+          "noteSlug": "python-data-types-operators",
+          "noteUrl": "/note/python/python-data-types-operators.md",
+          "anchorId": "concept-arithmetic-operators",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/assignment-operator",
+          "label": "assignment",
+          "slug": "assignment-operator",
+          "noteSlug": "python-data-types-operators",
+          "noteUrl": "/note/python/python-data-types-operators.md",
+          "anchorId": "concept-assignment-operator",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/comparison-operators",
+          "label": "relational operators",
+          "slug": "comparison-operators",
+          "noteSlug": "python-data-types-operators",
+          "noteUrl": "/note/python/python-data-types-operators.md",
+          "anchorId": "concept-comparison-operators",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "control-flow-python",
+      "title": "Control Flow in Python",
+      "topicOrder": 2,
+      "concepts": [
+        {
+          "id": "concept:python/conditional-statement",
+          "label": "conditional programming",
+          "slug": "conditional-statement",
+          "noteSlug": "control-flow-python",
+          "noteUrl": "/note/python/control-flow-python.md",
+          "anchorId": "concept-conditional-statement",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/if-elif-else-statement",
+          "label": "if-then-else",
+          "slug": "if-elif-else-statement",
+          "noteSlug": "control-flow-python",
+          "noteUrl": "/note/python/control-flow-python.md",
+          "anchorId": "concept-if-elif-else-statement",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/for-loop",
+          "label": "for statement",
+          "slug": "for-loop",
+          "noteSlug": "control-flow-python",
+          "noteUrl": "/note/python/control-flow-python.md",
+          "anchorId": "concept-for-loop",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/while-loop",
+          "label": "while statement",
+          "slug": "while-loop",
+          "noteSlug": "control-flow-python",
+          "noteUrl": "/note/python/control-flow-python.md",
+          "anchorId": "concept-while-loop",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/break-statement",
+          "label": "break statement",
+          "slug": "break-statement",
+          "noteSlug": "control-flow-python",
+          "noteUrl": "/note/python/control-flow-python.md",
+          "anchorId": "concept-break-statement",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/continue-statement",
+          "label": "continue statement",
+          "slug": "continue-statement",
+          "noteSlug": "control-flow-python",
+          "noteUrl": "/note/python/control-flow-python.md",
+          "anchorId": "concept-continue-statement",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/code-indentation",
+          "label": "significant indentation",
+          "slug": "code-indentation",
+          "noteSlug": "control-flow-python",
+          "noteUrl": "/note/python/control-flow-python.md",
+          "anchorId": "concept-code-indentation",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "python-data-structures",
+      "title": "Python Data Structures",
+      "topicOrder": 3,
+      "concepts": [
+        {
+          "id": "concept:python/data-structures",
+          "label": "collection types",
+          "slug": "data-structures",
+          "noteSlug": "python-data-structures",
+          "noteUrl": "/note/python/python-data-structures.md",
+          "anchorId": "concept-data-structures",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/list-data-structure",
+          "label": "list",
+          "slug": "list-data-structure",
+          "noteSlug": "python-data-structures",
+          "noteUrl": "/note/python/python-data-structures.md",
+          "anchorId": "concept-list-data-structure",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/tuple-data-structure",
+          "label": "tuple",
+          "slug": "tuple-data-structure",
+          "noteSlug": "python-data-structures",
+          "noteUrl": "/note/python/python-data-structures.md",
+          "anchorId": "concept-tuple-data-structure",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/dictionary-data-structure",
+          "label": "dictionary",
+          "slug": "dictionary-data-structure",
+          "noteSlug": "python-data-structures",
+          "noteUrl": "/note/python/python-data-structures.md",
+          "anchorId": "concept-dictionary-data-structure",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/set-data-structure",
+          "label": "set",
+          "slug": "set-data-structure",
+          "noteSlug": "python-data-structures",
+          "noteUrl": "/note/python/python-data-structures.md",
+          "anchorId": "concept-set-data-structure",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/mutability-vs-immutability",
+          "label": "mutable objects",
+          "slug": "mutability-vs-immutability",
+          "noteSlug": "python-data-structures",
+          "noteUrl": "/note/python/python-data-structures.md",
+          "anchorId": "concept-mutability-vs-immutability",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/list-comprehension",
+          "label": "list comprehensions",
+          "slug": "list-comprehension",
+          "noteSlug": "python-data-structures",
+          "noteUrl": "/note/python/python-data-structures.md",
+          "anchorId": "concept-list-comprehension",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "functions-in-python",
+      "title": "Functions in Python",
+      "topicOrder": 4,
+      "concepts": [
+        {
+          "id": "concept:python/function",
+          "label": "computer function",
+          "slug": "function",
+          "noteSlug": "functions-in-python",
+          "noteUrl": "/note/python/functions-in-python.md",
+          "anchorId": "concept-function",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/function-arguments",
+          "label": "parameters",
+          "slug": "function-arguments",
+          "noteSlug": "functions-in-python",
+          "noteUrl": "/note/python/functions-in-python.md",
+          "anchorId": "concept-function-arguments",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/return-statement",
+          "label": "return value",
+          "slug": "return-statement",
+          "noteSlug": "functions-in-python",
+          "noteUrl": "/note/python/functions-in-python.md",
+          "anchorId": "concept-return-statement",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/variable-scope",
+          "label": "scope",
+          "slug": "variable-scope",
+          "noteSlug": "functions-in-python",
+          "noteUrl": "/note/python/functions-in-python.md",
+          "anchorId": "concept-variable-scope",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/lambda-function",
+          "label": "anonymous function",
+          "slug": "lambda-function",
+          "noteSlug": "functions-in-python",
+          "noteUrl": "/note/python/functions-in-python.md",
+          "anchorId": "concept-lambda-function",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/docstring",
+          "label": "documentation string",
+          "slug": "docstring",
+          "noteSlug": "functions-in-python",
+          "noteUrl": "/note/python/functions-in-python.md",
+          "anchorId": "concept-docstring",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "modules-packages",
+      "title": "Modules and Packages",
+      "topicOrder": 5,
+      "concepts": [
+        {
+          "id": "concept:python/python-module",
+          "label": "module",
+          "slug": "python-module",
+          "noteSlug": "modules-packages",
+          "noteUrl": "/note/python/modules-packages.md",
+          "anchorId": "concept-python-module",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/python-package",
+          "label": "package",
+          "slug": "python-package",
+          "noteSlug": "modules-packages",
+          "noteUrl": "/note/python/modules-packages.md",
+          "anchorId": "concept-python-package",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/import-statement",
+          "label": "import",
+          "slug": "import-statement",
+          "noteSlug": "modules-packages",
+          "noteUrl": "/note/python/modules-packages.md",
+          "anchorId": "concept-import-statement",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/python-package-index",
+          "label": "PyPI",
+          "slug": "python-package-index",
+          "noteSlug": "modules-packages",
+          "noteUrl": "/note/python/modules-packages.md",
+          "anchorId": "concept-python-package-index",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/pip-package-manager",
+          "label": "pip",
+          "slug": "pip-package-manager",
+          "noteSlug": "modules-packages",
+          "noteUrl": "/note/python/modules-packages.md",
+          "anchorId": "concept-pip-package-manager",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/python-standard-library",
+          "label": "standard library",
+          "slug": "python-standard-library",
+          "noteSlug": "modules-packages",
+          "noteUrl": "/note/python/modules-packages.md",
+          "anchorId": "concept-python-standard-library",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "file-exception-handling",
+      "title": "File Handling and Exception Handling",
+      "topicOrder": 6,
+      "concepts": [
+        {
+          "id": "concept:python/file-io",
+          "label": "file input/output",
+          "slug": "file-io",
+          "noteSlug": "file-exception-handling",
+          "noteUrl": "/note/python/file-exception-handling.md",
+          "anchorId": "concept-file-io",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/text-file-handling",
+          "label": "reading text files",
+          "slug": "text-file-handling",
+          "noteSlug": "file-exception-handling",
+          "noteUrl": "/note/python/file-exception-handling.md",
+          "anchorId": "concept-text-file-handling",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/binary-file-handling",
+          "label": "reading binary files",
+          "slug": "binary-file-handling",
+          "noteSlug": "file-exception-handling",
+          "noteUrl": "/note/python/file-exception-handling.md",
+          "anchorId": "concept-binary-file-handling",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/exception-handling",
+          "label": "error handling",
+          "slug": "exception-handling",
+          "noteSlug": "file-exception-handling",
+          "noteUrl": "/note/python/file-exception-handling.md",
+          "anchorId": "concept-exception-handling",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/try-except-finally-block",
+          "label": "try-except",
+          "slug": "try-except-finally-block",
+          "noteSlug": "file-exception-handling",
+          "noteUrl": "/note/python/file-exception-handling.md",
+          "anchorId": "concept-try-except-finally-block",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/custom-exceptions",
+          "label": "user-defined exceptions",
+          "slug": "custom-exceptions",
+          "noteSlug": "file-exception-handling",
+          "noteUrl": "/note/python/file-exception-handling.md",
+          "anchorId": "concept-custom-exceptions",
+          "importance": "medium"
+        }
+      ]
+    },
+    {
+      "id": "object-oriented-programming-python",
+      "title": "Object-Oriented Programming in Python",
+      "topicOrder": 7,
+      "concepts": [
+        {
+          "id": "concept:python/object-oriented-programming",
+          "label": "OOP",
+          "slug": "object-oriented-programming",
+          "noteSlug": "object-oriented-programming-python",
+          "noteUrl": "/note/python/object-oriented-programming-python.md",
+          "anchorId": "concept-object-oriented-programming",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/class",
+          "label": "class (computer science)",
+          "slug": "class",
+          "noteSlug": "object-oriented-programming-python",
+          "noteUrl": "/note/python/object-oriented-programming-python.md",
+          "anchorId": "concept-class",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/object",
+          "label": "object (computer science)",
+          "slug": "object",
+          "noteSlug": "object-oriented-programming-python",
+          "noteUrl": "/note/python/object-oriented-programming-python.md",
+          "anchorId": "concept-object",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/inheritance",
+          "label": "inheritance",
+          "slug": "inheritance",
+          "noteSlug": "object-oriented-programming-python",
+          "noteUrl": "/note/python/object-oriented-programming-python.md",
+          "anchorId": "concept-inheritance",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/polymorphism",
+          "label": "polymorphism",
+          "slug": "polymorphism",
+          "noteSlug": "object-oriented-programming-python",
+          "noteUrl": "/note/python/object-oriented-programming-python.md",
+          "anchorId": "concept-polymorphism",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/encapsulation",
+          "label": "encapsulation",
+          "slug": "encapsulation",
+          "noteSlug": "object-oriented-programming-python",
+          "noteUrl": "/note/python/object-oriented-programming-python.md",
+          "anchorId": "concept-encapsulation",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/method",
+          "label": "method (computing)",
+          "slug": "method",
+          "noteSlug": "object-oriented-programming-python",
+          "noteUrl": "/note/python/object-oriented-programming-python.md",
+          "anchorId": "concept-method",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:python/self-parameter",
+          "label": "self",
+          "slug": "self-parameter",
+          "noteSlug": "object-oriented-programming-python",
+          "noteUrl": "/note/python/object-oriented-programming-python.md",
+          "anchorId": "concept-self-parameter",
+          "importance": "medium"
+        }
+      ]
+    },
+    {
+      "id": "advanced-python-concepts",
+      "title": "Advanced Python Concepts",
+      "topicOrder": 8,
+      "concepts": [
+        {
+          "id": "concept:python/generator",
+          "label": "generator (computer programming)",
+          "slug": "generator",
+          "noteSlug": "advanced-python-concepts",
+          "noteUrl": "/note/python/advanced-python-concepts.md",
+          "anchorId": "concept-generator",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/iterator",
+          "label": "iterator",
+          "slug": "iterator",
+          "noteSlug": "advanced-python-concepts",
+          "noteUrl": "/note/python/advanced-python-concepts.md",
+          "anchorId": "concept-iterator",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/decorator",
+          "label": "function decorator",
+          "slug": "decorator",
+          "noteSlug": "advanced-python-concepts",
+          "noteUrl": "/note/python/advanced-python-concepts.md",
+          "anchorId": "concept-decorator",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/context-manager",
+          "label": "with statement",
+          "slug": "context-manager",
+          "noteSlug": "advanced-python-concepts",
+          "noteUrl": "/note/python/advanced-python-concepts.md",
+          "anchorId": "concept-context-manager",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/metaclass",
+          "label": "metaclass",
+          "slug": "metaclass",
+          "noteSlug": "advanced-python-concepts",
+          "noteUrl": "/note/python/advanced-python-concepts.md",
+          "anchorId": "concept-metaclass",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/duck-typing",
+          "label": "duck typing",
+          "slug": "duck-typing",
+          "noteSlug": "advanced-python-concepts",
+          "noteUrl": "/note/python/advanced-python-concepts.md",
+          "anchorId": "concept-duck-typing",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "intro-scientific-computing",
+      "title": "Introduction to Scientific Computing with Python",
+      "topicOrder": 9,
+      "concepts": [
+        {
+          "id": "concept:python/scientific-computing",
+          "label": "scientific computing",
+          "slug": "scientific-computing",
+          "noteSlug": "intro-scientific-computing",
+          "noteUrl": "/note/python/intro-scientific-computing.md",
+          "anchorId": "concept-scientific-computing",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/numpy-library",
+          "label": "NumPy",
+          "slug": "numpy-library",
+          "noteSlug": "intro-scientific-computing",
+          "noteUrl": "/note/python/intro-scientific-computing.md",
+          "anchorId": "concept-numpy-library",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/pandas-library",
+          "label": "Pandas",
+          "slug": "pandas-library",
+          "noteSlug": "intro-scientific-computing",
+          "noteUrl": "/note/python/intro-scientific-computing.md",
+          "anchorId": "concept-pandas-library",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/data-analysis",
+          "label": "data analysis",
+          "slug": "data-analysis",
+          "noteSlug": "intro-scientific-computing",
+          "noteUrl": "/note/python/intro-scientific-computing.md",
+          "anchorId": "concept-data-analysis",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/matplotlib-library",
+          "label": "Matplotlib",
+          "slug": "matplotlib-library",
+          "noteSlug": "intro-scientific-computing",
+          "noteUrl": "/note/python/intro-scientific-computing.md",
+          "anchorId": "concept-matplotlib-library",
+          "importance": "high"
+        },
+        {
+          "id": "concept:python/machine-learning",
+          "label": "ML",
+          "slug": "machine-learning",
+          "noteSlug": "intro-scientific-computing",
+          "noteUrl": "/note/python/intro-scientific-computing.md",
+          "anchorId": "concept-machine-learning",
+          "importance": "high"
+        }
+      ]
+    }
+  ],
+  "generatedAt": "2026-06-26T14:50:30.107668+00:00",
+  "meta": {
+    "topicCount": 10,
+    "conceptCount": 65,
+    "missingTopicSlugs": []
+  }
+}

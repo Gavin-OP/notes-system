@@ -1,0 +1,483 @@
+{
+  "subjectId": "finance",
+  "summary": "This subject provides a comprehensive introduction to the fundamental principles and instruments of finance. It begins by establishing core terminology and notation, then systematically explores major asset classes including fixed income, equities, and derivatives. Learners will delve into essential concepts such as the time value of money, strategies for portfolio management, the impact of behavioral biases on financial decisions, and foundational approaches to risk management and insurance. The curriculum is designed to build a cohesive understanding of how financial markets function and how wealth and risk are managed.",
+  "outcomes": [
+    "Interpret and apply core financial terminology, notation, and foundational concepts like arbitrage and rates of return.",
+    "Analyze and understand the characteristics, valuation, and uses of key financial instruments, including bonds, stocks, and derivatives.",
+    "Utilize time value of money principles to evaluate investment opportunities and financial decisions.",
+    "Describe different portfolio management vehicles and strategies, including methods for diversification and risk mitigation.",
+    "Identify and explain common behavioral biases and heuristics that influence investor decision-making and market behavior.",
+    "Understand various types of financial risk and fundamental techniques for risk management and insurance."
+  ],
+  "level": "This subject offers a foundational to intermediate-level understanding of finance. It is structured to provide learners with the essential vocabulary, analytical tools, and conceptual frameworks necessary to comprehend financial markets and make informed decisions. While covering a broad spectrum of topics, the depth is tailored to establish a robust base for further specialized study or practical application in personal and professional financial contexts.",
+  "prerequisites": [
+    "Basic arithmetic and algebraic skills.",
+    "A willingness to engage with quantitative concepts.",
+    "No prior formal finance education is required."
+  ],
+  "whyLearn": "Understanding finance is critical for navigating personal wealth management, making informed investment choices, and comprehending global economic dynamics. Professionally, this subject provides the essential knowledge base for a wide array of careers in investment banking, asset management, corporate finance, risk analysis, and financial planning. By mastering these concepts, learners will be equipped to evaluate investment opportunities, manage financial risks effectively, and contribute meaningfully in various financial roles.",
+  "whoItsFor": [
+    "Individuals seeking a comprehensive introduction to financial markets, instruments, and principles.",
+    "Aspiring finance professionals looking to build a strong foundational knowledge for future specialization.",
+    "Investors who wish to deepen their understanding of investment vehicles, strategies, and market behavior.",
+    "Anyone interested in enhancing their financial literacy and improving their personal financial decision-making skills."
+  ],
+  "conceptGroups": [
+    {
+      "id": "rules-of-thumb",
+      "title": "Finance Notation & Reference",
+      "topicOrder": 0,
+      "concepts": [
+        {
+          "id": "concept:finance/finance-abbreviations",
+          "label": "financial abbreviations",
+          "slug": "finance-abbreviations",
+          "noteSlug": "rules-of-thumb",
+          "noteUrl": "/note/finance/rules-of-thumb.md",
+          "anchorId": "concept-finance-abbreviations",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/finance-dictionary",
+          "label": "finance dictionary",
+          "slug": "finance-dictionary",
+          "noteSlug": "rules-of-thumb",
+          "noteUrl": "/note/finance/rules-of-thumb.md",
+          "anchorId": "concept-finance-dictionary",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "basic-definition",
+      "title": "Basic Definition",
+      "topicOrder": 1,
+      "concepts": [
+        {
+          "id": "concept:finance/arbitrage",
+          "label": "arbitrage",
+          "slug": "arbitrage",
+          "noteSlug": "basic-definition",
+          "noteUrl": "/note/finance/basic-definition.md",
+          "anchorId": "concept-arbitrage",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/basis-points",
+          "label": "basis points",
+          "slug": "basis-points",
+          "noteSlug": "basic-definition",
+          "noteUrl": "/note/finance/basic-definition.md",
+          "anchorId": "concept-basis-points",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/holding-period-return",
+          "label": "holding period return",
+          "slug": "holding-period-return",
+          "noteSlug": "basic-definition",
+          "noteUrl": "/note/finance/basic-definition.md",
+          "anchorId": "concept-holding-period-return",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/risk-neutral-pricing",
+          "label": "risk-neutral pricing",
+          "slug": "risk-neutral-pricing",
+          "noteSlug": "basic-definition",
+          "noteUrl": "/note/finance/basic-definition.md",
+          "anchorId": "concept-risk-neutral-pricing",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/rate-of-return",
+          "label": "rate of return",
+          "slug": "rate-of-return",
+          "noteSlug": "basic-definition",
+          "noteUrl": "/note/finance/basic-definition.md",
+          "anchorId": "concept-rate-of-return",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "fixed-income",
+      "title": "Fixed Income",
+      "topicOrder": 2,
+      "concepts": [
+        {
+          "id": "concept:finance/bond",
+          "label": "bond",
+          "slug": "bond",
+          "noteSlug": "fixed-income",
+          "noteUrl": "/note/finance/fixed-income.md",
+          "anchorId": "concept-bond",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/bond-valuation",
+          "label": "bond valuation",
+          "slug": "bond-valuation",
+          "noteSlug": "fixed-income",
+          "noteUrl": "/note/finance/fixed-income.md",
+          "anchorId": "concept-bond-valuation",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/duration",
+          "label": "duration",
+          "slug": "duration",
+          "noteSlug": "fixed-income",
+          "noteUrl": "/note/finance/fixed-income.md",
+          "anchorId": "concept-duration",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/yield",
+          "label": "yield",
+          "slug": "yield",
+          "noteSlug": "fixed-income",
+          "noteUrl": "/note/finance/fixed-income.md",
+          "anchorId": "concept-yield",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/convexity",
+          "label": "convexity",
+          "slug": "convexity",
+          "noteSlug": "fixed-income",
+          "noteUrl": "/note/finance/fixed-income.md",
+          "anchorId": "concept-convexity",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/immunization",
+          "label": "portfolio immunization",
+          "slug": "immunization",
+          "noteSlug": "fixed-income",
+          "noteUrl": "/note/finance/fixed-income.md",
+          "anchorId": "concept-immunization",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "equity-market",
+      "title": "Equity Market",
+      "topicOrder": 3,
+      "concepts": [
+        {
+          "id": "concept:finance/stock",
+          "label": "stock",
+          "slug": "stock",
+          "noteSlug": "equity-market",
+          "noteUrl": "/note/finance/equity-market.md",
+          "anchorId": "concept-stock",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/common-stock",
+          "label": "common stock",
+          "slug": "common-stock",
+          "noteSlug": "equity-market",
+          "noteUrl": "/note/finance/equity-market.md",
+          "anchorId": "concept-common-stock",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/preferred-stock",
+          "label": "preferred stock",
+          "slug": "preferred-stock",
+          "noteSlug": "equity-market",
+          "noteUrl": "/note/finance/equity-market.md",
+          "anchorId": "concept-preferred-stock",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/stock-valuation",
+          "label": "stock valuation",
+          "slug": "stock-valuation",
+          "noteSlug": "equity-market",
+          "noteUrl": "/note/finance/equity-market.md",
+          "anchorId": "concept-stock-valuation",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/dividend-discount-model",
+          "label": "dividend discount model",
+          "slug": "dividend-discount-model",
+          "noteSlug": "equity-market",
+          "noteUrl": "/note/finance/equity-market.md",
+          "anchorId": "concept-dividend-discount-model",
+          "importance": "medium"
+        }
+      ]
+    },
+    {
+      "id": "derivatives",
+      "title": "Derivatives",
+      "topicOrder": 4,
+      "concepts": [
+        {
+          "id": "concept:finance/derivative",
+          "label": "derivative",
+          "slug": "derivative",
+          "noteSlug": "derivatives",
+          "noteUrl": "/note/finance/derivatives.md",
+          "anchorId": "concept-derivative",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/forward",
+          "label": "forward contract",
+          "slug": "forward",
+          "noteSlug": "derivatives",
+          "noteUrl": "/note/finance/derivatives.md",
+          "anchorId": "concept-forward",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/futures",
+          "label": "futures",
+          "slug": "futures",
+          "noteSlug": "derivatives",
+          "noteUrl": "/note/finance/derivatives.md",
+          "anchorId": "concept-futures",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/option",
+          "label": "option",
+          "slug": "option",
+          "noteSlug": "derivatives",
+          "noteUrl": "/note/finance/derivatives.md",
+          "anchorId": "concept-option",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/swap",
+          "label": "swap",
+          "slug": "swap",
+          "noteSlug": "derivatives",
+          "noteUrl": "/note/finance/derivatives.md",
+          "anchorId": "concept-swap",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/greeks",
+          "label": "the greeks",
+          "slug": "greeks",
+          "noteSlug": "derivatives",
+          "noteUrl": "/note/finance/derivatives.md",
+          "anchorId": "concept-greeks",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "portfolio-management",
+      "title": "Portfolio Management",
+      "topicOrder": 5,
+      "concepts": [
+        {
+          "id": "concept:finance/mutual-fund",
+          "label": "mutual fund",
+          "slug": "mutual-fund",
+          "noteSlug": "portfolio-management",
+          "noteUrl": "/note/finance/portfolio-management.md",
+          "anchorId": "concept-mutual-fund",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/etf",
+          "label": "ETF",
+          "slug": "etf",
+          "noteSlug": "portfolio-management",
+          "noteUrl": "/note/finance/portfolio-management.md",
+          "anchorId": "concept-etf",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/hedge-fund",
+          "label": "hedge fund",
+          "slug": "hedge-fund",
+          "noteSlug": "portfolio-management",
+          "noteUrl": "/note/finance/portfolio-management.md",
+          "anchorId": "concept-hedge-fund",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/portfolio-diversification",
+          "label": "diversification",
+          "slug": "portfolio-diversification",
+          "noteSlug": "portfolio-management",
+          "noteUrl": "/note/finance/portfolio-management.md",
+          "anchorId": "concept-portfolio-diversification",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "behavioral-finance",
+      "title": "Behavioral Finance",
+      "topicOrder": 6,
+      "concepts": [
+        {
+          "id": "concept:finance/behavioral-finance",
+          "label": "behavioral finance",
+          "slug": "behavioral-finance",
+          "noteSlug": "behavioral-finance",
+          "noteUrl": "/note/finance/behavioral-finance.md",
+          "anchorId": "concept-behavioral-finance",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/efficient-market-hypothesis",
+          "label": "efficient market hypothesis",
+          "slug": "efficient-market-hypothesis",
+          "noteSlug": "behavioral-finance",
+          "noteUrl": "/note/finance/behavioral-finance.md",
+          "anchorId": "concept-efficient-market-hypothesis",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/cognitive-bias",
+          "label": "cognitive bias",
+          "slug": "cognitive-bias",
+          "noteSlug": "behavioral-finance",
+          "noteUrl": "/note/finance/behavioral-finance.md",
+          "anchorId": "concept-cognitive-bias",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/market-anomaly",
+          "label": "market anomaly",
+          "slug": "market-anomaly",
+          "noteSlug": "behavioral-finance",
+          "noteUrl": "/note/finance/behavioral-finance.md",
+          "anchorId": "concept-market-anomaly",
+          "importance": "medium"
+        }
+      ]
+    },
+    {
+      "id": "time-value",
+      "title": "Time Value",
+      "topicOrder": 7,
+      "concepts": [
+        {
+          "id": "concept:finance/time-value-of-money",
+          "label": "time value of money",
+          "slug": "time-value-of-money",
+          "noteSlug": "time-value",
+          "noteUrl": "/note/finance/time-value.md",
+          "anchorId": "concept-time-value-of-money",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/present-value",
+          "label": "present value",
+          "slug": "present-value",
+          "noteSlug": "time-value",
+          "noteUrl": "/note/finance/time-value.md",
+          "anchorId": "concept-present-value",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/future-value",
+          "label": "future value",
+          "slug": "future-value",
+          "noteSlug": "time-value",
+          "noteUrl": "/note/finance/time-value.md",
+          "anchorId": "concept-future-value",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/interest-rate",
+          "label": "interest rate",
+          "slug": "interest-rate",
+          "noteSlug": "time-value",
+          "noteUrl": "/note/finance/time-value.md",
+          "anchorId": "concept-interest-rate",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/effective-annual-rate",
+          "label": "effective annual rate",
+          "slug": "effective-annual-rate",
+          "noteSlug": "time-value",
+          "noteUrl": "/note/finance/time-value.md",
+          "anchorId": "concept-effective-annual-rate",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/compounding",
+          "label": "compounding",
+          "slug": "compounding",
+          "noteSlug": "time-value",
+          "noteUrl": "/note/finance/time-value.md",
+          "anchorId": "concept-compounding",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "risk-and-insurance",
+      "title": "Risk and Insurance",
+      "topicOrder": 8,
+      "concepts": [
+        {
+          "id": "concept:finance/risk",
+          "label": "risk",
+          "slug": "risk",
+          "noteSlug": "risk-and-insurance",
+          "noteUrl": "/note/finance/risk-and-insurance.md",
+          "anchorId": "concept-risk",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/insurance",
+          "label": "insurance",
+          "slug": "insurance",
+          "noteSlug": "risk-and-insurance",
+          "noteUrl": "/note/finance/risk-and-insurance.md",
+          "anchorId": "concept-insurance",
+          "importance": "high"
+        },
+        {
+          "id": "concept:finance/hazard",
+          "label": "hazard",
+          "slug": "hazard",
+          "noteSlug": "risk-and-insurance",
+          "noteUrl": "/note/finance/risk-and-insurance.md",
+          "anchorId": "concept-hazard",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/adverse-selection",
+          "label": "adverse selection",
+          "slug": "adverse-selection",
+          "noteSlug": "risk-and-insurance",
+          "noteUrl": "/note/finance/risk-and-insurance.md",
+          "anchorId": "concept-adverse-selection",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:finance/risk-management",
+          "label": "risk management",
+          "slug": "risk-management",
+          "noteSlug": "risk-and-insurance",
+          "noteUrl": "/note/finance/risk-and-insurance.md",
+          "anchorId": "concept-risk-management",
+          "importance": "high"
+        }
+      ]
+    }
+  ],
+  "generatedAt": "2026-06-26T14:50:48.787782+00:00",
+  "meta": {
+    "topicCount": 9,
+    "conceptCount": 43,
+    "missingTopicSlugs": []
+  }
+}

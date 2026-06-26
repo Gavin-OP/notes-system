@@ -10,6 +10,7 @@ const NoteLayout = lazy(() => import("../common/layouts/NoteLayout"));
 const NotePage = lazy(() => import("../pages/NotePage"));
 const SubjectEntry = lazy(() => import("../pages/NotePage/SubjectEntry"));
 const SubjectMindmap = lazy(() => import("../pages/NotePage/SubjectEntry/SubjectMindmap"));
+const SubjectOverviewPage = lazy(() => import("../pages/SubjectOverview/SubjectOverviewPage"));
 const UserLoginPage = lazy(() => import("../pages/UserLoginPage"));
 const UserProfilePage = lazy(() => import("../pages/UserProfilePage"));
 const ExploreCareersPage = lazy(() => import("../pages/ExploreCareersPage"));
@@ -62,6 +63,7 @@ function RoutesWithTracking() {
         {/* Subject-specific routes (mindmap) */}
         {/* Dynamic routing: /subject/:subjectId/mindmap */}
         <Route path="subject/:subjectId" element={<SubjectEntry />}>
+          <Route index element={<SubjectOverviewPage />} />
           <Route path="mindmap" element={<SubjectMindmap />} />
         </Route>
 

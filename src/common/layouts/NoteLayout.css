@@ -91,6 +91,23 @@
   overflow: visible !important;
 }
 
+.note-layout__menu-overview-label {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  padding: 1px 0;
+}
+
+.note-layout__menu-overview-label--current .note-layout__menu-overview-text {
+  color: var(--ns-color-primary);
+  font-weight: 600;
+}
+
+.note-layout__menu-overview-text {
+  display: block;
+  line-height: 1.4;
+}
+
 .note-layout__menu-note-label {
   display: flex;
   align-items: stretch;

@@ -1,0 +1,898 @@
+{
+  "subjectId": "data-science",
+  "summary": "This subject offers a comprehensive journey through the entire data science lifecycle, from foundational concepts to advanced machine learning applications. Learners will begin by understanding what data science is and the different types of data, then build essential programming skills in Python for data manipulation. The curriculum progresses through critical stages of data acquisition, cleaning, and exploratory analysis, establishing a strong statistical groundwork. Finally, it delves into core machine learning paradigms, including supervised learning (regression and classification) and unsupervised learning (clustering), culminating in advanced data visualization techniques and strategies for model evaluation and deployment.",
+  "outcomes": [
+    "Define the data science lifecycle and articulate the role of a data scientist in various industries.",
+    "Utilize Python and its key libraries (e.g., Pandas, NumPy) to acquire, clean, preprocess, and transform diverse datasets.",
+    "Perform exploratory data analysis (EDA) and create compelling data visualizations to uncover patterns, detect anomalies, and communicate insights effectively.",
+    "Apply fundamental statistical concepts, including probability, distributions, hypothesis testing, and confidence intervals, to analyze data and draw valid conclusions.",
+    "Build, train, and evaluate various machine learning models for both supervised (regression and classification) and unsupervised (clustering) learning tasks.",
+    "Rigorously assess the performance of machine learning models using appropriate metrics and understand the basics of deploying models into production environments."
+  ],
+  "level": "Upon completion, learners will have achieved an intermediate proficiency in data science. This subject provides a robust theoretical understanding of core concepts combined with practical, hands-on skills in data manipulation, statistical analysis, and machine learning using Python. It prepares individuals to confidently approach real-world data challenges, contribute to data-driven projects, and serves as a solid foundation for pursuing further specialization in advanced data science or machine learning domains.",
+  "prerequisites": [
+    "Basic computer literacy and familiarity with navigating digital environments.",
+    "A willingness to learn programming concepts and logical problem-solving.",
+    "No prior experience in data science, statistics, or programming is required, as these foundational skills are taught within the curriculum."
+  ],
+  "whyLearn": "Data science is a transformative field at the forefront of innovation, empowering individuals and organizations to extract valuable insights, predict future trends, and build intelligent systems from vast amounts of data. By mastering data science, you gain a highly sought-after skill set that is critical across virtually every industry, from technology and finance to healthcare and marketing. This subject equips you to make data-driven decisions, solve complex problems, and unlock new opportunities, opening doors to diverse and impactful career paths in analytics, machine learning engineering, and business intelligence.",
+  "whoItsFor": [
+    "Individuals new to data science who are seeking a structured, comprehensive introduction to the field.",
+    "Professionals looking to transition into data-centric roles such as data analysts, data scientists, or machine learning engineers.",
+    "Analysts, researchers, or domain experts who want to enhance their existing skills with programming, statistics, and machine learning techniques.",
+    "Anyone interested in understanding how data is used to solve real-world problems and drive strategic decision-making."
+  ],
+  "conceptGroups": [
+    {
+      "id": "introduction-to-data-science",
+      "title": "Introduction to Data Science",
+      "topicOrder": 0,
+      "concepts": [
+        {
+          "id": "concept:data-science/data-science",
+          "label": "Data science",
+          "slug": "data-science",
+          "noteSlug": "introduction-to-data-science",
+          "noteUrl": "/note/data-science/introduction-to-data-science.md",
+          "anchorId": "concept-data-science",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/data-scientist",
+          "label": "Data scientist role",
+          "slug": "data-scientist",
+          "noteSlug": "introduction-to-data-science",
+          "noteUrl": "/note/data-science/introduction-to-data-science.md",
+          "anchorId": "concept-data-scientist",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/data-science-lifecycle",
+          "label": "CRISP-DM",
+          "slug": "data-science-lifecycle",
+          "noteSlug": "introduction-to-data-science",
+          "noteUrl": "/note/data-science/introduction-to-data-science.md",
+          "anchorId": "concept-data-science-lifecycle",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:data-science/data-driven-decision-making",
+          "label": "data-driven insights",
+          "slug": "data-driven-decision-making",
+          "noteSlug": "introduction-to-data-science",
+          "noteUrl": "/note/data-science/introduction-to-data-science.md",
+          "anchorId": "concept-data-driven-decision-making",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/artificial-intelligence",
+          "label": "AI",
+          "slug": "artificial-intelligence",
+          "noteSlug": "introduction-to-data-science",
+          "noteUrl": "/note/data-science/introduction-to-data-science.md",
+          "anchorId": "concept-artificial-intelligence",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/machine-learning",
+          "label": "ML",
+          "slug": "machine-learning",
+          "noteSlug": "introduction-to-data-science",
+          "noteUrl": "/note/data-science/introduction-to-data-science.md",
+          "anchorId": "concept-machine-learning",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "data-fundamentals-and-types",
+      "title": "Data Fundamentals and Types",
+      "topicOrder": 1,
+      "concepts": [
+        {
+          "id": "concept:data-science/data",
+          "label": "data",
+          "slug": "data",
+          "noteSlug": "data-fundamentals-and-types",
+          "noteUrl": "/note/data-science/data-fundamentals-and-types.md",
+          "anchorId": "concept-data",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/structured-data",
+          "label": "structured data",
+          "slug": "structured-data",
+          "noteSlug": "data-fundamentals-and-types",
+          "noteUrl": "/note/data-science/data-fundamentals-and-types.md",
+          "anchorId": "concept-structured-data",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:data-science/unstructured-data",
+          "label": "unstructured data",
+          "slug": "unstructured-data",
+          "noteSlug": "data-fundamentals-and-types",
+          "noteUrl": "/note/data-science/data-fundamentals-and-types.md",
+          "anchorId": "concept-unstructured-data",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:data-science/semi-structured-data",
+          "label": "semi structured data",
+          "slug": "semi-structured-data",
+          "noteSlug": "data-fundamentals-and-types",
+          "noteUrl": "/note/data-science/data-fundamentals-and-types.md",
+          "anchorId": "concept-semi-structured-data",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:data-science/quantitative-data",
+          "label": "numerical data",
+          "slug": "quantitative-data",
+          "noteSlug": "data-fundamentals-and-types",
+          "noteUrl": "/note/data-science/data-fundamentals-and-types.md",
+          "anchorId": "concept-quantitative-data",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:data-science/qualitative-data",
+          "label": "categorical data",
+          "slug": "qualitative-data",
+          "noteSlug": "data-fundamentals-and-types",
+          "noteUrl": "/note/data-science/data-fundamentals-and-types.md",
+          "anchorId": "concept-qualitative-data",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:data-science/data-source",
+          "label": "data source",
+          "slug": "data-source",
+          "noteSlug": "data-fundamentals-and-types",
+          "noteUrl": "/note/data-science/data-fundamentals-and-types.md",
+          "anchorId": "concept-data-source",
+          "importance": "medium"
+        }
+      ]
+    },
+    {
+      "id": "programming-for-data-science-python",
+      "title": "Programming for Data Science with Python",
+      "topicOrder": 2,
+      "concepts": [
+        {
+          "id": "concept:data-science/python-programming",
+          "label": "Python",
+          "slug": "python-programming",
+          "noteSlug": "programming-for-data-science-python",
+          "noteUrl": "/note/data-science/programming-for-data-science-python.md",
+          "anchorId": "concept-python-programming",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/data-structures-python",
+          "label": "lists",
+          "slug": "data-structures-python",
+          "noteSlug": "programming-for-data-science-python",
+          "noteUrl": "/note/data-science/programming-for-data-science-python.md",
+          "anchorId": "concept-data-structures-python",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/control-flow-python",
+          "label": "if-else",
+          "slug": "control-flow-python",
+          "noteSlug": "programming-for-data-science-python",
+          "noteUrl": "/note/data-science/programming-for-data-science-python.md",
+          "anchorId": "concept-control-flow-python",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/functions-python",
+          "label": "Python functions",
+          "slug": "functions-python",
+          "noteSlug": "programming-for-data-science-python",
+          "noteUrl": "/note/data-science/programming-for-data-science-python.md",
+          "anchorId": "concept-functions-python",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/python-libraries",
+          "label": "packages",
+          "slug": "python-libraries",
+          "noteSlug": "programming-for-data-science-python",
+          "noteUrl": "/note/data-science/programming-for-data-science-python.md",
+          "anchorId": "concept-python-libraries",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/pandas-dataframe",
+          "label": "DataFrame",
+          "slug": "pandas-dataframe",
+          "noteSlug": "programming-for-data-science-python",
+          "noteUrl": "/note/data-science/programming-for-data-science-python.md",
+          "anchorId": "concept-pandas-dataframe",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/numpy-array",
+          "label": "NumPy array",
+          "slug": "numpy-array",
+          "noteSlug": "programming-for-data-science-python",
+          "noteUrl": "/note/data-science/programming-for-data-science-python.md",
+          "anchorId": "concept-numpy-array",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "data-acquisition-and-storage",
+      "title": "Data Acquisition and Storage",
+      "topicOrder": 3,
+      "concepts": [
+        {
+          "id": "concept:data-science/data-acquisition",
+          "label": "data collection",
+          "slug": "data-acquisition",
+          "noteSlug": "data-acquisition-and-storage",
+          "noteUrl": "/note/data-science/data-acquisition-and-storage.md",
+          "anchorId": "concept-data-acquisition",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/database",
+          "label": "relational database",
+          "slug": "database",
+          "noteSlug": "data-acquisition-and-storage",
+          "noteUrl": "/note/data-science/data-acquisition-and-storage.md",
+          "anchorId": "concept-database",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/sql",
+          "label": "Structured Query Language",
+          "slug": "sql",
+          "noteSlug": "data-acquisition-and-storage",
+          "noteUrl": "/note/data-science/data-acquisition-and-storage.md",
+          "anchorId": "concept-sql",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/api",
+          "label": "Application Programming Interface",
+          "slug": "api",
+          "noteSlug": "data-acquisition-and-storage",
+          "noteUrl": "/note/data-science/data-acquisition-and-storage.md",
+          "anchorId": "concept-api",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/web-scraping",
+          "label": "data scraping",
+          "slug": "web-scraping",
+          "noteSlug": "data-acquisition-and-storage",
+          "noteUrl": "/note/data-science/data-acquisition-and-storage.md",
+          "anchorId": "concept-web-scraping",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/csv-file",
+          "label": "Comma Separated Values",
+          "slug": "csv-file",
+          "noteSlug": "data-acquisition-and-storage",
+          "noteUrl": "/note/data-science/data-acquisition-and-storage.md",
+          "anchorId": "concept-csv-file",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/json-file",
+          "label": "JavaScript Object Notation",
+          "slug": "json-file",
+          "noteSlug": "data-acquisition-and-storage",
+          "noteUrl": "/note/data-science/data-acquisition-and-storage.md",
+          "anchorId": "concept-json-file",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "data-cleaning-preprocessing",
+      "title": "Data Cleaning and Preprocessing",
+      "topicOrder": 4,
+      "concepts": [
+        {
+          "id": "concept:data-science/missing-data",
+          "label": "null values",
+          "slug": "missing-data",
+          "noteSlug": "data-cleaning-preprocessing",
+          "noteUrl": "/note/data-science/data-cleaning-preprocessing.md",
+          "anchorId": "concept-missing-data",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/outliers",
+          "label": "anomalies",
+          "slug": "outliers",
+          "noteSlug": "data-cleaning-preprocessing",
+          "noteUrl": "/note/data-science/data-cleaning-preprocessing.md",
+          "anchorId": "concept-outliers",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/data-imputation",
+          "label": "imputation",
+          "slug": "data-imputation",
+          "noteSlug": "data-cleaning-preprocessing",
+          "noteUrl": "/note/data-science/data-cleaning-preprocessing.md",
+          "anchorId": "concept-data-imputation",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/data-transformation",
+          "label": "data wrangling",
+          "slug": "data-transformation",
+          "noteSlug": "data-cleaning-preprocessing",
+          "noteUrl": "/note/data-science/data-cleaning-preprocessing.md",
+          "anchorId": "concept-data-transformation",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/feature-scaling",
+          "label": "standardization",
+          "slug": "feature-scaling",
+          "noteSlug": "data-cleaning-preprocessing",
+          "noteUrl": "/note/data-science/data-cleaning-preprocessing.md",
+          "anchorId": "concept-feature-scaling",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/categorical-encoding",
+          "label": "one-hot encoding",
+          "slug": "categorical-encoding",
+          "noteSlug": "data-cleaning-preprocessing",
+          "noteUrl": "/note/data-science/data-cleaning-preprocessing.md",
+          "anchorId": "concept-categorical-encoding",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/data-normalization",
+          "label": "min-max scaling",
+          "slug": "data-normalization",
+          "noteSlug": "data-cleaning-preprocessing",
+          "noteUrl": "/note/data-science/data-cleaning-preprocessing.md",
+          "anchorId": "concept-data-normalization",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "exploratory-data-analysis",
+      "title": "Exploratory Data Analysis (EDA)",
+      "topicOrder": 5,
+      "concepts": [
+        {
+          "id": "concept:data-science/descriptive-statistics",
+          "label": "summary statistics",
+          "slug": "descriptive-statistics",
+          "noteSlug": "exploratory-data-analysis",
+          "noteUrl": "/note/data-science/exploratory-data-analysis.md",
+          "anchorId": "concept-descriptive-statistics",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/data-visualization",
+          "label": "visual analytics",
+          "slug": "data-visualization",
+          "noteSlug": "exploratory-data-analysis",
+          "noteUrl": "/note/data-science/exploratory-data-analysis.md",
+          "anchorId": "concept-data-visualization",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/univariate-analysis",
+          "label": "univariate analysis",
+          "slug": "univariate-analysis",
+          "noteSlug": "exploratory-data-analysis",
+          "noteUrl": "/note/data-science/exploratory-data-analysis.md",
+          "anchorId": "concept-univariate-analysis",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/bivariate-analysis",
+          "label": "bivariate analysis",
+          "slug": "bivariate-analysis",
+          "noteSlug": "exploratory-data-analysis",
+          "noteUrl": "/note/data-science/exploratory-data-analysis.md",
+          "anchorId": "concept-bivariate-analysis",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/correlation",
+          "label": "covariance",
+          "slug": "correlation",
+          "noteSlug": "exploratory-data-analysis",
+          "noteUrl": "/note/data-science/exploratory-data-analysis.md",
+          "anchorId": "concept-correlation",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "statistical-foundations",
+      "title": "Statistical Foundations for Data Science",
+      "topicOrder": 6,
+      "concepts": [
+        {
+          "id": "concept:data-science/probability",
+          "label": "probability",
+          "slug": "probability",
+          "noteSlug": "statistical-foundations",
+          "noteUrl": "/note/data-science/statistical-foundations.md",
+          "anchorId": "concept-probability",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/random-variable",
+          "label": "random variable",
+          "slug": "random-variable",
+          "noteSlug": "statistical-foundations",
+          "noteUrl": "/note/data-science/statistical-foundations.md",
+          "anchorId": "concept-random-variable",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/probability-distribution",
+          "label": "normal distribution",
+          "slug": "probability-distribution",
+          "noteSlug": "statistical-foundations",
+          "noteUrl": "/note/data-science/statistical-foundations.md",
+          "anchorId": "concept-probability-distribution",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:data-science/hypothesis-testing",
+          "label": "statistical hypothesis testing",
+          "slug": "hypothesis-testing",
+          "noteSlug": "statistical-foundations",
+          "noteUrl": "/note/data-science/statistical-foundations.md",
+          "anchorId": "concept-hypothesis-testing",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/p-value",
+          "label": "p value",
+          "slug": "p-value",
+          "noteSlug": "statistical-foundations",
+          "noteUrl": "/note/data-science/statistical-foundations.md",
+          "anchorId": "concept-p-value",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/confidence-interval",
+          "label": "confidence interval",
+          "slug": "confidence-interval",
+          "noteSlug": "statistical-foundations",
+          "noteUrl": "/note/data-science/statistical-foundations.md",
+          "anchorId": "concept-confidence-interval",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/sampling",
+          "label": "sampling techniques",
+          "slug": "sampling",
+          "noteSlug": "statistical-foundations",
+          "noteUrl": "/note/data-science/statistical-foundations.md",
+          "anchorId": "concept-sampling",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "introduction-to-machine-learning",
+      "title": "Introduction to Machine Learning",
+      "topicOrder": 7,
+      "concepts": [
+        {
+          "id": "concept:data-science/machine-learning",
+          "label": "ML",
+          "slug": "machine-learning",
+          "noteSlug": "introduction-to-machine-learning",
+          "noteUrl": "/note/data-science/introduction-to-machine-learning.md",
+          "anchorId": "concept-machine-learning",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/supervised-learning",
+          "label": "supervised learning",
+          "slug": "supervised-learning",
+          "noteSlug": "introduction-to-machine-learning",
+          "noteUrl": "/note/data-science/introduction-to-machine-learning.md",
+          "anchorId": "concept-supervised-learning",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/unsupervised-learning",
+          "label": "unsupervised learning",
+          "slug": "unsupervised-learning",
+          "noteSlug": "introduction-to-machine-learning",
+          "noteUrl": "/note/data-science/introduction-to-machine-learning.md",
+          "anchorId": "concept-unsupervised-learning",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/model-training",
+          "label": "training a model",
+          "slug": "model-training",
+          "noteSlug": "introduction-to-machine-learning",
+          "noteUrl": "/note/data-science/introduction-to-machine-learning.md",
+          "anchorId": "concept-model-training",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/feature-engineering",
+          "label": "feature engineering",
+          "slug": "feature-engineering",
+          "noteSlug": "introduction-to-machine-learning",
+          "noteUrl": "/note/data-science/introduction-to-machine-learning.md",
+          "anchorId": "concept-feature-engineering",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/overfitting-vs-underfitting",
+          "label": "overfitting",
+          "slug": "overfitting-vs-underfitting",
+          "noteSlug": "introduction-to-machine-learning",
+          "noteUrl": "/note/data-science/introduction-to-machine-learning.md",
+          "anchorId": "concept-overfitting-vs-underfitting",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/bias-variance-tradeoff",
+          "label": "bias variance tradeoff",
+          "slug": "bias-variance-tradeoff",
+          "noteSlug": "introduction-to-machine-learning",
+          "noteUrl": "/note/data-science/introduction-to-machine-learning.md",
+          "anchorId": "concept-bias-variance-tradeoff",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "supervised-learning-regression",
+      "title": "Supervised Learning: Regression",
+      "topicOrder": 8,
+      "concepts": [
+        {
+          "id": "concept:data-science/regression-analysis",
+          "label": "regression",
+          "slug": "regression-analysis",
+          "noteSlug": "supervised-learning-regression",
+          "noteUrl": "/note/data-science/supervised-learning-regression.md",
+          "anchorId": "concept-regression-analysis",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/linear-regression",
+          "label": "linear regression",
+          "slug": "linear-regression",
+          "noteSlug": "supervised-learning-regression",
+          "noteUrl": "/note/data-science/supervised-learning-regression.md",
+          "anchorId": "concept-linear-regression",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/multiple-linear-regression",
+          "label": "multiple linear regression",
+          "slug": "multiple-linear-regression",
+          "noteSlug": "supervised-learning-regression",
+          "noteUrl": "/note/data-science/supervised-learning-regression.md",
+          "anchorId": "concept-multiple-linear-regression",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:data-science/mean-squared-error",
+          "label": "MSE",
+          "slug": "mean-squared-error",
+          "noteSlug": "supervised-learning-regression",
+          "noteUrl": "/note/data-science/supervised-learning-regression.md",
+          "anchorId": "concept-mean-squared-error",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/r-squared",
+          "label": "coefficient of determination",
+          "slug": "r-squared",
+          "noteSlug": "supervised-learning-regression",
+          "noteUrl": "/note/data-science/supervised-learning-regression.md",
+          "anchorId": "concept-r-squared",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/gradient-descent",
+          "label": "gradient descent",
+          "slug": "gradient-descent",
+          "noteSlug": "supervised-learning-regression",
+          "noteUrl": "/note/data-science/supervised-learning-regression.md",
+          "anchorId": "concept-gradient-descent",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "supervised-learning-classification",
+      "title": "Supervised Learning: Classification",
+      "topicOrder": 9,
+      "concepts": [
+        {
+          "id": "concept:data-science/classification",
+          "label": "classification task",
+          "slug": "classification",
+          "noteSlug": "supervised-learning-classification",
+          "noteUrl": "/note/data-science/supervised-learning-classification.md",
+          "anchorId": "concept-classification",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/logistic-regression",
+          "label": "logistic regression",
+          "slug": "logistic-regression",
+          "noteSlug": "supervised-learning-classification",
+          "noteUrl": "/note/data-science/supervised-learning-classification.md",
+          "anchorId": "concept-logistic-regression",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/decision-tree",
+          "label": "decision tree",
+          "slug": "decision-tree",
+          "noteSlug": "supervised-learning-classification",
+          "noteUrl": "/note/data-science/supervised-learning-classification.md",
+          "anchorId": "concept-decision-tree",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/support-vector-machine",
+          "label": "SVM",
+          "slug": "support-vector-machine",
+          "noteSlug": "supervised-learning-classification",
+          "noteUrl": "/note/data-science/supervised-learning-classification.md",
+          "anchorId": "concept-support-vector-machine",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/accuracy",
+          "label": "accuracy",
+          "slug": "accuracy",
+          "noteSlug": "supervised-learning-classification",
+          "noteUrl": "/note/data-science/supervised-learning-classification.md",
+          "anchorId": "concept-accuracy",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/precision-vs-recall",
+          "label": "precision",
+          "slug": "precision-vs-recall",
+          "noteSlug": "supervised-learning-classification",
+          "noteUrl": "/note/data-science/supervised-learning-classification.md",
+          "anchorId": "concept-precision-vs-recall",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/f1-score",
+          "label": "f1 score",
+          "slug": "f1-score",
+          "noteSlug": "supervised-learning-classification",
+          "noteUrl": "/note/data-science/supervised-learning-classification.md",
+          "anchorId": "concept-f1-score",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/confusion-matrix",
+          "label": "confusion matrix",
+          "slug": "confusion-matrix",
+          "noteSlug": "supervised-learning-classification",
+          "noteUrl": "/note/data-science/supervised-learning-classification.md",
+          "anchorId": "concept-confusion-matrix",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "unsupervised-learning-clustering",
+      "title": "Unsupervised Learning: Clustering",
+      "topicOrder": 10,
+      "concepts": [
+        {
+          "id": "concept:data-science/clustering",
+          "label": "cluster analysis",
+          "slug": "clustering",
+          "noteSlug": "unsupervised-learning-clustering",
+          "noteUrl": "/note/data-science/unsupervised-learning-clustering.md",
+          "anchorId": "concept-clustering",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/k-means-clustering",
+          "label": "K-Means",
+          "slug": "k-means-clustering",
+          "noteSlug": "unsupervised-learning-clustering",
+          "noteUrl": "/note/data-science/unsupervised-learning-clustering.md",
+          "anchorId": "concept-k-means-clustering",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:data-science/hierarchical-clustering",
+          "label": "hierarchical clustering",
+          "slug": "hierarchical-clustering",
+          "noteSlug": "unsupervised-learning-clustering",
+          "noteUrl": "/note/data-science/unsupervised-learning-clustering.md",
+          "anchorId": "concept-hierarchical-clustering",
+          "importance": "medium"
+        },
+        {
+          "id": "concept:data-science/silhouette-score",
+          "label": "silhouette score",
+          "slug": "silhouette-score",
+          "noteSlug": "unsupervised-learning-clustering",
+          "noteUrl": "/note/data-science/unsupervised-learning-clustering.md",
+          "anchorId": "concept-silhouette-score",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/dimensionality-reduction",
+          "label": "dimensionality reduction",
+          "slug": "dimensionality-reduction",
+          "noteSlug": "unsupervised-learning-clustering",
+          "noteUrl": "/note/data-science/unsupervised-learning-clustering.md",
+          "anchorId": "concept-dimensionality-reduction",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/principal-component-analysis",
+          "label": "PCA",
+          "slug": "principal-component-analysis",
+          "noteSlug": "unsupervised-learning-clustering",
+          "noteUrl": "/note/data-science/unsupervised-learning-clustering.md",
+          "anchorId": "concept-principal-component-analysis",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "advanced-data-visualization",
+      "title": "Advanced Data Visualization",
+      "topicOrder": 11,
+      "concepts": [
+        {
+          "id": "concept:data-science/matplotlib",
+          "label": "matplotlib",
+          "slug": "matplotlib",
+          "noteSlug": "advanced-data-visualization",
+          "noteUrl": "/note/data-science/advanced-data-visualization.md",
+          "anchorId": "concept-matplotlib",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/seaborn",
+          "label": "seaborn",
+          "slug": "seaborn",
+          "noteSlug": "advanced-data-visualization",
+          "noteUrl": "/note/data-science/advanced-data-visualization.md",
+          "anchorId": "concept-seaborn",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/histogram",
+          "label": "histogram",
+          "slug": "histogram",
+          "noteSlug": "advanced-data-visualization",
+          "noteUrl": "/note/data-science/advanced-data-visualization.md",
+          "anchorId": "concept-histogram",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/scatterplot",
+          "label": "scatterplot",
+          "slug": "scatterplot",
+          "noteSlug": "advanced-data-visualization",
+          "noteUrl": "/note/data-science/advanced-data-visualization.md",
+          "anchorId": "concept-scatterplot",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/boxplot",
+          "label": "boxplot",
+          "slug": "boxplot",
+          "noteSlug": "advanced-data-visualization",
+          "noteUrl": "/note/data-science/advanced-data-visualization.md",
+          "anchorId": "concept-boxplot",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/heat-map",
+          "label": "heatmap",
+          "slug": "heat-map",
+          "noteSlug": "advanced-data-visualization",
+          "noteUrl": "/note/data-science/advanced-data-visualization.md",
+          "anchorId": "concept-heat-map",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/dashboard",
+          "label": "data dashboard",
+          "slug": "dashboard",
+          "noteSlug": "advanced-data-visualization",
+          "noteUrl": "/note/data-science/advanced-data-visualization.md",
+          "anchorId": "concept-dashboard",
+          "importance": "high"
+        }
+      ]
+    },
+    {
+      "id": "model-evaluation-deployment",
+      "title": "Model Evaluation and Deployment",
+      "topicOrder": 12,
+      "concepts": [
+        {
+          "id": "concept:data-science/model-evaluation",
+          "label": "model assessment",
+          "slug": "model-evaluation",
+          "noteSlug": "model-evaluation-deployment",
+          "noteUrl": "/note/data-science/model-evaluation-deployment.md",
+          "anchorId": "concept-model-evaluation",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/cross-validation",
+          "label": "k-fold cross-validation",
+          "slug": "cross-validation",
+          "noteSlug": "model-evaluation-deployment",
+          "noteUrl": "/note/data-science/model-evaluation-deployment.md",
+          "anchorId": "concept-cross-validation",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/hyperparameter-tuning",
+          "label": "hyperparameter optimization",
+          "slug": "hyperparameter-tuning",
+          "noteSlug": "model-evaluation-deployment",
+          "noteUrl": "/note/data-science/model-evaluation-deployment.md",
+          "anchorId": "concept-hyperparameter-tuning",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/model-deployment",
+          "label": "ML deployment",
+          "slug": "model-deployment",
+          "noteSlug": "model-evaluation-deployment",
+          "noteUrl": "/note/data-science/model-evaluation-deployment.md",
+          "anchorId": "concept-model-deployment",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/api-endpoint",
+          "label": "REST API",
+          "slug": "api-endpoint",
+          "noteSlug": "model-evaluation-deployment",
+          "noteUrl": "/note/data-science/model-evaluation-deployment.md",
+          "anchorId": "concept-api-endpoint",
+          "importance": "high"
+        },
+        {
+          "id": "concept:data-science/version-control",
+          "label": "Git",
+          "slug": "version-control",
+          "noteSlug": "model-evaluation-deployment",
+          "noteUrl": "/note/data-science/model-evaluation-deployment.md",
+          "anchorId": "concept-version-control",
+          "importance": "high"
+        }
+      ]
+    }
+  ],
+  "generatedAt": "2026-06-26T14:47:15.021923+00:00",
+  "meta": {
+    "topicCount": 13,
+    "conceptCount": 86,
+    "missingTopicSlugs": []
+  }
+}
