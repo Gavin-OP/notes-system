@@ -1,7 +1,7 @@
 .explore-careers-page {
   min-height: 100vh;
-  background: #f5f5f5;
-  padding: 20px 16px 32px;
+  background: var(--ns-color-bg-layout);
+  padding: var(--ns-space-5) var(--ns-space-4) var(--ns-space-6);
 }
 
 .explore-careers-page__container {
@@ -9,70 +9,13 @@
   margin: 0 auto;
 }
 
-.explore-careers-page__back-profile {
-  width: 100%;
-  margin-bottom: 20px;
-  padding: 22px 20px 28px;
-  border: 1px dashed rgba(22, 119, 255, 0.35);
-  border-radius: 16px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(22, 119, 255, 0.06) 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    border-color 0.18s ease;
-}
-
-.explore-careers-page__back-profile:hover {
-  transform: translateY(-1px);
-  border-color: rgba(22, 119, 255, 0.55);
-  box-shadow: 0 12px 28px rgba(22, 119, 255, 0.12);
-}
-
-.explore-careers-page__back-profile-label {
-  font-size: 22px;
-  font-weight: 700;
-  color: rgba(5, 5, 5, 0.88);
-  letter-spacing: 0.01em;
-}
-
-.explore-careers-page__back-profile-arrow {
-  font-size: 22px;
-  color: #1677ff;
-  animation: explore-careers-page-back-bounce 1.6s ease-in-out infinite;
-}
-
-@keyframes explore-careers-page-back-bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-[data-theme="dark"] .explore-careers-page__back-profile {
-  background: linear-gradient(180deg, rgba(20, 20, 20, 0.96) 0%, rgba(22, 119, 255, 0.14) 100%);
-  border-color: rgba(105, 177, 255, 0.35);
-}
-
-[data-theme="dark"] .explore-careers-page__back-profile-label {
-  color: rgba(255, 255, 255, 0.88);
-}
-
 .explore-careers-page__header {
   width: 100%;
-  margin-bottom: 8px;
+  margin-bottom: var(--ns-space-2);
 }
 
 .explore-careers-page__title {
-  margin-bottom: 4px !important;
+  margin-bottom: var(--ns-space-1) !important;
 }
 
 .explore-careers-page__subtitle {
@@ -83,12 +26,12 @@
 .explore-careers-page__state {
   display: flex;
   justify-content: center;
-  padding: 48px 0;
+  padding: var(--ns-space-6) 0;
 }
 
 .explore-careers-page__card {
   height: 100%;
-  border-radius: 14px;
+  border-radius: var(--ns-radius-lg);
 }
 
 .explore-careers-page__card-body {
@@ -99,7 +42,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--ns-space-2);
 }
 
 .explore-careers-page__card-title {

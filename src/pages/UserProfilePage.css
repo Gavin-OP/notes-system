@@ -1,7 +1,7 @@
 .user-profile-page {
   min-height: 100vh;
-  background: #f5f5f5;
-  padding: 16px;
+  background: var(--ns-color-bg-layout);
+  padding: var(--ns-space-4);
 }
 
 .user-profile-page--state {
@@ -19,11 +19,11 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--ns-space-4);
 }
 
 .user-profile-page__hero {
-  border-radius: 12px;
+  border-radius: var(--ns-radius-lg);
 }
 
 .user-profile-page__hero-title {
@@ -45,8 +45,8 @@
 
 .user-profile-page__dashboard-card > .ant-card-head {
   min-height: 0;
-  padding: 0 24px;
-  border-bottom: 1px solid rgba(5, 5, 5, 0.08);
+  padding: 0 var(--ns-space-5);
+  border-bottom: 1px solid var(--ns-color-split);
 }
 
 .user-profile-page__dashboard-card > .ant-card-head .ant-card-head-title {
@@ -62,24 +62,25 @@
 
 .user-profile-page__folder-tab {
   position: relative;
-  border: 1px solid rgba(5, 5, 5, 0.08);
+  border: 1px solid var(--ns-color-split);
   border-bottom: 0;
-  background: #f7f8fa;
-  color: rgba(5, 5, 5, 0.55);
+  background: var(--ns-color-bg-spotlight);
+  color: var(--ns-color-text-tertiary);
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
-  padding: 12px 28px 13px;
-  border-radius: 12px 12px 0 0;
+  padding: var(--ns-space-3) var(--ns-space-5);
+  border-radius: var(--ns-radius-lg) var(--ns-radius-lg) 0 0;
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  transition:
+    color var(--ns-duration-normal) var(--ns-ease-out),
+    background-color var(--ns-duration-normal) var(--ns-ease-out);
 }
 
 .user-profile-page__folder-tab.is-active {
   z-index: 1;
-  background: #fff;
-  color: rgba(5, 5, 5, 0.88);
-  transform: translateY(1px);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text);
 }
 
 .user-profile-page__main-grid {
@@ -96,25 +97,25 @@
 
 .user-profile-page__quote-note {
   cursor: pointer;
-  border-radius: 10px;
-  padding: 12px !important;
+  border-radius: var(--ns-radius-md);
+  padding: var(--ns-space-3) !important;
   transition:
-    background 160ms ease,
-    box-shadow 160ms ease;
+    background var(--ns-duration-fast) var(--ns-ease-out),
+    box-shadow var(--ns-duration-fast) var(--ns-ease-out);
 }
 
 .user-profile-page__quote-note:hover {
-  background: rgba(22, 119, 255, 0.06);
-  box-shadow: inset 3px 0 0 #722ed1;
+  background: var(--ns-color-primary-bg-hover);
+  box-shadow: inset 2px 0 0 var(--ns-color-primary);
 }
 
 .user-profile-page__quote-text {
   width: 100%;
-  margin: 8px 0 0 !important;
-  padding: 10px 12px;
-  border-left: 3px solid #722ed1;
-  border-radius: 8px;
-  background: rgba(114, 46, 209, 0.08);
+  margin: var(--ns-space-2) 0 0 !important;
+  padding: var(--ns-space-3);
+  border-left: 1px solid var(--ns-color-primary-border);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-primary-bg-hover);
   color: inherit;
 }
 
@@ -249,7 +250,7 @@
 }
 
 .career-recommendation-card.is-active {
-  background: rgba(22, 119, 255, 0.08);
+  background: var(--ns-color-primary-bg-hover);
 }
 
 .user-profile-page__role-detail-head {
@@ -268,7 +269,7 @@
 .user-profile-page__role-related {
   border-radius: 10px;
   padding: 8px 10px;
-  background: rgba(22, 119, 255, 0.04);
+  background: var(--ns-color-fill-secondary);
 }
 
 .user-profile-page__contrib-tooltip {
@@ -354,12 +355,12 @@
 }
 
 [data-theme="dark"] .career-recommendation-card.is-active {
-  background: rgba(22, 119, 255, 0.2);
+  background: var(--ns-color-primary-muted);
 }
 
 [data-theme="dark"] .user-profile-page__role-related {
-  border-color: rgba(22, 119, 255, 0.32);
-  background: rgba(22, 119, 255, 0.12);
+  border-color: var(--ns-color-primary-border-hover);
+  background: var(--ns-color-primary-bg);
 }
 
 .user-profile-page .ant-card {
@@ -390,7 +391,7 @@
 }
 
 .user-profile-page__conversation-item.is-active {
-  background: rgba(22, 119, 255, 0.1);
+  background: var(--ns-color-primary-bg-hover);
 }
 
 .user-profile-page__conversation-thread {
@@ -435,7 +436,7 @@
 }
 
 .user-profile-page__conversation-bubble--user {
-  background: rgba(22, 119, 255, 0.12);
+  background: var(--ns-color-primary-bg);
   align-self: flex-end;
 }
 
@@ -444,7 +445,7 @@
 }
 
 [data-theme="dark"] .user-profile-page__conversation-item.is-active {
-  background: rgba(22, 119, 255, 0.2);
+  background: var(--ns-color-primary-muted);
 }
 
 [data-theme="dark"] .user-profile-page__conversation-messages {
@@ -452,59 +453,6 @@
 }
 
 .user-profile-page__explore-careers {
-  width: 100%;
-  margin-top: 20px;
-  padding: 28px 20px 22px;
-  border: 1px dashed rgba(22, 119, 255, 0.35);
-  border-radius: 16px;
-  background: linear-gradient(180deg, rgba(22, 119, 255, 0.06) 0%, rgba(255, 255, 255, 0.98) 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    border-color 0.18s ease;
-}
-
-.user-profile-page__explore-careers:hover {
-  transform: translateY(-1px);
-  border-color: rgba(22, 119, 255, 0.55);
-  box-shadow: 0 12px 28px rgba(22, 119, 255, 0.12);
-}
-
-.user-profile-page__explore-careers-label {
-  font-size: 22px;
-  font-weight: 700;
-  color: rgba(5, 5, 5, 0.88);
-  letter-spacing: 0.01em;
-}
-
-.user-profile-page__explore-careers-arrow {
-  font-size: 22px;
-  color: #1677ff;
-  animation: user-profile-page-explore-bounce 1.6s ease-in-out infinite;
-}
-
-@keyframes user-profile-page-explore-bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(6px);
-  }
-}
-
-[data-theme="dark"] .user-profile-page__explore-careers {
-  background: linear-gradient(180deg, rgba(22, 119, 255, 0.14) 0%, rgba(20, 20, 20, 0.96) 100%);
-  border-color: rgba(105, 177, 255, 0.35);
-}
-
-[data-theme="dark"] .user-profile-page__explore-careers-label {
-  color: rgba(255, 255, 255, 0.88);
+  margin-top: var(--ns-space-5);
 }
 

@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Badge, Button, Empty, Input, List, Modal, Space, Spin, Typography } from "antd";
+import { Button, Empty, Input, List, Modal, Space, Spin, Typography } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 import { buildSearchResultUrl, searchNotes } from "../api/search";
+import SemanticChip from "./SemanticChip";
 
 import "./SearchModal.css";
 
@@ -175,7 +176,7 @@ function SearchModal({ open, onClose, localOptions = [] }) {
                   <div className="search-modal__result-main">
                     <Space size="small" wrap>
                       <Text strong>{result.note_title}</Text>
-                      <Badge color="blue" text={matchTypeLabel(result.match_type)} />
+                      <SemanticChip variant="primary">{matchTypeLabel(result.match_type)}</SemanticChip>
                     </Space>
                     <Text type="secondary" className="search-modal__path">
                       {[result.subject_title, result.section_title].filter(Boolean).join(" / ")}

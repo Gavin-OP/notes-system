@@ -10,18 +10,24 @@ import {
   Row,
   Space,
   Spin,
-  Tag,
   Typography,
 } from "antd";
 import { ArrowLeftOutlined, BookOutlined } from "@ant-design/icons";
 
 import { getCareerJobDetail } from "../common/api/careers";
+import SemanticChip from "../common/components/SemanticChip";
 import {
   formatCareerRoleLabel,
   formatExperienceLevel,
   getExperienceLevelTagColor,
   normalizeDegreeRequirements,
 } from "../common/utils/careerDisplayUtils";
+import {
+  getKnowledgeAreaChipVariant,
+  getSkillChipVariant,
+  getSoftSkillChipVariant,
+  getToolChipVariant,
+} from "../common/utils/semanticChipUtils";
 
 import "./CareerJobDetailPage.css";
 
@@ -135,7 +141,9 @@ function CareerJobDetailPage() {
                 {profile.title}
               </Title>
               <Space wrap>
-                <Tag color={profile.experienceLevelColor}>{profile.experienceLevel}</Tag>
+                <SemanticChip variant={profile.experienceLevelColor}>
+                  {profile.experienceLevel}
+                </SemanticChip>
               </Space>
               <Paragraph className="career-job-detail-page__description">{profile.description}</Paragraph>
             </Space>
@@ -164,9 +172,9 @@ function CareerJobDetailPage() {
                     <div className="career-job-detail-page__tag-wall">
                       {profile.hardSkills.length ? (
                         profile.hardSkills.map((skill) => (
-                          <Tag key={`hard-${skill}`} color="purple">
+                          <SemanticChip key={`hard-${skill}`} variant={getSkillChipVariant(skill)}>
                             {skill}
-                          </Tag>
+                          </SemanticChip>
                         ))
                       ) : (
                         <Text type="secondary">None listed</Text>
@@ -178,9 +186,9 @@ function CareerJobDetailPage() {
                     <div className="career-job-detail-page__tag-wall">
                       {profile.softSkills.length ? (
                         profile.softSkills.map((skill) => (
-                          <Tag key={`soft-${skill}`} color="cyan">
+                          <SemanticChip key={`soft-${skill}`} variant={getSoftSkillChipVariant()}>
                             {skill}
-                          </Tag>
+                          </SemanticChip>
                         ))
                       ) : (
                         <Text type="secondary">None listed</Text>
@@ -192,9 +200,9 @@ function CareerJobDetailPage() {
                     <div className="career-job-detail-page__tag-wall">
                       {profile.tools.length ? (
                         profile.tools.map((tool) => (
-                          <Tag key={`tool-${tool}`} color="geekblue">
+                          <SemanticChip key={`tool-${tool}`} variant={getToolChipVariant()}>
                             {tool}
-                          </Tag>
+                          </SemanticChip>
                         ))
                       ) : (
                         <Text type="secondary">None listed</Text>
@@ -215,7 +223,12 @@ function CareerJobDetailPage() {
                         {item.fields.length ? (
                           <div className="career-job-detail-page__tag-wall">
                             {item.fields.map((field) => (
-                              <Tag key={`${item.level}-${field}`}>{field}</Tag>
+                              <SemanticChip
+                                key={`${item.level}-${field}`}
+                                variant={getKnowledgeAreaChipVariant(field)}
+                              >
+                                {field}
+                              </SemanticChip>
                             ))}
                           </div>
                         ) : (
@@ -246,7 +259,12 @@ function CareerJobDetailPage() {
                       {subject.matchedTerms.length ? (
                         <Space wrap size={[4, 4]}>
                           {subject.matchedTerms.slice(0, 4).map((term) => (
-                            <Tag key={`${subject.subjectSlug}-${term}`}>{term}</Tag>
+                            <SemanticChip
+                              key={`${subject.subjectSlug}-${term}`}
+                              variant={getKnowledgeAreaChipVariant(term)}
+                            >
+                              {term}
+                            </SemanticChip>
                           ))}
                         </Space>
                       ) : null}

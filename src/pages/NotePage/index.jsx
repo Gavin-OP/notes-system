@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   clearCurrentNoteMeta,
@@ -82,8 +82,6 @@ function NotePage() {
   const notesIndex = useSelector((state) => state.notesIndex.data);
   const theme = useSelector((state) => state.preference.theme);
   const outletContext = useOutletContext() || {};
-  const isCurrentNoteCompleted = Boolean(outletContext.isCurrentNoteCompleted);
-  const completeCurrentNotePending = Boolean(outletContext.completeCurrentNotePending);
   const noteSearchParams = new URLSearchParams(location.search);
   const activeQuoteId = noteSearchParams.get("quoteId") || "";
   const searchQuery = noteSearchParams.get("search") || "";
@@ -92,10 +90,6 @@ function NotePage() {
     () => (Array.isArray(outletContext.noteQuotes) ? outletContext.noteQuotes : []),
     [outletContext.noteQuotes],
   );
-  const onToggleCurrentNoteCompletion =
-    typeof outletContext.onToggleCurrentNoteCompletion === "function"
-      ? outletContext.onToggleCurrentNoteCompletion
-      : null;
   const onCreateQuoteFromSelection =
     typeof outletContext.onCreateQuoteFromSelection === "function"
       ? outletContext.onCreateQuoteFromSelection
@@ -103,6 +97,10 @@ function NotePage() {
   const onAskWithSelectedText =
     typeof outletContext.onAskWithSelectedText === "function"
       ? outletContext.onAskWithSelectedText
+      : null;
+  const registerWorkspaceMeta =
+    typeof outletContext.registerWorkspaceMeta === "function"
+      ? outletContext.registerWorkspaceMeta
       : null;
 
   // state
@@ -137,8 +135,8 @@ function NotePage() {
     [noteQuotes, restoreCandidates, selectedVersionId],
   );
 
-  const handleRestoreAnnotations = async () => {
-    if (!subjectSlug || !topicSlug || restorePending) return;
+  const handleRestoreAnnotations = useCallback(async () => {
+    if (!subjectSlug || !topicSlug) return;
     setRestorePending(true);
     try {
       const payload = await restoreNoteAnnotations(subjectSlug, topicSlug, selectedVersionId);
@@ -148,70 +146,36 @@ function NotePage() {
     } finally {
       setRestorePending(false);
     }
-  };
+  }, [subjectSlug, topicSlug, selectedVersionId]);
 
-  const versionHeaderAddon =
-    noteVersions.length > 0 ? (
-      <>
-        <span className="note-page__version-label">Note version</span>
-        <label className="note-page__version-select-wrap">
-          <span className="note-page__version-select-label">View</span>
-          <select
-            className="note-page__version-select"
-            value={selectedVersionId}
-            onChange={(event) => {
-              setSelectedVersionId(event.target.value);
-              setRestoreCandidates([]);
-            }}
-          >
-            {noteVersions.map((version) => (
-              <option key={version.version_id} value={version.version_id}>
-                {version.is_current ? "Current" : version.version_id}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button
-          type="button"
-          className="note-page__restore-btn"
-          onClick={handleRestoreAnnotations}
-          disabled={restorePending}
-        >
-          {restorePending ? "Restoring..." : "Restore previous highlights"}
-        </button>
-        {restoreCandidates.length > 0 ? (
-          <span className="note-page__restore-status">
-            {restoreCandidates.length} candidates ready to review
-          </span>
-        ) : null}
-      </>
-    ) : null;
+  const handleVersionChange = useCallback((versionId) => {
+    setSelectedVersionId(versionId);
+    setRestoreCandidates([]);
+  }, []);
 
-  const subjectHeaderAddon =
-    isNavigableSubjectSlug(subjectSlug) ? (
-      <>
-        <span className="note-page__subject-nav-label">Explore</span>
-        <button
-          type="button"
-          className="note-page__subject-nav-btn"
-          onClick={() => navigate(`/subject/${subjectSlug}/mindmap`)}
-        >
-          Mindmap
-        </button>
-      </>
-    ) : null;
-
-  const headerAddon =
-    subjectHeaderAddon || versionHeaderAddon ? (
-      <div className="note-page__header-tools">
-        {subjectHeaderAddon ? (
-          <div className="note-page__subject-nav">{subjectHeaderAddon}</div>
-        ) : null}
-        {versionHeaderAddon ? (
-          <div className="note-page__version-tools">{versionHeaderAddon}</div>
-        ) : null}
-      </div>
-    ) : null;
+  useEffect(() => {
+    if (!registerWorkspaceMeta) return undefined;
+    registerWorkspaceMeta({
+      showMindmap: isNavigableSubjectSlug(subjectSlug),
+      mindmapSubjectSlug: subjectSlug,
+      versions: noteVersions,
+      selectedVersionId,
+      onVersionChange: handleVersionChange,
+      onRestoreAnnotations: handleRestoreAnnotations,
+      restorePending,
+      restoreCandidateCount: restoreCandidates.length,
+    });
+    return () => registerWorkspaceMeta(null);
+  }, [
+    registerWorkspaceMeta,
+    subjectSlug,
+    noteVersions,
+    selectedVersionId,
+    handleVersionChange,
+    handleRestoreAnnotations,
+    restorePending,
+    restoreCandidates.length,
+  ]);
 
   const currentSubjectId = useMemo(() => {
     if (!noteSlugTrimmed) return null;
@@ -413,19 +377,15 @@ function NotePage() {
             <MarkdownRenderer
               content={noteContent}
               theme={theme}
-              isCompleted={isCurrentNoteCompleted}
-              completionPending={completeCurrentNotePending}
-              onMarkComplete={onToggleCurrentNoteCompletion}
               noteQuotes={visibleNoteQuotes}
               activeQuoteId={activeQuoteId}
               searchQuery={searchQuery}
               searchMatchText={searchMatchText}
               onCreateQuoteFromSelection={onCreateQuoteFromSelection}
               onAskWithSelectedText={onAskWithSelectedText}
-              headerAddon={headerAddon}
             />
-            <div className="note-page__complete-footer">
-              {showMicroCourseLink ? (
+            {showMicroCourseLink ? (
+              <div className="note-page__complete-footer">
                 <button
                   type="button"
                   className="note-page__micro-course-btn"
@@ -433,20 +393,8 @@ function NotePage() {
                 >
                   Open interactive micro-course
                 </button>
-              ) : null}
-              <button
-                type="button"
-                className={`note-page__complete-btn ${isCurrentNoteCompleted ? "is-completed" : ""}`}
-                onClick={() => onToggleCurrentNoteCompletion?.()}
-                disabled={completeCurrentNotePending || !onToggleCurrentNoteCompletion}
-              >
-                {completeCurrentNotePending
-                  ? "Updating..."
-                  : isCurrentNoteCompleted
-                    ? "Completed"
-                    : "Mark as completed"}
-              </button>
-            </div>
+              </div>
+            ) : null}
           </>
         )}
       </div>

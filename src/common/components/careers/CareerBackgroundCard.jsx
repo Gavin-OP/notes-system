@@ -1,4 +1,7 @@
-import { Button, Empty, Form, Select, Space, Tag, Typography } from "antd";
+import { Button, Empty, Form, Select, Space, Typography } from "antd";
+
+import SemanticChip from "../SemanticChip";
+import { getKnowledgeAreaChipVariant } from "../../utils/semanticChipUtils";
 
 import { CAREER_LEVEL_OPTIONS, formatCareerRoleLabel } from "../../utils/careerDisplayUtils";
 
@@ -163,7 +166,9 @@ function CareerBackgroundCard({
           <Space wrap>
             <Text type="secondary">Inferred from learning:</Text>
             {inferredKnowledge.map((item) => (
-              <Tag key={item}>{item}</Tag>
+              <SemanticChip key={item} variant={getKnowledgeAreaChipVariant(item)}>
+                {item}
+              </SemanticChip>
             ))}
           </Space>
         ) : null}

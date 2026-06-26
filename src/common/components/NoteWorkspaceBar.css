@@ -1,0 +1,312 @@
+/* Note workspace bar — learner-oriented tool groups below breadcrumb */
+
+.note-workspace-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ns-space-3);
+  margin-bottom: var(--ns-space-4);
+  padding: var(--ns-space-2) var(--ns-space-3);
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-bg-spotlight);
+}
+
+.note-workspace-bar__study,
+.note-workspace-bar__assist,
+.note-workspace-bar__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ns-space-2);
+}
+
+.note-workspace-bar__study {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.note-workspace-bar__assist {
+  padding-left: var(--ns-space-2);
+  border-left: 1px solid var(--ns-color-border-secondary);
+}
+
+.note-workspace-bar__meta {
+  padding-left: var(--ns-space-2);
+  border-left: 1px solid var(--ns-color-border-secondary);
+}
+
+.note-workspace-bar__completion {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px var(--ns-space-3);
+  border: 1px solid var(--ns-chip-primary-border);
+  border-radius: var(--ns-radius-sm);
+  background: var(--ns-chip-primary-bg);
+  color: var(--ns-chip-primary-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  cursor: pointer;
+  transition:
+    border-color var(--ns-duration-fast) var(--ns-ease-out),
+    background-color var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.note-workspace-bar__completion:hover:not(:disabled) {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg);
+}
+
+.note-workspace-bar__completion:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.note-workspace-bar__completion--done {
+  border-color: var(--ns-chip-sage-border);
+  background: var(--ns-chip-sage-bg);
+  color: var(--ns-chip-sage-text);
+}
+
+.note-workspace-bar__completion--done:hover:not(:disabled) {
+  border-color: var(--ns-sem-sage);
+  background: var(--ns-chip-sage-bg);
+}
+
+.note-workspace-bar__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px var(--ns-space-2);
+  border: 1px solid transparent;
+  border-radius: var(--ns-radius-sm);
+  background: transparent;
+  color: var(--ns-color-text-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  cursor: pointer;
+  transition:
+    color var(--ns-duration-fast) var(--ns-ease-out),
+    background-color var(--ns-duration-fast) var(--ns-ease-out),
+    border-color var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.note-workspace-bar__icon-btn .anticon {
+  font-size: 16px;
+}
+
+.note-workspace-bar__icon-btn:hover {
+  color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg-hover);
+}
+
+.note-workspace-bar__icon-btn:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
+}
+
+.note-workspace-bar__icon-btn--active {
+  border-color: var(--ns-chip-primary-border);
+  background: var(--ns-chip-primary-bg);
+  color: var(--ns-chip-primary-text);
+}
+
+.note-workspace-bar__more-btn {
+  position: relative;
+}
+
+.note-workspace-bar__more-badge {
+  margin: 0;
+  font-size: 10px;
+  padding: 0 6px;
+}
+
+.note-workspace-bar__guide-trigger.ant-btn {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  height: auto;
+  line-height: 1;
+  color: var(--ns-color-text-secondary);
+}
+
+.note-workspace-bar__guide-trigger.ant-btn .anticon {
+  font-size: 16px;
+}
+
+.note-workspace-bar__guide-trigger.ant-btn:hover,
+.note-workspace-bar__guide-trigger.ant-btn:focus-visible {
+  color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg-hover);
+}
+
+.note-workspace-bar__more-version {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ns-space-2);
+  padding: var(--ns-space-2) var(--ns-space-1);
+  min-width: 220px;
+}
+
+.note-workspace-bar__more-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ns-color-text);
+}
+
+.note-workspace-bar__version-field {
+  display: flex;
+  align-items: center;
+  gap: var(--ns-space-2);
+  margin: 0;
+}
+
+.note-workspace-bar__version-field-label {
+  font-size: 12px;
+  color: var(--ns-color-text-tertiary);
+}
+
+.note-workspace-bar__version-select {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-sm);
+  padding: 4px var(--ns-space-2);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text);
+  font: inherit;
+  font-size: 13px;
+}
+
+.note-workspace-bar__restore-btn {
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-sm);
+  padding: 5px var(--ns-space-2);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.note-workspace-bar__restore-btn:hover:not(:disabled) {
+  border-color: var(--ns-color-primary);
+  color: var(--ns-color-primary);
+}
+
+.note-workspace-bar__restore-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.note-workspace-bar__restore-hint {
+  font-size: 12px;
+  color: var(--ns-color-primary);
+}
+
+.note-workspace-bar__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.note-workspace-bar__more-overlay .ant-dropdown-menu-item-disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.note-workspace-bar__more-panel {
+  min-width: 220px;
+  padding: var(--ns-space-2);
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-bg-container);
+  box-shadow: var(--ns-shadow-md);
+}
+
+.note-workspace-bar__more-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: var(--ns-space-2);
+  border-top: 1px solid var(--ns-color-border-secondary);
+}
+
+.note-workspace-bar__more-panel .note-workspace-bar__more-version {
+  padding-bottom: var(--ns-space-2);
+}
+
+.note-workspace-bar__more-action {
+  display: flex;
+  align-items: center;
+  gap: var(--ns-space-2);
+  width: 100%;
+  min-height: 36px;
+  padding: 6px var(--ns-space-2);
+  border: 0;
+  border-radius: var(--ns-radius-sm);
+  background: transparent;
+  color: var(--ns-color-text);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.note-workspace-bar__more-action:hover:not(:disabled) {
+  background: var(--ns-color-fill-secondary);
+}
+
+.note-workspace-bar__more-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .note-workspace-bar {
+    gap: var(--ns-space-2);
+    padding: var(--ns-space-2);
+  }
+
+  .note-workspace-bar__assist,
+  .note-workspace-bar__meta {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .note-workspace-bar__study {
+    flex: 1 1 100%;
+  }
+
+  .note-workspace-bar__assist {
+    flex: 1 1 auto;
+  }
+
+  .note-workspace-bar__meta {
+    flex: 0 0 auto;
+  }
+
+  .note-workspace-bar__completion span {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

@@ -600,3 +600,79 @@ The user should always feel:
 
 "I understand where I am, why this matters, and what to learn next."
 
+
+## Brand Color Direction
+
+Use a calm but richer academic palette grounded in knowledge, clarity, trust, and interdisciplinary learning. The interface should feel more expressive than a default Ant Design prototype, but still restrained and production-ready.
+
+### Core Palette
+
+- Primary Blue: #4F8CC9
+- Deep Blue: #2F5F8F
+- Wisdom Gold: #F4D06F
+- Sage Green: #7BAE7F
+- Academic Teal: #4FA3A5
+- Clay Coral: #D9826B
+- Soft Lavender: #9B8ACB
+- Ink: #1F2933
+- Slate: #52616B
+- Mist: #EEF4FA
+- Paper: #F8FAFC
+- Surface: #FFFFFF
+- Line: #D9E2EC
+
+Use Primary Blue for main actions, links, current selection, focus states, and active navigation. Use Deep Blue for text on primary-blue tinted surfaces or high-emphasis academic labels. Use Wisdom Gold sparingly for highlights, achievement, important knowledge markers, and medium-strength match states.
+
+Do not use purple as the default accent. Soft Lavender may be used only as a controlled semantic color for communication, strategy, humanities, or reflection-related knowledge areas.
+
+### Semantic Color Roles
+
+Career level:
+
+- Beginner: Sage Green
+- Intermediate: Wisdom Gold
+- Advanced: Clay Coral
+
+Knowledge areas:
+
+- Data / Technical: Primary Blue
+- Business / Career: Wisdom Gold
+- Research / Science: Academic Teal
+- Communication / Strategy: Soft Lavender
+- Tools / Practice: Sage Green
+- Risk / Challenge / Gap: Clay Coral
+
+Match percentage:
+
+- High match: Sage Green
+- Medium match: Wisdom Gold
+- Low match or unknown match: Slate
+
+Progress and learning state:
+
+- Not started: Slate
+- In progress: Primary Blue
+- Completed: Sage Green
+- Review or attention needed: Wisdom Gold
+- Error or blocked: Clay Coral
+
+### Tag And Chip Treatment
+
+Tags, career levels, knowledge areas, concept chips, and match indicators should use subtle tinted chips, not saturated badges.
+
+Preferred treatment:
+
+- Light tinted background.
+- One-pixel border.
+- Dark readable text.
+- No gradients.
+- No random per-item colors.
+- No large solid-color pills unless the element is a primary action.
+
+For implementation, derive chips from semantic tokens with roughly:
+
+- 10-14% color tint in the background.
+- 28-40% color tint in the border.
+- 70-80% color tint mixed with Ink for text.
+
+This keeps the palette richer without making the product look like a prototype, dashboard template, or AI-generated landing page.

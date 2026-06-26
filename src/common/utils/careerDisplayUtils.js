@@ -1,3 +1,5 @@
+import { getExperienceLevelChipVariant } from "./semanticChipUtils";
+
 export const CAREER_LEVEL_OPTIONS = [
   { label: "Entry", value: "Entry" },
   { label: "Senior", value: "Senior" },
@@ -10,14 +12,6 @@ const EXPERIENCE_LEVEL_LABELS = {
   senior: "Senior Level",
   manager: "Manager Level",
   unspecified: "Unspecified",
-};
-
-const EXPERIENCE_LEVEL_TAG_COLORS = {
-  entry: "green",
-  entry_or_mid: "green",
-  senior: "gold",
-  manager: "purple",
-  unspecified: "default",
 };
 
 const DEGREE_LEVEL_ORDER = ["associate", "bachelor", "master", "phd", "unspecified"];
@@ -44,9 +38,7 @@ export function formatExperienceLevel(level = "") {
 }
 
 export function getExperienceLevelTagColor(level = "") {
-  const normalized = normalizeToken(level);
-  if (!normalized) return EXPERIENCE_LEVEL_TAG_COLORS.unspecified;
-  return EXPERIENCE_LEVEL_TAG_COLORS[normalized] || "blue";
+  return getExperienceLevelChipVariant(level);
 }
 
 export function formatDegreeLevel(level = "") {

@@ -12,7 +12,7 @@
   padding: 12px 10px 10px;
   border-radius: 14px;
   border: 1px solid rgba(250, 173, 20, 0.22);
-  background: linear-gradient(180deg, rgba(255, 251, 230, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+  background: linear-gradient(180deg, var(--ns-color-wisdom-bg) 0%, var(--ns-color-bg-container) 100%);
   box-sizing: border-box;
   overflow: hidden;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
@@ -93,7 +93,7 @@
 .trophy-badge--locked {
   opacity: 0.72;
   border-color: rgba(5, 5, 5, 0.08);
-  background: linear-gradient(180deg, rgba(245, 245, 245, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+  background: linear-gradient(180deg, var(--ns-color-bg-spotlight) 0%, var(--ns-color-bg-container) 100%);
 }
 
 .trophy-badge--locked .trophy-badge__icon-shell {

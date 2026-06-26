@@ -1,0 +1,61 @@
+/**
+ * Semantic chips — subtle tinted surfaces with borders (DESIGN.md)
+ * Use with .ns-chip and .ns-chip--{variant} modifiers.
+ */
+
+.ns-chip {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  margin: 2px 4px 2px 0;
+  padding: 1px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--ns-radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.ns-chip--primary {
+  background: var(--ns-chip-primary-bg);
+  border-color: var(--ns-chip-primary-border);
+  color: var(--ns-chip-primary-text);
+}
+
+.ns-chip--sage {
+  background: var(--ns-chip-sage-bg);
+  border-color: var(--ns-chip-sage-border);
+  color: var(--ns-chip-sage-text);
+}
+
+.ns-chip--wisdom {
+  background: var(--ns-chip-wisdom-bg);
+  border-color: var(--ns-chip-wisdom-border);
+  color: var(--ns-chip-wisdom-text);
+}
+
+.ns-chip--teal {
+  background: var(--ns-chip-teal-bg);
+  border-color: var(--ns-chip-teal-border);
+  color: var(--ns-chip-teal-text);
+}
+
+.ns-chip--coral {
+  background: var(--ns-chip-coral-bg);
+  border-color: var(--ns-chip-coral-border);
+  color: var(--ns-chip-coral-text);
+}
+
+.ns-chip--lavender {
+  background: var(--ns-chip-lavender-bg);
+  border-color: var(--ns-chip-lavender-border);
+  color: var(--ns-chip-lavender-text);
+}
+
+.ns-chip--slate {
+  background: var(--ns-chip-slate-bg);
+  border-color: var(--ns-chip-slate-border);
+  color: var(--ns-chip-slate-text);
+}

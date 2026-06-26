@@ -1,14 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button, Card, Col, Empty, Input, Row, Space, Spin, Tag, Typography } from "antd";
+import { Alert, Button, Card, Col, Empty, Input, Row, Space, Spin, Typography } from "antd";
 import { SearchOutlined, UpOutlined } from "@ant-design/icons";
 
 import { getCareerTaxonomy } from "../common/api/careers";
+import SemanticChip from "../common/components/SemanticChip";
 import {
   formatCareerRoleLabel,
   formatExperienceLevel,
   getExperienceLevelTagColor,
 } from "../common/utils/careerDisplayUtils";
+import { getSkillChipVariant, getToolChipVariant } from "../common/utils/semanticChipUtils";
 
 import "./ExploreCareersPage.css";
 
@@ -88,11 +90,11 @@ function ExploreCareersPage() {
       <div className="explore-careers-page__container">
         <button
           type="button"
-          className="explore-careers-page__back-profile"
+          className="ns-career-nav-link explore-careers-page__back-profile"
           onClick={() => navigate("/user/profile", { state: { dashboard: "career" } })}
         >
-          <UpOutlined className="explore-careers-page__back-profile-arrow" aria-hidden="true" />
-          <span className="explore-careers-page__back-profile-label">Back to Profile</span>
+          <UpOutlined className="ns-career-nav-link__icon" aria-hidden="true" />
+          <span className="ns-career-nav-link__label">Back to Profile</span>
         </button>
 
         <Space direction="vertical" size={16} className="explore-careers-page__header">
@@ -139,7 +141,9 @@ function ExploreCareersPage() {
                         <Text strong className="explore-careers-page__card-title">
                           {profile.title}
                         </Text>
-                        <Tag color={profile.experienceLevelColor}>{profile.experienceLevel}</Tag>
+                        <SemanticChip variant={profile.experienceLevelColor}>
+                          {profile.experienceLevel}
+                        </SemanticChip>
                       </div>
                       <Paragraph
                         type="secondary"
@@ -150,12 +154,14 @@ function ExploreCareersPage() {
                       </Paragraph>
                       <Space wrap size={[6, 6]}>
                         {profile.hardSkills.slice(0, 4).map((skill) => (
-                          <Tag key={`${profile.jobId}-${skill}`}>{skill}</Tag>
+                          <SemanticChip key={`${profile.jobId}-${skill}`} variant={getSkillChipVariant(skill)}>
+                            {skill}
+                          </SemanticChip>
                         ))}
                         {profile.tools.slice(0, 2).map((tool) => (
-                          <Tag key={`${profile.jobId}-tool-${tool}`} color="geekblue">
+                          <SemanticChip key={`${profile.jobId}-tool-${tool}`} variant={getToolChipVariant()}>
                             {tool}
-                          </Tag>
+                          </SemanticChip>
                         ))}
                       </Space>
                       <Button type="primary" ghost block>

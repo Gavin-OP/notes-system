@@ -115,9 +115,7 @@ function isSkippableHighlightNode(node) {
 const SELECTION_TOOLBAR_EXCLUDE_SELECTORS = [
   ".markdown-h1-addon",
   ".markdown-complete-btn",
-  ".note-page__header-tools",
-  ".note-page__subject-nav",
-  ".note-page__version-tools",
+  ".note-workspace-bar",
   ".note-page__complete-footer",
   ".note-page__complete-btn",
 ].join(", ");
@@ -292,39 +290,8 @@ function useH1TitleFit(deps) {
   return [toolbarRef, titleRef];
 }
 
-function HeadingCopyH1({
-  children,
-  id,
-  theme,
-  onMarkComplete,
-  completionPending,
-  isCompleted,
-  headerAddon,
-  ...domProps
-}) {
-  const [toolbarRef, titleRef] = useH1TitleFit([
-    children,
-    id,
-    completionPending,
-    isCompleted,
-    typeof onMarkComplete === "function",
-  ]);
-
-  const completionBtn =
-    typeof onMarkComplete === "function" ? (
-      <button
-        type="button"
-        className={`markdown-complete-btn ${isCompleted ? "is-completed" : ""}`}
-        onClick={onMarkComplete}
-        disabled={completionPending}
-      >
-        {completionPending
-          ? "Updating..."
-          : isCompleted
-            ? "Completed"
-            : "Mark as completed"}
-      </button>
-    ) : null;
+function HeadingCopyH1({ children, id, theme, ...domProps }) {
+  const [toolbarRef, titleRef] = useH1TitleFit([children, id]);
 
   const { className: domClassName, id: markdownIdProp, ...restDomAttrs } =
     domProps;
@@ -344,22 +311,12 @@ function HeadingCopyH1({
         <span ref={titleRef} className="markdown-h1-toolbar__title">
           {children}
         </span>
-        {completionBtn}
       </div>
-      {headerAddon ? <div className="markdown-h1-addon">{headerAddon}</div> : null}
     </h1>
   );
 }
 
-const HeadingWithCopy = ({
-  level,
-  children,
-  onMarkComplete,
-  completionPending = false,
-  isCompleted = false,
-  headerAddon,
-  ...props
-}) => {
+const HeadingWithCopy = ({ level, children, ...props }) => {
   const id = props.node?.data?.id || props.id;
   const Tag = `h${level}`;
   const theme = props.theme || "light";
@@ -368,15 +325,7 @@ const HeadingWithCopy = ({
 
   if (level === 1) {
     return (
-      <HeadingCopyH1
-        {...restMarkdownProps}
-        id={id}
-        theme={theme}
-        onMarkComplete={onMarkComplete}
-        completionPending={completionPending}
-        isCompleted={isCompleted}
-        headerAddon={headerAddon}
-      >
+      <HeadingCopyH1 {...restMarkdownProps} id={id} theme={theme}>
         {children}
       </HeadingCopyH1>
     );
@@ -408,16 +357,12 @@ const MarkdownContent = memo(function MarkdownContent({
 const MarkdownRenderer = ({
   content,
   theme,
-  onMarkComplete,
-  completionPending = false,
-  isCompleted = false,
   noteQuotes = [],
   activeQuoteId = "",
   searchQuery = "",
   searchMatchText = "",
   onCreateQuoteFromSelection,
   onAskWithSelectedText,
-  headerAddon,
 }) => {
   const bodyRef = useRef(null);
   const selectionRangeRef = useRef(null);
@@ -752,16 +697,7 @@ const MarkdownRenderer = ({
 
   const components = useMemo(
     () => ({
-      h1: (props) => (
-        <HeadingWithCopy
-          level={1}
-          onMarkComplete={onMarkComplete}
-          completionPending={completionPending}
-          isCompleted={isCompleted}
-          headerAddon={headerAddon}
-          {...props}
-        />
-      ),
+      h1: (props) => <HeadingWithCopy level={1} {...props} />,
       h2: (props) => <HeadingWithCopy level={2} {...props} />,
       h3: (props) => <HeadingWithCopy level={3} {...props} />,
       h4: (props) => <HeadingWithCopy level={4} {...props} />,
@@ -824,7 +760,7 @@ const MarkdownRenderer = ({
       },
 
     }),
-    [completionPending, headerAddon, isCompleted, noteDirectory, onMarkComplete],
+    [noteDirectory],
   );
 
   return (

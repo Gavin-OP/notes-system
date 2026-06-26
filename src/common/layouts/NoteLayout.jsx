@@ -10,11 +10,9 @@ import {
   theme,
   Row,
   Col,
-  Segmented,
   Modal,
   Checkbox,
   Space,
-  Typography,
   message,
 } from "antd";
 import {
@@ -28,7 +26,7 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 
-import NoteHeader from "../components/NoteHeader";
+import NoteWorkspaceBar from "../components/NoteWorkspaceBar";
 import OutlineSider from "../components/OutlineSider";
 import FloatingOutlineButton from "../components/FloatingOutlineButton";
 import AssistantWorkspace from "../components/assistant/AssistantWorkspace";
@@ -50,7 +48,6 @@ import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncom
 import "./NoteLayout.css";
 
 const { Header, Sider, Content } = Layout;
-const { Text } = Typography;
 
 // convert icon type to icon
 const getIcon = (iconType) => {
@@ -207,9 +204,14 @@ function decorateMenuItemsWithProgress(items, options, inSubjectFolder = false) 
               ? "current"
               : "todo"
         : null;
-      const topLineColor = prevStatus && prevStatus !== "todo" && status !== "todo" ? "#1677ff" : "#d9d9d9";
+      const topLineColor =
+        prevStatus && prevStatus !== "todo" && status !== "todo"
+          ? "var(--ns-color-primary)"
+          : "var(--ns-color-border)";
       const bottomLineColor =
-        nextStatus && status === "done" && nextStatus !== "todo" ? "#1677ff" : "#d9d9d9";
+        nextStatus && status === "done" && nextStatus !== "todo"
+          ? "var(--ns-color-primary)"
+          : "var(--ns-color-border)";
       const isFirst = noteIndex === 0;
       const isLast = noteIndex === eligibleFileItems.length - 1;
 
@@ -348,6 +350,7 @@ const NoteLayout = () => {
   const [noteQuotes, setNoteQuotes] = useState([]);
   const [completeNotePending, setCompleteNotePending] = useState(false);
   const [notesTourStartToken, setNotesTourStartToken] = useState(0);
+  const [workspaceMeta, setWorkspaceMeta] = useState(null);
   const [narrationState, setNarrationState] = useState("idle");
   const [narrationAudioUrls, setNarrationAudioUrls] = useState([]);
   const [currentNarrationChunkIndex, setCurrentNarrationChunkIndex] = useState(0);
@@ -360,9 +363,8 @@ const NoteLayout = () => {
   const outlineTabRef = useRef(null);
   const assistantAreaRef = useRef(null);
   const narrationGuideRef = useRef(null);
-  const profileGuideRef = useRef(null);
-  const headerToolbarRef = useRef(null);
-  const subjectNavRef = useRef(null);
+  const workspaceBarRef = useRef(null);
+  const exploreGuideRef = useRef(null);
   const resizeStateRef = useRef({
     active: false,
     startX: 0,
@@ -490,25 +492,36 @@ const NoteLayout = () => {
   const handleThemeChange = (checked) =>
     dispatch(setTheme(checked ? "dark" : "light"));
   const handleLanguageChange = (value) => dispatch(setLanguage(value));
-  const handleSearch = (value) => {
-    const rawValue = String(value || "").trim();
-    if (!rawValue) return;
-    const exactItem = searchItems.find((item) => item.path === rawValue);
-    if (exactItem) {
-      navigate(exactItem.path);
+  const handleNoteSelect = (path) => navigate(path);
+
+  const handleOpenProfile = () => navigate("/user/profile");
+
+  const handleExploreMindmap = () => {
+    const slug = workspaceMeta?.mindmapSubjectSlug;
+    if (slug) navigate(`/subject/${slug}/mindmap`);
+  };
+
+  const handleToggleAssistant = () => {
+    if (isMobile) {
+      setAssistantModalOpen(true);
       return;
     }
-    const normalizedQuery = normalizeSearchText(rawValue);
-    const bestMatch = searchItems.find((item) =>
-      normalizeSearchText(`${item.title} ${item.breadcrumb} ${item.path}`).includes(normalizedQuery),
-    );
-    if (bestMatch) {
-      navigate(bestMatch.path);
+    setAssistantMode("dock");
+    if (assistantCollapsed) {
+      setAssistantCollapsed(false);
+      setAssistantDockTab("qa");
+      setAssistantTool("qa");
     } else {
-      message.info("No matching note found.");
+      setAssistantCollapsed(true);
     }
   };
-  const handleNoteSelect = (path) => navigate(path);
+
+  const assistantPanelActive =
+    isMobile ? assistantModalOpen : assistantMode === "dock" && !assistantCollapsed;
+
+  const registerWorkspaceMeta = useCallback((meta) => {
+    setWorkspaceMeta(meta);
+  }, []);
 
   const noteName = useMemo(() => {
     const h1Match = String(currentNoteContent || "").match(/^#\s+(.+)$/m);
@@ -1025,18 +1038,14 @@ const NoteLayout = () => {
     [isMobile],
   );
 
-  useEffect(() => {
-    subjectNavRef.current = document.querySelector(".note-page__subject-nav");
-  }, [currentMeta, currentNoteContent]);
-
   const noteGuideSteps = useMemo(
     () =>
       createNoteGuideSteps({
         directoryAreaRef,
         noteAreaRef,
-        subjectNavRef,
+        exploreGuideRef,
         assistantAreaRef,
-        headerToolbarRef,
+        workspaceBarRef,
       }),
     [],
   );
@@ -1051,12 +1060,11 @@ const NoteLayout = () => {
         "--content-radius": borderRadiusLG,
       }}
     >
-      {/* header */}
-      <Header
-        className={`note-layout__header ${isMobile ? "note-layout__header--mobile" : ""}`}
-      >
-        <Row align="middle" className="note-layout__header-row">
-          {isMobile ? (
+      {isMobile ? (
+        <Header
+          className={`note-layout__header ${isMobile ? "note-layout__header--mobile" : ""}`}
+        >
+          <Row align="middle" className="note-layout__header-row">
             <Col>
               <Button
                 type="text"
@@ -1069,33 +1077,10 @@ const NoteLayout = () => {
                 }}
               />
             </Col>
-          ) : null}
-
-          {/* space between */}
-          <Col flex="auto" />
-
-          {/* theme, language, search */}
-          <Col>
-            <NoteHeader
-              theme={themeValue}
-              language={language}
-              onThemeChange={handleThemeChange}
-              onLanguageChange={handleLanguageChange}
-              onSearch={handleSearch}
-              searchOptions={searchOptions}
-              narrationState={narrationState}
-              isNarrationPlaying={isNarrationPlaying}
-              onToggleNarration={handleToggleNarration}
-              narrationGuideRef={narrationGuideRef}
-              profileGuideRef={profileGuideRef}
-              headerToolbarRef={headerToolbarRef}
-              notesGuideSteps={noteGuideSteps}
-              notesTourStartToken={notesTourStartToken}
-              onNotesTourStepChange={handleNoteTourStepChange}
-            />
-          </Col>
-        </Row>
-      </Header>
+            <Col flex="auto" />
+          </Row>
+        </Header>
+      ) : null}
 
       <Layout className="note-layout__main">
         {/* backdrop overlay for mobile menu */}
@@ -1174,26 +1159,33 @@ const NoteLayout = () => {
               className={`note-layout__content ${isMobile ? "note-layout__content--mobile" : ""}`}
               ref={noteAreaRef}
             >
-              <div className="note-layout__assistant-mode">
-                <Text type="secondary">Assistant Mode</Text>
-                <Segmented
-                  size="small"
-                  value={assistantMode}
-                  onChange={setAssistantMode}
-                  options={[
-                    { label: "Option 1: Right Dock", value: "dock" },
-                    { label: "Option 2: Typeless", value: "typeless" },
-                  ]}
-                />
-                {assistantMode === "typeless" ? (
-                  <Button size="small" onClick={() => setAssistantModalOpen(true)}>
-                    Open (Cmd/Ctrl + K)
-                  </Button>
-                ) : null}
-              </div>
               <Breadcrumb
                 items={breadcrumbItems}
                 className={`note-layout__breadcrumb ${isMobile ? "note-layout__breadcrumb--mobile" : ""}`}
+              />
+              <NoteWorkspaceBar
+                theme={themeValue}
+                language={language}
+                onThemeChange={handleThemeChange}
+                onLanguageChange={handleLanguageChange}
+                searchOptions={searchOptions}
+                narrationState={narrationState}
+                isNarrationPlaying={isNarrationPlaying}
+                onToggleNarration={handleToggleNarration}
+                workspaceBarRef={workspaceBarRef}
+                exploreGuideRef={exploreGuideRef}
+                notesGuideSteps={noteGuideSteps}
+                notesTourStartToken={notesTourStartToken}
+                onNotesTourStepChange={handleNoteTourStepChange}
+                onOpenProfile={handleOpenProfile}
+                onToggleAssistant={handleToggleAssistant}
+                assistantActive={assistantPanelActive}
+                isCurrentNoteCompleted={isCurrentNoteCompleted}
+                completePending={completeNotePending}
+                onToggleCompletion={handleToggleCurrentNoteCompletion}
+                workspaceMeta={workspaceMeta}
+                onExploreMindmap={handleExploreMindmap}
+                isMobile={isMobile}
               />
               <Outlet
                 context={{
@@ -1203,6 +1195,7 @@ const NoteLayout = () => {
                   noteQuotes,
                   onCreateQuoteFromSelection: handleCreateQuoteFromSelection,
                   onAskWithSelectedText: handleAskWithSelectedText,
+                  registerWorkspaceMeta,
                 }}
               />
             </Content>

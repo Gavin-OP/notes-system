@@ -1,7 +1,7 @@
 .career-job-detail-page {
   min-height: 100vh;
-  background: #f5f5f5;
-  padding: 20px 16px 32px;
+  background: var(--ns-color-bg-layout);
+  padding: var(--ns-space-5) var(--ns-space-4) var(--ns-space-6);
 }
 
 .career-job-detail-page--state {

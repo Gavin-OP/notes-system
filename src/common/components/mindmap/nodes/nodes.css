@@ -41,7 +41,7 @@
 .mindmap-node--center {
   min-width: 160px;
   padding: 20px 36px;
-  background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+  background: linear-gradient(135deg, #2d4a66 0%, #3a6ea5 100%);
   border-radius: 16px;
   box-shadow: 
     0 4px 20px rgba(44, 62, 80, 0.3),
@@ -96,25 +96,24 @@
 
 .mindmap-node--concept {
   min-width: 100px;
-  padding: 10px 18px;
-  background: var(--content-bg, #ffffff);
-  border-radius: 20px;
-  border: 2.5px solid;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 8px 14px;
+  background: color-mix(in srgb, var(--node-color) 12%, var(--ns-color-bg-container, #ffffff));
+  border-radius: var(--ns-radius-sm, 6px);
+  border: 1px solid color-mix(in srgb, var(--node-color) 35%, transparent);
+  box-shadow: none;
   animation-delay: 0.2s;
-  /* Use CSS variable for border color */
-  border-color: var(--node-color);
 }
 
 .mindmap-node--concept .mindmap-node__label {
-  color: var(--text-color, #2c3e50);
+  color: color-mix(in srgb, var(--node-color) 72%, var(--ns-sem-ink, #1f2933));
   font-size: 13px;
   font-weight: 500;
 }
 
 .mindmap-node--concept:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--ns-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.03));
+  background: color-mix(in srgb, var(--node-color) 16%, var(--ns-color-bg-container, #ffffff));
 }
 
 /* High importance concepts */
@@ -144,7 +143,7 @@
    ========================================================================== */
 
 [data-theme="dark"] .mindmap-node--center {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  background: linear-gradient(135deg, #152535 0%, #2d5684 100%);
   box-shadow: 
     0 4px 20px rgba(0, 0, 0, 0.4),
     0 0 0 4px rgba(255, 255, 255, 0.05);

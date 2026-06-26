@@ -2,61 +2,61 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--ns-space-2);
   min-width: 0;
 }
 
 .assistant-workspace__tool-tabs {
   display: flex;
-  gap: 8px;
+  gap: var(--ns-space-2);
   flex-wrap: wrap;
 }
 
 .assistant-workspace__body {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--ns-space-2);
   min-height: 0;
   flex: 1;
   min-width: 0;
 }
 
 .assistant-workspace__chat-log {
-  border: 1px solid rgba(5, 5, 5, 0.08);
-  border-radius: 8px;
-  padding: 8px;
+  border: 1px solid var(--ns-color-split);
+  border-radius: var(--ns-radius-md);
+  padding: var(--ns-space-2);
   min-height: 180px;
   height: 240px;
   max-height: none;
   overflow: auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--ns-space-2);
   resize: vertical;
 }
 
 .assistant-workspace__qa-tools {
   display: flex;
-  gap: 8px;
+  gap: var(--ns-space-2);
   flex-wrap: wrap;
 }
 
 .assistant-workspace__asset-tags {
   display: flex;
-  gap: 8px;
+  gap: var(--ns-space-2);
   flex-wrap: wrap;
 }
 
 .assistant-workspace__chat-msg {
-  border-radius: 8px;
-  padding: 8px 10px;
+  border-radius: var(--ns-radius-md);
+  padding: var(--ns-space-2) var(--ns-space-3);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--ns-space-1);
 }
 
 .assistant-workspace__chat-msg--user {
-  background: rgba(22, 119, 255, 0.12);
+  background: var(--ns-color-primary-bg-hover);
 }
 
 .assistant-workspace__chat-msg--assistant {
@@ -95,21 +95,21 @@
 }
 
 .assistant-workspace__note-title {
-  border-radius: 8px;
+  border-radius: var(--ns-radius-md);
 }
 
 .assistant-workspace__editor-toolbar {
   display: flex;
-  gap: 8px;
+  gap: var(--ns-space-2);
   flex-wrap: wrap;
 }
 
 .assistant-workspace__editor-shell {
-  border: 1px solid rgba(5, 5, 5, 0.15);
-  border-radius: 10px;
-  background: #fff;
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-bg-container);
   min-height: 320px;
-  padding: 10px 12px;
+  padding: var(--ns-space-3);
 }
 
 .assistant-workspace__editor {
@@ -124,11 +124,11 @@
 }
 
 .assistant-workspace__editor .personal-note-quote {
-  margin: 10px 0;
-  padding: 10px 12px;
-  border-left: 3px solid #722ed1;
-  border-radius: 8px;
-  background: rgba(114, 46, 209, 0.08);
+  margin: var(--ns-space-3) 0;
+  padding: var(--ns-space-3);
+  border-left: 1px solid var(--ns-color-primary-border);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-primary-bg-hover);
 }
 
 .assistant-workspace__editor .personal-note-quote p {
@@ -136,20 +136,20 @@
 }
 
 .assistant-workspace__editor .personal-note-quote footer {
-  margin-top: 6px;
-  color: rgba(5, 5, 5, 0.55);
+  margin-top: var(--ns-space-2);
+  color: var(--ns-color-text-tertiary);
   font-size: 12px;
 }
 
 .assistant-workspace__editor:empty::before {
   content: attr(data-placeholder);
-  color: rgba(0, 0, 0, 0.3);
+  color: var(--ns-color-text-quaternary);
 }
 
 .assistant-workspace__quiz-block {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--ns-space-2);
 }
 
 .assistant-workspace__quiz-options {
@@ -160,19 +160,19 @@
 .assistant-workspace__quiz-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--ns-space-2);
   min-width: 0;
 }
 
 .assistant-workspace__quiz-card {
-  border: 1px solid rgba(5, 5, 5, 0.08);
-  border-radius: 8px;
+  border: 1px solid var(--ns-color-split);
+  border-radius: var(--ns-radius-md);
   box-sizing: border-box;
   width: 100%;
-  padding: 8px 10px;
+  padding: var(--ns-space-2) var(--ns-space-3);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--ns-space-2);
   line-height: 1.45;
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -212,14 +212,14 @@
 }
 
 [data-theme="dark"] .assistant-workspace__editor-shell {
-  background: #141414;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--ns-color-bg-container);
+  border-color: var(--ns-color-border);
 }
 
 [data-theme="dark"] .assistant-workspace__editor {
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--ns-color-text);
 }
 
 [data-theme="dark"] .assistant-workspace__editor:empty::before {
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--ns-color-text-quaternary);
 }

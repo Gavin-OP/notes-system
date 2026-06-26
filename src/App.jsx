@@ -18,6 +18,7 @@ import Routes from "./router/Routes";
 import { fetchNotesIndex } from "./redux/notesIndexSlice";
 import { setIsMobile } from "./redux/preferenceSlice";
 import { isLocalhost } from "./utils/analyticsUtils";
+import { academicAntTokens } from "./styles/academicTheme";
 
 import "./App.css";
 
@@ -90,6 +91,7 @@ function App() {
       theme={{
         algorithm:
           themeMode === "dark" ? theme.darkAlgorithm : theme.defaultAlgorithm,
+        token: academicAntTokens,
       }}
       locale={language === "cn" ? zhCN : enUS}
     >

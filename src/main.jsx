@@ -7,6 +7,8 @@ import store from "./redux/store.js";
 import App from "./App.jsx";
 import { isLocalhost } from "./utils/analyticsUtils.js";
 
+import "./styles/tokens.css";
+import "./styles/semanticChips.css";
 import "./index.css";
 
 // Only initialize Google Analytics when not running on localhost

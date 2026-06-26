@@ -1,5 +1,8 @@
-import { Alert, Empty, List, Space, Tag, Typography } from "antd";
+import { Alert, Empty, List, Space, Typography } from "antd";
 import { AimOutlined } from "@ant-design/icons";
+
+import SemanticChip from "../SemanticChip";
+import { getMatchScoreChipVariant } from "../../utils/semanticChipUtils";
 
 const { Text } = Typography;
 
@@ -46,9 +49,9 @@ function CareerRecommendationsCard({
                   <AimOutlined />
                   <Text strong>{item.title}</Text>
                 </Space>
-                <Tag color={matchScore >= 70 ? "green" : matchScore >= 45 ? "blue" : "orange"}>
+                <SemanticChip variant={getMatchScoreChipVariant(matchScore)}>
                   {matchScore}% match
-                </Tag>
+                </SemanticChip>
               </div>
             </Space>
           </List.Item>

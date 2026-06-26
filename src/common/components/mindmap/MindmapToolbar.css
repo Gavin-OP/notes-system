@@ -47,8 +47,8 @@
 
 .mindmap-toolbar__back-btn:hover {
   background: var(--hover-bg, #f5f5f5);
-  border-color: var(--primary-color, #1890ff);
-  color: var(--primary-color, #1890ff);
+  border-color: var(--ns-color-primary);
+  color: var(--ns-color-primary);
 }
 
 .mindmap-toolbar__back-btn span {
@@ -107,13 +107,13 @@
 
 .mindmap-toolbar__view-btn:hover:not(.mindmap-toolbar__view-btn--disabled) {
   background: var(--hover-bg, #f5f5f5);
-  border-color: var(--primary-color, #1890ff);
-  color: var(--primary-color, #1890ff);
+  border-color: var(--ns-color-primary);
+  color: var(--ns-color-primary);
 }
 
 .mindmap-toolbar__view-btn--active {
-  background: var(--primary-color, #1890ff);
-  border-color: var(--primary-color, #1890ff);
+  background: var(--ns-color-primary);
+  border-color: var(--ns-color-primary);
   color: #ffffff;
   font-weight: 600;
 }
@@ -158,8 +158,8 @@
 
 [data-theme="dark"] .mindmap-toolbar__back-btn:hover {
   background: var(--hover-bg, #2a2a2a);
-  border-color: var(--primary-color, #1890ff);
-  color: var(--primary-color, #1890ff);
+  border-color: var(--ns-color-primary);
+  color: var(--ns-color-primary);
 }
 
 [data-theme="dark"] .mindmap-toolbar__title h2 {
@@ -178,13 +178,13 @@
 
 [data-theme="dark"] .mindmap-toolbar__view-btn:hover:not(.mindmap-toolbar__view-btn--disabled) {
   background: var(--hover-bg, #2a2a2a);
-  border-color: var(--primary-color, #1890ff);
-  color: var(--primary-color, #1890ff);
+  border-color: var(--ns-color-primary);
+  color: var(--ns-color-primary);
 }
 
 [data-theme="dark"] .mindmap-toolbar__view-btn--active {
-  background: var(--primary-color, #1890ff);
-  border-color: var(--primary-color, #1890ff);
+  background: var(--ns-color-primary);
+  border-color: var(--ns-color-primary);
   color: #ffffff;
 }
 

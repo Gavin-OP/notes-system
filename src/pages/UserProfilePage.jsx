@@ -16,7 +16,6 @@ import {
   Row,
   Space,
   Spin,
-  Tag,
   Tabs,
   Tooltip,
   Typography,
@@ -29,6 +28,20 @@ import {
   LogoutOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+
+import SemanticChip from "../common/components/SemanticChip";
+import {
+  getCareerGoalChipVariant,
+  getGapChipVariant,
+  getKnowledgeAreaChipVariant,
+  getMatchScoreChipVariant,
+  getMatchScoreStrokeColor,
+  getProgressStateChipVariant,
+  getProgressStateStrokeColor,
+  getSkillChipVariant,
+  getSubjectChipVariant,
+  getToolChipVariant,
+} from "../common/utils/semanticChipUtils";
 import {
   getCurrentUser,
   getMyNoteQuotes,
@@ -1057,11 +1070,13 @@ function UserProfilePage() {
                                 <div key={track.id}>
                                   <div className="user-profile-page__track-head">
                                     <Text strong>{track.title}</Text>
-                                    <Tag color={track.status === "Completed" ? "green" : "blue"}>{track.status}</Tag>
+                                    <SemanticChip variant={getProgressStateChipVariant(track.status)}>
+                                      {track.status}
+                                    </SemanticChip>
                                   </div>
                                   <Progress
                                     percent={track.progress}
-                                    strokeColor={track.progress >= 100 ? "#52c41a" : "#1677ff"}
+                                    strokeColor={getProgressStateStrokeColor(track.status, track.progress)}
                                   />
                                   <Text type="secondary">Current topic: {track.current}</Text>
                                 </div>
@@ -1267,9 +1282,9 @@ function UserProfilePage() {
                   <div className="user-profile-page__tag-wall">
                     {accumulationDashboard.knowledge.length > 0 ? (
                       accumulationDashboard.knowledge.map((item) => (
-                        <Tag key={`knowledge-${item}`} color="blue">
+                        <SemanticChip key={`knowledge-${item}`} variant={getKnowledgeAreaChipVariant(item)}>
                           {item}
-                        </Tag>
+                        </SemanticChip>
                       ))
                     ) : (
                       <Text type="secondary">No knowledge areas yet.</Text>
@@ -1281,9 +1296,9 @@ function UserProfilePage() {
                   <div className="user-profile-page__tag-wall">
                     {accumulationDashboard.skills.length > 0 ? (
                       accumulationDashboard.skills.map((item) => (
-                        <Tag key={`skill-${item}`} color="purple">
+                        <SemanticChip key={`skill-${item}`} variant={getSkillChipVariant(item)}>
                           {item}
-                        </Tag>
+                        </SemanticChip>
                       ))
                     ) : (
                       <Text type="secondary">No skills tagged yet.</Text>
@@ -1295,9 +1310,9 @@ function UserProfilePage() {
                   <div className="user-profile-page__tag-wall">
                     {accumulationDashboard.tools.length > 0 ? (
                       accumulationDashboard.tools.map((item) => (
-                        <Tag key={`tool-${item}`} color="geekblue">
+                        <SemanticChip key={`tool-${item}`} variant={getToolChipVariant()}>
                           {item}
-                        </Tag>
+                        </SemanticChip>
                       ))
                     ) : (
                       <Text type="secondary">No tools tracked yet.</Text>
@@ -1310,9 +1325,9 @@ function UserProfilePage() {
               {careerGoals.length > 0 ? (
                 <div className="user-profile-page__tag-wall">
                   {careerGoals.map((goal) => (
-                    <Tag key={`career-goal-${goal}`} color="green">
+                    <SemanticChip key={`career-goal-${goal}`} variant={getCareerGoalChipVariant()}>
                       {goal}
-                    </Tag>
+                    </SemanticChip>
                   ))}
                 </div>
               ) : (
@@ -1361,47 +1376,64 @@ function UserProfilePage() {
                     <Space direction="vertical" size={12} className="user-profile-page__block">
                       <div className="user-profile-page__role-detail-head">
                         <Text strong>{selectedCareerRecommendation.title}</Text>
-                        <Tag
-                          color={
-                            formatScore(selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore) >= 70
-                              ? "green"
-                              : formatScore(selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore) >= 45
-                                ? "blue"
-                                : "orange"
-                          }
+                        <SemanticChip
+                          variant={getMatchScoreChipVariant(
+                            selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore,
+                          )}
                         >
-                          {formatScore(selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore)}% match
-                        </Tag>
+                          {formatScore(
+                            selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore,
+                          )}% match
+                        </SemanticChip>
                       </div>
                       <Progress
-                        percent={formatScore(selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore)}
+                        percent={formatScore(
+                          selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore,
+                        )}
                         showInfo={false}
+                        strokeColor={getMatchScoreStrokeColor(
+                          selectedCareerRecommendation.match_score ?? selectedCareerRecommendation.matchScore,
+                        )}
                       />
                       <Space wrap size={[8, 8]}>
-                        <Tag>
+                        <SemanticChip
+                          variant={getMatchScoreChipVariant(
+                            selectedCareerRecommendation.knowledge_match ??
+                              selectedCareerRecommendation.knowledgeMatch,
+                          )}
+                        >
                           Knowledge{" "}
                           {formatScore(
                             selectedCareerRecommendation.knowledge_match ??
                               selectedCareerRecommendation.knowledgeMatch,
                           )}
                           %
-                        </Tag>
-                        <Tag>
+                        </SemanticChip>
+                        <SemanticChip
+                          variant={getMatchScoreChipVariant(
+                            selectedCareerRecommendation.skill_match ?? selectedCareerRecommendation.skillMatch,
+                          )}
+                        >
                           Skills{" "}
                           {formatScore(
                             selectedCareerRecommendation.skill_match ??
                               selectedCareerRecommendation.skillMatch,
                           )}
                           %
-                        </Tag>
-                        <Tag>
+                        </SemanticChip>
+                        <SemanticChip
+                          variant={getMatchScoreChipVariant(
+                            selectedCareerRecommendation.work_style_match ??
+                              selectedCareerRecommendation.workStyleMatch,
+                          )}
+                        >
                           Work Style{" "}
                           {formatScore(
                             selectedCareerRecommendation.work_style_match ??
                               selectedCareerRecommendation.workStyleMatch,
                           )}
                           %
-                        </Tag>
+                        </SemanticChip>
                       </Space>
                       <Paragraph className="career-recommendation-card__reasoning">
                         {selectedCareerRecommendation.reasoning ||
@@ -1412,9 +1444,12 @@ function UserProfilePage() {
                         <div className="user-profile-page__tag-wall">
                           {selectedCareerSubjects.length > 0 ? (
                             selectedCareerSubjects.map((subject) => (
-                              <Tag key={`role-subject-${subject.slug}`} color="blue">
+                              <SemanticChip
+                                key={`role-subject-${subject.slug}`}
+                                variant={getSubjectChipVariant(subject.score)}
+                              >
                                 {subject.title} {subject.score ? `${subject.score}%` : ""}
-                              </Tag>
+                              </SemanticChip>
                             ))
                           ) : (
                             <Text type="secondary">No subject links yet.</Text>
@@ -1426,9 +1461,9 @@ function UserProfilePage() {
                         <div className="user-profile-page__tag-wall">
                           {selectedCareerSkills.length > 0 ? (
                             selectedCareerSkills.slice(0, 12).map((skill) => (
-                              <Tag key={`role-skill-${skill}`} color="purple">
+                              <SemanticChip key={`role-skill-${skill}`} variant={getSkillChipVariant(skill)}>
                                 {skill}
-                              </Tag>
+                              </SemanticChip>
                             ))
                           ) : (
                             <Text type="secondary">No related skills yet.</Text>
@@ -1439,12 +1474,12 @@ function UserProfilePage() {
                         {(selectedCareerRecommendation.skill_gaps ||
                           selectedCareerRecommendation.skillGaps ||
                           []).slice(0, 6).map((gap) => (
-                          <Tag
+                          <SemanticChip
                             key={`${selectedCareerRecommendation.job_id || selectedCareerRecommendation.jobId}-${gap.category}-${gap.skill}`}
-                            color="gold"
+                            variant={getGapChipVariant()}
                           >
                             {gap.skill}
-                          </Tag>
+                          </SemanticChip>
                         ))}
                       </Space>
                       <Divider style={{ margin: "4px 0" }} />
@@ -1500,11 +1535,11 @@ function UserProfilePage() {
             </Row>
             <button
               type="button"
-              className="user-profile-page__explore-careers"
+              className="ns-career-nav-link user-profile-page__explore-careers"
               onClick={() => navigate("/careers")}
             >
-              <span className="user-profile-page__explore-careers-label">Explore Careers</span>
-              <DownOutlined className="user-profile-page__explore-careers-arrow" aria-hidden="true" />
+              <span className="ns-career-nav-link__label">Explore Careers</span>
+              <DownOutlined className="ns-career-nav-link__icon" aria-hidden="true" />
             </button>
           </Card>
         </div>
@@ -1544,7 +1579,7 @@ function UserProfilePage() {
               <>
                 <div className="user-profile-page__conversation-thread-header">
                   <Text strong>{activeConversation.title}</Text>
-                  <Tag>{activeConversation.note}</Tag>
+                  <SemanticChip variant="slate">{activeConversation.note}</SemanticChip>
                 </div>
                 <div className="user-profile-page__conversation-messages">
                   {(activeConversation.messages || []).map((message, index) => (

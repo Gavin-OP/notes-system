@@ -23,7 +23,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #1677ff;
+  color: var(--ns-color-primary);
 }
 
 .admin-layout__logout {
@@ -54,7 +54,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #1677ff;
+  color: var(--ns-color-primary);
   line-height: 1.1;
 }
 
@@ -93,7 +93,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #1677ff;
+  color: var(--ns-color-primary);
 }
 
 .admin-page-header {
@@ -111,7 +111,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #1677ff;
+  color: var(--ns-color-primary);
 }
 
 .admin-page-header__title.ant-typography {

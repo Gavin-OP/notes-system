@@ -1,0 +1,308 @@
+/**
+ * Notes System — academic color system
+ * Primary blue #3A6EA5 · Wisdom gold #F4D06F (DESIGN.md)
+ * Aliases Ant Design CSS variables when ConfigProvider seeds academic tokens.
+ */
+
+:root {
+  /* Palette seeds */
+  --ns-palette-primary: #3a6ea5;
+  --ns-palette-wisdom: #f4d06f;
+
+  /* Color — primary (academic blue) */
+  --ns-color-primary: var(--ant-color-primary, #3a6ea5);
+  --ns-color-primary-hover: var(--ant-color-primary-hover, #4d82b8);
+  --ns-color-primary-active: var(--ant-color-primary-active, #2d5684);
+  --ns-color-primary-bg: var(--ant-color-primary-bg, #e8f0f8);
+  --ns-color-primary-bg-hover: rgba(58, 110, 165, 0.08);
+  --ns-color-primary-border: var(--ant-color-primary-border, #b8cfe8);
+  --ns-color-primary-border-hover: rgba(58, 110, 165, 0.45);
+  --ns-color-primary-muted: rgba(58, 110, 165, 0.14);
+  --ns-color-primary-shadow: rgba(58, 110, 165, 0.12);
+
+  /* Color — wisdom gold (accent / highlights) */
+  --ns-color-wisdom: #f4d06f;
+  --ns-color-wisdom-ink: #6e5a24;
+  --ns-color-wisdom-bg: rgba(244, 208, 111, 0.18);
+  --ns-color-wisdom-bg-strong: rgba(244, 208, 111, 0.32);
+
+  /* Color — semantic palette (DESIGN.md Brand Color Direction) */
+  --ns-sem-ink: #1f2933;
+  --ns-sem-slate: #52616b;
+  --ns-sem-sage: #7bae7f;
+  --ns-sem-teal: #4fa3a5;
+  --ns-sem-coral: #d9826b;
+  --ns-sem-lavender: #9b8acb;
+
+  /* Color — semantic (legacy success aliases → sage green) */
+  --ns-color-success: var(--ns-sem-sage);
+  --ns-color-success-hover: #8fbf93;
+  --ns-color-success-active: #5f8f63;
+  --ns-color-success-bg: rgba(123, 174, 127, 0.12);
+  --ns-color-success-ink: #3d6b41;
+
+  /* Semantic chip surfaces — 12% bg · 35% border · ink-mixed text */
+  --ns-chip-primary-bg: rgba(58, 110, 165, 0.12);
+  --ns-chip-primary-border: rgba(58, 110, 165, 0.35);
+  --ns-chip-primary-text: #2d5684;
+
+  --ns-chip-sage-bg: rgba(123, 174, 127, 0.12);
+  --ns-chip-sage-border: rgba(123, 174, 127, 0.35);
+  --ns-chip-sage-text: #3d6b41;
+
+  --ns-chip-wisdom-bg: rgba(244, 208, 111, 0.14);
+  --ns-chip-wisdom-border: rgba(244, 208, 111, 0.4);
+  --ns-chip-wisdom-text: #6e5a24;
+
+  --ns-chip-teal-bg: rgba(79, 163, 165, 0.12);
+  --ns-chip-teal-border: rgba(79, 163, 165, 0.35);
+  --ns-chip-teal-text: #2f6d6f;
+
+  --ns-chip-coral-bg: rgba(217, 130, 107, 0.12);
+  --ns-chip-coral-border: rgba(217, 130, 107, 0.35);
+  --ns-chip-coral-text: #8f4f3f;
+
+  --ns-chip-lavender-bg: rgba(155, 138, 203, 0.12);
+  --ns-chip-lavender-border: rgba(155, 138, 203, 0.35);
+  --ns-chip-lavender-text: #5c4f82;
+
+  --ns-chip-slate-bg: rgba(82, 97, 107, 0.1);
+  --ns-chip-slate-border: rgba(82, 97, 107, 0.28);
+  --ns-chip-slate-text: #3f4d57;
+
+  /* Color — surfaces & text */
+  --ns-color-bg-layout: var(--ant-color-bg-layout, #f3f5f8);
+  --ns-color-bg-container: var(--ant-color-bg-container, #ffffff);
+  --ns-color-bg-elevated: var(--ant-color-bg-elevated, #ffffff);
+  --ns-color-bg-spotlight: var(--ant-color-bg-spotlight, #f7f8fa);
+  --ns-color-border: var(--ant-color-border, #d9d9d9);
+  --ns-color-border-secondary: var(--ant-color-border-secondary, rgba(5, 5, 5, 0.06));
+  --ns-color-text: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+  --ns-color-text-secondary: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+  --ns-color-text-tertiary: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+  --ns-color-text-quaternary: var(--ant-color-text-quaternary, rgba(0, 0, 0, 0.25));
+  --ns-color-fill-secondary: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.04));
+  --ns-color-fill-tertiary: rgba(5, 5, 5, 0.08);
+  --ns-color-split: rgba(5, 5, 5, 0.08);
+
+  /* Highlights — wisdom gold for search marks & reading emphasis */
+  --ns-color-highlight: var(--ns-color-wisdom-bg-strong);
+  --ns-color-highlight-active: rgba(244, 208, 111, 0.42);
+  --ns-color-highlight-ring: rgba(244, 208, 111, 0.28);
+
+  /* Spacing — 8px grid */
+  --ns-space-1: 4px;
+  --ns-space-2: 8px;
+  --ns-space-3: 12px;
+  --ns-space-4: 16px;
+  --ns-space-5: 24px;
+  --ns-space-6: 32px;
+
+  /* Radius */
+  --ns-radius-sm: 6px;
+  --ns-radius-md: 8px;
+  --ns-radius-lg: 12px;
+  --ns-radius-xl: 16px;
+  --ns-radius-pill: 999px;
+
+  /* Motion */
+  --ns-duration-fast: 150ms;
+  --ns-duration-normal: 200ms;
+  --ns-ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* Shadows */
+  --ns-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --ns-shadow-md: 0 6px 16px rgba(0, 0, 0, 0.12);
+  --ns-shadow-lg: 0 24px 80px rgba(15, 23, 42, 0.1);
+  --ns-shadow-primary: 0 12px 28px var(--ns-color-primary-shadow);
+
+  /* Focus */
+  --ns-focus-ring: 2px solid rgba(58, 110, 165, 0.45);
+
+  /* Z-index */
+  --ns-z-sticky: 99;
+  --ns-z-drawer: 100;
+  --ns-z-popover: 2000;
+}
+
+[data-theme="dark"] {
+  --ns-color-primary: var(--ant-color-primary, #6ba8d9);
+  --ns-color-primary-hover: var(--ant-color-primary-hover, #85b8e3);
+  --ns-color-primary-active: var(--ant-color-primary-active, #5b93c9);
+  --ns-color-primary-bg: var(--ant-color-primary-bg, #152535);
+  --ns-color-primary-bg-hover: rgba(107, 168, 217, 0.14);
+  --ns-color-primary-border: var(--ant-color-primary-border, #2a4560);
+  --ns-color-primary-border-hover: rgba(107, 168, 217, 0.55);
+  --ns-color-primary-muted: rgba(107, 168, 217, 0.2);
+  --ns-color-primary-shadow: rgba(0, 0, 0, 0.35);
+
+  --ns-color-wisdom-ink: #e8c96a;
+  --ns-color-wisdom-bg: rgba(244, 208, 111, 0.14);
+  --ns-color-wisdom-bg-strong: rgba(244, 208, 111, 0.24);
+
+  --ns-color-success: #8fbf93;
+  --ns-color-success-hover: #a5cca8;
+  --ns-color-success-active: #7bae7f;
+  --ns-color-success-bg: rgba(123, 174, 127, 0.16);
+  --ns-color-success-ink: #a5cca8;
+
+  --ns-chip-primary-bg: rgba(107, 168, 217, 0.14);
+  --ns-chip-primary-border: rgba(107, 168, 217, 0.38);
+  --ns-chip-primary-text: #a8cce8;
+
+  --ns-chip-sage-bg: rgba(123, 174, 127, 0.16);
+  --ns-chip-sage-border: rgba(123, 174, 127, 0.38);
+  --ns-chip-sage-text: #b5d4b7;
+
+  --ns-chip-wisdom-bg: rgba(244, 208, 111, 0.14);
+  --ns-chip-wisdom-border: rgba(244, 208, 111, 0.38);
+  --ns-chip-wisdom-text: #e8c96a;
+
+  --ns-chip-teal-bg: rgba(79, 163, 165, 0.14);
+  --ns-chip-teal-border: rgba(79, 163, 165, 0.38);
+  --ns-chip-teal-text: #7ec4c6;
+
+  --ns-chip-coral-bg: rgba(217, 130, 107, 0.14);
+  --ns-chip-coral-border: rgba(217, 130, 107, 0.38);
+  --ns-chip-coral-text: #e8a894;
+
+  --ns-chip-lavender-bg: rgba(155, 138, 203, 0.14);
+  --ns-chip-lavender-border: rgba(155, 138, 203, 0.38);
+  --ns-chip-lavender-text: #c4b8e0;
+
+  --ns-chip-slate-bg: rgba(82, 97, 107, 0.14);
+  --ns-chip-slate-border: rgba(82, 97, 107, 0.32);
+  --ns-chip-slate-text: #9aa8b3;
+
+  --ns-color-bg-layout: var(--ant-color-bg-layout, #0a0c10);
+  --ns-color-bg-container: var(--ant-color-bg-container, #141414);
+  --ns-color-bg-elevated: var(--ant-color-bg-elevated, #1f1f1f);
+  --ns-color-bg-spotlight: var(--ant-color-bg-spotlight, #1a1a1a);
+  --ns-color-border: var(--ant-color-border, #424242);
+  --ns-color-border-secondary: var(--ant-color-border-secondary, rgba(255, 255, 255, 0.06));
+  --ns-color-text: var(--ant-color-text, rgba(255, 255, 255, 0.88));
+  --ns-color-text-secondary: var(--ant-color-text-secondary, rgba(255, 255, 255, 0.65));
+  --ns-color-text-tertiary: var(--ant-color-text-tertiary, rgba(255, 255, 255, 0.45));
+  --ns-color-text-quaternary: var(--ant-color-text-quaternary, rgba(255, 255, 255, 0.25));
+  --ns-color-fill-secondary: var(--ant-color-fill-secondary, rgba(255, 255, 255, 0.06));
+  --ns-color-fill-tertiary: rgba(255, 255, 255, 0.08);
+  --ns-color-split: rgba(255, 255, 255, 0.15);
+
+  --ns-color-highlight: rgba(244, 208, 111, 0.24);
+  --ns-color-highlight-active: rgba(244, 208, 111, 0.2);
+  --ns-color-highlight-ring: rgba(244, 208, 111, 0.14);
+
+  --ns-shadow-sm: none;
+  --ns-shadow-md: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --ns-shadow-lg: 0 24px 80px rgba(0, 0, 0, 0.5);
+  --ns-shadow-primary: 0 12px 28px var(--ns-color-primary-shadow);
+
+  --ns-focus-ring: 2px solid rgba(107, 168, 217, 0.45);
+}
+
+/* Shared career/profile navigation */
+.ns-career-nav-link {
+  width: 100%;
+  margin-bottom: var(--ns-space-4);
+  padding: var(--ns-space-3) var(--ns-space-4);
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ns-space-2);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+  transition:
+    border-color var(--ns-duration-fast) var(--ns-ease-out),
+    background-color var(--ns-duration-fast) var(--ns-ease-out),
+    box-shadow var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.ns-career-nav-link:hover {
+  border-color: var(--ns-color-primary-border-hover);
+  background: var(--ns-color-primary-bg-hover);
+  box-shadow: var(--ns-shadow-sm);
+}
+
+.ns-career-nav-link:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
+}
+
+.ns-career-nav-link__label {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ns-color-text);
+}
+
+.ns-career-nav-link__icon {
+  font-size: 16px;
+  color: var(--ns-color-primary);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Shared choice / CTA card (micro-courses, quizzes) */
+.ns-choice-card {
+  border: 1px solid var(--ns-color-primary-muted);
+  border-radius: var(--ns-radius-lg);
+  padding: var(--ns-space-4);
+  background: var(--ns-color-bg-container);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--ns-duration-normal) var(--ns-ease-out),
+    box-shadow var(--ns-duration-normal) var(--ns-ease-out),
+    background-color var(--ns-duration-normal) var(--ns-ease-out);
+}
+
+.ns-choice-card:hover {
+  border-color: var(--ns-color-primary);
+  box-shadow: var(--ns-shadow-primary);
+}
+
+.ns-choice-card.is-active,
+.ns-choice-card.is-selected {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg);
+}
+
+.ns-choice-card__accent {
+  display: block;
+  margin-bottom: var(--ns-space-2);
+  color: var(--ns-color-primary);
+  font-weight: 700;
+}
+
+/* Primary filled control (non-Ant custom buttons) */
+.ns-btn-primary {
+  border: 1px solid var(--ns-color-primary);
+  background: var(--ns-color-primary);
+  color: #fff;
+  border-radius: var(--ns-radius-sm);
+  padding: var(--ns-space-2) var(--ns-space-4);
+  font-size: 14px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background-color var(--ns-duration-fast) var(--ns-ease-out),
+    border-color var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.ns-btn-primary:hover:not(:disabled) {
+  background: var(--ns-color-primary-hover);
+  border-color: var(--ns-color-primary-hover);
+}
+
+.ns-btn-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}

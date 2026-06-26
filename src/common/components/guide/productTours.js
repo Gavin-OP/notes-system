@@ -82,9 +82,9 @@ export function createNoteGuideSteps(refs) {
   const {
     directoryAreaRef,
     noteAreaRef,
-    subjectNavRef,
+    exploreGuideRef,
     assistantAreaRef,
-    headerToolbarRef,
+    workspaceBarRef,
   } = refs;
 
   return [
@@ -104,15 +104,17 @@ export function createNoteGuideSteps(refs) {
     {
       title: "Read, highlight, complete",
       description:
-        "Study in the main canvas. Highlight text to save a quote or ask a question, then mark the note complete when you are ready to move on.",
+        "Study in the main canvas. Highlight text to save a quote or ask a question. Mark complete from the workspace bar when you are ready to move on.",
       target: () => noteAreaRef?.current,
       placement: "right",
     },
     {
       title: "Explore connections",
       description:
-        "Open Mindmap from Explore when a linear list is not enough—see how concepts relate across the subject.",
-      target: () => subjectNavRef?.current || document.querySelector(".note-page__subject-nav"),
+        "Open Mindmap from the workspace bar when a linear list is not enough—see how concepts relate across the subject.",
+      target: () =>
+        exploreGuideRef?.current ||
+        document.querySelector(".note-workspace-bar__study .note-workspace-bar__icon-btn"),
       placement: "bottom",
     },
     {
@@ -123,10 +125,10 @@ export function createNoteGuideSteps(refs) {
       placement: "left",
     },
     {
-      title: "Header shortcuts",
+      title: "Workspace shortcuts",
       description:
-        "Search notes, listen to narration, or open your profile for progress and career tools. Tap the question-mark icon anytime to replay this tour.",
-      target: () => headerToolbarRef?.current,
+        "Mark notes complete, search, open the assistant, or use More for theme, language, narration, versions, and profile.",
+      target: () => workspaceBarRef?.current,
       placement: "bottom",
     },
   ];

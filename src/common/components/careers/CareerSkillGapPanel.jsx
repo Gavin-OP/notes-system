@@ -1,4 +1,7 @@
-import { Empty, List, Space, Tag, Typography } from "antd";
+import { Empty, List, Space, Typography } from "antd";
+
+import SemanticChip from "../SemanticChip";
+import { getKnowledgeAreaChipVariant } from "../../utils/semanticChipUtils";
 
 const { Text } = Typography;
 
@@ -41,6 +44,12 @@ function categoryLabel(category) {
   return "Knowledge";
 }
 
+function categoryChipVariant(category) {
+  if (category === "tool") return "sage";
+  if (category === "hard_skill") return "primary";
+  return getKnowledgeAreaChipVariant(category);
+}
+
 function CareerSkillGapPanel({ recommendations = [] }) {
   const gaps = buildGapGroups(recommendations);
   if (!gaps.length) {
@@ -56,10 +65,12 @@ function CareerSkillGapPanel({ recommendations = [] }) {
           <Space direction="vertical" size={4}>
             <Space wrap>
               <Text strong>{gap.skill}</Text>
-              <Tag>{categoryLabel(gap.category)}</Tag>
-              <Tag color="blue">
+              <SemanticChip variant={categoryChipVariant(gap.category)}>
+                {categoryLabel(gap.category)}
+              </SemanticChip>
+              <SemanticChip variant="slate">
                 {gap.count} role{gap.count > 1 ? "s" : ""}
-              </Tag>
+              </SemanticChip>
             </Space>
             <Text type="secondary">Related to {gap.roles.slice(0, 3).join(", ")}</Text>
           </Space>
