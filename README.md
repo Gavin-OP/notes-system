@@ -1,6 +1,13 @@
 # notes-system
 
-A markdown notes system based on ReactJS. 
+React frontend for Notes System. The app can run in two modes:
+
+- **Static mode** for GitHub Pages, reading published mirrors under `public/`.
+- **API mode** for local development, using `VITE_API_BASE_URL` to call the FastAPI backend.
+
+Generated subject content is owned by the backend repo. Files under `public/notes/`,
+`public/graphs/`, `public/audio/`, and `public/subjects/` are frontend publish mirrors,
+not canonical authoring sources.
 
 ## Usage
 
@@ -18,25 +25,28 @@ A markdown notes system based on ReactJS.
     npm run dev
     ```
 
-    If you want local narration API support at the same time:
-
-    ```
-    npm run dev:with-tts
-    ```
-
     or
 
     ```
     npx vite
     ```
 
-## Narration audio prebuild (ElevenLabs)
+    To use API mode, run the backend separately and set `VITE_API_BASE_URL` in
+    `.env.local`.
 
-Set `ELEVENLABS_API_KEY` and `ELEVENLABS_VOICE_ID` in `.env.local`, then:
+## Static content mirror
 
+The backend is the canonical source for generated notes, graphs, images, audio,
+and subject overview data. This frontend keeps a static mirror for GitHub Pages.
+
+Sync current backend outputs into the frontend mirror with:
+
+```bash
+npm run sync:backend-content -- --subject data-science
+npm run generate:notes
 ```
-npm run ai-agents:narration:batch -- --course python
-```
+
+See `docs/content-sync.md` for the source-of-truth rules and migration plan.
 
 4. Publish and Deploy  
 
