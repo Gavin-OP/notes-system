@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -29,21 +29,34 @@ import {
   LogoutOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { getCurrentUser, getMyNoteQuotes, getMyProfile, getUserProgress, logoutUser } from "../common/api/user";
+import {
+  getCurrentUser,
+  getMyNoteQuotes,
+  getMyProfile,
+  getUserProgress,
+  logoutUser,
+  updateMyGuideState,
+} from "../common/api/user";
 import {
   getCareerTaxonomy,
   getMyCareerBackground,
   getMyCareerRecommendations,
   getSubjectJobMatches,
+  submitCareerOnboarding,
   updateMyCareerBackground,
 } from "../common/api/careers";
 import CareerBackgroundCard from "../common/components/careers/CareerBackgroundCard";
+import CareerOnboardingModal from "../common/components/careers/CareerOnboardingModal";
 import CareerRecommendationsCard from "../common/components/careers/CareerRecommendationsCard";
 import CareerSkillGapPanel from "../common/components/careers/CareerSkillGapPanel";
 import AchievementsPanel, { normalizeAchievements } from "../common/components/achievements/AchievementsPanel";
 import { extractSubjectsFromNotesIndex } from "../common/components/achievements/achievementCatalog";
 import { isConcreteNoteRoute, normalizeNoteRoute } from "../utils/notesIndexUtils";
-import AppFeatureTour from "../common/components/guide/AppFeatureTour";
+import AppFeatureTour, { PENDING_NOTES_TOUR_KEY } from "../common/components/guide/AppFeatureTour";
+import {
+  createProfileGuideSteps,
+  prepareProfileTourStep,
+} from "../common/components/guide/productTours";
 
 import "./UserProfilePage.css";
 
@@ -329,6 +342,11 @@ function normalizeCareerBackgroundForForm(background = {}) {
     skills: background.skills || [],
     tools: background.tools || [],
     careerInterests: background.career_interests || background.careerInterests || [],
+    experienceLevels: background.experience_levels || background.experienceLevels || [],
+    onboardingCompleted: Boolean(background.onboarding_completed ?? background.onboardingCompleted),
+    recommendedNoteUrl: background.recommended_note_url || background.recommendedNoteUrl || "",
+    recommendedNoteTitle: background.recommended_note_title || background.recommendedNoteTitle || "",
+    recommendedSubject: background.recommended_subject || background.recommendedSubject || "",
   };
 }
 
@@ -376,12 +394,21 @@ function UserProfilePage() {
   const [careerSaving, setCareerSaving] = useState(false);
   const [careerGoalSaving, setCareerGoalSaving] = useState(false);
   const [careerErrorText, setCareerErrorText] = useState("");
+  const [careerOnboardingOpen, setCareerOnboardingOpen] = useState(false);
+  const [careerOnboardingSubmitting, setCareerOnboardingSubmitting] = useState(false);
+  const [recommendedFirstNote, setRecommendedFirstNote] = useState(null);
+  const [tourPromptOpen, setTourPromptOpen] = useState(false);
+  const [profileTourStartToken, setProfileTourStartToken] = useState(0);
+  const [chainNotesTourAfterProfile, setChainNotesTourAfterProfile] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [previewNotice, setPreviewNotice] = useState("");
   const [activeDashboard, setActiveDashboard] = useState("learning");
+  const [learningRecordsTab, setLearningRecordsTab] = useState("study");
   const [selectedCareerRole, setSelectedCareerRole] = useState("");
   const [achievementsViewAllOpen, setAchievementsViewAllOpen] = useState(false);
   const location = useLocation();
+  const profileHeroRef = useRef(null);
+  const profileDashboardTabsRef = useRef(null);
   const profileLearningRef = useRef(null);
   const profileCareerRef = useRef(null);
   const profileRecordsRef = useRef(null);
@@ -480,6 +507,22 @@ function UserProfilePage() {
       mounted = false;
     };
   }, [previewMode, userInfo?.id]);
+
+  useEffect(() => {
+    if (previewMode || !userInfo?.id || careerLoading || careerErrorText) return;
+    if (!careerTaxonomy.length) return;
+    const normalized = normalizeCareerBackgroundForForm(careerBackground);
+    if (!normalized.onboardingCompleted) {
+      setCareerOnboardingOpen(true);
+    }
+  }, [
+    careerBackground,
+    careerErrorText,
+    careerLoading,
+    careerTaxonomy.length,
+    previewMode,
+    userInfo?.id,
+  ]);
 
   const learningTracks = useMemo(
     () => normalizeLearningTracks(profileInfo),
@@ -659,9 +702,11 @@ function UserProfilePage() {
 
   const continueLearningUrl = useMemo(() => {
     const FALLBACK_NOTE = "/note/disclaimer.md";
+    const normalizedCareerBackground = normalizeCareerBackgroundForForm(careerBackground);
 
     const tried = [];
     tried.push(
+      normalizedCareerBackground.recommendedNoteUrl,
       profileInfo.currentNoteUrl,
       profileInfo.current_note_url,
       profileInfo.currentLessonUrl,
@@ -679,7 +724,7 @@ function UserProfilePage() {
     }
 
     return FALLBACK_NOTE;
-  }, [fallbackProgress, learningTracks, profileInfo]);
+  }, [careerBackground, fallbackProgress, learningTracks, profileInfo]);
 
   const handleLogout = async () => {
     if (previewMode) {
@@ -717,6 +762,74 @@ function UserProfilePage() {
     }
   };
 
+  const handleCareerOnboardingSubmit = async (values) => {
+    if (previewMode) return;
+    setCareerOnboardingSubmitting(true);
+    try {
+      const response = await submitCareerOnboarding(values);
+      const nextBackground = response?.background || {};
+      const nextRecommendations = response?.recommendations || [];
+      const nextRecommendedNote = response?.recommended_note || response?.recommendedNote || null;
+      setCareerBackground(nextBackground);
+      setCareerRecommendations(nextRecommendations);
+      setRecommendedFirstNote(nextRecommendedNote);
+      setCareerOnboardingOpen(false);
+      setTourPromptOpen(true);
+      message.success("Your first note is ready.");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Failed to save onboarding answers.");
+    } finally {
+      setCareerOnboardingSubmitting(false);
+    }
+  };
+
+  const handleSkipProfileTour = async () => {
+    setTourPromptOpen(false);
+    setChainNotesTourAfterProfile(false);
+    try {
+      await updateMyGuideState({
+        guideKey: "profile_page",
+        seen: true,
+        completed: false,
+        currentStep: 0,
+      });
+    } catch {
+      // The question-mark button can still start the local tour if this fails.
+    }
+  };
+
+  const resolveRecommendedNoteUrl = () =>
+    recommendedFirstNote?.note_url ||
+    recommendedFirstNote?.noteUrl ||
+    continueLearningUrl;
+
+  const handleStartProfileTour = async () => {
+    setTourPromptOpen(false);
+    setChainNotesTourAfterProfile(true);
+    try {
+      await updateMyGuideState({
+        guideKey: "profile_page",
+        seen: true,
+        completed: false,
+        currentStep: 0,
+      });
+    } catch {
+      // Ignore guide-state persistence failures.
+    }
+    setProfileTourStartToken((value) => value + 1);
+  };
+
+  const handleProfileTourAfterFinish = () => {
+    if (!chainNotesTourAfterProfile) return;
+    setChainNotesTourAfterProfile(false);
+    try {
+      window.sessionStorage.setItem(PENDING_NOTES_TOUR_KEY, "1");
+    } catch {
+      // Ignore storage errors; user can still open the note-page guide manually.
+    }
+    navigate(resolveRecommendedNoteUrl());
+  };
+
   const handleAddCareerGoal = async () => {
     if (previewMode) {
       message.info("Preview mode cannot save career goals.");
@@ -750,29 +863,26 @@ function UserProfilePage() {
     }
   };
 
-  const profileGuideSteps = [
-    {
-      title: "Achievements",
-      description:
-        "Track trophies for completed subjects, learning streaks, and milestone goals instead of a plain completed-notes list.",
-      target: () => profileLearningRef.current,
-      placement: "bottom",
-    },
-    {
-      title: "Exploration Records",
-      description:
-        "Revisit AI conversations and saved note passages. This is the memory layer for open-ended exploration.",
-      target: () => profileRecordsRef.current,
-      placement: "right",
-    },
-    {
-      title: "Career Goals",
-      description:
-        "Career planning is optional: add goals when you want the system to turn skill gaps into a practical learning path.",
-      target: () => profileCareerRef.current,
-      placement: "left",
-    },
-  ];
+  const profileGuideSteps = useMemo(
+    () =>
+      createProfileGuideSteps({
+        profileHeroRef,
+        profileDashboardTabsRef,
+        profileLearningRef,
+        profileRecordsRef,
+        profileCareerRef,
+      }),
+    [],
+  );
+
+  const handleProfileTourStepChange = useCallback(
+    (stepIndex) =>
+      prepareProfileTourStep(stepIndex, {
+        setActiveDashboard,
+        setLearningRecordsTab,
+      }),
+    [],
+  );
 
   if (loading) {
     return (
@@ -801,7 +911,12 @@ function UserProfilePage() {
   }
 
   const dashboardTabs = (
-    <div className="user-profile-page__folder-tabs" role="tablist" aria-label="Dashboard switch">
+    <div
+      className="user-profile-page__folder-tabs"
+      ref={profileDashboardTabsRef}
+      role="tablist"
+      aria-label="Dashboard switch"
+    >
       <button
         type="button"
         role="tab"
@@ -825,9 +940,55 @@ function UserProfilePage() {
 
   return (
     <div className="user-profile-page">
+      <CareerOnboardingModal
+        open={careerOnboardingOpen}
+        taxonomy={careerTaxonomy}
+        loading={careerOnboardingSubmitting}
+        onSubmit={handleCareerOnboardingSubmit}
+      />
+      <Modal
+        open={tourPromptOpen}
+        title="Your first note is ready"
+        onCancel={handleSkipProfileTour}
+        footer={[
+          <Button key="later" onClick={handleSkipProfileTour}>
+            Skip tour for now
+          </Button>,
+          <Button key="tour" type="default" onClick={handleStartProfileTour}>
+            View tours now
+          </Button>,
+          <Button
+            key="note"
+            type="primary"
+            onClick={() => {
+              setTourPromptOpen(false);
+              setChainNotesTourAfterProfile(false);
+              navigate(resolveRecommendedNoteUrl());
+            }}
+          >
+            Start recommended note
+          </Button>,
+        ]}
+      >
+        <Space direction="vertical" size={8}>
+          <Paragraph>
+            We recommend starting with{" "}
+            <Text strong>
+              {recommendedFirstNote?.note_title ||
+                recommendedFirstNote?.noteTitle ||
+                "your first recommended note"}
+            </Text>
+            .
+          </Paragraph>
+          <Paragraph type="secondary">
+            View a short profile tour, then a learning workspace tour on your recommended note. Skip
+            for now, or reopen either anytime with the question-mark button.
+          </Paragraph>
+        </Space>
+      </Modal>
       <div className="user-profile-page__container">
         <div>
-          <Card className="user-profile-page__hero">
+          <Card className="user-profile-page__hero" ref={profileHeroRef}>
           <Space align="start" size={16}>
             <Avatar size={72} icon={<UserOutlined />} />
             <div>
@@ -866,6 +1027,9 @@ function UserProfilePage() {
                   startLabel="Guide"
                   iconOnly
                   buttonAriaLabel="Open profile guide"
+                  startToken={profileTourStartToken}
+                  onBeforeStepChange={handleProfileTourStepChange}
+                  onAfterFinish={handleProfileTourAfterFinish}
                 />
               </Space>
             </div>
@@ -877,6 +1041,8 @@ function UserProfilePage() {
         <div ref={profileLearningRef}>
           <Card title={dashboardTabs} className="user-profile-page__section user-profile-page__dashboard-card">
             <Tabs
+              activeKey={learningRecordsTab}
+              onChange={setLearningRecordsTab}
               items={[
                 {
                   key: "study",

@@ -1,6 +1,6 @@
 import { Button, Empty, Form, Select, Space, Tag, Typography } from "antd";
 
-import { formatCareerRoleLabel } from "../../utils/careerDisplayUtils";
+import { CAREER_LEVEL_OPTIONS, formatCareerRoleLabel } from "../../utils/careerDisplayUtils";
 
 const { Text } = Typography;
 
@@ -83,6 +83,7 @@ function normalizeBackground(background = {}) {
     skills: background.skills || [],
     tools: background.tools || [],
     careerInterests: background.career_interests || background.careerInterests || [],
+    experienceLevels: background.experience_levels || background.experienceLevels || [],
   };
 }
 
@@ -106,6 +107,7 @@ function CareerBackgroundCard({
         skills: normalized.skills,
         tools: normalized.tools,
         careerInterests: normalized.careerInterests,
+        experienceLevels: normalized.experienceLevels,
       }}
       onFinish={(values) => onSave?.(values)}
     >
@@ -142,6 +144,15 @@ function CareerBackgroundCard({
             mode="tags"
             placeholder="Add career interests"
             options={toSelectOptions(taxonomyOptions.careers)}
+            disabled={disabled}
+          />
+        </Form.Item>
+        <Form.Item label="Level" name="experienceLevels">
+          <Select
+            mode="multiple"
+            allowClear
+            placeholder="Select preferred levels"
+            options={CAREER_LEVEL_OPTIONS}
             disabled={disabled}
           />
         </Form.Item>

@@ -93,6 +93,20 @@ export function updateMyCareerBackground(payload) {
       skills: payload?.skills ?? [],
       tools: payload?.tools ?? [],
       career_interests: payload?.careerInterests ?? payload?.career_interests ?? [],
+      experience_levels: payload?.experienceLevels ?? payload?.experience_levels ?? [],
+    }),
+  });
+}
+
+export function submitCareerOnboarding(payload) {
+  return careerApiRequest("/api/v1/users/me/career-onboarding", {
+    method: "POST",
+    body: JSON.stringify({
+      knowledge_areas: payload?.knowledgeAreas ?? payload?.knowledge_areas ?? [],
+      skills: payload?.skills ?? [],
+      tools: payload?.tools ?? [],
+      career_interests: payload?.careerInterests ?? payload?.career_interests ?? [],
+      experience_levels: payload?.experienceLevels ?? payload?.experience_levels ?? [],
     }),
   });
 }

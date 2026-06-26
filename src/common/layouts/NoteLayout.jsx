@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 
@@ -32,7 +32,11 @@ import NoteHeader from "../components/NoteHeader";
 import OutlineSider from "../components/OutlineSider";
 import FloatingOutlineButton from "../components/FloatingOutlineButton";
 import AssistantWorkspace from "../components/assistant/AssistantWorkspace";
-import AppFeatureTour from "../components/guide/AppFeatureTour";
+import { PENDING_NOTES_TOUR_KEY } from "../components/guide/AppFeatureTour";
+import {
+  createNoteGuideSteps,
+  prepareNoteTourStep,
+} from "../components/guide/productTours";
 
 import { buildMenuItems } from "../../utils/notesIndexUtils";
 import { setTheme, setLanguage } from "../../redux/preferenceSlice";
@@ -41,7 +45,7 @@ import {
   requestAssistantQuiz,
   requestAssistantQuizEvaluate,
 } from "../api/assistant";
-import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncompleteMyNote } from "../api/user";
+import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncompleteMyNote, updateMyGuideState } from "../api/user";
 
 import "./NoteLayout.css";
 
@@ -343,6 +347,7 @@ const NoteLayout = () => {
   const [completedNoteUrls, setCompletedNoteUrls] = useState(new Set());
   const [noteQuotes, setNoteQuotes] = useState([]);
   const [completeNotePending, setCompleteNotePending] = useState(false);
+  const [notesTourStartToken, setNotesTourStartToken] = useState(0);
   const [narrationState, setNarrationState] = useState("idle");
   const [narrationAudioUrls, setNarrationAudioUrls] = useState([]);
   const [currentNarrationChunkIndex, setCurrentNarrationChunkIndex] = useState(0);
@@ -356,6 +361,8 @@ const NoteLayout = () => {
   const assistantAreaRef = useRef(null);
   const narrationGuideRef = useRef(null);
   const profileGuideRef = useRef(null);
+  const headerToolbarRef = useRef(null);
+  const subjectNavRef = useRef(null);
   const resizeStateRef = useRef({
     active: false,
     startX: 0,
@@ -373,6 +380,47 @@ const NoteLayout = () => {
     }
     prevIsMobileRef.current = isMobile;
   }, [isMobile]);
+
+  useEffect(() => {
+    let cancelled = false;
+    let pendingNotesTour = false;
+    try {
+      pendingNotesTour = window.sessionStorage.getItem(PENDING_NOTES_TOUR_KEY) === "1";
+      if (pendingNotesTour) {
+        window.sessionStorage.removeItem(PENDING_NOTES_TOUR_KEY);
+      }
+    } catch {
+      return;
+    }
+    if (!pendingNotesTour) return;
+
+    async function startPendingNotesTour() {
+      try {
+        await updateMyGuideState({
+          guideKey: "notes_page",
+          seen: true,
+          completed: false,
+          currentStep: 0,
+        });
+      } catch {
+        // The question-mark button can still start the local tour if this fails.
+      }
+      if (!cancelled) {
+        window.requestAnimationFrame(() => {
+          window.setTimeout(() => {
+            if (!cancelled) {
+              setNotesTourStartToken((value) => value + 1);
+            }
+          }, 400);
+        });
+      }
+    }
+
+    startPendingNotesTour();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Scroll listener for floating button (mobile only)
   useEffect(() => {
@@ -962,56 +1010,36 @@ const NoteLayout = () => {
     />
   );
 
-  const noteGuideSteps = [
-    {
-      title: "Three Ways to Learn",
-      description:
-        "The workspace is built around three equal paths: read Notes deeply, explore ideas visually in Mindmap, and optionally connect learning to Career goals.",
-      placement: "bottom",
-    },
-    {
-      title: "Notes: Deep Reading",
-      description:
-        "Use the note canvas for focused study. Read concepts, save useful passages, ask the assistant, and mark notes completed as you go.",
-      target: () => noteAreaRef.current,
-      placement: "right",
-    },
-    {
-      title: "Notes: Course Order",
-      description:
-        "The sidebar still gives a clean course sequence for learners who simply want to progress through a subject step by step.",
-      target: () => directoryAreaRef.current,
-      placement: "right",
-    },
-    {
-      title: "Mindmap: Explore Connections",
-      description:
-        "Use Explore > Mindmap when you want a visual map of concepts and relationships instead of a linear course list.",
-      target: () => document.querySelector(".note-page__subject-nav"),
-      placement: "bottom",
-    },
-    {
-      title: "Learning Support",
-      description:
-        "The assistant area supports both structured learners and explorers: ask Q&A, build personal notes, and test yourself with Quiz.",
-      target: () => assistantAreaRef.current,
-      placement: "left",
-    },
-    {
-      title: "Optional Audio Review",
-      description:
-        "Prefer audio learning? Play narration to review a note hands-free while keeping your place.",
-      target: () => narrationGuideRef.current,
-      placement: "bottom",
-    },
-    {
-      title: "Career: Goal Path",
-      description:
-        "Career tools are optional but powerful: add goals, compare matches, and turn skill gaps into a concrete learning path when you want direction.",
-      target: () => profileGuideRef.current,
-      placement: "bottom",
-    },
-  ];
+  const handleNoteTourStepChange = useCallback(
+    (stepIndex) =>
+      prepareNoteTourStep(stepIndex, {
+        setCollapsed,
+        setShowMenu,
+        setAssistantCollapsed,
+        setAssistantMode,
+        setAssistantDockTab,
+        setAssistantTool,
+        setAssistantModalOpen,
+        isMobile,
+      }),
+    [isMobile],
+  );
+
+  useEffect(() => {
+    subjectNavRef.current = document.querySelector(".note-page__subject-nav");
+  }, [currentMeta, currentNoteContent]);
+
+  const noteGuideSteps = useMemo(
+    () =>
+      createNoteGuideSteps({
+        directoryAreaRef,
+        noteAreaRef,
+        subjectNavRef,
+        assistantAreaRef,
+        headerToolbarRef,
+      }),
+    [],
+  );
 
   return (
     <Layout
@@ -1060,7 +1088,10 @@ const NoteLayout = () => {
               onToggleNarration={handleToggleNarration}
               narrationGuideRef={narrationGuideRef}
               profileGuideRef={profileGuideRef}
+              headerToolbarRef={headerToolbarRef}
               notesGuideSteps={noteGuideSteps}
+              notesTourStartToken={notesTourStartToken}
+              onNotesTourStepChange={handleNoteTourStepChange}
             />
           </Col>
         </Row>

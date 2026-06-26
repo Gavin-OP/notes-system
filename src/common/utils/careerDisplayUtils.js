@@ -1,3 +1,9 @@
+export const CAREER_LEVEL_OPTIONS = [
+  { label: "Entry", value: "Entry" },
+  { label: "Senior", value: "Senior" },
+  { label: "Manager", value: "Manager" },
+];
+
 const EXPERIENCE_LEVEL_LABELS = {
   entry: "Entry Level",
   entry_or_mid: "Entry Level",

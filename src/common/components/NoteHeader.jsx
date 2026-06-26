@@ -28,7 +28,10 @@ function NoteHeader({
   onToggleNarration,
   narrationGuideRef = null,
   profileGuideRef = null,
+  headerToolbarRef = null,
   notesGuideSteps = [],
+  notesTourStartToken = 0,
+  onNotesTourStepChange,
 }) {
   const navigate = useNavigate();
   // redux
@@ -73,7 +76,7 @@ function NoteHeader({
 
   return (
     <div>
-      <Space size={isMobile ? "small" : "middle"}>
+      <Space size={isMobile ? "small" : "middle"} ref={headerToolbarRef}>
         {/* search */}
         <SearchOutlined
           className="note-header__search-icon"
@@ -137,11 +140,13 @@ function NoteHeader({
         </span>
         {Array.isArray(notesGuideSteps) && notesGuideSteps.length > 0 ? (
           <AppFeatureTour
-            guideKey="product_pillars_v1"
+            guideKey="notes_page"
             steps={notesGuideSteps}
             iconOnly
-            buttonAriaLabel="Open product guide"
+            buttonAriaLabel="Open learning guide"
             triggerClassName="note-header__guide-trigger"
+            startToken={notesTourStartToken}
+            onBeforeStepChange={onNotesTourStepChange}
           />
         ) : null}
         <span ref={profileGuideRef}>
