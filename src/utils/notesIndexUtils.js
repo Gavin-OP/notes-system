@@ -31,6 +31,7 @@ function isDisclaimerNoteItem(item) {
 /** Static assets under `public/notes/image/` — not navigable “subjects”. */
 function shouldHideFromSidebarMenu(item) {
   if (!item || typeof item !== "object") return false;
+  if (isDisclaimerNoteItem(item)) return true;
   if (item.type === "image") return true;
   const url = normalizeUrl(String(item.url || "").split("#")[0] || "");
   if (url === "/note/image") return true;

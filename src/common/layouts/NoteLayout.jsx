@@ -37,7 +37,7 @@ import {
   prepareNoteTourStep,
 } from "../components/guide/productTours";
 
-import { buildMenuItems, injectSubjectOverviewMenuItems, isSubjectOverviewPath } from "../../utils/notesIndexUtils";
+import { buildMenuItems, isSubjectOverviewPath } from "../../utils/notesIndexUtils";
 import { setTheme, setLanguage } from "../../redux/preferenceSlice";
 import {
   requestAssistantQa,
@@ -523,7 +523,7 @@ const NoteLayout = () => {
 
   // menu contents & icons
   const plainMenuItems = useMemo(
-    () => injectSubjectOverviewMenuItems(buildMenuItems(notesIndex)),
+    () => buildMenuItems(notesIndex),
     [notesIndex],
   );
   const menuLabelPayload = useMemo(

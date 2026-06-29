@@ -11,6 +11,8 @@ const NotePage = lazy(() => import("../pages/NotePage"));
 const SubjectEntry = lazy(() => import("../pages/NotePage/SubjectEntry"));
 const SubjectMindmap = lazy(() => import("../pages/NotePage/SubjectEntry/SubjectMindmap"));
 const SubjectOverviewPage = lazy(() => import("../pages/SubjectOverview/SubjectOverviewPage"));
+const SubjectDatabasePage = lazy(() => import("../pages/SubjectDatabasePage"));
+const DisclaimerPage = lazy(() => import("../pages/DisclaimerPage"));
 const UserLoginPage = lazy(() => import("../pages/UserLoginPage"));
 const UserProfilePage = lazy(() => import("../pages/UserProfilePage"));
 const ExploreCareersPage = lazy(() => import("../pages/ExploreCareersPage"));
@@ -56,6 +58,8 @@ function RoutesWithTracking() {
   return (
     <Suspense fallback={<RouteLoading />}>
       <Routes>
+        <Route index element={<HomePage />} />
+
         {/* Legacy redirects for old URLs */}
         <Route path="data-science/mindmap" element={<Navigate to="../subject/data-science/mindmap" replace />} />
         <Route path="python/mindmap" element={<Navigate to="../subject/python/mindmap" replace />} />
@@ -94,6 +98,10 @@ function RoutesWithTracking() {
         {/* Careers */}
         <Route path="careers" element={<ExploreCareersPage />} />
         <Route path="careers/:jobId" element={<CareerJobDetailPage />} />
+
+        {/* Databases and policy pages */}
+        <Route path="subjects" element={<SubjectDatabasePage />} />
+        <Route path="disclaimer" element={<DisclaimerPage />} />
 
         {/* Search */}
         <Route path="search" element={<SearchResultsPage />} />
