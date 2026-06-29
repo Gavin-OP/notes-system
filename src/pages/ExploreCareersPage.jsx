@@ -46,6 +46,10 @@ function ExploreCareersPage() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, []);
+
+  useEffect(() => {
     let mounted = true;
     async function loadCareers() {
       setLoading(true);

@@ -97,14 +97,14 @@ function CareerSkillGapPanel({ recommendations = [], relatedSubjects = [] }) {
               </SemanticChip>
               <Tooltip title={detailText("roles", gap.roles)}>
                 <span>
-                  <SemanticChip variant="slate">
+                  <SemanticChip variant="wisdom">
                     {gap.roles.length} role{gap.roles.length > 1 ? "s" : ""}
                   </SemanticChip>
                 </span>
               </Tooltip>
               <Tooltip title={detailText("subjects", gap.relatedSubjects)}>
                 <span>
-                  <SemanticChip variant="slate">
+                  <SemanticChip variant="teal">
                     {gap.relatedSubjects.length} subject{gap.relatedSubjects.length > 1 ? "s" : ""}
                   </SemanticChip>
                 </span>

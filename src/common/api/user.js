@@ -111,6 +111,15 @@ export function getMyProfile() {
   return userApiRequest("/api/v1/users/me/profile");
 }
 
+export function updateMyProfile(payload) {
+  return userApiRequest("/api/v1/users/me/profile", {
+    method: "PATCH",
+    body: JSON.stringify({
+      display_name: payload?.displayName ?? payload?.display_name ?? undefined,
+    }),
+  });
+}
+
 export function getMyGuideState() {
   return userApiRequest("/api/v1/users/me/guides");
 }

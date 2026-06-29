@@ -9,11 +9,14 @@ import {
   Col,
   Divider,
   Empty,
+  Form,
+  Input,
   List,
   message,
   Modal,
   Progress,
   Row,
+  Select,
   Space,
   Spin,
   Tabs,
@@ -26,7 +29,6 @@ import {
   DownOutlined,
   EditOutlined,
   LogoutOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 
 import SemanticChip from "../common/components/SemanticChip";
@@ -48,6 +50,7 @@ import {
   getUserProgress,
   logoutUser,
   updateMyGuideState,
+  updateMyProfile,
 } from "../common/api/user";
 import {
   getCareerTaxonomy,
@@ -65,6 +68,7 @@ import AchievementsPanel, { normalizeAchievements } from "../common/components/a
 import { extractSubjectsFromNotesIndex } from "../common/components/achievements/achievementCatalog";
 import { isConcreteNoteRoute, normalizeNoteRoute } from "../utils/notesIndexUtils";
 import AppFeatureTour, { PENDING_NOTES_TOUR_KEY } from "../common/components/guide/AppFeatureTour";
+import { CAREER_LEVEL_OPTIONS, formatCareerRoleLabel } from "../common/utils/careerDisplayUtils";
 import {
   createProfileGuideSteps,
   prepareProfileTourStep,
@@ -328,6 +332,61 @@ function uniqueValues(values = []) {
   ];
 }
 
+function toSelectOptions(values = []) {
+  return uniqueValues(values).map((value) => ({ label: value, value }));
+}
+
+function buildProfileEditOptions(taxonomy = [], normalized = {}, inferredKnowledge = []) {
+  const profiles = Array.isArray(taxonomy) ? taxonomy : [];
+  const degreeFields = profiles.flatMap((profile) =>
+    (profile.degree_requirements || profile.degreeRequirements || []).flatMap(
+      (requirement) => requirement.fields || [],
+    ),
+  );
+  return {
+    knowledge: toSelectOptions([
+      "Data Science",
+      "Computer Science",
+      "Statistics",
+      "Business Analytics",
+      "Python",
+      "Machine Learning",
+      ...degreeFields,
+      ...inferredKnowledge,
+      ...(normalized.knowledgeAreas || []),
+    ]),
+    skills: toSelectOptions([
+      "Machine Learning",
+      "Data Visualization",
+      "Statistics",
+      "SQL",
+      "Experimentation",
+      "Data Cleaning",
+      ...profiles.flatMap((profile) => profile.hard_skills || profile.hardSkills || []),
+      ...(normalized.skills || []),
+    ]),
+    tools: toSelectOptions([
+      "Python",
+      "SQL",
+      "Pandas",
+      "PyTorch",
+      "Tableau",
+      "Power BI",
+      ...profiles.flatMap((profile) => profile.tools || []),
+      ...(normalized.tools || []),
+    ]),
+    careers: toSelectOptions([
+      ...profiles.map((profile) =>
+        formatCareerRoleLabel(
+          profile.title,
+          profile.experience_level || profile.experienceLevel,
+        ),
+      ),
+      ...(normalized.careerInterests || []),
+    ]),
+  };
+}
+
 function getCareerRelatedSubjects(recommendation) {
   return (recommendation?.related_subjects || recommendation?.relatedSubjects || []).filter(Boolean);
 }
@@ -401,6 +460,31 @@ const PREVIEW_PROFILE = {
   learning_history: [],
 };
 
+const AVATAR_PALETTE = [
+  { background: "#3A6EA5", color: "#FFFFFF" },
+  { background: "#F4D06F", color: "#5A4615" },
+  { background: "#7BAE7F", color: "#FFFFFF" },
+  { background: "#4FA3A5", color: "#FFFFFF" },
+  { background: "#D9826B", color: "#FFFFFF" },
+  { background: "#9B8ACB", color: "#FFFFFF" },
+];
+
+function getAvatarSeed(user) {
+  return user?.displayName || user?.email || user?.id || "Learner";
+}
+
+function getAvatarInitial(user) {
+  const seed = getAvatarSeed(user).trim();
+  if (!seed) return "L";
+  const namePart = seed.includes("@") ? seed.split("@")[0] : seed;
+  const firstToken = namePart.trim().split(/\s+/)[0] || namePart;
+  return Array.from(firstToken)[0]?.toUpperCase() || "L";
+}
+
+function getPaletteIndex(seed) {
+  return Array.from(seed || "Learner").reduce((sum, char) => sum + char.charCodeAt(0), 0) % AVATAR_PALETTE.length;
+}
+
 function UserProfilePage() {
   const navigate = useNavigate();
   const rawNotesIndex = useSelector((state) => state.notesIndex?.data);
@@ -423,6 +507,8 @@ function UserProfilePage() {
   const [careerErrorText, setCareerErrorText] = useState("");
   const [careerOnboardingOpen, setCareerOnboardingOpen] = useState(false);
   const [careerOnboardingSubmitting, setCareerOnboardingSubmitting] = useState(false);
+  const [profileEditOpen, setProfileEditOpen] = useState(false);
+  const [profileEditSaving, setProfileEditSaving] = useState(false);
   const [recommendedFirstNote, setRecommendedFirstNote] = useState(null);
   const [tourPromptOpen, setTourPromptOpen] = useState(false);
   const [profileTourStartToken, setProfileTourStartToken] = useState(0);
@@ -439,6 +525,9 @@ function UserProfilePage() {
   const profileLearningRef = useRef(null);
   const profileCareerRef = useRef(null);
   const profileRecordsRef = useRef(null);
+  const avatarSeed = getAvatarSeed(userInfo);
+  const avatarTone = AVATAR_PALETTE[getPaletteIndex(avatarSeed)];
+  const avatarInitial = getAvatarInitial(userInfo);
 
   useEffect(() => {
     if (location.state?.dashboard === "career") {
@@ -667,6 +756,37 @@ function UserProfilePage() {
     };
   }, [careerBackground, decoratedCompletedNotes, learningTracks, recentNotes]);
 
+  const profileEditBackground = useMemo(
+    () => normalizeCareerBackgroundForForm(careerBackground),
+    [careerBackground],
+  );
+
+  const profileEditInferredKnowledge = useMemo(
+    () => learningTracks.map((track) => track.title).filter(Boolean),
+    [learningTracks],
+  );
+
+  const profileEditOptions = useMemo(
+    () => buildProfileEditOptions(careerTaxonomy, profileEditBackground, profileEditInferredKnowledge),
+    [careerTaxonomy, profileEditBackground, profileEditInferredKnowledge],
+  );
+
+  const profileEditInitialValues = useMemo(
+    () => ({
+      displayName: userInfo?.displayName || "Learner",
+      knowledgeAreas: profileEditBackground.knowledgeAreas.length
+        ? profileEditBackground.knowledgeAreas
+        : profileEditInferredKnowledge,
+      skills: profileEditBackground.skills,
+      tools: profileEditBackground.tools,
+      careerInterests: profileEditBackground.careerInterests,
+      experienceLevels: profileEditBackground.experienceLevels.length
+        ? profileEditBackground.experienceLevels
+        : ["Entry"],
+    }),
+    [profileEditBackground, profileEditInferredKnowledge, userInfo],
+  );
+
   const visibleCareerRecommendations = useMemo(
     () =>
       careerRecommendations.filter(
@@ -806,6 +926,43 @@ function UserProfilePage() {
       navigate("/user/login");
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Logout failed.");
+    }
+  };
+
+  const handleEditProfile = () => {
+    setProfileEditOpen(true);
+  };
+
+  const handleProfileEditSubmit = async (values) => {
+    if (previewMode) {
+      message.info("Preview mode cannot save profile changes.");
+      return;
+    }
+    setProfileEditSaving(true);
+    try {
+      const [nextProfile, nextBackground] = await Promise.all([
+        updateMyProfile({ displayName: values.displayName }),
+        updateMyCareerBackground(values),
+      ]);
+      const recommendationsPayload = await getMyCareerRecommendations({
+        limit: CAREER_RECOMMENDATION_LIMIT,
+        minimumMatchScore: CAREER_MATCH_MIN_SCORE,
+      });
+      setUserInfo((current) => ({
+        ...(current || {}),
+        displayName: nextProfile?.display_name || nextProfile?.displayName || values.displayName,
+        email: nextProfile?.email || current?.email || "",
+      }));
+      setProfileInfo(nextProfile || profileInfo);
+      setCareerBackground(nextBackground || {});
+      setCareerRecommendations(recommendationsPayload?.recommendations || []);
+      setActiveDashboard("career");
+      setProfileEditOpen(false);
+      message.success("Profile updated.");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Failed to update profile.");
+    } finally {
+      setProfileEditSaving(false);
     }
   };
 
@@ -1016,6 +1173,88 @@ function UserProfilePage() {
         onSubmit={handleCareerOnboardingSubmit}
       />
       <Modal
+        open={profileEditOpen}
+        title={null}
+        footer={null}
+        width={720}
+        centered
+        destroyOnClose
+        onCancel={() => setProfileEditOpen(false)}
+      >
+        <Space direction="vertical" size={16} className="user-profile-page__edit-modal">
+          <div>
+            <Title level={3}>Edit profile</Title>
+            <Paragraph type="secondary">
+              Update your name, background, tools, and career interests so recommendations stay aligned with what you know and where you want to go.
+            </Paragraph>
+          </div>
+          <Form
+            key={`${userInfo?.id || "user"}-${profileEditOpen ? "open" : "closed"}`}
+            layout="vertical"
+            requiredMark={false}
+            initialValues={profileEditInitialValues}
+            onFinish={handleProfileEditSubmit}
+          >
+            <Form.Item
+              label="Display Name"
+              name="displayName"
+              rules={[{ required: true, whitespace: true, message: "Please enter your name." }]}
+            >
+              <Input placeholder="How should we address you?" disabled={profileEditSaving} />
+            </Form.Item>
+            <Form.Item label="Knowledge Areas" name="knowledgeAreas">
+              <Select
+                mode="tags"
+                placeholder="What areas do you already know?"
+                options={profileEditOptions.knowledge}
+                disabled={profileEditSaving}
+              />
+            </Form.Item>
+            <Form.Item label="Skills" name="skills">
+              <Select
+                mode="tags"
+                placeholder="Add skills you already have"
+                options={profileEditOptions.skills}
+                disabled={profileEditSaving}
+              />
+            </Form.Item>
+            <Form.Item label="Tools" name="tools">
+              <Select
+                mode="tags"
+                placeholder="Add tools you can use"
+                options={profileEditOptions.tools}
+                disabled={profileEditSaving}
+              />
+            </Form.Item>
+            <Form.Item label="Career Interests" name="careerInterests">
+              <Select
+                mode="tags"
+                placeholder="Add career directions you are interested in"
+                options={profileEditOptions.careers}
+                disabled={profileEditSaving}
+              />
+            </Form.Item>
+            <Form.Item label="Level" name="experienceLevels">
+              <Select
+                mode="multiple"
+                allowClear
+                placeholder="Select target levels"
+                options={CAREER_LEVEL_OPTIONS}
+                disabled={profileEditSaving}
+              />
+            </Form.Item>
+            <Space className="user-profile-page__edit-actions" wrap>
+              <Button onClick={() => setProfileEditOpen(false)} disabled={profileEditSaving}>
+                Cancel
+              </Button>
+              <Button type="primary" htmlType="submit" loading={profileEditSaving}>
+                Save profile
+              </Button>
+            </Space>
+          </Form>
+        </Space>
+      </Modal>
+      <Modal
         open={tourPromptOpen}
         title="Your first note is ready"
         onCancel={handleSkipProfileTour}
@@ -1059,7 +1298,13 @@ function UserProfilePage() {
         <div>
           <Card className="user-profile-page__hero" ref={profileHeroRef}>
           <Space align="start" size={16}>
-            <Avatar size={72} icon={<UserOutlined />} />
+            <div
+              className="user-profile-page__avatar"
+              style={{ backgroundColor: avatarTone.background, color: avatarTone.color }}
+              aria-label={`${userInfo?.displayName || "Learner"} avatar`}
+            >
+              <span>{avatarInitial}</span>
+            </div>
             <div>
               {previewMode ? (
                 <Alert
@@ -1081,7 +1326,12 @@ function UserProfilePage() {
                 Personalized learning workspace for progress tracking, AI conversations, and study notes.
               </Paragraph>
               <Space wrap>
-                <Button type="primary" icon={<EditOutlined />} disabled={previewMode}>
+                <Button
+                  type="primary"
+                  icon={<EditOutlined />}
+                  disabled={previewMode}
+                  onClick={handleEditProfile}
+                >
                   Edit profile
                 </Button>
                 <Button icon={<BookOutlined />} onClick={() => navigate(continueLearningUrl)}>
