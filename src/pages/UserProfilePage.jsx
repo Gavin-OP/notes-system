@@ -32,7 +32,6 @@ import {
 import SemanticChip from "../common/components/SemanticChip";
 import {
   getCareerGoalChipVariant,
-  getGapChipVariant,
   getKnowledgeAreaChipVariant,
   getMatchScoreChipVariant,
   getMatchScoreStrokeColor,
@@ -329,8 +328,20 @@ function uniqueValues(values = []) {
   ];
 }
 
-function getCareerSkillGaps(recommendation) {
-  return (recommendation?.skill_gaps || recommendation?.skillGaps || []).filter(Boolean);
+function getCareerRelatedSubjects(recommendation) {
+  return (recommendation?.related_subjects || recommendation?.relatedSubjects || []).filter(Boolean);
+}
+
+function getCareerRelatedSkills(recommendation) {
+  return (recommendation?.related_skills || recommendation?.relatedSkills || []).filter(Boolean);
+}
+
+function getCareerDescription(recommendation, profile) {
+  return recommendation?.description || profile?.description || "";
+}
+
+function getCareerJobId(item) {
+  return item?.job_id || item?.jobId || "";
 }
 
 function getMatchJobTitle(match) {
@@ -345,8 +356,11 @@ function getMatchSubjectTitle(match) {
   return match?.subject_title || match?.subjectTitle || slugToSubjectTitle(getMatchSubjectSlug(match));
 }
 
-function getMatchTerms(match) {
-  return (match?.matched_terms || match?.matchedTerms || []).filter(Boolean);
+function getSubjectScore(subject) {
+  const rawScore = subject?.score ?? subject?.match_score ?? subject?.matchScore ?? 0;
+  const numeric = Number(rawScore);
+  if (!Number.isFinite(numeric)) return 0;
+  return numeric <= 1 ? numeric * 100 : numeric;
 }
 
 function normalizeCareerBackgroundForForm(background = {}) {
@@ -671,29 +685,71 @@ function UserProfilePage() {
     [selectedCareerRole, visibleCareerRecommendations],
   );
 
+  const selectedCareerProfile = useMemo(() => {
+    if (!selectedCareerRecommendation) return null;
+    const recommendationJobId = getCareerJobId(selectedCareerRecommendation);
+    if (recommendationJobId) {
+      const byJobId = careerTaxonomy.find((item) => getCareerJobId(item) === recommendationJobId);
+      if (byJobId) return byJobId;
+    }
+    const normalizedRole = normalizeText(selectedCareerRole);
+    return (
+      careerTaxonomy.find(
+        (item) =>
+          normalizeText(item?.title) === normalizedRole ||
+          normalizeText(`${item?.title || ""} ${item?.experience_level || item?.experienceLevel || ""}`) ===
+            normalizedRole,
+      ) || null
+    );
+  }, [careerTaxonomy, selectedCareerRecommendation, selectedCareerRole]);
+
   const selectedRoleSubjectMatches = useMemo(() => {
     const normalizedRole = normalizeText(selectedCareerRole);
-    if (!normalizedRole) return [];
+    const recommendationJobId = getCareerJobId(selectedCareerRecommendation);
+    const profileTitle = selectedCareerProfile?.title || selectedCareerRole;
+    const normalizedProfileTitle = normalizeText(profileTitle);
+    if (!normalizedRole && !recommendationJobId && !normalizedProfileTitle) return [];
     return subjectJobMatches
-      .filter((match) => normalizeText(getMatchJobTitle(match)) === normalizedRole)
+      .filter((match) => {
+        if (recommendationJobId && getCareerJobId(match) === recommendationJobId) return true;
+        const matchTitle = normalizeText(getMatchJobTitle(match));
+        return matchTitle === normalizedRole || matchTitle === normalizedProfileTitle;
+      })
       .sort((a, b) => (b.score || 0) - (a.score || 0));
-  }, [selectedCareerRole, subjectJobMatches]);
+  }, [selectedCareerProfile, selectedCareerRecommendation, selectedCareerRole, subjectJobMatches]);
 
-  const selectedCareerSubjects = useMemo(
-    () => selectedRoleSubjectMatches.map((match) => ({
+  const selectedCareerSubjects = useMemo(() => {
+    const apiSubjects = getCareerRelatedSubjects(selectedCareerRecommendation).map((subject) => ({
+      title: subject.subject_title || subject.subjectTitle || subject.title || slugToSubjectTitle(subject.subject_slug || subject.slug),
+      slug: subject.subject_slug || subject.subjectSlug || subject.slug || "",
+      score: formatScore(getSubjectScore(subject)),
+    }));
+    const matchSubjects = selectedRoleSubjectMatches.map((match) => ({
       title: getMatchSubjectTitle(match),
       slug: getMatchSubjectSlug(match),
       score: formatScore((match.score || 0) * 100),
-    })),
-    [selectedRoleSubjectMatches],
-  );
+    }));
+    const bySlug = new Map();
+    [...apiSubjects, ...matchSubjects].forEach((subject) => {
+      const key = subject.slug || subject.title;
+      if (!key) return;
+      const existing = bySlug.get(key);
+      if (!existing || subject.score > existing.score) bySlug.set(key, subject);
+    });
+    return Array.from(bySlug.values()).sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
+  }, [selectedCareerRecommendation, selectedRoleSubjectMatches]);
 
-  const selectedCareerSkills = useMemo(
-    () => uniqueValues([
-      ...getCareerSkillGaps(selectedCareerRecommendation).map((gap) => gap.skill),
-      ...selectedRoleSubjectMatches.flatMap((match) => getMatchTerms(match)),
-    ]),
-    [selectedCareerRecommendation, selectedRoleSubjectMatches],
+  const selectedCareerSkills = useMemo(() => {
+    return uniqueValues([
+      ...getCareerRelatedSkills(selectedCareerRecommendation),
+      ...(selectedCareerProfile?.hard_skills || selectedCareerProfile?.hardSkills || []),
+      ...(selectedCareerProfile?.tools || []),
+    ]);
+  }, [selectedCareerProfile, selectedCareerRecommendation]);
+
+  const selectedCareerDescription = useMemo(
+    () => getCareerDescription(selectedCareerRecommendation, selectedCareerProfile),
+    [selectedCareerProfile, selectedCareerRecommendation],
   );
 
   const selectedCareerIsGoal = useMemo(() => {
@@ -1339,7 +1395,7 @@ function UserProfilePage() {
             </Card>
             <Divider />
             <Row gutter={[16, 16]}>
-              <Col xs={24} lg={17}>
+              <Col xs={24} lg={14}>
                 <Card type="inner" title="Career Matches">
                   <Row gutter={[20, 20]}>
                     <Col xs={24} lg={11}>
@@ -1370,7 +1426,7 @@ function UserProfilePage() {
                   </Row>
                 </Card>
               </Col>
-              <Col xs={24} lg={7}>
+              <Col xs={24} lg={10}>
                 <Card type="inner" title="Role Details">
                   {selectedCareerRecommendation ? (
                     <Space direction="vertical" size={12} className="user-profile-page__block">
@@ -1435,61 +1491,56 @@ function UserProfilePage() {
                           %
                         </SemanticChip>
                       </Space>
-                      <Paragraph className="career-recommendation-card__reasoning">
-                        {selectedCareerRecommendation.reasoning ||
-                          "This role has partial overlap with your learning record."}
-                      </Paragraph>
-                      <div className="user-profile-page__role-related">
-                        <Text strong>Related Subjects</Text>
-                        <div className="user-profile-page__tag-wall">
-                          {selectedCareerSubjects.length > 0 ? (
-                            selectedCareerSubjects.map((subject) => (
-                              <SemanticChip
-                                key={`role-subject-${subject.slug}`}
-                                variant={getSubjectChipVariant(subject.score)}
-                              >
-                                {subject.title} {subject.score ? `${subject.score}%` : ""}
-                              </SemanticChip>
-                            ))
-                          ) : (
-                            <Text type="secondary">No subject links yet.</Text>
-                          )}
+                      <div className="user-profile-page__role-detail-grid">
+                        <div className="user-profile-page__role-detail-main">
+                          <div className="user-profile-page__role-related">
+                            <Text strong>Job Description</Text>
+                            <Paragraph className="career-recommendation-card__reasoning">
+                              {selectedCareerDescription ||
+                                "Open the full role profile to view the generated career summary."}
+                            </Paragraph>
+                          </div>
+                          <div className="user-profile-page__role-related">
+                            <Text strong>Related Subjects</Text>
+                            <div className="user-profile-page__tag-wall">
+                              {selectedCareerSubjects.length > 0 ? (
+                                selectedCareerSubjects.map((subject) => (
+                                  <SemanticChip
+                                    key={`role-subject-${subject.slug}`}
+                                    variant={getSubjectChipVariant(subject.score)}
+                                  >
+                                    {subject.title} {subject.score ? `${subject.score}%` : ""}
+                                  </SemanticChip>
+                                ))
+                              ) : (
+                                <Text type="secondary">No subject links yet.</Text>
+                              )}
+                            </div>
+                          </div>
+                          <div className="user-profile-page__role-related">
+                            <Text strong>Related Skills</Text>
+                            <div className="user-profile-page__tag-wall">
+                              {selectedCareerSkills.length > 0 ? (
+                                selectedCareerSkills.slice(0, 12).map((skill) => (
+                                  <SemanticChip key={`role-skill-${skill}`} variant={getSkillChipVariant(skill)}>
+                                    {skill}
+                                  </SemanticChip>
+                                ))
+                              ) : (
+                                <Text type="secondary">No related skills yet.</Text>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="user-profile-page__role-related">
-                        <Text strong>Related Skills</Text>
-                        <div className="user-profile-page__tag-wall">
-                          {selectedCareerSkills.length > 0 ? (
-                            selectedCareerSkills.slice(0, 12).map((skill) => (
-                              <SemanticChip key={`role-skill-${skill}`} variant={getSkillChipVariant(skill)}>
-                                {skill}
-                              </SemanticChip>
-                            ))
-                          ) : (
-                            <Text type="secondary">No related skills yet.</Text>
-                          )}
+                        <div className="user-profile-page__career-gaps">
+                          <Text strong>Skill Gap</Text>
+                          <CareerSkillGapPanel
+                            recommendations={visibleCareerRecommendations.filter(
+                              (item) => item?.title === selectedCareerRole,
+                            )}
+                            relatedSubjects={selectedCareerSubjects}
+                          />
                         </div>
-                      </div>
-                      <Space wrap size={[8, 8]}>
-                        {(selectedCareerRecommendation.skill_gaps ||
-                          selectedCareerRecommendation.skillGaps ||
-                          []).slice(0, 6).map((gap) => (
-                          <SemanticChip
-                            key={`${selectedCareerRecommendation.job_id || selectedCareerRecommendation.jobId}-${gap.category}-${gap.skill}`}
-                            variant={getGapChipVariant()}
-                          >
-                            {gap.skill}
-                          </SemanticChip>
-                        ))}
-                      </Space>
-                      <Divider style={{ margin: "4px 0" }} />
-                      <div className="user-profile-page__career-gaps">
-                        <Text strong>Skill Gap</Text>
-                        <CareerSkillGapPanel
-                          recommendations={visibleCareerRecommendations.filter(
-                            (item) => item?.title === selectedCareerRole,
-                          )}
-                        />
                       </div>
                       <Space wrap>
                         <Button
