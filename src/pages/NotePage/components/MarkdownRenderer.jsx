@@ -28,13 +28,20 @@ const themeCssMap = {
 const MARKDOWN_REMARK_PLUGINS = [remarkGfm, remarkMath, remarkHighlightMark, remarkSlug];
 
 const MARKDOWN_HTML_ALLOWLIST = {
-  ALLOWED_TAGS: ["a", "br", "span", "sub", "sup", "kbd"],
+  ALLOWED_TAGS: ["a", "br", "span", "sub", "sup", "kbd", "strong", "em", "b", "i"],
   ALLOWED_ATTR: ["id", "name", "href", "title", "class"],
   ALLOW_DATA_ATTR: false,
 };
 
+function normalizeTranslatedMarkdown(content) {
+  return String(content || "")
+    .replace(/\\\*\\\*/g, "**")
+    .replace(/\*\*\s*(<a\b[^>]*>[\s\S]*?<\/a>)\s*\*\*/g, "<strong>$1</strong>")
+    .replace(/__\s*(<a\b[^>]*>[\s\S]*?<\/a>)\s*__/g, "<strong>$1</strong>");
+}
+
 function sanitizeMarkdownContent(content) {
-  return DOMPurify.sanitize(String(content || ""), MARKDOWN_HTML_ALLOWLIST);
+  return DOMPurify.sanitize(normalizeTranslatedMarkdown(content), MARKDOWN_HTML_ALLOWLIST);
 }
 
 function MermaidDiagram({ chart }) {

@@ -28,6 +28,7 @@ import {
   getSoftSkillChipVariant,
   getToolChipVariant,
 } from "../common/utils/semanticChipUtils";
+import useTranslatedContent from "../i18n/useTranslatedContent";
 
 import "./CareerJobDetailPage.css";
 
@@ -104,6 +105,29 @@ function CareerJobDetailPage() {
     () => normalizeDegreeRequirements(profile?.degreeRequirements || []),
     [profile],
   );
+  const translatedDescription = useTranslatedContent(profile?.description || "", {
+    sourceType: "career_description",
+    sourceId: profile?.jobId || decodedJobId || "career-role",
+    disabled: !profile?.description,
+  });
+  const responsibilitiesPayload = useMemo(
+    () => JSON.stringify(profile?.responsibilities || []),
+    [profile?.responsibilities],
+  );
+  const translatedResponsibilitiesPayload = useTranslatedContent(responsibilitiesPayload, {
+    sourceType: "career_responsibilities",
+    sourceId: `${profile?.jobId || decodedJobId || "career-role"}:responsibilities`,
+    disabled: !profile?.responsibilities?.length,
+  });
+  const displayResponsibilities = useMemo(() => {
+    if (!profile?.responsibilities?.length) return [];
+    try {
+      const parsed = JSON.parse(translatedResponsibilitiesPayload.content || "[]");
+      return Array.isArray(parsed) && parsed.length ? parsed : profile.responsibilities;
+    } catch {
+      return profile.responsibilities;
+    }
+  }, [profile?.responsibilities, translatedResponsibilitiesPayload.content]);
 
   if (loading) {
     return (
@@ -145,7 +169,9 @@ function CareerJobDetailPage() {
                   {profile.experienceLevel}
                 </SemanticChip>
               </Space>
-              <Paragraph className="career-job-detail-page__description">{profile.description}</Paragraph>
+              <Paragraph className="career-job-detail-page__description">
+                {translatedDescription.content || profile.description}
+              </Paragraph>
             </Space>
           </Card>
         </Space>
@@ -153,9 +179,9 @@ function CareerJobDetailPage() {
         <Row gutter={[16, 16]}>
           <Col xs={24} lg={14}>
             <Card title="Responsibilities" className="career-job-detail-page__section">
-              {profile.responsibilities.length > 0 ? (
+              {displayResponsibilities.length > 0 ? (
                 <List
-                  dataSource={profile.responsibilities}
+                  dataSource={displayResponsibilities}
                   renderItem={(item) => <List.Item>{item}</List.Item>}
                 />
               ) : (

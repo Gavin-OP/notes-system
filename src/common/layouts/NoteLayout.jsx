@@ -45,6 +45,7 @@ import {
   requestAssistantQuizEvaluate,
 } from "../api/assistant";
 import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncompleteMyNote, updateMyGuideState } from "../api/user";
+import useTranslatedContent from "../../i18n/useTranslatedContent";
 import useTranslation from "../../i18n/useTranslation";
 
 import "./NoteLayout.css";
@@ -53,10 +54,10 @@ import "../components/LearningSupportPanel.css";
 const { Header, Sider, Content } = Layout;
 
 const LEARNING_SUPPORT_TABS = [
-  { id: "outline", label: "Outline" },
-  { id: "qa", label: "Q&A", tool: "qa" },
-  { id: "notes", label: "Notes", tool: "notes" },
-  { id: "quiz", label: "Quiz", tool: "quiz" },
+  { id: "outline", labelKey: "learningSupport.tabs.outline" },
+  { id: "qa", labelKey: "learningSupport.tabs.qa", tool: "qa" },
+  { id: "notes", labelKey: "learningSupport.tabs.notes", tool: "notes" },
+  { id: "quiz", labelKey: "learningSupport.tabs.quiz", tool: "quiz" },
 ];
 
 // convert icon type to icon
@@ -155,6 +156,44 @@ function normalizeCompletedNoteUrlsFromProfile(profilePayload) {
   return [...completedFromUrls, ...completedFromObjects]
     .map((item) => normalizeMenuKey(item || ""))
     .filter(Boolean);
+}
+
+function collectMenuLabelPayload(items, list = []) {
+  items.forEach((item) => {
+    if (item?.key && typeof item.label === "string") {
+      list.push({ key: item.key, label: item.label });
+    }
+    if (Array.isArray(item?.children)) {
+      collectMenuLabelPayload(item.children, list);
+    }
+  });
+  return list;
+}
+
+function parseTranslatedMenuLabelMap(content) {
+  try {
+    const parsed = JSON.parse(content || "[]");
+    if (!Array.isArray(parsed)) return new Map();
+    return new Map(
+      parsed
+        .map((item) => [item?.key, item?.label])
+        .filter(([key, label]) => key && typeof label === "string" && label.trim()),
+    );
+  } catch {
+    return new Map();
+  }
+}
+
+function applyTranslatedMenuLabels(items, labelMap, t) {
+  return items.map((item) => {
+    const mappedLabel = labelMap.get(item.key);
+    const fallbackLabel = item.label === "Overview" ? t("note.sidebar.overview") : item.label;
+    return {
+      ...item,
+      label: mappedLabel || fallbackLabel,
+      children: item.children ? applyTranslatedMenuLabels(item.children, labelMap, t) : undefined,
+    };
+  });
 }
 
 function findBreadcrumbLabels(items, targetKey, trail = []) {
@@ -487,8 +526,25 @@ const NoteLayout = () => {
     () => injectSubjectOverviewMenuItems(buildMenuItems(notesIndex)),
     [notesIndex],
   );
-  const iconMenuItems = useMemo(() => addIconsToMenuItems(plainMenuItems), [plainMenuItems]);
-  const searchItems = useMemo(() => flattenSearchItems(plainMenuItems), [plainMenuItems]);
+  const menuLabelPayload = useMemo(
+    () => JSON.stringify(collectMenuLabelPayload(plainMenuItems)),
+    [plainMenuItems],
+  );
+  const translatedMenuLabelPayload = useTranslatedContent(menuLabelPayload, {
+    sourceType: "menu_label_list",
+    sourceId: "notes-sidebar-menu",
+    disabled: !plainMenuItems.length,
+  });
+  const translatedMenuLabelMap = useMemo(
+    () => parseTranslatedMenuLabelMap(translatedMenuLabelPayload.content),
+    [translatedMenuLabelPayload.content],
+  );
+  const localizedPlainMenuItems = useMemo(
+    () => applyTranslatedMenuLabels(plainMenuItems, translatedMenuLabelMap, t),
+    [plainMenuItems, translatedMenuLabelMap, t],
+  );
+  const iconMenuItems = useMemo(() => addIconsToMenuItems(localizedPlainMenuItems), [localizedPlainMenuItems]);
+  const searchItems = useMemo(() => flattenSearchItems(localizedPlainMenuItems), [localizedPlainMenuItems]);
   const searchOptions = useMemo(
     () =>
       searchItems.map((item) => {
@@ -512,12 +568,12 @@ const NoteLayout = () => {
   // breadcrumb (reuse menu labels so display is consistent)
   const breadcrumbItems = useMemo(() => {
     if (!currentMeta?.url) return [];
-    const labels = findBreadcrumbLabels(plainMenuItems, currentMeta.url) || [];
+    const labels = findBreadcrumbLabels(localizedPlainMenuItems, currentMeta.url) || [];
     return labels.map((label, idx) => ({
       title: label,
       key: `${idx}-${label}`,
     }));
-  }, [currentMeta?.url, plainMenuItems]);
+  }, [currentMeta?.url, localizedPlainMenuItems]);
 
   // event handlers
   const handleThemeChange = (checked) =>
@@ -1136,7 +1192,7 @@ const NoteLayout = () => {
             <div className="note-layout__sider-menu-shell" ref={directoryAreaRef}>
               {!isMobile ? (
                 <div className="note-layout__sider-header">
-                  <span className="note-layout__sider-title">Notes</span>
+                  <span className="note-layout__sider-title">{t("note.sidebar.title")}</span>
                   <button
                     type="button"
                     className="note-layout__sider-collapse-btn"
@@ -1286,7 +1342,7 @@ const NoteLayout = () => {
                                   if (tab.tool) setAssistantTool(tab.tool);
                                 }}
                               >
-                                {tab.label}
+                                {t(tab.labelKey)}
                               </button>
                             );
                           })}

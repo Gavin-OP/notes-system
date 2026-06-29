@@ -14,6 +14,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Alert, Button, Checkbox, Input, Radio, Space, Tag, Typography } from "antd";
 
+import useTranslation from "../../../i18n/useTranslation";
 import "./AssistantWorkspace.css";
 
 const { Text, Paragraph } = Typography;
@@ -63,6 +64,7 @@ function AssistantWorkspace({
   quizError = "",
   hideToolTabs = false,
 }) {
+  const { t } = useTranslation();
   const imageInputRef = useRef(null);
   const attachmentInputRef = useRef(null);
   const editorRef = useRef(null);
@@ -71,10 +73,10 @@ function AssistantWorkspace({
   const toolLabels = useMemo(
     () => ({
       qa: "Q&A",
-      notes: "Scratchpad",
-      quiz: "Quiz",
+      notes: t("learningSupport.tabs.notes"),
+      quiz: t("learningSupport.tabs.quiz"),
     }),
-    [],
+    [t],
   );
 
   useEffect(() => {

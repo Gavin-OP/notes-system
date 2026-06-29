@@ -69,6 +69,7 @@ import { extractSubjectsFromNotesIndex } from "../common/components/achievements
 import { isConcreteNoteRoute, normalizeNoteRoute } from "../utils/notesIndexUtils";
 import AppFeatureTour, { PENDING_NOTES_TOUR_KEY } from "../common/components/guide/AppFeatureTour";
 import { CAREER_LEVEL_OPTIONS, formatCareerRoleLabel } from "../common/utils/careerDisplayUtils";
+import useTranslatedContent from "../i18n/useTranslatedContent";
 import useTranslation from "../i18n/useTranslation";
 import {
   createProfileGuideSteps,
@@ -873,6 +874,11 @@ function UserProfilePage() {
     () => getCareerDescription(selectedCareerRecommendation, selectedCareerProfile),
     [selectedCareerProfile, selectedCareerRecommendation],
   );
+  const translatedSelectedCareerDescription = useTranslatedContent(selectedCareerDescription, {
+    sourceType: "career_description",
+    sourceId: getCareerJobId(selectedCareerRecommendation) || selectedCareerRole || "career-role",
+    disabled: !selectedCareerDescription,
+  });
 
   const selectedCareerIsGoal = useMemo(() => {
     return careerGoals.some(
@@ -1753,7 +1759,8 @@ function UserProfilePage() {
                           <div className="user-profile-page__role-related">
                             <Text strong>{t("profile.career.jobDescription")}</Text>
                             <Paragraph className="career-recommendation-card__reasoning">
-                              {selectedCareerDescription ||
+                              {translatedSelectedCareerDescription.content ||
+                                selectedCareerDescription ||
                                 t("profile.career.descriptionFallback")}
                             </Paragraph>
                           </div>

@@ -21,6 +21,7 @@ import {
   getNoteVersions,
   restoreNoteAnnotations,
 } from "../../common/api/noteVersions";
+import useTranslatedContent from "../../i18n/useTranslatedContent";
 import "./NotePage.css";
 
 function removeYamlFrontMatter(text) {
@@ -111,9 +112,16 @@ function NotePage() {
   const [versionApiAvailable, setVersionApiAvailable] = useState(false);
   const [restoreCandidates, setRestoreCandidates] = useState([]);
   const [restorePending, setRestorePending] = useState(false);
-
-  const outline = useMemo(() => getOutline(noteContent), [noteContent]);
   const isOverview = isSubjectOverviewPath(notePathWithoutHash);
+  const translatedNote = useTranslatedContent(noteContent, {
+    sourceType: "markdown_note",
+    sourceId: notePathWithoutHash || "note",
+    contentVersion: selectedVersionId || "current",
+    disabled: isOverview,
+  });
+  const displayNoteContent = translatedNote.content || noteContent;
+
+  const outline = useMemo(() => getOutline(displayNoteContent), [displayNoteContent]);
   const { subjectSlug, topicSlug } = useMemo(
     () => parseNoteSubjectAndTopic(notePathWithoutHash),
     [notePathWithoutHash],
@@ -316,15 +324,15 @@ function NotePage() {
   useEffect(() => {
     if (isOverview) return;
     dispatch(setCurrentNoteOutline(outline));
-  }, [isOverview, noteContent, outline, dispatch]);
+  }, [isOverview, displayNoteContent, outline, dispatch]);
 
   useEffect(() => {
     if (isOverview) return;
-    dispatch(setCurrentNoteContent(noteContent));
-  }, [isOverview, noteContent, dispatch]);
+    dispatch(setCurrentNoteContent(displayNoteContent));
+  }, [isOverview, displayNoteContent, dispatch]);
 
   useEffect(() => {
-    if (isOverview || !noteContent) return;
+    if (isOverview || !displayNoteContent) return;
 
     const resolveAnchorElement = () => {
       const rawHash = location.hash?.replace(/^#/, "");
@@ -402,7 +410,7 @@ function NotePage() {
 
     const timer = setTimeout(attemptScroll, 0);
     return () => clearTimeout(timer);
-  }, [isOverview, noteContent, location.hash, location.pathname]);
+  }, [isOverview, displayNoteContent, location.hash, location.pathname]);
 
   if (isOverview && subjectSlug) {
     return (
@@ -418,7 +426,7 @@ function NotePage() {
         {noteContent && (
           <>
             <MarkdownRenderer
-              content={noteContent}
+              content={displayNoteContent}
               theme={theme}
               noteQuotes={visibleNoteQuotes}
               activeQuoteId={activeQuoteId}

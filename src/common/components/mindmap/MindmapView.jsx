@@ -7,7 +7,7 @@
  * - category: category-${categoryId}
  * - concept:  concept.id
  */
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactFlow, {
   Background,
@@ -32,6 +32,7 @@ import NetworkMindmapView from "./NetworkMindmapView";
 import SphereNetworkView from "./SphereNetworkView";
 import ConceptReviewModal from "./ConceptReviewModal";
 import { normalizeConceptPayload, migrateConceptReviewCaches } from "../../utils/conceptReviewUtils";
+import useTranslatedContent from "../../../i18n/useTranslatedContent";
 import "./nodes/nodes.css";
 import "./MindmapView.css";
 
@@ -49,6 +50,79 @@ const defaultEdgeOptions = {
     strokeWidth: 2,
   },
 };
+
+function buildMindmapLabelBundle(graphData) {
+  if (!graphData) return "";
+  return JSON.stringify({
+    subjectName: graphData.meta?.subjectName || graphData.meta?.name || "",
+    categories: (graphData.categories || []).map((category) => ({
+      id: category.id,
+      name: category.name || "",
+      displayName: category.displayName || category.name || "",
+    })),
+    nodes: (graphData.nodes || []).map((node) => ({
+      id: node.id,
+      title: node.title || "",
+      displayTitle: node.displayTitle || node.displayName || node.title || node.name || "",
+      name: node.name || "",
+      noteTitle: node.noteTitle || "",
+      clusterLabel: node.clusterLabel || "",
+      category: node.category || "",
+    })),
+  });
+}
+
+function applyMindmapLabelBundle(graphData, translatedBundleContent) {
+  if (!graphData) return graphData;
+  try {
+    const bundle = JSON.parse(translatedBundleContent || "{}");
+    if (!bundle || typeof bundle !== "object") return graphData;
+    const categoriesById = new Map(
+      (Array.isArray(bundle.categories) ? bundle.categories : [])
+        .map((category) => [category?.id, category])
+        .filter(([id]) => id),
+    );
+    const nodesById = new Map(
+      (Array.isArray(bundle.nodes) ? bundle.nodes : [])
+        .map((node) => [node?.id, node])
+        .filter(([id]) => id),
+    );
+    return {
+      ...graphData,
+      meta: {
+        ...graphData.meta,
+        subjectName: bundle.subjectName || graphData.meta?.subjectName,
+      },
+      categories: (graphData.categories || []).map((category) => {
+        const translated = categoriesById.get(category.id);
+        return translated
+          ? {
+              ...category,
+              name: translated.name || category.name,
+              displayName: translated.displayName || translated.name || category.displayName,
+            }
+          : category;
+      }),
+      nodes: (graphData.nodes || []).map((node) => {
+        const translated = nodesById.get(node.id);
+        return translated
+          ? {
+              ...node,
+              title: translated.title || node.title,
+              displayTitle: translated.displayTitle || translated.title || node.displayTitle,
+              displayName: translated.displayTitle || translated.title || node.displayName,
+              name: translated.name || node.name,
+              noteTitle: translated.noteTitle || node.noteTitle,
+              clusterLabel: translated.clusterLabel || node.clusterLabel,
+              category: translated.category || node.category,
+            }
+          : node;
+      }),
+    };
+  } catch {
+    return graphData;
+  }
+}
 
 /**
  * MindmapView Component
@@ -70,6 +144,26 @@ const MindmapView = ({ subjectId }) => {
   const [viewType, setViewType] = useState(MINDMAP_TYPES.HIERARCHICAL);
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [conceptModalOpen, setConceptModalOpen] = useState(false);
+  const graphLabelBundle = useMemo(() => buildMindmapLabelBundle(graphData), [graphData]);
+  const translatedGraphLabelBundle = useTranslatedContent(graphLabelBundle, {
+    sourceType: "mindmap_label_bundle",
+    sourceId: `mindmap:${subjectId}:hierarchical`,
+    disabled: !graphData,
+  });
+  const localizedGraphData = useMemo(
+    () => applyMindmapLabelBundle(graphData, translatedGraphLabelBundle.content),
+    [graphData, translatedGraphLabelBundle.content],
+  );
+  const networkGraphLabelBundle = useMemo(() => buildMindmapLabelBundle(networkGraphData), [networkGraphData]);
+  const translatedNetworkGraphLabelBundle = useTranslatedContent(networkGraphLabelBundle, {
+    sourceType: "mindmap_label_bundle",
+    sourceId: `mindmap:${subjectId}:network`,
+    disabled: !networkGraphData,
+  });
+  const localizedNetworkGraphData = useMemo(
+    () => applyMindmapLabelBundle(networkGraphData, translatedNetworkGraphLabelBundle.content),
+    [networkGraphData, translatedNetworkGraphLabelBundle.content],
+  );
 
   useEffect(() => {
     migrateConceptReviewCaches();
@@ -112,7 +206,7 @@ const MindmapView = ({ subjectId }) => {
 
   // PASS 1: Initial layout with estimated dimensions
   useEffect(() => {
-    if (!graphData) return;
+    if (!localizedGraphData) return;
 
     // Create base config with subject-specific overrides
     const baseConfig = {
@@ -122,24 +216,24 @@ const MindmapView = ({ subjectId }) => {
     };
 
     const layoutResult = calculateOrthogonalMindmapLayout(
-      graphData.categories,
-      graphData.nodes,
+      localizedGraphData.categories,
+      localizedGraphData.nodes,
       baseConfig
     );
 
     const { nodes: flowNodes, edges: flowEdges } = convertToHierarchicalFormat(
-      graphData,
+      localizedGraphData,
       layoutResult
     );
 
     setNodes(flowNodes);
     setEdges(flowEdges);
     setNeedsRelayout(true);  // Trigger second pass after render
-  }, [graphData, subjectId, setNodes, setEdges]);
+  }, [localizedGraphData, subjectId, setNodes, setEdges]);
 
   // PASS 2: Re-layout with measured dimensions after nodes are rendered
   useEffect(() => {
-    if (!needsRelayout || !graphData || nodes.length === 0) return;
+    if (!needsRelayout || !localizedGraphData || nodes.length === 0) return;
 
     // Small delay to ensure nodes are rendered and measured
     const timer = setTimeout(() => {
@@ -164,13 +258,13 @@ const MindmapView = ({ subjectId }) => {
         };
 
         const layoutResult = calculateOrthogonalMindmapLayout(
-          graphData.categories,
-          graphData.nodes,
+          localizedGraphData.categories,
+          localizedGraphData.nodes,
           baseConfig
         );
 
         const { nodes: flowNodes, edges: flowEdges } = convertToHierarchicalFormat(
-          graphData,
+          localizedGraphData,
           layoutResult
         );
 
@@ -182,7 +276,7 @@ const MindmapView = ({ subjectId }) => {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [needsRelayout, graphData, nodes, subjectId, setNodes, setEdges]);
+  }, [needsRelayout, localizedGraphData, nodes, subjectId, setNodes, setEdges]);
 
   // Handle mindmap view type change
   const handleViewTypeChange = useCallback((newType) => {
@@ -251,7 +345,7 @@ const MindmapView = ({ subjectId }) => {
       return (
         <div className="mindmap-view__canvas">
           <RadialMindmapView
-            graphData={graphData}
+            graphData={localizedGraphData}
             subjectId={subjectId}
             onConceptClick={handleConceptClick}
             isDarkMode={false} // TODO: Get from theme context
@@ -265,7 +359,7 @@ const MindmapView = ({ subjectId }) => {
       return (
         <div className="mindmap-view__canvas">
           <NetworkMindmapView
-            graphData={networkGraphData}
+            graphData={localizedNetworkGraphData}
             subjectId={subjectId}
             onConceptClick={handleConceptClick}
           />
@@ -278,7 +372,7 @@ const MindmapView = ({ subjectId }) => {
       return (
         <div className="mindmap-view__canvas">
           <SphereNetworkView
-            graphData={networkGraphData}
+            graphData={localizedNetworkGraphData}
             subjectId={subjectId}
             onConceptClick={handleConceptClick}
           />
@@ -340,7 +434,7 @@ const MindmapView = ({ subjectId }) => {
         subjectId={subjectId}
         currentType={viewType}
         onTypeChange={handleViewTypeChange}
-        subjectName={graphData?.meta?.subjectName}
+        subjectName={localizedGraphData?.meta?.subjectName}
       />
       
       {/* Render the selected mindmap view */}
@@ -357,4 +451,3 @@ const MindmapView = ({ subjectId }) => {
 };
 
 export default MindmapView;
-

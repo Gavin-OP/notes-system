@@ -11,6 +11,7 @@ import {
   getExperienceLevelTagColor,
 } from "../common/utils/careerDisplayUtils";
 import { getSkillChipVariant, getToolChipVariant } from "../common/utils/semanticChipUtils";
+import useTranslatedContent from "../i18n/useTranslatedContent";
 import useTranslation from "../i18n/useTranslation";
 
 import "./ExploreCareersPage.css";
@@ -90,6 +91,34 @@ function ExploreCareersPage() {
       return haystack.includes(normalizedQuery);
     });
   }, [profiles, query]);
+  const careerDescriptionPayload = useMemo(
+    () =>
+      JSON.stringify(
+        profiles.map((profile) => ({
+          jobId: profile.jobId || profile.title,
+          description: profile.description || "",
+        })),
+      ),
+    [profiles],
+  );
+  const translatedCareerDescriptionPayload = useTranslatedContent(careerDescriptionPayload, {
+    sourceType: "career_description_list",
+    sourceId: "career-taxonomy-descriptions",
+    disabled: profiles.length === 0,
+  });
+  const translatedDescriptionsByJobId = useMemo(() => {
+    try {
+      const parsed = JSON.parse(translatedCareerDescriptionPayload.content || "[]");
+      if (!Array.isArray(parsed)) return new Map();
+      return new Map(
+        parsed
+          .map((item) => [item?.jobId, item?.description])
+          .filter(([jobId, description]) => jobId && description),
+      );
+    } catch {
+      return new Map();
+    }
+  }, [translatedCareerDescriptionPayload.content]);
 
   return (
     <div className="explore-careers-page">
@@ -156,7 +185,9 @@ function ExploreCareersPage() {
                         ellipsis={{ rows: 3 }}
                         className="explore-careers-page__card-description"
                       >
-                        {profile.description || t("career.explore.descriptionFallback")}
+                        {translatedDescriptionsByJobId.get(profile.jobId || profile.title) ||
+                          profile.description ||
+                          t("career.explore.descriptionFallback")}
                       </Paragraph>
                       <Space wrap size={[6, 6]}>
                         {profile.hardSkills.slice(0, 4).map((skill) => (
