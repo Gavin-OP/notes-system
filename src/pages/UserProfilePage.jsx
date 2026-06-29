@@ -69,6 +69,7 @@ import { extractSubjectsFromNotesIndex } from "../common/components/achievements
 import { isConcreteNoteRoute, normalizeNoteRoute } from "../utils/notesIndexUtils";
 import AppFeatureTour, { PENDING_NOTES_TOUR_KEY } from "../common/components/guide/AppFeatureTour";
 import { CAREER_LEVEL_OPTIONS, formatCareerRoleLabel } from "../common/utils/careerDisplayUtils";
+import useTranslation from "../i18n/useTranslation";
 import {
   createProfileGuideSteps,
   prepareProfileTourStep,
@@ -487,6 +488,7 @@ function getPaletteIndex(seed) {
 
 function UserProfilePage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const rawNotesIndex = useSelector((state) => state.notesIndex?.data);
   const notesIndex = useMemo(() => rawNotesIndex || [], [rawNotesIndex]);
   const [conversationWorkspaceOpen, setConversationWorkspaceOpen] = useState(false);
@@ -935,7 +937,7 @@ function UserProfilePage() {
 
   const handleProfileEditSubmit = async (values) => {
     if (previewMode) {
-      message.info("Preview mode cannot save profile changes.");
+      message.info(t("profile.edit.previewDisabled"));
       return;
     }
     setProfileEditSaving(true);
@@ -958,9 +960,9 @@ function UserProfilePage() {
       setCareerRecommendations(recommendationsPayload?.recommendations || []);
       setActiveDashboard("career");
       setProfileEditOpen(false);
-      message.success("Profile updated.");
+      message.success(t("profile.edit.success"));
     } catch (error) {
-      message.error(error instanceof Error ? error.message : "Failed to update profile.");
+      message.error(error instanceof Error ? error.message : t("profile.edit.error"));
     } finally {
       setProfileEditSaving(false);
     }
@@ -1097,8 +1099,8 @@ function UserProfilePage() {
         profileLearningRef,
         profileRecordsRef,
         profileCareerRef,
-      }),
-    [],
+      }, t),
+    [t],
   );
 
   const handleProfileTourStepChange = useCallback(
@@ -1126,9 +1128,9 @@ function UserProfilePage() {
             <Alert type="error" showIcon message={errorText} />
             <Space>
               <Button type="primary" onClick={() => navigate("/user/login")}>
-                Go to login
+                {t("profile.state.goLogin")}
               </Button>
-              <Button onClick={() => window.location.reload()}>Retry</Button>
+              <Button onClick={() => window.location.reload()}>{t("common.retry")}</Button>
             </Space>
           </Space>
         </Card>
@@ -1150,7 +1152,7 @@ function UserProfilePage() {
         className={`user-profile-page__folder-tab ${activeDashboard === "learning" ? "is-active" : ""}`}
         onClick={() => setActiveDashboard("learning")}
       >
-        Learning
+        {t("profile.tabs.learning")}
       </button>
       <button
         type="button"
@@ -1159,7 +1161,7 @@ function UserProfilePage() {
         className={`user-profile-page__folder-tab ${activeDashboard === "career" ? "is-active" : ""}`}
         onClick={() => setActiveDashboard("career")}
       >
-        Career
+        {t("profile.tabs.career")}
       </button>
     </div>
   );
@@ -1183,9 +1185,9 @@ function UserProfilePage() {
       >
         <Space direction="vertical" size={16} className="user-profile-page__edit-modal">
           <div>
-            <Title level={3}>Edit profile</Title>
+            <Title level={3}>{t("profile.edit.title")}</Title>
             <Paragraph type="secondary">
-              Update your name, background, tools, and career interests so recommendations stay aligned with what you know and where you want to go.
+              {t("profile.edit.description")}
             </Paragraph>
           </div>
           <Form
@@ -1196,59 +1198,59 @@ function UserProfilePage() {
             onFinish={handleProfileEditSubmit}
           >
             <Form.Item
-              label="Display Name"
+              label={t("profile.edit.displayName")}
               name="displayName"
-              rules={[{ required: true, whitespace: true, message: "Please enter your name." }]}
+              rules={[{ required: true, whitespace: true, message: t("profile.edit.displayNameRequired") }]}
             >
-              <Input placeholder="How should we address you?" disabled={profileEditSaving} />
+              <Input placeholder={t("profile.edit.displayNamePlaceholder")} disabled={profileEditSaving} />
             </Form.Item>
-            <Form.Item label="Knowledge Areas" name="knowledgeAreas">
+            <Form.Item label={t("profile.edit.knowledge")} name="knowledgeAreas">
               <Select
                 mode="tags"
-                placeholder="What areas do you already know?"
+                placeholder={t("profile.edit.knowledgePlaceholder")}
                 options={profileEditOptions.knowledge}
                 disabled={profileEditSaving}
               />
             </Form.Item>
-            <Form.Item label="Skills" name="skills">
+            <Form.Item label={t("profile.edit.skills")} name="skills">
               <Select
                 mode="tags"
-                placeholder="Add skills you already have"
+                placeholder={t("profile.edit.skillsPlaceholder")}
                 options={profileEditOptions.skills}
                 disabled={profileEditSaving}
               />
             </Form.Item>
-            <Form.Item label="Tools" name="tools">
+            <Form.Item label={t("profile.edit.tools")} name="tools">
               <Select
                 mode="tags"
-                placeholder="Add tools you can use"
+                placeholder={t("profile.edit.toolsPlaceholder")}
                 options={profileEditOptions.tools}
                 disabled={profileEditSaving}
               />
             </Form.Item>
-            <Form.Item label="Career Interests" name="careerInterests">
+            <Form.Item label={t("profile.edit.careers")} name="careerInterests">
               <Select
                 mode="tags"
-                placeholder="Add career directions you are interested in"
+                placeholder={t("profile.edit.careersPlaceholder")}
                 options={profileEditOptions.careers}
                 disabled={profileEditSaving}
               />
             </Form.Item>
-            <Form.Item label="Level" name="experienceLevels">
+            <Form.Item label={t("profile.edit.level")} name="experienceLevels">
               <Select
                 mode="multiple"
                 allowClear
-                placeholder="Select target levels"
+                placeholder={t("profile.edit.levelPlaceholder")}
                 options={CAREER_LEVEL_OPTIONS}
                 disabled={profileEditSaving}
               />
             </Form.Item>
             <Space className="user-profile-page__edit-actions" wrap>
               <Button onClick={() => setProfileEditOpen(false)} disabled={profileEditSaving}>
-                Cancel
+                {t("common.cancel")}
               </Button>
               <Button type="primary" htmlType="submit" loading={profileEditSaving}>
-                Save profile
+                {t("profile.edit.save")}
               </Button>
             </Space>
           </Form>
@@ -1256,14 +1258,14 @@ function UserProfilePage() {
       </Modal>
       <Modal
         open={tourPromptOpen}
-        title="Your first note is ready"
+        title={t("profile.tourPrompt.title")}
         onCancel={handleSkipProfileTour}
         footer={[
           <Button key="later" onClick={handleSkipProfileTour}>
-            Skip tour for now
+            {t("profile.tourPrompt.later")}
           </Button>,
           <Button key="tour" type="default" onClick={handleStartProfileTour}>
-            View tours now
+            {t("profile.tourPrompt.start")}
           </Button>,
           <Button
             key="note"
@@ -1274,13 +1276,13 @@ function UserProfilePage() {
               navigate(resolveRecommendedNoteUrl());
             }}
           >
-            Start recommended note
+            {t("profile.tourPrompt.openFirstNote")}
           </Button>,
         ]}
       >
         <Space direction="vertical" size={8}>
           <Paragraph>
-            We recommend starting with{" "}
+            {t("profile.tourPrompt.firstNoteReady")}{" "}
             <Text strong>
               {recommendedFirstNote?.note_title ||
                 recommendedFirstNote?.noteTitle ||
@@ -1289,8 +1291,7 @@ function UserProfilePage() {
             .
           </Paragraph>
           <Paragraph type="secondary">
-            View a short profile tour, then a learning workspace tour on your recommended note. Skip
-            for now, or reopen either anytime with the question-mark button.
+            {t("profile.tourPrompt.body")}
           </Paragraph>
         </Space>
       </Modal>
@@ -1311,10 +1312,10 @@ function UserProfilePage() {
                   type="warning"
                   showIcon
                   style={{ marginBottom: 12 }}
-                  message="Profile preview mode"
+                  message={t("profile.preview.message")}
                   description={
                     previewNotice ||
-                    "Backend services are currently unavailable. Data below is a read-only preview."
+                    t("profile.preview.description")
                   }
                 />
               ) : null}
@@ -1323,7 +1324,7 @@ function UserProfilePage() {
               </Title>
               <Text type="secondary">{userInfo?.email || "-"}</Text>
               <Paragraph className="user-profile-page__hero-desc">
-                Personalized learning workspace for progress tracking, AI conversations, and study notes.
+                {t("profile.hero.description")}
               </Paragraph>
               <Space wrap>
                 <Button
@@ -1332,20 +1333,20 @@ function UserProfilePage() {
                   disabled={previewMode}
                   onClick={handleEditProfile}
                 >
-                  Edit profile
+                  {t("profile.actions.edit")}
                 </Button>
                 <Button icon={<BookOutlined />} onClick={() => navigate(continueLearningUrl)}>
-                  Continue learning
+                  {t("profile.actions.continue")}
                 </Button>
                 <Button icon={<LogoutOutlined />} onClick={handleLogout} disabled={previewMode}>
-                  Logout
+                  {t("profile.actions.logout")}
                 </Button>
                 <AppFeatureTour
                   guideKey="profile_page"
                   steps={profileGuideSteps}
-                  startLabel="Guide"
+                  startLabel={t("profile.actions.guide")}
                   iconOnly
-                  buttonAriaLabel="Open profile guide"
+                  buttonAriaLabel={t("profile.actions.openGuide")}
                   startToken={profileTourStartToken}
                   onBeforeStepChange={handleProfileTourStepChange}
                   onAfterFinish={handleProfileTourAfterFinish}
@@ -1365,11 +1366,15 @@ function UserProfilePage() {
               items={[
                 {
                   key: "study",
-                  label: "Study Records",
+                  label: t("profile.learning.studyRecords"),
                   children: (
                     <Row gutter={[16, 16]}>
                       <Col xs={24} lg={12}>
-                        <Card type="inner" title="Learning Progress" extra={<Button type="link">View all</Button>}>
+                        <Card
+                          type="inner"
+                          title={t("profile.learning.progress")}
+                          extra={<Button type="link">{t("profile.learning.viewAll")}</Button>}
+                        >
                           {learningTracks.length > 0 ? (
                             <Space direction="vertical" className="user-profile-page__block" size={16}>
                               {learningTracks.map((track) => (
@@ -1384,22 +1389,22 @@ function UserProfilePage() {
                                     percent={track.progress}
                                     strokeColor={getProgressStateStrokeColor(track.status, track.progress)}
                                   />
-                                  <Text type="secondary">Current topic: {track.current}</Text>
+                                  <Text type="secondary">{t("profile.learning.currentTopic")} {track.current}</Text>
                                 </div>
                               ))}
                             </Space>
                           ) : (
-                            <Empty description="No learning progress yet." />
+                            <Empty description={t("profile.learning.noProgress")} />
                           )}
                         </Card>
                       </Col>
                       <Col xs={24} lg={12}>
                         <Card
                           type="inner"
-                          title="Achievements"
+                          title={t("profile.learning.achievements")}
                           extra={
                             <Button type="link" onClick={() => setAchievementsViewAllOpen(true)}>
-                              View all
+                              {t("profile.learning.viewAll")}
                             </Button>
                           }
                         >
@@ -1413,7 +1418,7 @@ function UserProfilePage() {
                         </Card>
                       </Col>
                       <Col xs={24}>
-                        <Card type="inner" title="Learning History" className="user-profile-page__timeline-card">
+                        <Card type="inner" title={t("profile.learning.history")} className="user-profile-page__timeline-card">
                           <div className="user-profile-page__contrib">
                             <div className="user-profile-page__contrib-body">
                               <div className="user-profile-page__contrib-weekdays">
@@ -1453,7 +1458,7 @@ function UserProfilePage() {
                                           title={
                                             <div className="user-profile-page__contrib-tooltip">
                                               <div>
-                                                <strong>{day.dateLabel}</strong> · {day.count} notes
+                                                <strong>{day.dateLabel}</strong> · {day.count} {t("profile.learning.notesCount")}
                                               </div>
                                               {day.count > 0 ? (
                                                 <ul className="user-profile-page__contrib-tooltip-list">
@@ -1462,7 +1467,7 @@ function UserProfilePage() {
                                                   ))}
                                                 </ul>
                                               ) : (
-                                                <div>No study activity on this day.</div>
+                                                <div>{t("profile.learning.noStudyActivity")}</div>
                                               )}
                                             </div>
                                           }
@@ -1477,7 +1482,7 @@ function UserProfilePage() {
                             </div>
                           </div>
                           {contributionMatrix.totalContributions === 0 ? (
-                            <Empty description="No learning history yet." />
+                            <Empty description={t("profile.learning.noHistory")} />
                           ) : null}
                         </Card>
                       </Col>
@@ -1486,14 +1491,14 @@ function UserProfilePage() {
                 },
                 {
                   key: "interactions",
-                  label: "Interaction Records",
+                  label: t("profile.learning.interactionRecords"),
                   children: (
                     <div ref={profileRecordsRef}>
                       <Tabs
                         items={[
                           {
                             key: "conversations",
-                            label: "Recent Assistant Conversations",
+                            label: t("profile.learning.conversations"),
                             children: (
                               recentChats.length > 0 ? (
                                 <List
@@ -1510,27 +1515,27 @@ function UserProfilePage() {
                                             setConversationWorkspaceOpen(true);
                                           }}
                                         >
-                                          Open conversation
+                                          {t("profile.learning.openConversation")}
                                         </Button>,
                                       ]}
                                     >
                                       <List.Item.Meta
                                         avatar={<Avatar icon={<CommentOutlined />} />}
                                         title={item.title}
-                                        description={`${item.time || "Unknown time"} · ${item.note}`}
+                                        description={`${item.time || t("profile.learning.unknownTime")} · ${item.note}`}
                                       />
                                       <Paragraph>{item.summary}</Paragraph>
                                     </List.Item>
                                   )}
                                 />
                               ) : (
-                                <Empty description="No assistant conversations yet." />
+                                <Empty description={t("profile.learning.noConversations")} />
                               )
                             ),
                           },
                           {
                             key: "notes",
-                            label: "Saved Personal Notes",
+                            label: t("profile.learning.savedNotes"),
                             children: (
                               personalNoteQuotes.length > 0 ? (
                                 <List
@@ -1558,14 +1563,14 @@ function UserProfilePage() {
                                   )}
                                 />
                               ) : (
-                                <Empty description="No saved notes yet." />
+                                <Empty description={t("profile.learning.noSavedNotes")} />
                               )
                             ),
                           },
                         ]}
                         tabBarExtraContent={
                           <Button type="link" onClick={() => setConversationWorkspaceOpen(true)}>
-                            Open conversation workspace
+                            {t("profile.learning.openConversationWorkspace")}
                           </Button>
                         }
                       />
@@ -1581,10 +1586,10 @@ function UserProfilePage() {
         {activeDashboard === "career" ? (
         <div ref={profileCareerRef}>
           <Card title={dashboardTabs} className="user-profile-page__section user-profile-page__dashboard-card">
-            <Card type="inner" title="My Background Atlas" className="user-profile-page__section">
+            <Card type="inner" title={t("profile.career.background")} className="user-profile-page__section">
               <Space direction="vertical" className="user-profile-page__block" size={12}>
                 <div>
-                  <Text strong>Knowledge Areas</Text>
+                  <Text strong>{t("profile.career.knowledgeAreas")}</Text>
                   <div className="user-profile-page__tag-wall">
                     {accumulationDashboard.knowledge.length > 0 ? (
                       accumulationDashboard.knowledge.map((item) => (
@@ -1593,12 +1598,12 @@ function UserProfilePage() {
                         </SemanticChip>
                       ))
                     ) : (
-                      <Text type="secondary">No knowledge areas yet.</Text>
+                      <Text type="secondary">{t("profile.career.noKnowledge")}</Text>
                     )}
                   </div>
                 </div>
                 <div>
-                  <Text strong>Skills</Text>
+                  <Text strong>{t("profile.career.skills")}</Text>
                   <div className="user-profile-page__tag-wall">
                     {accumulationDashboard.skills.length > 0 ? (
                       accumulationDashboard.skills.map((item) => (
@@ -1607,12 +1612,12 @@ function UserProfilePage() {
                         </SemanticChip>
                       ))
                     ) : (
-                      <Text type="secondary">No skills tagged yet.</Text>
+                      <Text type="secondary">{t("profile.career.noSkills")}</Text>
                     )}
                   </div>
                 </div>
                 <div>
-                  <Text strong>Tools</Text>
+                  <Text strong>{t("profile.career.tools")}</Text>
                   <div className="user-profile-page__tag-wall">
                     {accumulationDashboard.tools.length > 0 ? (
                       accumulationDashboard.tools.map((item) => (
@@ -1621,13 +1626,13 @@ function UserProfilePage() {
                         </SemanticChip>
                       ))
                     ) : (
-                      <Text type="secondary">No tools tracked yet.</Text>
+                      <Text type="secondary">{t("profile.career.noTools")}</Text>
                     )}
                   </div>
                 </div>
               </Space>
             </Card>
-            <Card type="inner" title="My Career Goal" className="user-profile-page__section">
+            <Card type="inner" title={t("profile.career.goal")} className="user-profile-page__section">
               {careerGoals.length > 0 ? (
                 <div className="user-profile-page__tag-wall">
                   {careerGoals.map((goal) => (
@@ -1639,14 +1644,14 @@ function UserProfilePage() {
               ) : (
                 <Empty
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description="No career goals yet. Add one from Career Matches."
+                  description={t("profile.career.noGoals")}
                 />
               )}
             </Card>
             <Divider />
             <Row gutter={[16, 16]}>
               <Col xs={24} lg={14}>
-                <Card type="inner" title="Career Matches">
+                <Card type="inner" title={t("profile.career.matches")}>
                   <Row gutter={[20, 20]}>
                     <Col xs={24} lg={11}>
                       <div className="user-profile-page__career-pane">
@@ -1677,7 +1682,7 @@ function UserProfilePage() {
                 </Card>
               </Col>
               <Col xs={24} lg={10}>
-                <Card type="inner" title="Role Details">
+                <Card type="inner" title={t("profile.career.roleDetails")}>
                   {selectedCareerRecommendation ? (
                     <Space direction="vertical" size={12} className="user-profile-page__block">
                       <div className="user-profile-page__role-detail-head">
@@ -1744,14 +1749,14 @@ function UserProfilePage() {
                       <div className="user-profile-page__role-detail-grid">
                         <div className="user-profile-page__role-detail-main">
                           <div className="user-profile-page__role-related">
-                            <Text strong>Job Description</Text>
+                            <Text strong>{t("profile.career.jobDescription")}</Text>
                             <Paragraph className="career-recommendation-card__reasoning">
                               {selectedCareerDescription ||
-                                "Open the full role profile to view the generated career summary."}
+                                t("profile.career.descriptionFallback")}
                             </Paragraph>
                           </div>
                           <div className="user-profile-page__role-related">
-                            <Text strong>Related Subjects</Text>
+                            <Text strong>{t("profile.career.relatedSubjects")}</Text>
                             <div className="user-profile-page__tag-wall">
                               {selectedCareerSubjects.length > 0 ? (
                                 selectedCareerSubjects.map((subject) => (
@@ -1763,12 +1768,12 @@ function UserProfilePage() {
                                   </SemanticChip>
                                 ))
                               ) : (
-                                <Text type="secondary">No subject links yet.</Text>
+                                <Text type="secondary">{t("profile.career.noSubjects")}</Text>
                               )}
                             </div>
                           </div>
                           <div className="user-profile-page__role-related">
-                            <Text strong>Related Skills</Text>
+                            <Text strong>{t("profile.career.relatedSkills")}</Text>
                             <div className="user-profile-page__tag-wall">
                               {selectedCareerSkills.length > 0 ? (
                                 selectedCareerSkills.slice(0, 12).map((skill) => (
@@ -1777,13 +1782,13 @@ function UserProfilePage() {
                                   </SemanticChip>
                                 ))
                               ) : (
-                                <Text type="secondary">No related skills yet.</Text>
+                                <Text type="secondary">{t("profile.career.noRelatedSkills")}</Text>
                               )}
                             </div>
                           </div>
                         </div>
                         <div className="user-profile-page__career-gaps">
-                          <Text strong>Skill Gap</Text>
+                          <Text strong>{t("profile.career.skillGap")}</Text>
                           <CareerSkillGapPanel
                             recommendations={visibleCareerRecommendations.filter(
                               (item) => item?.title === selectedCareerRole,
@@ -1815,7 +1820,7 @@ function UserProfilePage() {
                             }
                           }}
                         >
-                          Open full role profile
+                          {t("profile.career.openFullRole")}
                         </Button>
                         <Button
                           size="small"
@@ -1824,12 +1829,12 @@ function UserProfilePage() {
                           disabled={previewMode || selectedCareerIsGoal}
                           onClick={handleAddCareerGoal}
                         >
-                          {selectedCareerIsGoal ? "Career goal added" : "Add as career goal"}
+                          {selectedCareerIsGoal ? t("profile.career.goalAdded") : t("profile.career.addGoal")}
                         </Button>
                       </Space>
                     </Space>
                   ) : (
-                    <Empty description="Select a role to view details." />
+                    <Empty description={t("profile.career.selectRole")} />
                   )}
                 </Card>
               </Col>
@@ -1839,7 +1844,7 @@ function UserProfilePage() {
               className="ns-career-nav-link user-profile-page__explore-careers"
               onClick={() => navigate("/careers")}
             >
-              <span className="ns-career-nav-link__label">Explore Careers</span>
+              <span className="ns-career-nav-link__label">{t("profile.career.explore")}</span>
               <DownOutlined className="ns-career-nav-link__icon" aria-hidden="true" />
             </button>
           </Card>

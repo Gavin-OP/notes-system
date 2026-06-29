@@ -45,6 +45,7 @@ import {
   requestAssistantQuizEvaluate,
 } from "../api/assistant";
 import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncompleteMyNote, updateMyGuideState } from "../api/user";
+import useTranslation from "../../i18n/useTranslation";
 
 import "./NoteLayout.css";
 import "../components/LearningSupportPanel.css";
@@ -332,6 +333,7 @@ const NoteLayout = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   // redux state
   const themeValue = useSelector((state) => state.preference.theme);
@@ -389,7 +391,6 @@ const NoteLayout = () => {
   const directoryAreaRef = useRef(null);
   const outlineTabRef = useRef(null);
   const assistantAreaRef = useRef(null);
-  const narrationGuideRef = useRef(null);
   const workspaceBarRef = useRef(null);
   const exploreGuideRef = useRef(null);
   const resizeStateRef = useRef({
@@ -1077,8 +1078,8 @@ const NoteLayout = () => {
         exploreGuideRef,
         assistantAreaRef,
         workspaceBarRef,
-      }),
-    [],
+      }, t),
+    [t],
   );
 
   return (

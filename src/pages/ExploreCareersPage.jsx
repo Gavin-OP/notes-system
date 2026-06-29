@@ -11,6 +11,7 @@ import {
   getExperienceLevelTagColor,
 } from "../common/utils/careerDisplayUtils";
 import { getSkillChipVariant, getToolChipVariant } from "../common/utils/semanticChipUtils";
+import useTranslation from "../i18n/useTranslation";
 
 import "./ExploreCareersPage.css";
 
@@ -40,6 +41,7 @@ function normalizeProfiles(payload) {
 
 function ExploreCareersPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [errorText, setErrorText] = useState("");
   const [profiles, setProfiles] = useState([]);
@@ -98,23 +100,23 @@ function ExploreCareersPage() {
           onClick={() => navigate("/user/profile", { state: { dashboard: "career" } })}
         >
           <UpOutlined className="ns-career-nav-link__icon" aria-hidden="true" />
-          <span className="ns-career-nav-link__label">Back to Profile</span>
+          <span className="ns-career-nav-link__label">{t("career.explore.backProfile")}</span>
         </button>
 
         <Space direction="vertical" size={16} className="explore-careers-page__header">
           <div>
             <Title level={2} className="explore-careers-page__title">
-              Explore Careers
+              {t("career.explore.title")}
             </Title>
             <Paragraph type="secondary" className="explore-careers-page__subtitle">
-              Browse every role in our career library. Open a role to see responsibilities, skills, and related subjects.
+              {t("career.explore.subtitle")}
             </Paragraph>
           </div>
           <Input
             allowClear
             size="large"
             prefix={<SearchOutlined />}
-            placeholder="Search by title, skill, or tool"
+            placeholder={t("career.explore.searchPlaceholder")}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -122,7 +124,7 @@ function ExploreCareersPage() {
 
         {loading ? (
           <div className="explore-careers-page__state">
-            <Spin tip="Loading careers..." />
+            <Spin tip={t("career.explore.loading")} />
           </div>
         ) : null}
 
@@ -154,7 +156,7 @@ function ExploreCareersPage() {
                         ellipsis={{ rows: 3 }}
                         className="explore-careers-page__card-description"
                       >
-                        {profile.description || "Open this role to view the generated career summary."}
+                        {profile.description || t("career.explore.descriptionFallback")}
                       </Paragraph>
                       <Space wrap size={[6, 6]}>
                         {profile.hardSkills.slice(0, 4).map((skill) => (
@@ -169,7 +171,7 @@ function ExploreCareersPage() {
                         ))}
                       </Space>
                       <Button type="primary" ghost block>
-                        View role details
+                        {t("profile.career.openFullRole")}
                       </Button>
                     </Space>
                   </Card>
@@ -177,7 +179,7 @@ function ExploreCareersPage() {
               ))}
             </Row>
           ) : (
-            <Empty description="No careers matched your search." />
+            <Empty description={t("career.explore.empty")} />
           )
         ) : null}
       </div>

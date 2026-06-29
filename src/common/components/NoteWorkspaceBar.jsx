@@ -19,6 +19,7 @@ import {
 import AppFeatureTour from "./guide/AppFeatureTour";
 import SearchModal from "./SearchModal";
 import SemanticChip from "./SemanticChip";
+import useTranslation from "../../i18n/useTranslation";
 
 import "./NoteWorkspaceBar.css";
 
@@ -47,19 +48,20 @@ function NoteWorkspaceBar({
   isMobile = false,
 }) {
   const [searchOpen, setSearchOpen] = useState(false);
+  const { t } = useTranslation();
 
   const languageItems = [
-    { key: "en", label: "English", onClick: () => onLanguageChange("en") },
-    { key: "cn", label: "中文", onClick: () => onLanguageChange("cn") },
+    { key: "en", label: t("language.english"), onClick: () => onLanguageChange("en") },
+    { key: "cn", label: t("language.chinese"), onClick: () => onLanguageChange("cn") },
   ];
 
   const narrationDisabled = narrationState !== "ready";
-  let narrationLabel = "Narration unavailable";
-  if (narrationState === "loading") narrationLabel = "Loading narration";
+  let narrationLabel = t("note.narration.unavailable");
+  if (narrationState === "loading") narrationLabel = t("note.narration.loading");
   if (narrationState === "ready") {
-    narrationLabel = isNarrationPlaying ? "Pause narration" : "Play narration";
+    narrationLabel = isNarrationPlaying ? t("note.narration.pause") : t("note.narration.play");
   }
-  if (narrationState === "error") narrationLabel = "Narration failed";
+  if (narrationState === "error") narrationLabel = t("note.narration.failed");
 
   const showMindmap = Boolean(workspaceMeta?.showMindmap);
   const versions = Array.isArray(workspaceMeta?.versions) ? workspaceMeta.versions : [];
@@ -67,18 +69,18 @@ function NoteWorkspaceBar({
   const restoreCount = Number(workspaceMeta?.restoreCandidateCount || 0);
 
   const completionLabel = completePending
-    ? "Updating..."
+    ? t("note.toolbar.updating")
     : isCurrentNoteCompleted
-      ? "Completed"
-      : "Mark complete";
+      ? t("note.toolbar.completed")
+      : t("note.toolbar.markComplete");
 
   const morePanel = (
     <div className="note-workspace-bar__more-panel">
       {hasVersions ? (
         <div className="note-workspace-bar__more-version">
-          <span className="note-workspace-bar__more-label">Note version</span>
+          <span className="note-workspace-bar__more-label">{t("note.toolbar.noteVersion")}</span>
           <label className="note-workspace-bar__version-field">
-            <span className="note-workspace-bar__version-field-label">View</span>
+            <span className="note-workspace-bar__version-field-label">{t("note.toolbar.view")}</span>
             <select
               className="note-workspace-bar__version-select"
               value={workspaceMeta?.selectedVersionId || "current"}
@@ -86,7 +88,7 @@ function NoteWorkspaceBar({
             >
               {versions.map((version) => (
                 <option key={version.version_id} value={version.version_id}>
-                  {version.is_current ? "Current" : version.version_id}
+                  {version.is_current ? t("note.toolbar.current") : version.version_id}
                 </option>
               ))}
             </select>
@@ -97,11 +99,11 @@ function NoteWorkspaceBar({
             onClick={() => workspaceMeta?.onRestoreAnnotations?.()}
             disabled={workspaceMeta?.restorePending}
           >
-            {workspaceMeta?.restorePending ? "Restoring…" : "Restore highlights"}
+            {workspaceMeta?.restorePending ? t("note.toolbar.restoring") : t("note.toolbar.restoreHighlights")}
           </button>
           {restoreCount > 0 ? (
             <span className="note-workspace-bar__restore-hint">
-              {restoreCount} candidates to review
+              {restoreCount} {t("note.toolbar.candidates")}
             </span>
           ) : null}
         </div>
@@ -113,7 +115,7 @@ function NoteWorkspaceBar({
           onClick={() => onThemeChange(theme !== "dark")}
         >
           {theme === "light" ? <MoonOutlined /> : <SunOutlined />}
-          {theme === "light" ? "Dark mode" : "Light mode"}
+          {theme === "light" ? t("note.toolbar.darkMode") : t("note.toolbar.lightMode")}
         </button>
         <Dropdown
           menu={{
@@ -126,7 +128,7 @@ function NoteWorkspaceBar({
         >
           <button type="button" className="note-workspace-bar__more-action">
             <GlobalOutlined />
-            {language === "cn" ? "中文" : "English"}
+            {language === "cn" ? t("language.chinese") : t("language.english")}
           </button>
         </Dropdown>
         <button
@@ -144,11 +146,11 @@ function NoteWorkspaceBar({
           ) : (
             <AudioOutlined />
           )}
-          Narration
+          {t("note.toolbar.narration")}
         </button>
         <button type="button" className="note-workspace-bar__more-action" onClick={onOpenProfile}>
           <UserOutlined />
-          Profile
+          {t("note.toolbar.profile")}
         </button>
       </div>
     </div>
@@ -158,7 +160,7 @@ function NoteWorkspaceBar({
     <div className="note-workspace-bar" ref={workspaceBarRef} aria-label="Note workspace tools">
       <div className="note-workspace-bar__study" aria-label="Study">
         {typeof onToggleCompletion === "function" ? (
-          <Tooltip title={isCurrentNoteCompleted ? "Mark as not complete" : "Mark this note complete"}>
+          <Tooltip title={isCurrentNoteCompleted ? t("note.toolbar.markIncomplete") : t("note.toolbar.markThisComplete")}>
             <button
               type="button"
               className={`note-workspace-bar__completion ${
@@ -174,46 +176,46 @@ function NoteWorkspaceBar({
         ) : null}
 
         {showMindmap ? (
-          <Tooltip title="Explore subject mindmap">
+          <Tooltip title={t("note.toolbar.openMindmap")}>
             <button
               type="button"
               className="note-workspace-bar__icon-btn"
               ref={exploreGuideRef}
               onClick={onExploreMindmap}
-              aria-label="Open mindmap"
+              aria-label={t("note.toolbar.openMindmap")}
             >
               <ApartmentOutlined />
-              {!isMobile ? <span>Mindmap</span> : null}
+              {!isMobile ? <span>{t("note.toolbar.mindmap")}</span> : null}
             </button>
           </Tooltip>
         ) : null}
       </div>
 
       <div className="note-workspace-bar__assist" aria-label="Assist">
-        <Tooltip title={assistantActive ? "Assistant open" : "Open learning assistant"}>
+        <Tooltip title={assistantActive ? t("note.toolbar.assistantOpen") : t("note.toolbar.openAssistant")}>
           <button
             type="button"
             className={`note-workspace-bar__icon-btn ${
               assistantActive ? "note-workspace-bar__icon-btn--active" : ""
             }`}
             onClick={onToggleAssistant}
-            aria-label="Learning assistant"
+            aria-label={t("note.toolbar.openAssistant")}
             aria-pressed={assistantActive}
           >
             <CommentOutlined />
-            {!isMobile ? <span>Assistant</span> : null}
+            {!isMobile ? <span>{t("note.toolbar.assistant")}</span> : null}
           </button>
         </Tooltip>
 
-        <Tooltip title="Search notes">
+        <Tooltip title={t("note.toolbar.searchNotes")}>
           <button
             type="button"
             className="note-workspace-bar__icon-btn"
             onClick={() => setSearchOpen(true)}
-            aria-label="Search notes"
+            aria-label={t("note.toolbar.searchNotes")}
           >
             <SearchOutlined />
-            {!isMobile ? <span>Search</span> : null}
+            {!isMobile ? <span>{t("note.toolbar.search")}</span> : null}
           </button>
         </Tooltip>
         <SearchModal
@@ -229,7 +231,7 @@ function NoteWorkspaceBar({
             guideKey="notes_page"
             steps={notesGuideSteps}
             iconOnly
-            buttonAriaLabel="Learning guide"
+            buttonAriaLabel={t("note.toolbar.learningGuide")}
             triggerClassName="note-workspace-bar__guide-trigger"
             startToken={notesTourStartToken}
             onBeforeStepChange={onNotesTourStepChange}
@@ -245,13 +247,13 @@ function NoteWorkspaceBar({
           <button
             type="button"
             className="note-workspace-bar__icon-btn note-workspace-bar__more-btn"
-            aria-label="More workspace options"
+            aria-label={t("note.toolbar.moreOptions")}
           >
             <MoreOutlined />
-            {!isMobile ? <span>More</span> : null}
+            {!isMobile ? <span>{t("note.toolbar.more")}</span> : null}
             {hasVersions ? (
               <SemanticChip variant="slate" className="note-workspace-bar__more-badge">
-                Version
+                {t("note.toolbar.version")}
               </SemanticChip>
             ) : null}
           </button>

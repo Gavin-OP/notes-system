@@ -14,6 +14,7 @@ import {
 } from "@ant-design/icons";
 import AppFeatureTour from "./guide/AppFeatureTour";
 import SearchModal from "./SearchModal";
+import useTranslation from "../../i18n/useTranslation";
 
 import "./NoteHeader.css";
 
@@ -36,6 +37,7 @@ function NoteHeader({
   const navigate = useNavigate();
   // redux
   const isMobile = useSelector((state) => state.preference.isMobile);
+  const { t } = useTranslation();
 
   // state
   const [searchOpen, setSearchOpen] = useState(false);
@@ -44,12 +46,12 @@ function NoteHeader({
   const languageItems = [
     {
       key: "en",
-      label: "English",
+      label: t("language.english"),
       onClick: () => onLanguageChange("en"),
     },
     {
       key: "cn",
-      label: "中文",
+      label: t("language.chinese"),
       onClick: () => onLanguageChange("cn"),
     },
   ];
@@ -60,12 +62,12 @@ function NoteHeader({
   };
 
   const narrationDisabled = narrationState !== "ready";
-  let narrationLabel = "Narration unavailable";
-  if (narrationState === "loading") narrationLabel = "Loading narration audio";
+  let narrationLabel = t("note.narration.unavailable");
+  if (narrationState === "loading") narrationLabel = t("note.narration.loadingAudio");
   if (narrationState === "ready") {
-    narrationLabel = isNarrationPlaying ? "Pause narration" : "Play narration";
+    narrationLabel = isNarrationPlaying ? t("note.narration.pause") : t("note.narration.play");
   }
-  if (narrationState === "error") narrationLabel = "Narration failed";
+  if (narrationState === "error") narrationLabel = t("note.narration.failed");
 
   const handleNarrationKeyDown = (event) => {
     if (event.key === "Enter" || event.key === " ") {
@@ -143,7 +145,7 @@ function NoteHeader({
             guideKey="notes_page"
             steps={notesGuideSteps}
             iconOnly
-            buttonAriaLabel="Open learning guide"
+            buttonAriaLabel={t("note.toolbar.learningGuide")}
             triggerClassName="note-header__guide-trigger"
             startToken={notesTourStartToken}
             onBeforeStepChange={onNotesTourStepChange}

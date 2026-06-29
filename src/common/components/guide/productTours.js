@@ -6,7 +6,7 @@ export function waitForTourTarget() {
   });
 }
 
-export function createProfileGuideSteps(refs) {
+export function createProfileGuideSteps(refs, t = (key, fallback) => fallback || key) {
   const {
     profileHeroRef,
     profileDashboardTabsRef,
@@ -17,37 +17,47 @@ export function createProfileGuideSteps(refs) {
 
   return [
     {
-      title: "Pick up where you left off",
-      description:
+      title: t("guide.profile.0.title", "Pick up where you left off"),
+      description: t(
+        "guide.profile.0.description",
         "Continue learning returns you to your current note. Everything else—progress, saved passages, and career planning—lives here on your profile.",
+      ),
       target: () => profileHeroRef?.current,
       placement: "bottom",
     },
     {
-      title: "Learning and Career",
-      description:
+      title: t("guide.profile.1.title", "Learning and Career"),
+      description: t(
+        "guide.profile.1.description",
         "Learning tracks study progress, achievements, and saved work. Career is optional—open it when you want job matches and skill-gap guidance.",
+      ),
       target: () => profileDashboardTabsRef?.current,
       placement: "bottom",
     },
     {
-      title: "Track momentum",
-      description:
+      title: t("guide.profile.2.title", "Track momentum"),
+      description: t(
+        "guide.profile.2.description",
         "Learning progress, achievements, and your activity history show what you have finished and how consistently you study.",
+      ),
       target: () => profileLearningRef?.current,
       placement: "top",
     },
     {
-      title: "Revisit what you saved",
-      description:
+      title: t("guide.profile.3.title", "Revisit what you saved"),
+      description: t(
+        "guide.profile.3.description",
         "Assistant conversations and highlighted passages land here. Open any item to jump back to the note where you left off.",
+      ),
       target: () => profileRecordsRef?.current,
       placement: "top",
     },
     {
-      title: "Aim at a role, if you want",
-      description:
+      title: t("guide.profile.4.title", "Aim at a role, if you want"),
+      description: t(
+        "guide.profile.4.description",
         "Set career goals, compare matches, and turn skill gaps into a concrete learning path. Skip this entirely if you are here just to study.",
+      ),
       target: () => profileCareerRef?.current,
       placement: "top",
     },
@@ -78,7 +88,7 @@ export async function prepareProfileTourStep(stepIndex, controls) {
   await waitForTourTarget();
 }
 
-export function createNoteGuideSteps(refs) {
+export function createNoteGuideSteps(refs, t = (key, fallback) => fallback || key) {
   const {
     directoryAreaRef,
     noteAreaRef,
@@ -89,45 +99,57 @@ export function createNoteGuideSteps(refs) {
 
   return [
     {
-      title: "Your learning workspace",
-      description:
+      title: t("guide.note.0.title", "Your learning workspace"),
+      description: t(
+        "guide.note.0.description",
         "Read notes in order, explore ideas visually, and ask the assistant—all without leaving this page. We will walk through the pieces that matter most.",
+      ),
       placement: "center",
     },
     {
-      title: "Follow the course path",
-      description:
+      title: t("guide.note.1.title", "Follow the course path"),
+      description: t(
+        "guide.note.1.description",
         "The sidebar lists notes in sequence. Pick any topic to jump ahead, or work top to bottom when you want a guided path.",
+      ),
       target: () => directoryAreaRef?.current,
       placement: "right",
     },
     {
-      title: "Read, highlight, complete",
-      description:
+      title: t("guide.note.2.title", "Read, highlight, complete"),
+      description: t(
+        "guide.note.2.description",
         "Study in the main canvas. Highlight text to save a quote or ask a question. Mark complete from the workspace bar when you are ready to move on.",
+      ),
       target: () => noteAreaRef?.current,
       placement: "right",
     },
     {
-      title: "Explore connections",
-      description:
+      title: t("guide.note.3.title", "Explore connections"),
+      description: t(
+        "guide.note.3.description",
         "Open Mindmap from the workspace bar when a linear list is not enough—see how concepts relate across the subject.",
+      ),
       target: () =>
         exploreGuideRef?.current ||
         document.querySelector(".note-workspace-bar__study .note-workspace-bar__icon-btn"),
       placement: "bottom",
     },
     {
-      title: "Ask, capture, test",
-      description:
+      title: t("guide.note.4.title", "Ask, capture, test"),
+      description: t(
+        "guide.note.4.description",
         "Use Q&A for quick help, Notes to collect your own takeaways, and Quiz to check understanding. Outline keeps you oriented inside long notes.",
+      ),
       target: () => assistantAreaRef?.current,
       placement: "left",
     },
     {
-      title: "Workspace shortcuts",
-      description:
+      title: t("guide.note.5.title", "Workspace shortcuts"),
+      description: t(
+        "guide.note.5.description",
         "Mark notes complete, search, open the assistant, or use More for theme, language, narration, versions, and profile.",
+      ),
       target: () => workspaceBarRef?.current,
       placement: "bottom",
     },
