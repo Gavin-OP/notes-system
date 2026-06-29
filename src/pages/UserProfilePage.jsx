@@ -1548,17 +1548,19 @@ function UserProfilePage() {
                                         navigate(quoteUrl);
                                       }}
                                     >
-                                      <List.Item.Meta
-                                        title={item.note_title || item.note_url}
-                                        description={
-                                          item.created_at
+                                      <div className="user-profile-page__quote-note-body">
+                                        <Text strong className="user-profile-page__quote-title">
+                                          {item.note_title || item.note_url}
+                                        </Text>
+                                        <Text type="secondary" className="user-profile-page__quote-meta">
+                                          {item.created_at
                                             ? `${item.subject || "General"} · ${normalizeDate(item.created_at)}`
-                                            : `${item.subject || "General"}`
-                                        }
-                                      />
+                                            : `${item.subject || "General"}`}
+                                        </Text>
                                       <Paragraph className="user-profile-page__quote-text">
                                         {item.selected_text}
                                       </Paragraph>
+                                      </div>
                                     </List.Item>
                                   )}
                                 />
