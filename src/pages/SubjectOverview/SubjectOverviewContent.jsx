@@ -129,22 +129,6 @@ function SubjectOverviewContent({ subjectId }) {
   }, [profile]);
   const completedCount = subjectNotes.filter((note) => completedNoteUrls.has(note.url)).length;
   const progressPercent = subjectNotes.length > 0 ? Math.round((completedCount / subjectNotes.length) * 100) : 0;
-  const notesCompletedLabel =
-    language === "cn"
-      ? `已完成 ${completedCount} / ${subjectNotes.length || 0} 篇笔记`
-      : `${completedCount} of ${subjectNotes.length || 0} notes completed`;
-  const moduleCountLabel =
-    language === "cn"
-      ? `${conceptPreview.groups.length || subjectNotes.length || 0} 个模块`
-      : `${conceptPreview.groups.length || subjectNotes.length || 0} modules`;
-  const mappedConceptsLabel =
-    language === "cn"
-      ? `${conceptPreview.totalConcepts || 0} 个已映射概念`
-      : `${conceptPreview.totalConcepts || 0} mapped concepts across this discipline.`;
-  const conceptCountLabel =
-    language === "cn"
-      ? `${conceptPreview.totalConcepts} 个概念`
-      : `${conceptPreview.totalConcepts} concepts`;
   const firstTopicUrl = getFirstSubjectTopicUrl(notesIndex, subjectId);
   const recommendedEntry =
     subjectNotes.find((note) => !completedNoteUrls.has(note.url)) ||
@@ -165,6 +149,23 @@ function SubjectOverviewContent({ subjectId }) {
     }
     return buildConceptPreviewByCategory(graphData);
   }, [graphData, resolvedSyllabus]);
+
+  const notesCompletedLabel =
+    language === "cn"
+      ? `已完成 ${completedCount} / ${subjectNotes.length || 0} 篇笔记`
+      : `${completedCount} of ${subjectNotes.length || 0} notes completed`;
+  const moduleCountLabel =
+    language === "cn"
+      ? `${conceptPreview.groups.length || subjectNotes.length || 0} 个模块`
+      : `${conceptPreview.groups.length || subjectNotes.length || 0} modules`;
+  const mappedConceptsLabel =
+    language === "cn"
+      ? `${conceptPreview.totalConcepts || 0} 个已映射概念`
+      : `${conceptPreview.totalConcepts || 0} mapped concepts across this discipline.`;
+  const conceptCountLabel =
+    language === "cn"
+      ? `${conceptPreview.totalConcepts} 个概念`
+      : `${conceptPreview.totalConcepts} concepts`;
 
   const pageLoading = notesIndexLoading || graphLoading || syllabusLoading;
 

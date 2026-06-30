@@ -2,7 +2,10 @@ import { useMemo, useState } from "react";
 import {
   ApartmentOutlined,
   CompassOutlined,
+  DragOutlined,
   NodeIndexOutlined,
+  SplitCellsOutlined,
+  CompressOutlined,
 } from "@ant-design/icons";
 
 import useTranslation from "../../i18n/useTranslation";
@@ -64,6 +67,22 @@ function collectLearningPathSteps(learningPathDraft) {
     }));
 }
 
+function buildSubjectLibrary(items = [], personalizedSteps = []) {
+  const existing = new Set(personalizedSteps.map((step) => normalizeKey(step.key)));
+  return (items || [])
+    .filter((item) => Array.isArray(item.children) && item.children.length > 0)
+    .map((item) => {
+      const steps = collectPathSteps(item.children).filter((step) => !existing.has(normalizeKey(step.key)));
+      return {
+        key: item.key,
+        title: typeof item.label === "string" ? item.label : item.key || "Subject",
+        stepCount: steps.length,
+        steps,
+      };
+    })
+    .filter((subject) => subject.stepCount > 0);
+}
+
 const LearningNavigationPanel = ({
   items,
   currentNoteUrl,
@@ -81,7 +100,8 @@ const LearningNavigationPanel = ({
   const { t } = useTranslation();
   const [editMode, setEditMode] = useState(false);
   const [draggedKey, setDraggedKey] = useState("");
-  const [addCandidateKey, setAddCandidateKey] = useState("");
+  const [dragPayload, setDragPayload] = useState(null);
+  const [isPathDropActive, setIsPathDropActive] = useState(false);
   const normalizedCurrent = normalizeKey(currentNoteUrl);
   const personalizedSteps = useMemo(
     () => collectLearningPathSteps(learningPathDraft),
@@ -109,6 +129,10 @@ const LearningNavigationPanel = ({
     const existing = new Set(personalizedSteps.map((step) => normalizeKey(step.key)));
     return collectPathSteps(items || []).filter((step) => !existing.has(normalizeKey(step.key)));
   }, [items, personalizedSteps]);
+  const subjectLibrary = useMemo(
+    () => buildSubjectLibrary(items, personalizedSteps),
+    [items, personalizedSteps],
+  );
   const initialExpandedKey = useMemo(() => {
     const currentSection = subjectSections.find((section) =>
       section.steps.some((step) => normalizeKey(step.key) === normalizedCurrent),
@@ -130,6 +154,82 @@ const LearningNavigationPanel = ({
       else next.add(sectionKey);
       return next;
     });
+  };
+
+  const addCandidateToPath = (candidate) => {
+    if (!candidate || typeof onAddPathNode !== "function") return;
+    onAddPathNode(candidate);
+  };
+
+  const addSubjectToPath = (subject) => {
+    if (!subject?.steps?.length || typeof onAddPathNode !== "function") return;
+    onAddPathNode({
+      type: "subject",
+      title: subject.title,
+      module: subject.title,
+      steps: subject.steps,
+    });
+  };
+
+  const handleLibraryDragStart = (event, payload) => {
+    setDragPayload(payload);
+    setDraggedKey(payload?.type === "course" ? payload.step?.key : "");
+    event.dataTransfer.effectAllowed = "copy";
+    event.dataTransfer.setData("application/x-learning-path-item", JSON.stringify(payload));
+    event.dataTransfer.setData("text/plain", payload?.step?.key || payload?.subject?.key || "");
+  };
+
+  const handlePathDrop = (event) => {
+    if (!editMode) return;
+    event.preventDefault();
+    setIsPathDropActive(false);
+    let payload = dragPayload;
+    const rawPayload = event.dataTransfer.getData("application/x-learning-path-item");
+    if (rawPayload) {
+      try {
+        payload = JSON.parse(rawPayload);
+      } catch {
+        payload = dragPayload;
+      }
+    }
+    if (payload?.type === "subject") addSubjectToPath(payload.subject);
+    if (payload?.type === "course") addCandidateToPath(payload.step);
+    setDragPayload(null);
+    setDraggedKey("");
+  };
+
+  const getRelationTitle = (relation) => {
+    if (relation === "branch") return "Start a side branch from this course.";
+    if (relation === "converge") return "Join branches back into one route here.";
+    return "Continue straight from the previous course.";
+  };
+
+  const renderRelationControls = (step) => {
+    const relationOptions = [
+      { value: "linear", label: "Linear", icon: <NodeIndexOutlined /> },
+      { value: "branch", label: "Split", icon: <SplitCellsOutlined /> },
+      { value: "converge", label: "Join", icon: <CompressOutlined /> },
+    ];
+    return (
+      <div className="learning-nav__edit-row" aria-label={`Edit relation for ${step.title}`}>
+        {relationOptions.map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            className={
+              step.pathRelation === option.value
+                ? "learning-nav__edit-chip learning-nav__edit-chip--active"
+                : "learning-nav__edit-chip"
+            }
+            onClick={() => onUpdatePathNodeRelation?.(step.key, option.value)}
+            title={getRelationTitle(option.value)}
+          >
+            {option.icon}
+            <span>{option.label}</span>
+          </button>
+        ))}
+      </div>
+    );
   };
 
   const renderSteps = (steps, subjectLabel, options = {}) => {
@@ -167,11 +267,12 @@ const LearningNavigationPanel = ({
               onDragStart={(event) => {
                 if (!allowEdit) return;
                 setDraggedKey(step.key);
+                setDragPayload({ type: "path-node", step });
                 event.dataTransfer.effectAllowed = "move";
                 event.dataTransfer.setData("text/plain", step.key);
               }}
               onDragOver={(event) => {
-                if (!allowEdit || !draggedKey) return;
+                if (!allowEdit || !draggedKey || dragPayload?.type === "course") return;
                 event.preventDefault();
                 event.dataTransfer.dropEffect = "move";
               }}
@@ -180,7 +281,10 @@ const LearningNavigationPanel = ({
                 event.preventDefault();
                 handleDropOnStep(step.key);
               }}
-              onDragEnd={() => setDraggedKey("")}
+              onDragEnd={() => {
+                setDraggedKey("");
+                setDragPayload(null);
+              }}
             >
               <button
                 type="button"
@@ -202,31 +306,7 @@ const LearningNavigationPanel = ({
                 </span>
                 <span className="learning-nav__connector learning-nav__connector--right" aria-hidden="true" />
               </button>
-              {allowEdit ? (
-                <div className="learning-nav__edit-row" aria-label={`Edit ${step.title}`}>
-                  <button
-                    type="button"
-                    className={step.pathRelation === "linear" ? "learning-nav__edit-chip learning-nav__edit-chip--active" : "learning-nav__edit-chip"}
-                    onClick={() => onUpdatePathNodeRelation?.(step.key, "linear")}
-                  >
-                    line
-                  </button>
-                  <button
-                    type="button"
-                    className={step.pathRelation === "branch" ? "learning-nav__edit-chip learning-nav__edit-chip--active" : "learning-nav__edit-chip"}
-                    onClick={() => onUpdatePathNodeRelation?.(step.key, "branch")}
-                  >
-                    branch
-                  </button>
-                  <button
-                    type="button"
-                    className={step.pathRelation === "converge" ? "learning-nav__edit-chip learning-nav__edit-chip--active" : "learning-nav__edit-chip"}
-                    onClick={() => onUpdatePathNodeRelation?.(step.key, "converge")}
-                  >
-                    converge
-                  </button>
-                </div>
-              ) : null}
+              {allowEdit ? renderRelationControls(step) : null}
               {allowRemove ? (
                 <button
                   type="button"
@@ -294,13 +374,8 @@ const LearningNavigationPanel = ({
 
   const renderPersonalizedSection = () => {
     if (!hasPersonalizedPath) return null;
-    const completedCount = personalizedSteps.filter((step) => {
-      const stepKey = normalizeKey(step.key);
-      return completedNoteUrls.has(stepKey) || step.pathStatus === "completed";
-    }).length;
     const goalTitle = learningPathDraft?.goal_title || learningPathDraft?.goalTitle || "Personalized path";
     const containsCurrent = personalizedSteps.some((step) => normalizeKey(step.key) === normalizedCurrent);
-    const firstStep = personalizedSteps[0];
     return (
       <section
         className={`learning-nav__section learning-nav__section--personalized ${
@@ -308,31 +383,6 @@ const LearningNavigationPanel = ({
         }`}
       >
         <div className="learning-nav__section-header">
-          <button
-            type="button"
-            className="learning-nav__section-toggle"
-            onClick={() => toggleSection("personalized")}
-            aria-expanded={effectiveExpandedKeys.has("personalized")}
-          >
-            <span className="learning-nav__section-icon" aria-hidden="true">
-              <NodeIndexOutlined />
-            </span>
-            <span className="learning-nav__section-copy">
-              <span className="learning-nav__section-title">{goalTitle}</span>
-              <span className="learning-nav__section-meta">
-                {completedCount}/{personalizedSteps.length} {t("learningPath.steps")} · personalized
-              </span>
-            </span>
-          </button>
-          {firstStep ? (
-            <button
-              type="button"
-              className="learning-nav__section-start"
-              onClick={() => onSelect(firstStep.key)}
-            >
-              {containsCurrent ? t("learningPath.resume") : t("learningPath.open")}
-            </button>
-          ) : null}
           <button
             type="button"
             className={`learning-nav__section-start ${editMode ? "learning-nav__section-start--active" : ""}`}
@@ -343,39 +393,63 @@ const LearningNavigationPanel = ({
         </div>
         {editMode ? (
           <div className="learning-nav__editor">
-            <div className="learning-nav__editor-add">
-              <select
-                className="learning-nav__editor-select"
-                value={addCandidateKey}
-                onChange={(event) => setAddCandidateKey(event.target.value)}
-              >
-                <option value="">Add a course...</option>
-                {addCandidateSteps.map((step) => (
-                  <option key={step.key} value={step.key}>
-                    {[step.module, step.title].filter(Boolean).join(" / ")}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                className="learning-nav__editor-add-btn"
-                disabled={!addCandidateKey || typeof onAddPathNode !== "function"}
-                onClick={() => {
-                  const candidate = addCandidateSteps.find((step) => step.key === addCandidateKey);
-                  if (!candidate) return;
-                  onAddPathNode(candidate);
-                  setAddCandidateKey("");
-                }}
-              >
-                Add
-              </button>
+            <div className="learning-nav__library" aria-label="Course library">
+              {subjectLibrary.map((subject) => (
+                <button
+                  key={subject.key}
+                  type="button"
+                  className="learning-nav__library-card learning-nav__library-card--subject"
+                  draggable
+                  onDragStart={(event) => handleLibraryDragStart(event, { type: "subject", subject })}
+                  onClick={() => addSubjectToPath(subject)}
+                  title={`Add ${subject.title}`}
+                >
+                  <span className="learning-nav__library-card-icon" aria-hidden="true">
+                    <ApartmentOutlined />
+                  </span>
+                  <span className="learning-nav__library-card-copy">
+                    <span className="learning-nav__library-card-title">{subject.title}</span>
+                    <span className="learning-nav__library-card-meta">{subject.stepCount} courses</span>
+                  </span>
+                  <DragOutlined />
+                </button>
+              ))}
+              {addCandidateSteps.map((step) => (
+                <button
+                  key={step.key}
+                  type="button"
+                  className="learning-nav__library-card"
+                  draggable
+                  onDragStart={(event) => handleLibraryDragStart(event, { type: "course", step })}
+                  onClick={() => addCandidateToPath(step)}
+                  title={`Add ${step.title}`}
+                >
+                  <span className="learning-nav__library-card-copy">
+                    {step.module ? <span className="learning-nav__library-card-meta">{step.module}</span> : null}
+                    <span className="learning-nav__library-card-title">{step.title}</span>
+                  </span>
+                  <DragOutlined />
+                </button>
+              ))}
             </div>
-            <p className="learning-nav__editor-hint">Drag cards to reorder. Mark branch or converge when a node splits or rejoins the path.</p>
           </div>
         ) : null}
-        {effectiveExpandedKeys.has("personalized")
-          ? renderSteps(personalizedSteps, goalTitle, { allowRemove: true, allowEdit: editMode })
-          : null}
+        <div
+          className={`learning-nav__drop-zone ${isPathDropActive ? "learning-nav__drop-zone--active" : ""}`}
+          onDragOver={(event) => {
+            if (!editMode) return;
+            event.preventDefault();
+            event.dataTransfer.dropEffect =
+              dragPayload?.type === "path-node" ? "move" : "copy";
+            setIsPathDropActive(true);
+          }}
+          onDragLeave={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) setIsPathDropActive(false);
+          }}
+          onDrop={handlePathDrop}
+        >
+          {renderSteps(personalizedSteps, goalTitle, { allowRemove: true, allowEdit: editMode })}
+        </div>
       </section>
     );
   };

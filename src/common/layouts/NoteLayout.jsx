@@ -595,34 +595,56 @@ const NoteLayout = () => {
   }, [loadLearningPath]);
 
   const handleAddPathNode = useCallback(async (candidate) => {
-    if (!learningPathDraft || !candidate?.key) return;
-    const noteUrl = normalizeMenuKey(candidate.key);
+    if (!learningPathDraft) return;
     const existing = new Set((learningPathDraft.nodes || []).map((node) => normalizeMenuKey(node.note_url || node.noteUrl || "")));
-    if (existing.has(noteUrl)) {
-      message.info("This course is already in the path.");
+    let candidates = [];
+    if (candidate?.type === "subject" && Array.isArray(candidate.steps)) {
+      candidates = candidate.steps;
+    } else if (candidate?.key) {
+      candidates = [candidate];
+    }
+    if (candidates.length === 0) return;
+    const newCandidates = candidates
+      .map((item) => ({ ...item, key: normalizeMenuKey(item.key) }))
+      .filter((item) => item.key && !existing.has(item.key));
+    if (newCandidates.length === 0) {
+      const duplicateMessage =
+        candidate?.type === "subject"
+          ? "This subject is already in the path."
+          : "This course is already in the path.";
+      message.info(duplicateMessage);
       return;
     }
     const nextNodes = [
       ...(learningPathDraft.nodes || []),
-      {
-        node_id: pathToLearningNodeId(noteUrl),
-        title: candidate.title || noteUrl,
-        subject: pathToSubject(noteUrl),
-        note_url: noteUrl,
-        status: "planned",
-        metadata: {
-          source: "manual_edit",
-          subject_title: candidate.module || pathToSubject(noteUrl),
-          path_relation: "linear",
-        },
-      },
+      ...newCandidates.map((item) => {
+        const noteUrl = normalizeMenuKey(item.key);
+        return {
+          node_id: pathToLearningNodeId(noteUrl),
+          title: item.title || noteUrl,
+          subject: pathToSubject(noteUrl),
+          note_url: noteUrl,
+          status: "planned",
+          metadata: {
+            source: candidate?.type === "subject" ? "manual_subject_drag" : "manual_edit",
+            subject_title: item.module || candidate?.title || pathToSubject(noteUrl),
+            path_relation: "linear",
+          },
+        };
+      }),
     ];
     const nextDraft = {
       ...learningPathDraft,
       nodes: nextNodes,
       edges: buildLearningPathEdges(nextNodes),
     };
-    await persistLearningPathDraft(nextDraft, "Course added to path.", "Added learning path node");
+    await persistLearningPathDraft(
+      nextDraft,
+      newCandidates.length > 1 ? `${newCandidates.length} courses added to path.` : "Course added to path.",
+      candidate?.type === "subject"
+        ? "Added subject to learning path"
+        : "Added learning path node",
+    );
   }, [learningPathDraft, persistLearningPathDraft]);
 
   const handleReorderPathNodes = useCallback(async (orderedNoteUrls) => {
