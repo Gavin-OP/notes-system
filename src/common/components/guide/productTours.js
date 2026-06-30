@@ -139,7 +139,7 @@ export function createNoteGuideSteps(refs, t = (key, fallback) => fallback || ke
       title: t("guide.note.4.title", "Ask, capture, test"),
       description: t(
         "guide.note.4.description",
-        "Use Q&A for quick help, Notes to collect your own takeaways, and Quiz to check understanding. Outline keeps you oriented inside long notes.",
+        "Use Notes to collect your own takeaways and Quiz to check understanding. The floating assistant stays available for questions anywhere in the product.",
       ),
       target: () => assistantAreaRef?.current,
       placement: "left",
@@ -184,8 +184,8 @@ export async function prepareNoteTourStep(stepIndex, controls) {
       } else {
         setAssistantMode("dock");
         setAssistantCollapsed(false);
-        setAssistantDockTab("qa");
-        setAssistantTool("qa");
+        setAssistantDockTab("notes");
+        setAssistantTool("notes");
       }
       break;
     case 5:

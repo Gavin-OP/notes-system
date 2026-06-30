@@ -20,7 +20,6 @@ import "./AssistantWorkspace.css";
 const { Text, Paragraph } = Typography;
 
 function AssistantWorkspace({
-  noteName = "Current Note",
   activeTool = "qa",
   onToolChange,
   qaInput,
@@ -146,9 +145,6 @@ function AssistantWorkspace({
 
       {activeTool === "qa" && (
         <div className="assistant-workspace__body">
-          <Text type="secondary">
-            Ask about the current note. You can also attach references, images, and files.
-          </Text>
           {qaError ? <Alert type="error" showIcon message={qaError} /> : null}
           <div className="assistant-workspace__chat-log">
             {qaMessages.map((msg) => (
@@ -168,9 +164,11 @@ function AssistantWorkspace({
             ))}
           </div>
           <div className="assistant-workspace__qa-tools">
-            <Button size="small" icon={<LinkOutlined />} onClick={onOpenReferencePicker}>
-              Reference notes {qaReferenceCount > 0 ? `(${qaReferenceCount})` : ""}
-            </Button>
+            {onOpenReferencePicker ? (
+              <Button size="small" icon={<LinkOutlined />} onClick={onOpenReferencePicker}>
+                Reference notes {qaReferenceCount > 0 ? `(${qaReferenceCount})` : ""}
+              </Button>
+            ) : null}
             <Button
               size="small"
               icon={<FileImageOutlined />}
@@ -245,7 +243,7 @@ function AssistantWorkspace({
             <Input.TextArea
               value={qaInput}
               onChange={(event) => onQaInputChange?.(event.target.value)}
-              placeholder={`Ask about ${noteName}...`}
+              placeholder="Message..."
               onPressEnter={handleQaPressEnter}
               autoSize={false}
               rows={2}

@@ -227,7 +227,7 @@ export const translations = {
       "Open Mindmap from the workspace bar when a linear list is not enough—see how concepts relate across the subject.",
     "guide.note.4.title": "Ask, capture, test",
     "guide.note.4.description":
-      "Use Q&A for quick help, Notes to collect your own takeaways, and Quiz to check understanding. Outline keeps you oriented inside long notes.",
+      "Use Notes to collect your own takeaways and Quiz to check understanding. The floating assistant stays available for questions anywhere in the product.",
     "guide.note.5.title": "Workspace shortcuts",
     "guide.note.5.description":
       "Mark notes complete, search, open the assistant, or use More for theme, language, narration, versions, and profile.",
@@ -436,7 +436,7 @@ export const translations = {
     "guide.note.3.title": "探索概念连接",
     "guide.note.3.description": "当线性列表不够时，可从工具栏打开知识图谱，查看学科内概念之间的关系。",
     "guide.note.4.title": "提问、记录、测验",
-    "guide.note.4.description": "使用 Q&A 获取帮助，用 Notes 记录自己的理解，用 Quiz 检查掌握情况。Outline 帮助你在长笔记中定位。",
+    "guide.note.4.description": "用 Notes 记录自己的理解，用 Quiz 检查掌握情况。右下角的浮动助手可随时回答产品内的问题。",
     "guide.note.5.title": "工作区快捷入口",
     "guide.note.5.description": "你可以标记完成、搜索、打开助手，或在更多菜单中切换主题、语言、朗读、版本和个人资料。",
   },

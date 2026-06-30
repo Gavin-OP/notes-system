@@ -26,6 +26,7 @@ import NoteWorkspaceBar from "../components/NoteWorkspaceBar";
 import OutlineSider from "../components/OutlineSider";
 import FloatingOutlineButton from "../components/FloatingOutlineButton";
 import AssistantWorkspace from "../components/assistant/AssistantWorkspace";
+import { useGlobalAssistant } from "../components/assistant/GlobalAssistantContext";
 import { PENDING_NOTES_TOUR_KEY } from "../components/guide/AppFeatureTour";
 import {
   createNoteGuideSteps,
@@ -35,7 +36,6 @@ import {
 import { buildMenuItems, isSubjectOverviewPath } from "../../utils/notesIndexUtils";
 import { setTheme, setLanguage } from "../../redux/preferenceSlice";
 import {
-  requestAssistantQa,
   requestAssistantQuiz,
   requestAssistantQuizEvaluate,
 } from "../api/assistant";
@@ -50,7 +50,6 @@ const { Header, Sider, Content } = Layout;
 
 const LEARNING_SUPPORT_TABS = [
   { id: "outline", labelKey: "learningSupport.tabs.outline" },
-  { id: "qa", labelKey: "learningSupport.tabs.qa", tool: "qa" },
   { id: "notes", labelKey: "learningSupport.tabs.notes", tool: "notes" },
   { id: "quiz", labelKey: "learningSupport.tabs.quiz", tool: "quiz" },
 ];
@@ -179,20 +178,6 @@ function findBreadcrumbLabels(items, targetKey, trail = []) {
   return null;
 }
 
-function resolveQaAnswerText(payload) {
-  if (!payload) return "";
-  if (typeof payload === "string") return payload;
-  if (typeof payload.answer_markdown === "string") return payload.answer_markdown;
-  if (typeof payload.markdown === "string") return payload.markdown;
-  if (typeof payload.answer === "string") return payload.answer;
-  if (typeof payload.response === "string") return payload.response;
-  if (typeof payload.message === "string") return payload.message;
-  if (typeof payload.content === "string") return payload.content;
-  if (typeof payload.text === "string") return payload.text;
-  if (payload.data && typeof payload.data === "object") return resolveQaAnswerText(payload.data);
-  return JSON.stringify(payload);
-}
-
 function resolveQuizQuestions(payload) {
   const candidate =
     payload?.questions ||
@@ -242,6 +227,7 @@ const NoteLayout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const { openAssistant } = useGlobalAssistant();
 
   // redux state
   const themeValue = useSelector((state) => state.preference.theme);
@@ -259,19 +245,13 @@ const NoteLayout = () => {
   const [showFloatingButton, setShowFloatingButton] = useState(true);
   const [assistantMode, setAssistantMode] = useState("dock");
   const [assistantDockTab, setAssistantDockTab] = useState("outline");
-  const [assistantTool, setAssistantTool] = useState("qa");
+  const [assistantTool, setAssistantTool] = useState("notes");
   const [assistantCollapsed, setAssistantCollapsed] = useState(false);
   const [immersiveMode, setImmersiveMode] = useState(false);
   const [assistantDockWidth, setAssistantDockWidth] = useState(420);
   const [assistantModalOpen, setAssistantModalOpen] = useState(false);
   const [referencePickerOpen, setReferencePickerOpen] = useState(false);
   const [selectedReferencePaths, setSelectedReferencePaths] = useState([]);
-  const [qaInput, setQaInput] = useState("");
-  const [qaMessages, setQaMessages] = useState([]);
-  const [qaImageFiles, setQaImageFiles] = useState([]);
-  const [qaAttachmentFiles, setQaAttachmentFiles] = useState([]);
-  const [qaPending, setQaPending] = useState(false);
-  const [qaError, setQaError] = useState("");
   const [scratchHtml, setScratchHtml] = useState("");
   const [scratchSavedHint, setScratchSavedHint] = useState("");
   const [quizObjective, setQuizObjective] = useState("check");
@@ -612,14 +592,9 @@ const NoteLayout = () => {
   const handleAskWithSelectedText = (selection) => {
     const selectedText = String(selection?.selectedText || "").trim();
     if (!selectedText) return;
-    setQaInput(`Explain this selected passage from ${noteName}:\n\n"${selectedText}"`);
-    setAssistantDockTab("qa");
-    setAssistantTool("qa");
-    if (immersiveMode) {
-      setAssistantModalOpen(true);
-    } else {
-      setAssistantCollapsed(false);
-    }
+    openAssistant({
+      prompt: `Explain this selected passage from ${noteName}:\n\n"${selectedText}"`,
+    });
   };
 
   const handleGenerateQuizFromSelection = (selection) => {
@@ -807,51 +782,6 @@ const NoteLayout = () => {
     [currentMeta?.url, currentNoteContent, noteName, selectedReferenceItems],
   );
 
-  const handleSendQa = async () => {
-    const trimmedQuestion = qaInput.trim();
-    if (!trimmedQuestion || qaPending) return;
-
-    setQaError("");
-    const userMessage = {
-      id: `qa-user-${Date.now()}`,
-      role: "user",
-      text: trimmedQuestion,
-    };
-    const nextMessages = [...qaMessages, userMessage];
-    setQaMessages(nextMessages);
-    setQaInput("");
-    setQaPending(true);
-
-    try {
-      const payload = {
-        question: trimmedQuestion,
-        history: nextMessages.slice(-12).map((item) => ({ role: item.role, content: item.text })),
-        ...assistantContextPayload,
-      };
-      const response = await requestAssistantQa(payload, {
-        images: qaImageFiles,
-        attachments: qaAttachmentFiles,
-      });
-      const answerText = resolveQaAnswerText(response) || "No response content.";
-      setQaMessages((prev) => [
-        ...prev,
-        {
-          id: `qa-assistant-${Date.now()}`,
-          role: "assistant",
-          text: answerText,
-        },
-      ]);
-      setQaImageFiles([]);
-      setQaAttachmentFiles([]);
-    } catch (error) {
-      const errorText = error instanceof Error ? error.message : "Q&A request failed.";
-      setQaError(errorText);
-      message.error(errorText);
-    } finally {
-      setQaPending(false);
-    }
-  };
-
   const handleGenerateQuiz = async () => {
     if (!quizObjective || !quizDifficulty || quizPending || quizQuestionTypes.length === 0) return;
     setQuizError("");
@@ -918,37 +848,19 @@ const NoteLayout = () => {
     window.setTimeout(() => setScratchSavedHint(""), 1500);
   };
 
-  const removeSelectedQaFile = (list, fileName) => list.filter((file) => file.name !== fileName);
-
   const renderAssistantWorkspace = (hideToolTabs = false) => (
     <AssistantWorkspace
       noteName={noteName}
       activeTool={assistantTool}
       onToolChange={setAssistantTool}
-      qaInput={qaInput}
-      onQaInputChange={setQaInput}
-      qaMessages={qaMessages}
-      onSendQa={handleSendQa}
       onOpenReferencePicker={() => setReferencePickerOpen(true)}
-      onPickImages={(files) => setQaImageFiles((prev) => [...prev, ...files])}
-      onPickAttachments={(files) => setQaAttachmentFiles((prev) => [...prev, ...files])}
       qaReferenceCount={selectedReferenceItems.length}
-      qaImageCount={qaImageFiles.length}
-      qaAttachmentCount={qaAttachmentFiles.length}
       qaReferenceNames={selectedReferenceItems.map((item) => item.label)}
-      qaImageNames={qaImageFiles.map((file) => file.name)}
-      qaAttachmentNames={qaAttachmentFiles.map((file) => file.name)}
       onRemoveQaReference={(name) =>
         setSelectedReferencePaths((prev) =>
           prev.filter((path) => selectedReferenceItems.find((item) => item.path === path)?.label !== name),
         )
       }
-      onRemoveQaImage={(name) => setQaImageFiles((prev) => removeSelectedQaFile(prev, name))}
-      onRemoveQaAttachment={(name) =>
-        setQaAttachmentFiles((prev) => removeSelectedQaFile(prev, name))
-      }
-      qaPending={qaPending}
-      qaError={qaError}
       scratchText={scratchHtml}
       onScratchHtmlChange={setScratchHtml}
       onScratchSave={handleScratchSave}
@@ -1268,14 +1180,14 @@ const NoteLayout = () => {
         </Checkbox.Group>
       </Modal>
       <Modal
-        title="Assistant"
+        title={assistantTool === "quiz" ? "Quiz" : "Study tools"}
         open={assistantModalOpen}
         onCancel={() => setAssistantModalOpen(false)}
         footer={null}
         width={920}
         className="note-layout__assistant-modal"
       >
-        {renderAssistantWorkspace(false)}
+        {renderAssistantWorkspace(true)}
       </Modal>
     </Layout>
   );

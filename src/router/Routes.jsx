@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-route
 import { lazy, Suspense, useEffect } from "react";
 import ReactGA from "react-ga4";
 
+import GlobalAssistantProvider from "../common/components/assistant/GlobalAssistantProvider";
 import HomePage from "../pages/HomePage";
 import { isLocalhost } from "../utils/analyticsUtils";
 import "../admin/styles/admin.css";
@@ -130,7 +131,9 @@ export default function AppRoutes() {
 
   return (
     <BrowserRouter basename={runtimeBasename}>
-      <RoutesWithTracking />
+      <GlobalAssistantProvider>
+        <RoutesWithTracking />
+      </GlobalAssistantProvider>
     </BrowserRouter>
   );
 }
