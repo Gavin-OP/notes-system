@@ -13,8 +13,7 @@ import {
 } from "../../redux/notesIndexSlice";
 
 import MarkdownRenderer from "./components/MarkdownRenderer";
-import { findMeta, getFirstSubjectTopicUrl, getSubjectOverviewUrl, isIndexNoteItem, isNavigableSubjectSlug, isSubjectOverviewPath } from "../../utils/notesIndexUtils";
-import SubjectOverviewContent from "../SubjectOverview/SubjectOverviewContent";
+import { findMeta, getFirstSubjectTopicUrl, isIndexNoteItem, isNavigableSubjectSlug } from "../../utils/notesIndexUtils";
 import { getOutline } from "../../utils/markdownUtils";
 import {
   getNoteVersionContent,
@@ -117,12 +116,10 @@ function NotePage() {
   const [versionApiAvailable, setVersionApiAvailable] = useState(false);
   const [restoreCandidates, setRestoreCandidates] = useState([]);
   const [restorePending, setRestorePending] = useState(false);
-  const isOverview = isSubjectOverviewPath(notePathWithoutHash);
   const translatedNote = useTranslatedContent(noteContent, {
     sourceType: "markdown_note",
     sourceId: notePathWithoutHash || "note",
     contentVersion: selectedVersionId || "current",
-    disabled: isOverview,
   });
   const displayNoteContent = translatedNote.content || noteContent;
 
@@ -170,19 +167,6 @@ function NotePage() {
 
   useEffect(() => {
     if (!registerWorkspaceMeta) return undefined;
-    if (isOverview) {
-      registerWorkspaceMeta({
-        showMindmap: isNavigableSubjectSlug(subjectSlug),
-        mindmapSubjectSlug: subjectSlug,
-        versions: [],
-        selectedVersionId: "current",
-        onVersionChange: () => {},
-        onRestoreAnnotations: () => {},
-        restorePending: false,
-        restoreCandidateCount: 0,
-      });
-      return () => registerWorkspaceMeta(null);
-    }
     registerWorkspaceMeta({
       showMindmap: isNavigableSubjectSlug(subjectSlug),
       mindmapSubjectSlug: subjectSlug,
@@ -196,7 +180,6 @@ function NotePage() {
     return () => registerWorkspaceMeta(null);
   }, [
     registerWorkspaceMeta,
-    isOverview,
     subjectSlug,
     noteVersions,
     selectedVersionId,
@@ -228,7 +211,7 @@ function NotePage() {
   }, [noteSlugTrimmed, notesIndex, navigate]);
 
   useEffect(() => {
-    if (!notesIndex || !noteSlugTrimmed || isOverview) return;
+    if (!notesIndex || !noteSlugTrimmed) return;
     const url = `/note/${noteSlugTrimmed.split("#")[0].replace(/^\/+/, "")}`;
     const meta = findMeta(notesIndex, url);
     if (!meta || !isIndexNoteItem(meta) || !subjectSlug) return;
@@ -236,7 +219,7 @@ function NotePage() {
     if (firstTopicUrl) {
       navigate(firstTopicUrl, { replace: true });
     }
-  }, [notesIndex, noteSlugTrimmed, isOverview, subjectSlug, navigate]);
+  }, [notesIndex, noteSlugTrimmed, subjectSlug, navigate]);
 
   useEffect(() => {
     if (currentSubjectId) {
@@ -247,22 +230,6 @@ function NotePage() {
   }, [currentSubjectId, dispatch]);
 
   useEffect(() => {
-    if (!isOverview || !subjectSlug) return;
-    dispatch(
-      setCurrentNoteMeta({
-        url: getSubjectOverviewUrl(subjectSlug),
-        title: "Overview",
-        directory: subjectSlug,
-        name: "overview",
-      }),
-    );
-    dispatch(setCurrentNoteOutline([]));
-    dispatch(setCurrentNoteContent(""));
-    setNoteContent("");
-  }, [isOverview, subjectSlug, dispatch]);
-
-  useEffect(() => {
-    if (isOverview) return;
     if (notesIndex && noteSlugTrimmed) {
       setNoteContent("");
       const url = `/note/${noteSlugTrimmed}`;
@@ -298,10 +265,9 @@ function NotePage() {
       }
       fetchNote();
     }
-  }, [isOverview, notesIndex, noteSlugTrimmed, dispatch, selectedVersionId, subjectSlug, topicSlug, versionApiAvailable]);
+  }, [notesIndex, noteSlugTrimmed, dispatch, selectedVersionId, subjectSlug, topicSlug, versionApiAvailable]);
 
   useEffect(() => {
-    if (isOverview) return;
     let mounted = true;
     async function loadVersions() {
       setNoteVersions([]);
@@ -324,20 +290,18 @@ function NotePage() {
     return () => {
       mounted = false;
     };
-  }, [isOverview, subjectSlug, topicSlug]);
+  }, [subjectSlug, topicSlug]);
 
   useEffect(() => {
-    if (isOverview) return;
     dispatch(setCurrentNoteOutline(outline));
-  }, [isOverview, displayNoteContent, outline, dispatch]);
+  }, [displayNoteContent, outline, dispatch]);
 
   useEffect(() => {
-    if (isOverview) return;
     dispatch(setCurrentNoteContent(displayNoteContent));
-  }, [isOverview, displayNoteContent, dispatch]);
+  }, [displayNoteContent, dispatch]);
 
   useEffect(() => {
-    if (isOverview || !displayNoteContent) return;
+    if (!displayNoteContent) return;
 
     const resolveAnchorElement = () => {
       const rawHash = location.hash?.replace(/^#/, "");
@@ -415,15 +379,7 @@ function NotePage() {
 
     const timer = setTimeout(attemptScroll, 0);
     return () => clearTimeout(timer);
-  }, [isOverview, displayNoteContent, location.hash, location.pathname]);
-
-  if (isOverview && subjectSlug) {
-    return (
-      <div className="note-page">
-        <SubjectOverviewContent subjectId={subjectSlug} />
-      </div>
-    );
-  }
+  }, [displayNoteContent, location.hash, location.pathname]);
 
   return (
     <>

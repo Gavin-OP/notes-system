@@ -3,6 +3,7 @@
  * Provides navigation and view switching controls
  */
 import { useNavigate } from "react-router-dom";
+import { getSubjectOverviewUrl } from "../../../utils/notesIndexUtils";
 import {
   AppstoreOutlined,
   BranchesOutlined,
@@ -24,7 +25,7 @@ const MindmapToolbar = ({ subjectId, currentType, onTypeChange, subjectName }) =
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate(`/note/${subjectId}/overview`);
+    navigate(getSubjectOverviewUrl(subjectId));
   };
 
   const viewOptions = [

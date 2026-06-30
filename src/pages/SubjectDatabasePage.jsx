@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Button, Card, Col, Empty, Input, Row, Space, Spin, Typography } from "antd";
-import { ApartmentOutlined, SearchOutlined } from "@ant-design/icons";
+import { ApartmentOutlined, ArrowLeftOutlined, SearchOutlined } from "@ant-design/icons";
 
 import SemanticChip from "../common/components/SemanticChip";
 import { loadGraphData } from "../common/components/mindmap/utils/graphLoader";
@@ -111,6 +111,9 @@ function SubjectDatabasePage() {
     <main className="subject-database-page">
       <div className="subject-database-page__container">
         <Space direction="vertical" size={16} className="subject-database-page__header">
+          <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => navigate("/")}>
+            {t("common.backToHome", "Back to Home")}
+          </Button>
           <div>
             <Title level={2} className="subject-database-page__title">
               {t("subject.database.title", "Subject Database")}

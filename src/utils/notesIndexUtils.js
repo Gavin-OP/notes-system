@@ -128,7 +128,7 @@ function extractSubjectIdFromMenuKey(key) {
 }
 
 function getSubjectOverviewUrl(subjectId) {
-  return normalizeUrl(`/note/${subjectId}/${SUBJECT_OVERVIEW_SEGMENT}`);
+  return normalizeUrl(`/subject/${subjectId}`);
 }
 
 function isSubjectOverviewPath(notePath) {

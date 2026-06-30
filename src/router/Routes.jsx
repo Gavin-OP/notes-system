@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate, useParams } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import ReactGA from "react-ga4";
 
@@ -40,6 +40,19 @@ function RouteLoading() {
   );
 }
 
+function LegacySubjectOverviewRedirect() {
+  const { subjectId = "" } = useParams();
+  return <Navigate to={`/subject/${subjectId}`} replace />;
+}
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
+  return null;
+}
+
 // page view tracking
 function usePageTracking() {
   const location = useLocation();
@@ -57,7 +70,9 @@ function usePageTracking() {
 function RoutesWithTracking() {
   usePageTracking();
   return (
-    <Suspense fallback={<RouteLoading />}>
+    <>
+      <ScrollToTop />
+      <Suspense fallback={<RouteLoading />}>
       <Routes>
         <Route index element={<HomePage />} />
 
@@ -73,6 +88,7 @@ function RoutesWithTracking() {
         </Route>
 
         {/* Note content routes */}
+        <Route path="note/:subjectId/overview" element={<LegacySubjectOverviewRedirect />} />
         <Route path="note/*" element={<NoteLayout />}>
           <Route path="*" element={<NotePage />} />
         </Route>
@@ -116,6 +132,7 @@ function RoutesWithTracking() {
         <Route path="*" element={<HomePage />} />
       </Routes>
     </Suspense>
+    </>
   );
 }
 

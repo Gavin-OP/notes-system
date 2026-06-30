@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, Card, Col, Empty, Input, Row, Space, Spin, Typography } from "antd";
-import { SearchOutlined, UpOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, SearchOutlined } from "@ant-design/icons";
 
 import { getCareerTaxonomy } from "../common/api/careers";
 import SemanticChip from "../common/components/SemanticChip";
@@ -123,16 +123,10 @@ function ExploreCareersPage() {
   return (
     <div className="explore-careers-page">
       <div className="explore-careers-page__container">
-        <button
-          type="button"
-          className="ns-career-nav-link explore-careers-page__back-profile"
-          onClick={() => navigate("/user/profile", { state: { dashboard: "career" } })}
-        >
-          <UpOutlined className="ns-career-nav-link__icon" aria-hidden="true" />
-          <span className="ns-career-nav-link__label">{t("career.explore.backProfile")}</span>
-        </button>
-
         <Space direction="vertical" size={16} className="explore-careers-page__header">
+          <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => navigate("/")}>
+            {t("common.backToHome", "Back to Home")}
+          </Button>
           <div>
             <Title level={2} className="explore-careers-page__title">
               {t("career.explore.title")}
