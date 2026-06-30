@@ -49,6 +49,29 @@
   line-height: 1.45;
 }
 
+.learning-nav__create-path {
+  margin-top: var(--ns-space-2);
+  border: 1px solid var(--ns-color-primary-border);
+  border-radius: var(--ns-radius-pill);
+  background: var(--ns-color-primary-bg);
+  color: var(--ns-color-primary);
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.learning-nav__create-path:hover {
+  border-color: var(--ns-color-primary-border-hover);
+  background: var(--ns-color-primary-bg-hover);
+}
+
+.learning-nav__create-path:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .learning-nav__legend {
   display: flex;
   gap: var(--ns-space-2);
@@ -109,6 +132,18 @@
 
 .learning-nav__section--active {
   border-color: var(--ns-color-primary-border);
+}
+
+.learning-nav__section--personalized {
+  border-color: var(--ns-chip-wisdom-border);
+  background:
+    linear-gradient(180deg, var(--ns-chip-wisdom-bg) 0%, var(--ns-color-bg-container) 58%);
+}
+
+.learning-nav__section--personalized .learning-nav__section-icon {
+  color: var(--ns-chip-wisdom-text);
+  background: var(--ns-chip-wisdom-bg);
+  border-color: var(--ns-chip-wisdom-border);
 }
 
 .learning-nav__section-header {
@@ -263,6 +298,40 @@
   background: var(--ns-color-primary-bg-hover);
   box-shadow: var(--ns-shadow-primary);
   transform: translateY(-1px);
+}
+
+.learning-nav__remove-node {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: 50%;
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text-tertiary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--ns-duration-fast) var(--ns-ease-out),
+    color var(--ns-duration-fast) var(--ns-ease-out),
+    border-color var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.learning-nav__step:hover .learning-nav__remove-node,
+.learning-nav__remove-node:focus-visible {
+  opacity: 1;
+}
+
+.learning-nav__remove-node:hover {
+  color: var(--ns-chip-coral-text);
+  border-color: var(--ns-chip-coral-border);
 }
 
 .learning-nav__step--current .learning-nav__node {

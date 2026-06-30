@@ -206,6 +206,34 @@ export function getLearningPath() {
   return assistantRequest("/api/v1/assistant/learning-path");
 }
 
+export function generateLearningPath(payload) {
+  return assistantRequest("/api/v1/assistant/learning-path/generate", {
+    method: "POST",
+    body: JSON.stringify(payload || {}),
+  });
+}
+
+export function saveLearningPathDraft(payload) {
+  return assistantRequest("/api/v1/assistant/learning-path/draft", {
+    method: "PUT",
+    body: JSON.stringify(payload || {}),
+  });
+}
+
+export function commitLearningPath(payload = {}) {
+  return assistantRequest("/api/v1/assistant/learning-path/commit", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function decideAssistantAction(proposalId, payload) {
+  return assistantRequest(`/api/v1/assistant/actions/${encodeURIComponent(proposalId)}/decision`, {
+    method: "POST",
+    body: JSON.stringify(payload || {}),
+  });
+}
+
 export function requestAssistantQuiz(payload) {
   validateAssistantQuizPayload(payload);
   return assistantRequest("/api/v1/assistant/quiz", {

@@ -38,6 +38,10 @@ import { setTheme, setLanguage } from "../../redux/preferenceSlice";
 import {
   requestAssistantQuiz,
   requestAssistantQuizEvaluate,
+  commitLearningPath,
+  generateLearningPath,
+  getLearningPath,
+  saveLearningPathDraft,
 } from "../api/assistant";
 import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncompleteMyNote, updateMyGuideState } from "../api/user";
 import useTranslatedContent from "../../i18n/useTranslatedContent";
@@ -265,6 +269,8 @@ const NoteLayout = () => {
   const [quizPending, setQuizPending] = useState(false);
   const [quizError, setQuizError] = useState("");
   const [completedNoteUrls, setCompletedNoteUrls] = useState(new Set());
+  const [learningPathDraft, setLearningPathDraft] = useState(null);
+  const [learningPathPending, setLearningPathPending] = useState(false);
   const [noteQuotes, setNoteQuotes] = useState([]);
   const [completeNotePending, setCompleteNotePending] = useState(false);
   const [notesTourStartToken, setNotesTourStartToken] = useState(0);
@@ -457,6 +463,10 @@ const NoteLayout = () => {
     () => normalizeMenuKey(currentMeta?.url || ""),
     [currentMeta?.url],
   );
+  const currentSubjectSlug = useMemo(() => {
+    const match = currentNoteUrlNormalized.match(/^\/note\/([^/]+)\//);
+    return match?.[1] || "";
+  }, [currentNoteUrlNormalized]);
   const isOverviewPage = isSubjectOverviewPath(currentNoteUrlNormalized);
   const isCurrentNoteCompleted = !isOverviewPage && currentNoteUrlNormalized
     ? completedNoteUrls.has(currentNoteUrlNormalized)
@@ -485,6 +495,92 @@ const NoteLayout = () => {
       mounted = false;
     };
   }, []);
+
+  const loadLearningPath = useCallback(async () => {
+    try {
+      const payload = await getLearningPath();
+      setLearningPathDraft(payload?.draft || null);
+    } catch {
+      setLearningPathDraft(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    async function run() {
+      try {
+        const payload = await getLearningPath();
+        if (!mounted) return;
+        setLearningPathDraft(payload?.draft || null);
+      } catch {
+        if (!mounted) return;
+        setLearningPathDraft(null);
+      }
+    }
+    run();
+    const onPathUpdated = () => {
+      if (mounted) loadLearningPath();
+    };
+    window.addEventListener("learning-path-updated", onPathUpdated);
+    return () => {
+      mounted = false;
+      window.removeEventListener("learning-path-updated", onPathUpdated);
+    };
+  }, [loadLearningPath]);
+
+  const handleGenerateSubjectPath = useCallback(async () => {
+    if (!currentSubjectSlug || learningPathPending) return;
+    setLearningPathPending(true);
+    try {
+      const response = await generateLearningPath({
+        goal_type: "subject",
+        goal_id: currentSubjectSlug,
+        subject_slugs: [currentSubjectSlug],
+        save_as_draft: true,
+        commit: true,
+      });
+      setLearningPathDraft(response?.draft || response?.path?.draft || null);
+      message.success("Learning path created.");
+    } catch (error) {
+      const errorText = error instanceof Error ? error.message : "Could not create learning path.";
+      message.error(errorText);
+    } finally {
+      setLearningPathPending(false);
+    }
+  }, [currentSubjectSlug, learningPathPending]);
+
+  const handleRemovePathNode = useCallback(async (noteUrl) => {
+    if (!learningPathDraft?.nodes?.length || !noteUrl) return;
+    const nextNodes = learningPathDraft.nodes.filter(
+      (node) => normalizeMenuKey(node.note_url || node.noteUrl || "") !== normalizeMenuKey(noteUrl),
+    );
+    const nextEdges = nextNodes.slice(1).map((node, index) => {
+      const previous = nextNodes[index];
+      return {
+        edge_id: `path-edge:${previous.node_id}:${node.node_id}`,
+        source: previous.node_id,
+        target: node.node_id,
+        relation: "precedes",
+        metadata: {},
+      };
+    });
+    const nextDraft = {
+      ...learningPathDraft,
+      nodes: nextNodes,
+      edges: nextEdges,
+    };
+    setLearningPathDraft(nextDraft);
+    try {
+      const response = await saveLearningPathDraft(nextDraft);
+      setLearningPathDraft(response?.draft || nextDraft);
+      await commitLearningPath({ message: "Removed learning path node" });
+      message.success("Path node removed.");
+    } catch (error) {
+      const errorText = error instanceof Error ? error.message : "Could not update learning path.";
+      message.error(errorText);
+      loadLearningPath();
+    }
+  }, [learningPathDraft, loadLearningPath]);
 
   useEffect(() => {
     let mounted = true;
@@ -988,6 +1084,10 @@ const NoteLayout = () => {
                 items={localizedPlainMenuItems}
                 currentNoteUrl={currentNoteUrlNormalized}
                 completedNoteUrls={completedNoteUrls}
+                learningPathDraft={learningPathDraft}
+                learningPathPending={learningPathPending}
+                onGeneratePath={currentSubjectSlug ? handleGenerateSubjectPath : undefined}
+                onRemovePathNode={handleRemovePathNode}
                 isMobile={isMobile}
                 onSelect={(path) => {
                   handleNoteSelect(path);

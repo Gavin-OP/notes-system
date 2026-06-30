@@ -7,13 +7,15 @@ import {
   Col,
   Empty,
   List,
+  message,
   Row,
   Space,
   Spin,
   Typography,
 } from "antd";
-import { ArrowLeftOutlined, BookOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, BookOutlined, NodeIndexOutlined } from "@ant-design/icons";
 
+import { generateLearningPath } from "../common/api/assistant";
 import { getCareerJobDetail } from "../common/api/careers";
 import SemanticChip from "../common/components/SemanticChip";
 import {
@@ -72,6 +74,7 @@ function CareerJobDetailPage() {
   const [errorText, setErrorText] = useState("");
   const [profile, setProfile] = useState(null);
   const [relatedSubjects, setRelatedSubjects] = useState([]);
+  const [pathPending, setPathPending] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -129,6 +132,29 @@ function CareerJobDetailPage() {
     }
   }, [profile?.responsibilities, translatedResponsibilitiesPayload.content]);
 
+  const handleGenerateCareerPath = async () => {
+    if (!profile?.jobId || pathPending) return;
+    setPathPending(true);
+    try {
+      const response = await generateLearningPath({
+        goal_type: "career",
+        goal_id: profile.jobId,
+        goal_title: profile.roleLabel || profile.title,
+        subject_slugs: relatedSubjects.map((subject) => subject.subjectSlug).filter(Boolean),
+        save_as_draft: true,
+        commit: true,
+      });
+      message.success("Career learning path created.");
+      const firstNode = response?.draft?.nodes?.[0] || response?.path?.draft?.nodes?.[0];
+      navigate(firstNode?.note_url || firstNode?.noteUrl || "/");
+    } catch (error) {
+      const errorText = error instanceof Error ? error.message : "Could not create career learning path.";
+      message.error(errorText);
+    } finally {
+      setPathPending(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="career-job-detail-page career-job-detail-page--state">
@@ -172,6 +198,14 @@ function CareerJobDetailPage() {
               <Paragraph className="career-job-detail-page__description">
                 {translatedDescription.content || profile.description}
               </Paragraph>
+              <Button
+                type="primary"
+                icon={<NodeIndexOutlined />}
+                loading={pathPending}
+                onClick={handleGenerateCareerPath}
+              >
+                Create career learning path
+              </Button>
             </Space>
           </Card>
         </Space>

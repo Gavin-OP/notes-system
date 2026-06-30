@@ -50,15 +50,36 @@ function getFirstStep(section) {
   return collectPathSteps(section.children || [section])[0] || null;
 }
 
+function collectLearningPathSteps(learningPathDraft) {
+  const nodes = Array.isArray(learningPathDraft?.nodes) ? learningPathDraft.nodes : [];
+  return nodes
+    .filter((node) => node?.note_url || node?.noteUrl)
+    .map((node) => ({
+      key: node.note_url || node.noteUrl,
+      title: node.title || node.note_url || node.noteUrl,
+      module: node.metadata?.subject_title || node.subject || "",
+      pathStatus: node.status || "planned",
+    }));
+}
+
 const LearningNavigationPanel = ({
   items,
   currentNoteUrl,
   completedNoteUrls,
+  learningPathDraft,
+  learningPathPending = false,
+  onGeneratePath,
+  onRemovePathNode,
   onSelect,
   isMobile = false,
 }) => {
   const { t } = useTranslation();
   const normalizedCurrent = normalizeKey(currentNoteUrl);
+  const personalizedSteps = useMemo(
+    () => collectLearningPathSteps(learningPathDraft),
+    [learningPathDraft],
+  );
+  const hasPersonalizedPath = personalizedSteps.length > 0;
   const subjectSections = useMemo(
     () =>
       (items || [])
@@ -85,9 +106,10 @@ const LearningNavigationPanel = ({
   const [expandedKeys, setExpandedKeys] = useState(() => new Set([initialExpandedKey]));
   const effectiveExpandedKeys = useMemo(() => {
     const next = new Set(expandedKeys);
+    if (hasPersonalizedPath) next.add("personalized");
     if (initialExpandedKey) next.add(initialExpandedKey);
     return next;
-  }, [expandedKeys, initialExpandedKey]);
+  }, [expandedKeys, hasPersonalizedPath, initialExpandedKey]);
 
   const toggleSection = (sectionKey) => {
     setExpandedKeys((prev) => {
@@ -98,16 +120,17 @@ const LearningNavigationPanel = ({
     });
   };
 
-  const renderSteps = (steps, subjectLabel) => {
+  const renderSteps = (steps, subjectLabel, options = {}) => {
+    const allowRemove = Boolean(options.allowRemove && typeof onRemovePathNode === "function");
     const firstIncompleteIndex = steps.findIndex(
-      (step) => !completedNoteUrls.has(normalizeKey(step.key)),
+      (step) => !completedNoteUrls.has(normalizeKey(step.key)) && step.pathStatus !== "completed",
     );
     return (
       <ol className="learning-nav__path" aria-label={`${subjectLabel} path`}>
         {steps.map((step, index) => {
           const stepKey = normalizeKey(step.key);
           const isCurrent = stepKey === normalizedCurrent;
-          const isDone = completedNoteUrls.has(stepKey);
+          const isDone = completedNoteUrls.has(stepKey) || step.pathStatus === "completed";
           const isNext = !isCurrent && !isDone && index === firstIncompleteIndex;
           const status = isCurrent ? "current" : isDone ? "done" : isNext ? "next" : "todo";
           return (
@@ -130,6 +153,20 @@ const LearningNavigationPanel = ({
                 </span>
                 <span className="learning-nav__connector learning-nav__connector--right" aria-hidden="true" />
               </button>
+              {allowRemove ? (
+                <button
+                  type="button"
+                  className="learning-nav__remove-node"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onRemovePathNode(step.key);
+                  }}
+                  aria-label={`Remove ${step.title} from path`}
+                  title="Remove from path"
+                >
+                  ×
+                </button>
+              ) : null}
             </li>
           );
         })}
@@ -181,6 +218,55 @@ const LearningNavigationPanel = ({
     );
   };
 
+  const renderPersonalizedSection = () => {
+    if (!hasPersonalizedPath) return null;
+    const completedCount = personalizedSteps.filter((step) => {
+      const stepKey = normalizeKey(step.key);
+      return completedNoteUrls.has(stepKey) || step.pathStatus === "completed";
+    }).length;
+    const goalTitle = learningPathDraft?.goal_title || learningPathDraft?.goalTitle || "Personalized path";
+    const containsCurrent = personalizedSteps.some((step) => normalizeKey(step.key) === normalizedCurrent);
+    const firstStep = personalizedSteps[0];
+    return (
+      <section
+        className={`learning-nav__section learning-nav__section--personalized ${
+          containsCurrent ? "learning-nav__section--active" : ""
+        }`}
+      >
+        <div className="learning-nav__section-header">
+          <button
+            type="button"
+            className="learning-nav__section-toggle"
+            onClick={() => toggleSection("personalized")}
+            aria-expanded={effectiveExpandedKeys.has("personalized")}
+          >
+            <span className="learning-nav__section-icon" aria-hidden="true">
+              <NodeIndexOutlined />
+            </span>
+            <span className="learning-nav__section-copy">
+              <span className="learning-nav__section-title">{goalTitle}</span>
+              <span className="learning-nav__section-meta">
+                {completedCount}/{personalizedSteps.length} {t("learningPath.steps")} · personalized
+              </span>
+            </span>
+          </button>
+          {firstStep ? (
+            <button
+              type="button"
+              className="learning-nav__section-start"
+              onClick={() => onSelect(firstStep.key)}
+            >
+              {containsCurrent ? t("learningPath.resume") : t("learningPath.open")}
+            </button>
+          ) : null}
+        </div>
+        {effectiveExpandedKeys.has("personalized")
+          ? renderSteps(personalizedSteps, goalTitle, { allowRemove: true })
+          : null}
+      </section>
+    );
+  };
+
   return (
     <nav
       className={`learning-nav ${isMobile ? "learning-nav--mobile" : ""}`}
@@ -193,6 +279,16 @@ const LearningNavigationPanel = ({
         <div>
           <p className="learning-nav__eyebrow">{t("learningPath.eyebrow")}</p>
           <p className="learning-nav__description">{t("learningPath.description")}</p>
+          {!hasPersonalizedPath && typeof onGeneratePath === "function" ? (
+            <button
+              type="button"
+              className="learning-nav__create-path"
+              onClick={onGeneratePath}
+              disabled={learningPathPending}
+            >
+              {learningPathPending ? "Creating..." : "Create path"}
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -209,8 +305,9 @@ const LearningNavigationPanel = ({
       </div>
 
       <div className="learning-nav__sections">
-        {subjectSections.map(renderSubjectSection)}
-        {standaloneSteps.length > 0 ? (
+        {renderPersonalizedSection()}
+        {!hasPersonalizedPath ? subjectSections.map(renderSubjectSection) : null}
+        {!hasPersonalizedPath && standaloneSteps.length > 0 ? (
           <section className="learning-nav__section learning-nav__section--active">
             <div className="learning-nav__section-header">
               <div className="learning-nav__section-toggle learning-nav__section-toggle--static">

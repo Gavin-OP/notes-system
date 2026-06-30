@@ -9,7 +9,7 @@ import {
   RobotOutlined,
 } from "@ant-design/icons";
 
-import { requestProductAssistant } from "../../api/assistant";
+import { decideAssistantAction, requestProductAssistant } from "../../api/assistant";
 import AssistantWorkspace from "./AssistantWorkspace";
 import { GlobalAssistantContext } from "./GlobalAssistantContext";
 import "./GlobalAssistantProvider.css";
@@ -63,6 +63,8 @@ export default function GlobalAssistantProvider({ children }) {
   const [qaPending, setQaPending] = useState(false);
   const [qaError, setQaError] = useState("");
   const [conversationId, setConversationId] = useState("");
+  const [actionProposals, setActionProposals] = useState([]);
+  const [proposalPendingId, setProposalPendingId] = useState("");
   const [position, setPosition] = useState(getDefaultPosition);
   const dragStateRef = useRef(null);
   const dragMovedRef = useRef(false);
@@ -115,11 +117,10 @@ export default function GlobalAssistantProvider({ children }) {
         attachments: qaAttachmentFiles,
       });
       if (response?.conversation_id) setConversationId(response.conversation_id);
-      const proposalText = Array.isArray(response?.action_proposals) && response.action_proposals.length > 0
-        ? `\n\nSuggested actions:\n${response.action_proposals
-            .map((proposal) => `- ${proposal.title || proposal.action_type}: ${proposal.description || ""}`)
-            .join("\n")}`
-        : "";
+      const nextProposals = Array.isArray(response?.action_proposals)
+        ? response.action_proposals.filter((proposal) => proposal?.status === "proposed").slice(-3)
+        : [];
+      setActionProposals(nextProposals);
       const responseMessages = Array.isArray(response?.messages)
         ? response.messages.map((item) => ({
             id: item.message_id || `global-qa-${Date.now()}-${Math.random()}`,
@@ -131,15 +132,9 @@ export default function GlobalAssistantProvider({ children }) {
             {
               id: `global-qa-assistant-${Date.now()}`,
               role: "assistant",
-              text: `${resolveQaAnswerText(response) || "No response content."}${proposalText}`,
+              text: resolveQaAnswerText(response) || "No response content.",
             },
           ];
-      if (proposalText && responseMessages.length > 0) {
-        const lastMessage = responseMessages[responseMessages.length - 1];
-        if (lastMessage.role === "assistant" && !lastMessage.text.includes("Suggested actions:")) {
-          lastMessage.text = `${lastMessage.text}${proposalText}`;
-        }
-      }
       setQaMessages(responseMessages);
       setQaImageFiles([]);
       setQaAttachmentFiles([]);
@@ -149,6 +144,30 @@ export default function GlobalAssistantProvider({ children }) {
       message.error(errorText);
     } finally {
       setQaPending(false);
+    }
+  };
+
+  const handleProposalDecision = async (proposal, decision) => {
+    if (!proposal?.proposal_id || proposalPendingId) return;
+    setProposalPendingId(proposal.proposal_id);
+    try {
+      await decideAssistantAction(proposal.proposal_id, { decision });
+      setActionProposals((prev) =>
+        prev.filter((item) => item.proposal_id !== proposal.proposal_id),
+      );
+      if (decision === "apply") {
+        window.dispatchEvent(new CustomEvent("learning-path-updated"));
+        message.success("Learning path updated.");
+      } else if (decision === "accept") {
+        message.success("Action accepted for review.");
+      } else {
+        message.info("Action rejected.");
+      }
+    } catch (error) {
+      const errorText = error instanceof Error ? error.message : "Action update failed.";
+      message.error(errorText);
+    } finally {
+      setProposalPendingId("");
     }
   };
 
@@ -285,6 +304,44 @@ export default function GlobalAssistantProvider({ children }) {
               qaError={qaError}
               hideToolTabs
             />
+            {actionProposals.length > 0 ? (
+              <div className="global-assistant__proposals" aria-label="Assistant action proposals">
+                {actionProposals.map((proposal) => (
+                  <article className="global-assistant__proposal" key={proposal.proposal_id}>
+                    <div className="global-assistant__proposal-copy">
+                      <Text strong>{proposal.title || proposal.action_type}</Text>
+                      {proposal.description ? (
+                        <Text type="secondary">{proposal.description}</Text>
+                      ) : null}
+                    </div>
+                    <div className="global-assistant__proposal-actions">
+                      <Button
+                        size="small"
+                        onClick={() => handleProposalDecision(proposal, "reject")}
+                        loading={proposalPendingId === proposal.proposal_id}
+                      >
+                        Reject
+                      </Button>
+                      <Button
+                        size="small"
+                        onClick={() => handleProposalDecision(proposal, "accept")}
+                        loading={proposalPendingId === proposal.proposal_id}
+                      >
+                        Accept
+                      </Button>
+                      <Button
+                        size="small"
+                        type="primary"
+                        onClick={() => handleProposalDecision(proposal, "apply")}
+                        loading={proposalPendingId === proposal.proposal_id}
+                      >
+                        Apply
+                      </Button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : null}
           </div>
         </section>
       ) : (
