@@ -1,30 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Button, Dropdown, Input, List, Space, Spin, Typography } from "antd";
-import {
-  ApartmentOutlined,
-  GlobalOutlined,
-  MoonOutlined,
-  NodeIndexOutlined,
-  SearchOutlined,
-  SunOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { Input, List, Space, Spin, Typography } from "antd";
+import { ArrowRightOutlined, BookOutlined, SearchOutlined } from "@ant-design/icons";
 
+import AppPageShell from "../../common/layouts/AppPageShell";
 import { getCareerTaxonomy } from "../../common/api/careers";
 import { buildSearchResultUrl, searchNotes } from "../../common/api/search";
 import SemanticChip from "../../common/components/SemanticChip";
-import { setLanguage, setTheme } from "../../redux/preferenceSlice";
-import { buildMenuItems, isNavigableSubjectSlug } from "../../utils/notesIndexUtils";
+import { buildMenuItems, getDefaultLearningEntryUrl, isNavigableSubjectSlug } from "../../utils/notesIndexUtils";
 import { getSubjectDisplayTitle } from "../../utils/subjectOverviewUtils";
 import useTranslation from "../../i18n/useTranslation";
 
 import "./HomePage.css";
 
 const { Text } = Typography;
-
-const POPULAR_SEARCHES = ["Data Science", "Data Analyst", "Python", "Statistics"];
 
 function flattenMenuItems(items = [], trail = [], list = []) {
   items.forEach((item) => {
@@ -88,29 +78,14 @@ function typeVariant(type) {
 
 function HomePage() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const rawNotesIndex = useSelector((state) => state.notesIndex.data);
   const notesIndex = useMemo(() => rawNotesIndex || [], [rawNotesIndex]);
-  const theme = useSelector((state) => state.preference.theme);
-  const language = useSelector((state) => state.preference.language);
   const [query, setQuery] = useState("");
   const [careers, setCareers] = useState([]);
   const [notePayload, setNotePayload] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
   const searchCacheRef = useRef(new Map());
-  const languageItems = [
-    {
-      key: "en",
-      label: t("language.english"),
-      onClick: () => dispatch(setLanguage("en")),
-    },
-    {
-      key: "cn",
-      label: t("language.chinese"),
-      onClick: () => dispatch(setLanguage("cn")),
-    },
-  ];
 
   useEffect(() => {
     let mounted = true;
@@ -150,6 +125,11 @@ function HomePage() {
     const notes = flattenMenuItems(buildMenuItems(notesIndex));
     return [...subjects, ...careers, ...notes];
   }, [careers, notesIndex]);
+
+  const learningEntryUrl = useMemo(
+    () => getDefaultLearningEntryUrl(notesIndex),
+    [notesIndex],
+  );
 
   const localMatches = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -214,38 +194,14 @@ function HomePage() {
   };
 
   return (
-    <main className="home-page">
-      <header className="home-page__topbar">
-        <button type="button" className="home-page__brand" onClick={() => navigate("/")}>
-          <span className="home-page__logo-placeholder">NS</span>
-          <span className="home-page__brand-name">{t("home.brand", "Notes System")}</span>
-        </button>
-        <Space size={8} className="home-page__tools">
-          <Button
-            shape="circle"
-            icon={theme === "dark" ? <SunOutlined /> : <MoonOutlined />}
-            onClick={() => dispatch(setTheme(theme === "dark" ? "light" : "dark"))}
-            aria-label={t("note.toolbar.darkMode", "Dark mode")}
-          />
-          <Dropdown
-            menu={{ items: languageItems, selectable: true, selectedKeys: [language] }}
-            trigger={["click"]}
-            placement="bottomRight"
-          >
-            <Button className="home-page__language-button" icon={<GlobalOutlined />}>
-              {language === "cn" ? t("language.chinese") : t("language.english")}
-            </Button>
-          </Dropdown>
-          <Button
-            shape="circle"
-            icon={<UserOutlined />}
-            onClick={() => navigate("/user/profile")}
-            aria-label={t("note.toolbar.profile", "Profile")}
-          />
-        </Space>
-      </header>
-
-      <section className="home-page__hero" aria-label={t("home.searchLabel", "Search everything")}>
+    <AppPageShell
+      surface="hero"
+      contentWidth="full"
+      mainClassName="app-page-shell__main--hero"
+      contentClassName="home-page__hero"
+      showSiteFooter
+    >
+      <section className="home-page__hero-inner" aria-label={t("home.searchLabel", "Search everything")}>
         <div className="home-page__hero-copy">
           <Text className="home-page__eyebrow">
             {t("home.eyebrow", "Structured learning for life after school")}
@@ -338,46 +294,28 @@ function HomePage() {
               </button>
             </div>
           ) : null}
-        </div>
 
-        <div className="home-page__popular-searches" aria-label={t("home.popularSearches", "Popular searches")}>
-          <span>{t("home.popularSearches", "Popular searches")}:</span>
-          {POPULAR_SEARCHES.map((item) => (
-            <button key={item} type="button" onClick={() => setQuery(item)}>
-              {item}
-            </button>
-          ))}
-        </div>
-
-        <div className="home-page__guide-strip" aria-label={t("home.guideStripLabel", "Learning guide features")}>
-          <div className="home-page__guide-item">
-            <NodeIndexOutlined />
-            <span>{t("home.guide.path", "Map prerequisites into a path")}</span>
-          </div>
-          <div className="home-page__guide-item">
-            <SearchOutlined />
-            <span>{t("home.guide.search", "Search across notes, subjects, and careers")}</span>
-          </div>
-          <div className="home-page__guide-item">
-            <ApartmentOutlined />
-            <span>{t("home.guide.databases", "Browse discipline and career databases")}</span>
-          </div>
+          <button
+            type="button"
+            className="home-page__enter-learning"
+            onClick={() => navigate(learningEntryUrl)}
+          >
+            <span className="home-page__enter-learning-icon" aria-hidden="true">
+              <BookOutlined />
+            </span>
+            <span className="home-page__enter-learning-copy">
+              <span className="home-page__enter-learning-label">
+                {t("home.enterLearning", "Enter learning workspace")}
+              </span>
+              <span className="home-page__enter-learning-hint">
+                {t("home.enterLearningHint", "Pick up where structured notes and paths live")}
+              </span>
+            </span>
+            <ArrowRightOutlined className="home-page__enter-learning-arrow" aria-hidden="true" />
+          </button>
         </div>
       </section>
-
-      <footer className="home-page__footer">
-        <button type="button" onClick={() => navigate("/disclaimer")}>
-          {t("home.footer.disclaimer", "Disclaimer")}
-        </button>
-        <button type="button" onClick={() => navigate("/careers")}>
-          {t("home.footer.careers", "Career Database")}
-        </button>
-        <button type="button" onClick={() => navigate("/subjects")}>
-          {t("home.footer.subjects", "Subject Database")}
-        </button>
-        <a href="mailto:hello@notes-system.local">{t("home.footer.contact", "Contact us")}</a>
-      </footer>
-    </main>
+    </AppPageShell>
   );
 }
 

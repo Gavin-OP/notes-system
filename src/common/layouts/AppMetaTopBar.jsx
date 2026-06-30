@@ -1,0 +1,70 @@
+import { Button, Dropdown, Space } from "antd";
+import { GlobalOutlined, MoonOutlined, SunOutlined, UserOutlined } from "@ant-design/icons";
+
+import { setLanguage, setTheme } from "../../redux/preferenceSlice";
+
+import "./AppPageShell.css";
+
+function AppMetaTopBar({
+  t,
+  theme,
+  language,
+  dispatch,
+  navigate,
+  startSlot = null,
+  toolSlot = null,
+  topBarRef = null,
+}) {
+  const languageItems = [
+    {
+      key: "en",
+      label: t("language.english"),
+      onClick: () => dispatch(setLanguage("en")),
+    },
+    {
+      key: "cn",
+      label: t("language.chinese"),
+      onClick: () => dispatch(setLanguage("cn")),
+    },
+  ];
+
+  return (
+    <header className="app-page-shell__topbar" ref={topBarRef}>
+      <div className="app-meta-topbar__start">
+        {startSlot}
+        <button type="button" className="app-page-shell__brand" onClick={() => navigate("/")}>
+          <span className="app-page-shell__logo">NS</span>
+          <span className="app-page-shell__brand-name">{t("home.brand", "Notes System")}</span>
+        </button>
+      </div>
+      <Space size={8} className="app-page-shell__tools">
+        {toolSlot}
+        <Button
+          shape="circle"
+          className="app-page-shell__tool-btn"
+          icon={theme === "dark" ? <SunOutlined /> : <MoonOutlined />}
+          onClick={() => dispatch(setTheme(theme === "dark" ? "light" : "dark"))}
+          aria-label={t("note.toolbar.darkMode", "Dark mode")}
+        />
+        <Dropdown
+          menu={{ items: languageItems, selectable: true, selectedKeys: [language] }}
+          trigger={["click"]}
+          placement="bottomRight"
+        >
+          <Button className="app-page-shell__language-btn" icon={<GlobalOutlined />}>
+            {language === "cn" ? t("language.chinese") : t("language.english")}
+          </Button>
+        </Dropdown>
+        <Button
+          shape="circle"
+          className="app-page-shell__tool-btn"
+          icon={<UserOutlined />}
+          onClick={() => navigate("/user/profile")}
+          aria-label={t("note.toolbar.profile", "Profile")}
+        />
+      </Space>
+    </header>
+  );
+}
+
+export default AppMetaTopBar;

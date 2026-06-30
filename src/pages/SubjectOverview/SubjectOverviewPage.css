@@ -1,23 +1,5 @@
-.subject-overview-page {
-  min-height: 100vh;
-  background: var(--ns-color-bg-layout);
-  padding: var(--ns-space-5) var(--ns-space-4) var(--ns-space-6);
-}
-
-.subject-overview-page__container {
-  max-width: 1180px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.subject-overview-page__header {
-  width: 100%;
-}
-
 .subject-overview {
-  max-width: 1120px;
+  max-width: none;
 }
 
 .subject-overview__loading {

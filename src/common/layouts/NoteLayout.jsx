@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useRef, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import {
@@ -7,8 +7,6 @@ import {
   Breadcrumb,
   Button,
   theme,
-  Row,
-  Col,
   Modal,
   Checkbox,
   message,
@@ -34,7 +32,6 @@ import {
 } from "../components/guide/productTours";
 
 import { buildMenuItems, isSubjectOverviewPath } from "../../utils/notesIndexUtils";
-import { setTheme, setLanguage } from "../../redux/preferenceSlice";
 import {
   requestAssistantQuiz,
   requestAssistantQuizEvaluate,
@@ -47,10 +44,11 @@ import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncom
 import useTranslatedContent from "../../i18n/useTranslatedContent";
 import useTranslation from "../../i18n/useTranslation";
 
+import LearningPageMetaBar from "./LearningPageMetaBar";
 import "./NoteLayout.css";
 import "../components/LearningSupportPanel.css";
 
-const { Header, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
 const LEARNING_SUPPORT_TABS = [
   { id: "outline", labelKey: "learningSupport.tabs.outline" },
@@ -258,13 +256,10 @@ const NoteLayout = () => {
   } = theme.useToken();
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { openAssistant } = useGlobalAssistant();
 
   // redux state
-  const themeValue = useSelector((state) => state.preference.theme);
-  const language = useSelector((state) => state.preference.language);
   const isMobile = useSelector((state) => state.preference.isMobile);
   const rawNotesIndex = useSelector((state) => state.notesIndex.data);
   const notesIndex = useMemo(() => rawNotesIndex || [], [rawNotesIndex]);
@@ -316,6 +311,7 @@ const NoteLayout = () => {
   const outlineTabRef = useRef(null);
   const assistantAreaRef = useRef(null);
   const workspaceBarRef = useRef(null);
+  const metaTopBarRef = useRef(null);
   const exploreGuideRef = useRef(null);
   const resizeStateRef = useRef({
     active: false,
@@ -460,12 +456,7 @@ const NoteLayout = () => {
   }, [currentMeta?.url, localizedPlainMenuItems]);
 
   // event handlers
-  const handleThemeChange = (checked) =>
-    dispatch(setTheme(checked ? "dark" : "light"));
-  const handleLanguageChange = (value) => dispatch(setLanguage(value));
   const handleNoteSelect = (path) => navigate(path);
-
-  const handleOpenProfile = () => navigate("/user/profile");
 
   const handleExploreMindmap = () => {
     const slug = workspaceMeta?.mindmapSubjectSlug;
@@ -1135,28 +1126,32 @@ const NoteLayout = () => {
         "--sider-bg": colorBgContainer,
         "--content-bg": colorBgContainer,
         "--content-radius": borderRadiusLG,
+        "--note-meta-topbar-height": immersiveMode ? "0px" : "64px",
       }}
     >
-      {isMobile ? (
-        <Header
-          className={`note-layout__header ${isMobile ? "note-layout__header--mobile" : ""}`}
-        >
-          <Row align="middle" className="note-layout__header-row">
-            <Col>
+      {!immersiveMode ? (
+        <LearningPageMetaBar
+          startSlot={
+            isMobile ? (
               <Button
                 type="text"
-                className={`note-layout__menu-button ${isMobile ? "note-layout__menu-button--mobile" : ""}`}
+                className="note-layout__menu-button note-layout__menu-button--mobile"
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 onClick={() => {
                   if (!collapsed) setShowMenu(false);
                   else setShowMenu(true);
                   setCollapsed(!collapsed);
                 }}
+                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
               />
-            </Col>
-            <Col flex="auto" />
-          </Row>
-        </Header>
+            ) : null
+          }
+          searchOptions={searchOptions}
+          notesGuideSteps={noteGuideSteps}
+          notesTourStartToken={notesTourStartToken}
+          onNotesTourStepChange={handleNoteTourStepChange}
+          topBarRef={metaTopBarRef}
+        />
       ) : null}
 
       <Layout className="note-layout__main">
@@ -1246,20 +1241,11 @@ const NoteLayout = () => {
                 className={`note-layout__breadcrumb ${isMobile ? "note-layout__breadcrumb--mobile" : ""}`}
               />
               <NoteWorkspaceBar
-                theme={themeValue}
-                language={language}
-                onThemeChange={handleThemeChange}
-                onLanguageChange={handleLanguageChange}
-                searchOptions={searchOptions}
                 narrationState={narrationState}
                 isNarrationPlaying={isNarrationPlaying}
                 onToggleNarration={handleToggleNarration}
                 workspaceBarRef={workspaceBarRef}
                 exploreGuideRef={exploreGuideRef}
-                notesGuideSteps={noteGuideSteps}
-                notesTourStartToken={notesTourStartToken}
-                onNotesTourStepChange={handleNoteTourStepChange}
-                onOpenProfile={handleOpenProfile}
                 immersiveMode={immersiveMode}
                 onToggleImmersiveMode={() => setImmersiveMode((value) => !value)}
                 isCurrentNoteCompleted={isCurrentNoteCompleted}

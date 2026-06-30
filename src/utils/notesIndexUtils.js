@@ -177,6 +177,25 @@ function getFirstSubjectTopicUrl(data, subjectId) {
   return menuItems[0]?.key || null;
 }
 
+function getDefaultLearningEntryUrl(data) {
+  if (!Array.isArray(data) || data.length === 0) return "/note/disclaimer.md";
+
+  const subjectIds = data
+    .filter((item) => item?.type === "folder")
+    .map((item) => {
+      const match = String(item.url || "").match(/^\/note\/([^/]+)$/);
+      return match?.[1] || "";
+    })
+    .filter((subjectId) => subjectId && isNavigableSubjectSlug(subjectId));
+
+  for (const subjectId of subjectIds) {
+    const topicUrl = getFirstSubjectTopicUrl(data, subjectId);
+    if (topicUrl) return topicUrl;
+  }
+
+  return "/note/disclaimer.md";
+}
+
 function buildMenuItems(data) {
   if (!data) return [];
   return data
@@ -435,6 +454,7 @@ export {
   isSubjectOverviewPath,
   injectSubjectOverviewMenuItems,
   getFirstSubjectTopicUrl,
+  getDefaultLearningEntryUrl,
   findMeta,
   buildMenuItems,
   buildNotesIndexFromGraphNotes,

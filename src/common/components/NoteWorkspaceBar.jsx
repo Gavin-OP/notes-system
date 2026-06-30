@@ -1,44 +1,25 @@
-import { useState } from "react";
-import { Dropdown, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import {
-  SearchOutlined,
-  GlobalOutlined,
-  SunOutlined,
-  MoonOutlined,
   AudioOutlined,
   PauseCircleOutlined,
   LoadingOutlined,
-  UserOutlined,
   ApartmentOutlined,
-  MoreOutlined,
   CheckCircleOutlined,
   CheckOutlined,
   FullscreenOutlined,
   FullscreenExitOutlined,
 } from "@ant-design/icons";
 
-import AppFeatureTour from "./guide/AppFeatureTour";
-import SearchModal from "./SearchModal";
-import SemanticChip from "./SemanticChip";
 import useTranslation from "../../i18n/useTranslation";
 
 import "./NoteWorkspaceBar.css";
 
 function NoteWorkspaceBar({
-  theme,
-  onThemeChange,
-  language,
-  onLanguageChange,
-  searchOptions = [],
   narrationState = "idle",
   isNarrationPlaying = false,
   onToggleNarration,
   workspaceBarRef = null,
   exploreGuideRef = null,
-  notesGuideSteps = [],
-  notesTourStartToken = 0,
-  onNotesTourStepChange,
-  onOpenProfile,
   immersiveMode = false,
   onToggleImmersiveMode,
   isCurrentNoteCompleted = false,
@@ -48,13 +29,7 @@ function NoteWorkspaceBar({
   onExploreMindmap,
   isMobile = false,
 }) {
-  const [searchOpen, setSearchOpen] = useState(false);
   const { t } = useTranslation();
-
-  const languageItems = [
-    { key: "en", label: t("language.english"), onClick: () => onLanguageChange("en") },
-    { key: "cn", label: t("language.chinese"), onClick: () => onLanguageChange("cn") },
-  ];
 
   const narrationDisabled = narrationState !== "ready";
   let narrationLabel = t("note.narration.unavailable");
@@ -74,88 +49,6 @@ function NoteWorkspaceBar({
     : isCurrentNoteCompleted
       ? t("note.toolbar.completed")
       : t("note.toolbar.markComplete");
-
-  const morePanel = (
-    <div className="note-workspace-bar__more-panel">
-      {hasVersions ? (
-        <div className="note-workspace-bar__more-version">
-          <span className="note-workspace-bar__more-label">{t("note.toolbar.noteVersion")}</span>
-          <label className="note-workspace-bar__version-field">
-            <span className="note-workspace-bar__version-field-label">{t("note.toolbar.view")}</span>
-            <select
-              className="note-workspace-bar__version-select"
-              value={workspaceMeta?.selectedVersionId || "current"}
-              onChange={(event) => workspaceMeta?.onVersionChange?.(event.target.value)}
-            >
-              {versions.map((version) => (
-                <option key={version.version_id} value={version.version_id}>
-                  {version.is_current ? t("note.toolbar.current") : version.version_id}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button
-            type="button"
-            className="note-workspace-bar__restore-btn"
-            onClick={() => workspaceMeta?.onRestoreAnnotations?.()}
-            disabled={workspaceMeta?.restorePending}
-          >
-            {workspaceMeta?.restorePending ? t("note.toolbar.restoring") : t("note.toolbar.restoreHighlights")}
-          </button>
-          {restoreCount > 0 ? (
-            <span className="note-workspace-bar__restore-hint">
-              {restoreCount} {t("note.toolbar.candidates")}
-            </span>
-          ) : null}
-        </div>
-      ) : null}
-      <div className="note-workspace-bar__more-actions">
-        <button
-          type="button"
-          className="note-workspace-bar__more-action"
-          onClick={() => onThemeChange(theme !== "dark")}
-        >
-          {theme === "light" ? <MoonOutlined /> : <SunOutlined />}
-          {theme === "light" ? t("note.toolbar.darkMode") : t("note.toolbar.lightMode")}
-        </button>
-        <Dropdown
-          menu={{
-            items: languageItems,
-            selectable: true,
-            selectedKeys: [language],
-          }}
-          trigger={["click"]}
-          placement="bottomLeft"
-        >
-          <button type="button" className="note-workspace-bar__more-action">
-            <GlobalOutlined />
-            {language === "cn" ? t("language.chinese") : t("language.english")}
-          </button>
-        </Dropdown>
-        <button
-          type="button"
-          className="note-workspace-bar__more-action"
-          disabled={narrationDisabled}
-          onClick={() => {
-            if (!narrationDisabled) onToggleNarration?.();
-          }}
-        >
-          {narrationState === "loading" ? (
-            <LoadingOutlined />
-          ) : isNarrationPlaying ? (
-            <PauseCircleOutlined />
-          ) : (
-            <AudioOutlined />
-          )}
-          {t("note.toolbar.narration")}
-        </button>
-        <button type="button" className="note-workspace-bar__more-action" onClick={onOpenProfile}>
-          <UserOutlined />
-          {t("note.toolbar.profile")}
-        </button>
-      </div>
-    </div>
-  );
 
   return (
     <div className="note-workspace-bar" ref={workspaceBarRef} aria-label="Note workspace tools">
@@ -190,6 +83,7 @@ function NoteWorkspaceBar({
             </button>
           </Tooltip>
         ) : null}
+
         <Tooltip title={immersiveMode ? t("note.toolbar.exitImmersive") : t("note.toolbar.enterImmersive")}>
           <button
             type="button"
@@ -206,61 +100,65 @@ function NoteWorkspaceBar({
         </Tooltip>
       </div>
 
-      <div className="note-workspace-bar__assist" aria-label="Assist">
-        <Tooltip title={t("note.toolbar.searchNotes")}>
+      {hasVersions ? (
+        <div className="note-workspace-bar__version" aria-label={t("note.toolbar.noteVersion")}>
+          <span className="note-workspace-bar__version-label">{t("note.toolbar.noteVersion")}</span>
+          <label className="note-workspace-bar__version-field">
+            <span className="note-workspace-bar__version-field-label">{t("note.toolbar.view")}</span>
+            <select
+              className="note-workspace-bar__version-select"
+              value={workspaceMeta?.selectedVersionId || "current"}
+              onChange={(event) => workspaceMeta?.onVersionChange?.(event.target.value)}
+            >
+              {versions.map((version) => (
+                <option key={version.version_id} value={version.version_id}>
+                  {version.is_current ? t("note.toolbar.current") : version.version_id}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button
+            type="button"
+            className="note-workspace-bar__restore-btn"
+            onClick={() => workspaceMeta?.onRestoreAnnotations?.()}
+            disabled={workspaceMeta?.restorePending}
+          >
+            {workspaceMeta?.restorePending ? t("note.toolbar.restoring") : t("note.toolbar.restoreHighlights")}
+          </button>
+          {restoreCount > 0 ? (
+            <span className="note-workspace-bar__restore-hint">
+              {restoreCount} {t("note.toolbar.candidates")}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="note-workspace-bar__narration" aria-label={t("note.toolbar.narration")}>
+        <Tooltip title={narrationLabel}>
           <button
             type="button"
             className="note-workspace-bar__icon-btn"
-            onClick={() => setSearchOpen(true)}
-            aria-label={t("note.toolbar.searchNotes")}
+            disabled={narrationDisabled}
+            onClick={() => {
+              if (!narrationDisabled) onToggleNarration?.();
+            }}
+            aria-label={narrationLabel}
           >
-            <SearchOutlined />
-            {!isMobile ? <span>{t("note.toolbar.search")}</span> : null}
+            {narrationState === "loading" ? (
+              <LoadingOutlined />
+            ) : isNarrationPlaying ? (
+              <PauseCircleOutlined />
+            ) : (
+              <AudioOutlined />
+            )}
+            {!isMobile ? <span>{t("note.toolbar.narration")}</span> : null}
           </button>
         </Tooltip>
-        <SearchModal
-          open={searchOpen}
-          onClose={() => setSearchOpen(false)}
-          localOptions={searchOptions}
-        />
       </div>
 
-      <div className="note-workspace-bar__meta" aria-label="Settings">
-        {Array.isArray(notesGuideSteps) && notesGuideSteps.length > 0 ? (
-          <AppFeatureTour
-            guideKey="notes_page"
-            steps={notesGuideSteps}
-            iconOnly
-            buttonAriaLabel={t("note.toolbar.learningGuide")}
-            triggerClassName="note-workspace-bar__guide-trigger"
-            startToken={notesTourStartToken}
-            onBeforeStepChange={onNotesTourStepChange}
-          />
-        ) : null}
-
-        <Dropdown
-          trigger={["click"]}
-          placement="bottomRight"
-          overlayClassName="note-workspace-bar__more-overlay"
-          dropdownRender={() => morePanel}
-        >
-          <button
-            type="button"
-            className="note-workspace-bar__icon-btn note-workspace-bar__more-btn"
-            aria-label={t("note.toolbar.moreOptions")}
-          >
-            <MoreOutlined />
-            {!isMobile ? <span>{t("note.toolbar.more")}</span> : null}
-            {hasVersions ? (
-              <SemanticChip variant="slate" className="note-workspace-bar__more-badge">
-                {t("note.toolbar.version")}
-              </SemanticChip>
-            ) : null}
-          </button>
-        </Dropdown>
-      </div>
-
-      <span className="note-workspace-bar__sr-only" aria-live="polite">{narrationLabel}</span>
+      <span className="note-workspace-bar__sr-only" aria-live="polite">
+        {narrationLabel}
+      </span>
     </div>
   );
 }

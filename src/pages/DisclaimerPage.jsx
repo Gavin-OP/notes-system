@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Spin, Typography } from "antd";
+import { Card, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import AppPageShell from "../common/layouts/AppPageShell";
 import useTranslation from "../i18n/useTranslation";
 
 import "./DisclaimerPage.css";
-
-const { Title } = Typography;
 
 function DisclaimerPage() {
   const navigate = useNavigate();
@@ -46,25 +45,27 @@ function DisclaimerPage() {
   }, []);
 
   return (
-    <main className="disclaimer-page">
-      <div className="disclaimer-page__container">
-        <Button onClick={() => navigate(-1)}>{t("common.back", "Back")}</Button>
-        <Card className="disclaimer-page__card">
-          <Title level={2}>{t("home.footer.disclaimer", "Disclaimer")}</Title>
-          {loading ? (
-            <div className="disclaimer-page__state">
-              <Spin tip={t("common.loading", "Loading...")} />
-            </div>
-          ) : (
-            <div className="disclaimer-page__markdown">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {content || t("disclaimer.empty", "Disclaimer content is not available yet.")}
-              </ReactMarkdown>
-            </div>
-          )}
-        </Card>
-      </div>
-    </main>
+    <AppPageShell
+      backLabel={t("common.backToHome", "Back to Home")}
+      onBack={() => navigate("/")}
+      title={t("home.footer.disclaimer", "Disclaimer")}
+      contentWidth="narrow"
+      showSiteFooter
+    >
+      <Card className="app-prose-panel">
+        {loading ? (
+          <div className="app-page-shell__state">
+            <Spin tip={t("common.loading", "Loading...")} />
+          </div>
+        ) : (
+          <div className="disclaimer-page__markdown">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {content || t("disclaimer.empty", "Disclaimer content is not available yet.")}
+            </ReactMarkdown>
+          </div>
+        )}
+      </Card>
+    </AppPageShell>
   );
 }
 

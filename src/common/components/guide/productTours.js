@@ -148,9 +148,11 @@ export function createNoteGuideSteps(refs, t = (key, fallback) => fallback || ke
       title: t("guide.note.5.title", "Workspace shortcuts"),
       description: t(
         "guide.note.5.description",
-        "Mark notes complete, search, open the assistant, or use More for theme, language, narration, versions, and profile.",
+        "Mark notes complete, switch versions, listen to narration, or use the top bar for search, home, theme, language, and profile.",
       ),
-      target: () => workspaceBarRef?.current,
+      target: () =>
+        workspaceBarRef?.current ||
+        document.querySelector(".note-workspace-bar"),
       placement: "bottom",
     },
   ];

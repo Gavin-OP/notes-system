@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, Card, Col, Empty, Input, Row, Space, Spin, Typography } from "antd";
-import { ArrowLeftOutlined, SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 
+import AppPageShell from "../common/layouts/AppPageShell";
 import { getCareerTaxonomy } from "../common/api/careers";
 import SemanticChip from "../common/components/SemanticChip";
 import {
@@ -14,9 +15,7 @@ import { getSkillChipVariant, getToolChipVariant } from "../common/utils/semanti
 import useTranslatedContent from "../i18n/useTranslatedContent";
 import useTranslation from "../i18n/useTranslation";
 
-import "./ExploreCareersPage.css";
-
-const { Paragraph, Text, Title } = Typography;
+const { Paragraph, Text } = Typography;
 
 function normalizeProfiles(payload) {
   const profiles = payload?.profiles || [];
@@ -47,10 +46,6 @@ function ExploreCareersPage() {
   const [errorText, setErrorText] = useState("");
   const [profiles, setProfiles] = useState([]);
   const [query, setQuery] = useState("");
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -91,6 +86,7 @@ function ExploreCareersPage() {
       return haystack.includes(normalizedQuery);
     });
   }, [profiles, query]);
+
   const careerDescriptionPayload = useMemo(
     () =>
       JSON.stringify(
@@ -121,94 +117,92 @@ function ExploreCareersPage() {
   }, [translatedCareerDescriptionPayload.content]);
 
   return (
-    <div className="explore-careers-page">
-      <div className="explore-careers-page__container">
-        <Space direction="vertical" size={16} className="explore-careers-page__header">
-          <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => navigate("/")}>
-            {t("common.backToHome", "Back to Home")}
-          </Button>
-          <div>
-            <Title level={2} className="explore-careers-page__title">
-              {t("career.explore.title")}
-            </Title>
-            <Paragraph type="secondary" className="explore-careers-page__subtitle">
-              {t("career.explore.subtitle")}
-            </Paragraph>
-          </div>
-          <Input
-            allowClear
-            size="large"
-            prefix={<SearchOutlined />}
-            placeholder={t("career.explore.searchPlaceholder")}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-        </Space>
-
-        {loading ? (
-          <div className="explore-careers-page__state">
-            <Spin tip={t("career.explore.loading")} />
-          </div>
-        ) : null}
-
-        {!loading && errorText ? (
-          <Alert type="error" showIcon message={errorText} />
-        ) : null}
-
-        {!loading && !errorText ? (
-          filteredProfiles.length > 0 ? (
-            <Row gutter={[16, 16]}>
-              {filteredProfiles.map((profile) => (
-                <Col key={profile.jobId || profile.title} xs={24} md={12} xl={8}>
-                  <Card
-                    hoverable
-                    className="explore-careers-page__card"
-                    onClick={() => navigate(`/careers/${encodeURIComponent(profile.jobId)}`)}
-                  >
-                    <Space direction="vertical" size={10} className="explore-careers-page__card-body">
-                      <div className="explore-careers-page__card-head">
-                        <Text strong className="explore-careers-page__card-title">
-                          {profile.title}
-                        </Text>
-                        <SemanticChip variant={profile.experienceLevelColor}>
-                          {profile.experienceLevel}
-                        </SemanticChip>
-                      </div>
-                      <Paragraph
-                        type="secondary"
-                        ellipsis={{ rows: 3 }}
-                        className="explore-careers-page__card-description"
-                      >
-                        {translatedDescriptionsByJobId.get(profile.jobId || profile.title) ||
-                          profile.description ||
-                          t("career.explore.descriptionFallback")}
-                      </Paragraph>
-                      <Space wrap size={[6, 6]}>
-                        {profile.hardSkills.slice(0, 4).map((skill) => (
-                          <SemanticChip key={`${profile.jobId}-${skill}`} variant={getSkillChipVariant(skill)}>
-                            {skill}
-                          </SemanticChip>
-                        ))}
-                        {profile.tools.slice(0, 2).map((tool) => (
-                          <SemanticChip key={`${profile.jobId}-tool-${tool}`} variant={getToolChipVariant()}>
-                            {tool}
-                          </SemanticChip>
-                        ))}
-                      </Space>
-                      <Button type="primary" ghost block>
-                        {t("profile.career.openFullRole")}
-                      </Button>
-                    </Space>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          ) : (
-            <Empty description={t("career.explore.empty")} />
-          )
-        ) : null}
+    <AppPageShell
+      backLabel={t("common.backToHome", "Back to Home")}
+      onBack={() => navigate("/")}
+      title={t("career.explore.title")}
+      subtitle={t("career.explore.subtitle")}
+      showSiteFooter
+    >
+      <div className="app-page-shell__toolbar">
+        <Input
+          allowClear
+          size="large"
+          prefix={<SearchOutlined />}
+          placeholder={t("career.explore.searchPlaceholder")}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
       </div>
-    </div>
+
+      {loading ? (
+        <div className="app-page-shell__state">
+          <Spin tip={t("career.explore.loading")} />
+        </div>
+      ) : null}
+
+      {!loading && errorText ? <Alert type="error" showIcon message={errorText} /> : null}
+
+      {!loading && !errorText ? (
+        filteredProfiles.length > 0 ? (
+          <Row gutter={[16, 16]}>
+            {filteredProfiles.map((profile) => (
+              <Col key={profile.jobId || profile.title} xs={24} md={12} xl={8}>
+                <Card
+                  hoverable
+                  className="app-catalog-card"
+                  onClick={() => navigate(`/careers/${encodeURIComponent(profile.jobId)}`)}
+                >
+                  <Space direction="vertical" size={10} className="app-catalog-card__body">
+                    <div className="app-catalog-card__head">
+                      <Text strong className="app-catalog-card__title">
+                        {profile.title}
+                      </Text>
+                      <SemanticChip variant={profile.experienceLevelColor}>
+                        {profile.experienceLevel}
+                      </SemanticChip>
+                    </div>
+                    <Paragraph
+                      type="secondary"
+                      ellipsis={{ rows: 3 }}
+                      className="app-catalog-card__description"
+                    >
+                      {translatedDescriptionsByJobId.get(profile.jobId || profile.title) ||
+                        profile.description ||
+                        t("career.explore.descriptionFallback")}
+                    </Paragraph>
+                    <Space wrap size={[6, 6]}>
+                      {profile.hardSkills.slice(0, 4).map((skill) => (
+                        <SemanticChip key={`${profile.jobId}-${skill}`} variant={getSkillChipVariant(skill)}>
+                          {skill}
+                        </SemanticChip>
+                      ))}
+                      {profile.tools.slice(0, 2).map((tool) => (
+                        <SemanticChip key={`${profile.jobId}-tool-${tool}`} variant={getToolChipVariant()}>
+                          {tool}
+                        </SemanticChip>
+                      ))}
+                    </Space>
+                    <Button
+                      type="primary"
+                      ghost
+                      block
+                      className="app-catalog-card__cta-btn"
+                      tabIndex={-1}
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      {t("profile.career.openFullRole")}
+                    </Button>
+                  </Space>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <Empty description={t("career.explore.empty")} />
+        )
+      ) : null}
+    </AppPageShell>
   );
 }
 

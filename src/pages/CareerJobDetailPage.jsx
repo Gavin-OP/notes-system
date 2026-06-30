@@ -57,13 +57,24 @@ function normalizeProfile(profile = {}) {
 
 function normalizeRelatedSubjects(items = []) {
   if (!Array.isArray(items)) return [];
-  return items.map((item) => ({
-    subjectId: item.subject_id || item.subjectId || "",
-    subjectSlug: item.subject_slug || item.subjectSlug || "",
-    subjectTitle: item.subject_title || item.subjectTitle || item.subjectSlug || "Subject",
-    score: Number(item.score ?? 0),
-    matchedTerms: item.matched_terms || item.matchedTerms || [],
-  }));
+  const bySlug = new Map();
+  for (const item of items) {
+    const subjectSlug = item.subject_slug || item.subjectSlug || "";
+    const normalized = {
+      subjectId: item.subject_id || item.subjectId || "",
+      subjectSlug,
+      subjectTitle: item.subject_title || item.subjectTitle || subjectSlug || "Subject",
+      score: Number(item.score ?? 0),
+      matchedTerms: item.matched_terms || item.matchedTerms || [],
+    };
+    const existing = bySlug.get(subjectSlug);
+    if (!existing || normalized.score > existing.score) {
+      bySlug.set(subjectSlug, normalized);
+    }
+  }
+  return [...bySlug.values()].sort(
+    (a, b) => b.score - a.score || a.subjectTitle.localeCompare(b.subjectTitle),
+  );
 }
 
 function CareerJobDetailPage() {
