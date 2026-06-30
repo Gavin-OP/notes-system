@@ -112,6 +112,35 @@ function normalizeMenuKey(key) {
   return String(key || "").replace(/\/+$/, "");
 }
 
+function pathToLearningNodeId(path) {
+  const match = normalizeMenuKey(path).match(/^\/note\/([^/]+)\/([^/]+)\.md$/);
+  if (!match) return `custom:${String(path || "").replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`;
+  return `${match[1]}.${match[2]}`;
+}
+
+function pathToSubject(path) {
+  const match = normalizeMenuKey(path).match(/^\/note\/([^/]+)\//);
+  return match?.[1] || "";
+}
+
+function buildLearningPathEdges(nodes) {
+  return nodes.slice(1).map((node, index) => {
+    const previous = nodes[index];
+    const relation = node?.metadata?.path_relation === "branch"
+      ? "branches_to"
+      : node?.metadata?.path_relation === "converge"
+        ? "converges_to"
+        : "precedes";
+    return {
+      edge_id: `path-edge:${previous.node_id}:${node.node_id}`,
+      source: previous.node_id,
+      target: node.node_id,
+      relation,
+      metadata: {},
+    };
+  });
+}
+
 function normalizeCompletedNoteUrlsFromProfile(profilePayload) {
   const profile = profilePayload && typeof profilePayload === "object" ? profilePayload : {};
   const completedFromUrls = Array.isArray(profile.completed_note_urls)
@@ -549,38 +578,103 @@ const NoteLayout = () => {
     }
   }, [currentSubjectSlug, learningPathPending]);
 
-  const handleRemovePathNode = useCallback(async (noteUrl) => {
+  const persistLearningPathDraft = useCallback(async (nextDraft, successMessage, commitMessage) => {
+    setLearningPathDraft(nextDraft);
+    try {
+      const response = await saveLearningPathDraft(nextDraft);
+      setLearningPathDraft(response?.draft || nextDraft);
+      await commitLearningPath({ message: commitMessage || successMessage || "Updated learning path" });
+      if (successMessage) message.success(successMessage);
+      return true;
+    } catch (error) {
+      const errorText = error instanceof Error ? error.message : "Could not update learning path.";
+      message.error(errorText);
+      loadLearningPath();
+      return false;
+    }
+  }, [loadLearningPath]);
+
+  const handleAddPathNode = useCallback(async (candidate) => {
+    if (!learningPathDraft || !candidate?.key) return;
+    const noteUrl = normalizeMenuKey(candidate.key);
+    const existing = new Set((learningPathDraft.nodes || []).map((node) => normalizeMenuKey(node.note_url || node.noteUrl || "")));
+    if (existing.has(noteUrl)) {
+      message.info("This course is already in the path.");
+      return;
+    }
+    const nextNodes = [
+      ...(learningPathDraft.nodes || []),
+      {
+        node_id: pathToLearningNodeId(noteUrl),
+        title: candidate.title || noteUrl,
+        subject: pathToSubject(noteUrl),
+        note_url: noteUrl,
+        status: "planned",
+        metadata: {
+          source: "manual_edit",
+          subject_title: candidate.module || pathToSubject(noteUrl),
+          path_relation: "linear",
+        },
+      },
+    ];
+    const nextDraft = {
+      ...learningPathDraft,
+      nodes: nextNodes,
+      edges: buildLearningPathEdges(nextNodes),
+    };
+    await persistLearningPathDraft(nextDraft, "Course added to path.", "Added learning path node");
+  }, [learningPathDraft, persistLearningPathDraft]);
+
+  const handleReorderPathNodes = useCallback(async (orderedNoteUrls) => {
+    if (!learningPathDraft?.nodes?.length || !Array.isArray(orderedNoteUrls)) return;
+    const rank = new Map(orderedNoteUrls.map((url, index) => [normalizeMenuKey(url), index]));
+    const nextNodes = [...learningPathDraft.nodes].sort((a, b) => {
+      const aRank = rank.get(normalizeMenuKey(a.note_url || a.noteUrl || ""));
+      const bRank = rank.get(normalizeMenuKey(b.note_url || b.noteUrl || ""));
+      return (aRank ?? Number.MAX_SAFE_INTEGER) - (bRank ?? Number.MAX_SAFE_INTEGER);
+    });
+    const nextDraft = {
+      ...learningPathDraft,
+      nodes: nextNodes,
+      edges: buildLearningPathEdges(nextNodes),
+    };
+    await persistLearningPathDraft(nextDraft, "Path reordered.", "Reordered learning path nodes");
+  }, [learningPathDraft, persistLearningPathDraft]);
+
+  const handleUpdatePathNodeRelation = useCallback(async (noteUrl, relation) => {
     if (!learningPathDraft?.nodes?.length || !noteUrl) return;
-    const nextNodes = learningPathDraft.nodes.filter(
-      (node) => normalizeMenuKey(node.note_url || node.noteUrl || "") !== normalizeMenuKey(noteUrl),
-    );
-    const nextEdges = nextNodes.slice(1).map((node, index) => {
-      const previous = nextNodes[index];
+    const normalizedUrl = normalizeMenuKey(noteUrl);
+    const safeRelation = ["linear", "branch", "converge"].includes(relation) ? relation : "linear";
+    const nextNodes = learningPathDraft.nodes.map((node) => {
+      if (normalizeMenuKey(node.note_url || node.noteUrl || "") !== normalizedUrl) return node;
       return {
-        edge_id: `path-edge:${previous.node_id}:${node.node_id}`,
-        source: previous.node_id,
-        target: node.node_id,
-        relation: "precedes",
-        metadata: {},
+        ...node,
+        metadata: {
+          ...(node.metadata || {}),
+          path_relation: safeRelation,
+        },
       };
     });
     const nextDraft = {
       ...learningPathDraft,
       nodes: nextNodes,
-      edges: nextEdges,
+      edges: buildLearningPathEdges(nextNodes),
     };
-    setLearningPathDraft(nextDraft);
-    try {
-      const response = await saveLearningPathDraft(nextDraft);
-      setLearningPathDraft(response?.draft || nextDraft);
-      await commitLearningPath({ message: "Removed learning path node" });
-      message.success("Path node removed.");
-    } catch (error) {
-      const errorText = error instanceof Error ? error.message : "Could not update learning path.";
-      message.error(errorText);
-      loadLearningPath();
-    }
-  }, [learningPathDraft, loadLearningPath]);
+    await persistLearningPathDraft(nextDraft, "Path relation updated.", "Updated learning path relation");
+  }, [learningPathDraft, persistLearningPathDraft]);
+
+  const handleRemovePathNode = useCallback(async (noteUrl) => {
+    if (!learningPathDraft?.nodes?.length || !noteUrl) return;
+    const nextNodes = learningPathDraft.nodes.filter(
+      (node) => normalizeMenuKey(node.note_url || node.noteUrl || "") !== normalizeMenuKey(noteUrl),
+    );
+    const nextDraft = {
+      ...learningPathDraft,
+      nodes: nextNodes,
+      edges: buildLearningPathEdges(nextNodes),
+    };
+    await persistLearningPathDraft(nextDraft, "Path node removed.", "Removed learning path node");
+  }, [learningPathDraft, persistLearningPathDraft]);
 
   useEffect(() => {
     let mounted = true;
@@ -1087,7 +1181,10 @@ const NoteLayout = () => {
                 learningPathDraft={learningPathDraft}
                 learningPathPending={learningPathPending}
                 onGeneratePath={currentSubjectSlug ? handleGenerateSubjectPath : undefined}
+                onAddPathNode={handleAddPathNode}
+                onReorderPathNodes={handleReorderPathNodes}
                 onRemovePathNode={handleRemovePathNode}
+                onUpdatePathNodeRelation={handleUpdatePathNodeRelation}
                 isMobile={isMobile}
                 onSelect={(path) => {
                   handleNoteSelect(path);

@@ -10,6 +10,8 @@ import {
 } from "@ant-design/icons";
 
 import { decideAssistantAction, requestProductAssistant } from "../../api/assistant";
+import { translateContent } from "../../api/translations";
+import useTranslation from "../../../i18n/useTranslation";
 import AssistantWorkspace from "./AssistantWorkspace";
 import { GlobalAssistantContext } from "./GlobalAssistantContext";
 import "./GlobalAssistantProvider.css";
@@ -52,6 +54,7 @@ function clampPosition(nextPosition, isOpen, isExpanded = false) {
 }
 
 export default function GlobalAssistantProvider({ children }) {
+  const { language } = useTranslation();
   const currentMeta = useSelector((state) => state.currentNote.meta);
   const currentNoteContent = useSelector((state) => state.currentNote.content);
   const [assistantOpen, setAssistantOpen] = useState(false);
@@ -91,6 +94,31 @@ export default function GlobalAssistantProvider({ children }) {
 
   const removeSelectedFile = (list, fileName) => list.filter((file) => file.name !== fileName);
 
+  const localizeAssistantMessages = async (messages) => {
+    const targetLanguage = String(language || "en").toLowerCase();
+    if (targetLanguage === "en") return messages;
+    return Promise.all(
+      messages.map(async (item) => {
+        if (item.role !== "assistant" || !String(item.text || "").trim()) return item;
+        try {
+          const translated = await translateContent({
+            source_type: "assistant_response",
+            source_id: `global-assistant:${item.id}`,
+            source_language: "en",
+            target_language: targetLanguage,
+            content: item.text,
+          });
+          return {
+            ...item,
+            text: translated?.translated_content || item.text,
+          };
+        } catch {
+          return item;
+        }
+      }),
+    );
+  };
+
   const handleSendQa = async () => {
     const trimmedQuestion = qaInput.trim();
     if (!trimmedQuestion || qaPending) return;
@@ -121,7 +149,7 @@ export default function GlobalAssistantProvider({ children }) {
         ? response.action_proposals.filter((proposal) => proposal?.status === "proposed").slice(-3)
         : [];
       setActionProposals(nextProposals);
-      const responseMessages = Array.isArray(response?.messages)
+      const rawResponseMessages = Array.isArray(response?.messages)
         ? response.messages.map((item) => ({
             id: item.message_id || `global-qa-${Date.now()}-${Math.random()}`,
             role: item.role || "assistant",
@@ -135,6 +163,7 @@ export default function GlobalAssistantProvider({ children }) {
               text: resolveQaAnswerText(response) || "No response content.",
             },
           ];
+      const responseMessages = await localizeAssistantMessages(rawResponseMessages);
       setQaMessages(responseMessages);
       setQaImageFiles([]);
       setQaAttachmentFiles([]);

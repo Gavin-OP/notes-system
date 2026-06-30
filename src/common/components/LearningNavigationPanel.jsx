@@ -56,9 +56,11 @@ function collectLearningPathSteps(learningPathDraft) {
     .filter((node) => node?.note_url || node?.noteUrl)
     .map((node) => ({
       key: node.note_url || node.noteUrl,
+      nodeId: node.node_id || node.nodeId || "",
       title: node.title || node.note_url || node.noteUrl,
       module: node.metadata?.subject_title || node.subject || "",
       pathStatus: node.status || "planned",
+      pathRelation: node.metadata?.path_relation || node.metadata?.pathRelation || "linear",
     }));
 }
 
@@ -69,11 +71,17 @@ const LearningNavigationPanel = ({
   learningPathDraft,
   learningPathPending = false,
   onGeneratePath,
+  onAddPathNode,
+  onReorderPathNodes,
   onRemovePathNode,
+  onUpdatePathNodeRelation,
   onSelect,
   isMobile = false,
 }) => {
   const { t } = useTranslation();
+  const [editMode, setEditMode] = useState(false);
+  const [draggedKey, setDraggedKey] = useState("");
+  const [addCandidateKey, setAddCandidateKey] = useState("");
   const normalizedCurrent = normalizeKey(currentNoteUrl);
   const personalizedSteps = useMemo(
     () => collectLearningPathSteps(learningPathDraft),
@@ -97,6 +105,10 @@ const LearningNavigationPanel = ({
       collectPathSteps((items || []).filter((item) => !Array.isArray(item.children) || item.children.length === 0)),
     [items],
   );
+  const addCandidateSteps = useMemo(() => {
+    const existing = new Set(personalizedSteps.map((step) => normalizeKey(step.key)));
+    return collectPathSteps(items || []).filter((step) => !existing.has(normalizeKey(step.key)));
+  }, [items, personalizedSteps]);
   const initialExpandedKey = useMemo(() => {
     const currentSection = subjectSections.find((section) =>
       section.steps.some((step) => normalizeKey(step.key) === normalizedCurrent),
@@ -122,9 +134,21 @@ const LearningNavigationPanel = ({
 
   const renderSteps = (steps, subjectLabel, options = {}) => {
     const allowRemove = Boolean(options.allowRemove && typeof onRemovePathNode === "function");
+    const allowEdit = Boolean(options.allowEdit);
     const firstIncompleteIndex = steps.findIndex(
       (step) => !completedNoteUrls.has(normalizeKey(step.key)) && step.pathStatus !== "completed",
     );
+    const handleDropOnStep = (targetKey) => {
+      if (!draggedKey || draggedKey === targetKey || typeof onReorderPathNodes !== "function") return;
+      const sourceIndex = steps.findIndex((step) => normalizeKey(step.key) === normalizeKey(draggedKey));
+      const targetIndex = steps.findIndex((step) => normalizeKey(step.key) === normalizeKey(targetKey));
+      if (sourceIndex < 0 || targetIndex < 0) return;
+      const nextSteps = [...steps];
+      const [moved] = nextSteps.splice(sourceIndex, 1);
+      nextSteps.splice(targetIndex, 0, moved);
+      onReorderPathNodes(nextSteps.map((step) => step.key));
+      setDraggedKey("");
+    };
     return (
       <ol className="learning-nav__path" aria-label={`${subjectLabel} path`}>
         {steps.map((step, index) => {
@@ -136,7 +160,27 @@ const LearningNavigationPanel = ({
           return (
             <li
               key={step.key}
-              className={`learning-nav__step learning-nav__step--${status}`}
+              className={`learning-nav__step learning-nav__step--${status} learning-nav__step--${step.pathRelation || "linear"} ${
+                draggedKey && normalizeKey(draggedKey) === stepKey ? "learning-nav__step--dragging" : ""
+              }`}
+              draggable={allowEdit}
+              onDragStart={(event) => {
+                if (!allowEdit) return;
+                setDraggedKey(step.key);
+                event.dataTransfer.effectAllowed = "move";
+                event.dataTransfer.setData("text/plain", step.key);
+              }}
+              onDragOver={(event) => {
+                if (!allowEdit || !draggedKey) return;
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+              }}
+              onDrop={(event) => {
+                if (!allowEdit) return;
+                event.preventDefault();
+                handleDropOnStep(step.key);
+              }}
+              onDragEnd={() => setDraggedKey("")}
             >
               <button
                 type="button"
@@ -150,9 +194,39 @@ const LearningNavigationPanel = ({
                     <span className="learning-nav__module">{step.module}</span>
                   ) : null}
                   <span className="learning-nav__node-title">{step.title}</span>
+                  {step.pathRelation && step.pathRelation !== "linear" ? (
+                    <span className={`learning-nav__relation learning-nav__relation--${step.pathRelation}`}>
+                      {step.pathRelation}
+                    </span>
+                  ) : null}
                 </span>
                 <span className="learning-nav__connector learning-nav__connector--right" aria-hidden="true" />
               </button>
+              {allowEdit ? (
+                <div className="learning-nav__edit-row" aria-label={`Edit ${step.title}`}>
+                  <button
+                    type="button"
+                    className={step.pathRelation === "linear" ? "learning-nav__edit-chip learning-nav__edit-chip--active" : "learning-nav__edit-chip"}
+                    onClick={() => onUpdatePathNodeRelation?.(step.key, "linear")}
+                  >
+                    line
+                  </button>
+                  <button
+                    type="button"
+                    className={step.pathRelation === "branch" ? "learning-nav__edit-chip learning-nav__edit-chip--active" : "learning-nav__edit-chip"}
+                    onClick={() => onUpdatePathNodeRelation?.(step.key, "branch")}
+                  >
+                    branch
+                  </button>
+                  <button
+                    type="button"
+                    className={step.pathRelation === "converge" ? "learning-nav__edit-chip learning-nav__edit-chip--active" : "learning-nav__edit-chip"}
+                    onClick={() => onUpdatePathNodeRelation?.(step.key, "converge")}
+                  >
+                    converge
+                  </button>
+                </div>
+              ) : null}
               {allowRemove ? (
                 <button
                   type="button"
@@ -259,9 +333,48 @@ const LearningNavigationPanel = ({
               {containsCurrent ? t("learningPath.resume") : t("learningPath.open")}
             </button>
           ) : null}
+          <button
+            type="button"
+            className={`learning-nav__section-start ${editMode ? "learning-nav__section-start--active" : ""}`}
+            onClick={() => setEditMode((value) => !value)}
+          >
+            {editMode ? "Done" : "Edit"}
+          </button>
         </div>
+        {editMode ? (
+          <div className="learning-nav__editor">
+            <div className="learning-nav__editor-add">
+              <select
+                className="learning-nav__editor-select"
+                value={addCandidateKey}
+                onChange={(event) => setAddCandidateKey(event.target.value)}
+              >
+                <option value="">Add a course...</option>
+                {addCandidateSteps.map((step) => (
+                  <option key={step.key} value={step.key}>
+                    {[step.module, step.title].filter(Boolean).join(" / ")}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="learning-nav__editor-add-btn"
+                disabled={!addCandidateKey || typeof onAddPathNode !== "function"}
+                onClick={() => {
+                  const candidate = addCandidateSteps.find((step) => step.key === addCandidateKey);
+                  if (!candidate) return;
+                  onAddPathNode(candidate);
+                  setAddCandidateKey("");
+                }}
+              >
+                Add
+              </button>
+            </div>
+            <p className="learning-nav__editor-hint">Drag cards to reorder. Mark branch or converge when a node splits or rejoins the path.</p>
+          </div>
+        ) : null}
         {effectiveExpandedKeys.has("personalized")
-          ? renderSteps(personalizedSteps, goalTitle, { allowRemove: true })
+          ? renderSteps(personalizedSteps, goalTitle, { allowRemove: true, allowEdit: editMode })
           : null}
       </section>
     );

@@ -228,7 +228,19 @@ function wrapFirstTextMatch(root, quote, activeQuoteId) {
       ? "note-quote-highlight note-quote-highlight--active"
       : "note-quote-highlight";
   wrapper.dataset.quoteId = quoteId;
-  wrapper.title = "Saved to your notes";
+  wrapper.dataset.selectedText = selectedText;
+  wrapper.dataset.personalNote = String(
+    quote?.personal_note ||
+      quote?.personalNote ||
+      quote?.note ||
+      quote?.content ||
+      "",
+  ).trim();
+  wrapper.tabIndex = 0;
+  wrapper.setAttribute("role", "button");
+  wrapper.title = wrapper.dataset.personalNote
+    ? "Click to review your saved note"
+    : "Saved to your notes";
   matchNode.parentNode.insertBefore(wrapper, matchNode);
   wrapper.appendChild(matchNode);
   return wrapper;
@@ -382,6 +394,7 @@ const MarkdownRenderer = ({
   const [noteComposerOpen, setNoteComposerOpen] = useState(false);
   const [personalNoteText, setPersonalNoteText] = useState("");
   const [personalNoteSaving, setPersonalNoteSaving] = useState(false);
+  const [activeQuoteDetail, setActiveQuoteDetail] = useState(null);
   const noteDirectory = useSelector(
     (state) => state.currentNote.meta?.directory,
   );
@@ -479,6 +492,41 @@ const MarkdownRenderer = ({
       if (old) old.remove();
     };
   }, [theme]);
+
+  useEffect(() => {
+    const root = bodyRef.current;
+    if (!root) return undefined;
+
+    const readQuoteDetail = (element) => ({
+      quoteId: element.dataset.quoteId || "",
+      selectedText: element.dataset.selectedText || element.textContent || "",
+      personalNote: element.dataset.personalNote || "",
+    });
+
+    const handleQuoteClick = (event) => {
+      const quoteElement = event.target?.closest?.(".note-quote-highlight");
+      if (!quoteElement || !root.contains(quoteElement)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      setActiveQuoteDetail(readQuoteDetail(quoteElement));
+    };
+
+    const handleQuoteKeyDown = (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const quoteElement = event.target?.closest?.(".note-quote-highlight");
+      if (!quoteElement || !root.contains(quoteElement)) return;
+      event.preventDefault();
+      setActiveQuoteDetail(readQuoteDetail(quoteElement));
+    };
+
+    root.addEventListener("click", handleQuoteClick);
+    root.addEventListener("keydown", handleQuoteKeyDown);
+
+    return () => {
+      root.removeEventListener("click", handleQuoteClick);
+      root.removeEventListener("keydown", handleQuoteKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     const root = bodyRef.current;
@@ -822,6 +870,22 @@ const MarkdownRenderer = ({
       onMouseUp={handleSelectionMouseUp}
     >
       <MarkdownContent content={safeContent} components={components} />
+      {activeQuoteDetail ? (
+        <div className="note-quote-popover" role="dialog" aria-label="Saved personal note">
+          <div className="note-quote-popover__header">
+            <span>Saved note</span>
+            <button type="button" onClick={() => setActiveQuoteDetail(null)} aria-label="Close saved note">
+              &times;
+            </button>
+          </div>
+          <blockquote>{activeQuoteDetail.selectedText}</blockquote>
+          {activeQuoteDetail.personalNote ? (
+            <p>{activeQuoteDetail.personalNote}</p>
+          ) : (
+            <p className="note-quote-popover__empty">No personal note was added for this highlight.</p>
+          )}
+        </div>
+      ) : null}
       {selectionToolbar ? (
         <div
           className={`note-selection-toolbar ${

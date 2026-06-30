@@ -239,6 +239,61 @@
   text-decoration-style: solid;
 }
 
+.note-quote-popover {
+  position: fixed;
+  right: var(--ns-space-5);
+  bottom: var(--ns-space-5);
+  z-index: 80;
+  width: min(360px, calc(100vw - 32px));
+  padding: var(--ns-space-4);
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-lg);
+  background: var(--ns-color-bg-container);
+  box-shadow: var(--ns-shadow-lg);
+  color: var(--ns-color-text);
+}
+
+.note-quote-popover__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ns-space-3);
+  margin-bottom: var(--ns-space-3);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.note-quote-popover__header button {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ns-color-border);
+  border-radius: 50%;
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text-secondary);
+  cursor: pointer;
+}
+
+.note-quote-popover blockquote {
+  margin: 0 0 var(--ns-space-3);
+  padding: 0 0 0 var(--ns-space-3);
+  border-left: 3px solid var(--ns-chip-wisdom-border);
+  color: var(--ns-color-text-secondary);
+  font-size: 0.9rem;
+}
+
+.note-quote-popover p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.note-quote-popover__empty {
+  color: var(--ns-color-text-tertiary);
+}
+
 .note-search-highlight {
   border-radius: var(--ns-radius-sm);
   background: var(--ns-chip-wisdom-bg);

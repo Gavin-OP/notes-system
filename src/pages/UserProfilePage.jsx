@@ -71,6 +71,7 @@ import AppFeatureTour, { PENDING_NOTES_TOUR_KEY } from "../common/components/gui
 import { CAREER_LEVEL_OPTIONS, formatCareerRoleLabel } from "../common/utils/careerDisplayUtils";
 import useTranslatedContent from "../i18n/useTranslatedContent";
 import useTranslation from "../i18n/useTranslation";
+import { generateLearningPath } from "../common/api/assistant";
 import {
   createProfileGuideSteps,
   prepareProfileTourStep,
@@ -1007,6 +1008,22 @@ function UserProfilePage() {
       setCareerBackground(nextBackground);
       setCareerRecommendations(nextRecommendations);
       setRecommendedFirstNote(nextRecommendedNote);
+      const recommendedSubject =
+        nextRecommendedNote?.subject_slug ||
+        nextRecommendedNote?.subjectSlug ||
+        nextBackground?.recommended_subject_slug ||
+        nextBackground?.recommendedSubjectSlug;
+      if (recommendedSubject) {
+        generateLearningPath({
+          goal_type: "subject",
+          goal_id: recommendedSubject,
+          subject_slugs: [recommendedSubject],
+          save_as_draft: true,
+          commit: true,
+        }).catch(() => {
+          // The first-note recommendation should still work if path generation is unavailable.
+        });
+      }
       setCareerOnboardingOpen(false);
       setTourPromptOpen(true);
       message.success("Your first note is ready.");
