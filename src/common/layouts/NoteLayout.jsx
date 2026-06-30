@@ -11,7 +11,6 @@ import {
   Col,
   Modal,
   Checkbox,
-  Space,
   message,
 } from "antd";
 import {
@@ -22,6 +21,7 @@ import {
 } from "@ant-design/icons";
 
 import LearningNavigationPanel from "../components/LearningNavigationPanel";
+import BottomOutlineProgress from "../components/BottomOutlineProgress";
 import NoteWorkspaceBar from "../components/NoteWorkspaceBar";
 import OutlineSider from "../components/OutlineSider";
 import FloatingOutlineButton from "../components/FloatingOutlineButton";
@@ -261,6 +261,7 @@ const NoteLayout = () => {
   const [assistantDockTab, setAssistantDockTab] = useState("outline");
   const [assistantTool, setAssistantTool] = useState("qa");
   const [assistantCollapsed, setAssistantCollapsed] = useState(false);
+  const [immersiveMode, setImmersiveMode] = useState(false);
   const [assistantDockWidth, setAssistantDockWidth] = useState(420);
   const [assistantModalOpen, setAssistantModalOpen] = useState(false);
   const [referencePickerOpen, setReferencePickerOpen] = useState(false);
@@ -456,24 +457,6 @@ const NoteLayout = () => {
     if (slug) navigate(`/subject/${slug}/mindmap`);
   };
 
-  const handleToggleAssistant = () => {
-    if (isMobile) {
-      setAssistantModalOpen(true);
-      return;
-    }
-    setAssistantMode("dock");
-    if (assistantCollapsed) {
-      setAssistantCollapsed(false);
-      setAssistantDockTab("qa");
-      setAssistantTool("qa");
-    } else {
-      setAssistantCollapsed(true);
-    }
-  };
-
-  const assistantPanelActive =
-    isMobile ? assistantModalOpen : assistantMode === "dock" && !assistantCollapsed;
-
   const registerWorkspaceMeta = useCallback((meta) => {
     setWorkspaceMeta(meta);
   }, []);
@@ -594,6 +577,7 @@ const NoteLayout = () => {
         noteTitle: noteName,
         subject: currentMeta?.subjectName || "",
         selectedText,
+        personalNote: selection?.personalNote || "",
         contextBefore: selection?.contextBefore || "",
         contextAfter: selection?.contextAfter || "",
         noteVersionId: "current",
@@ -607,6 +591,9 @@ const NoteLayout = () => {
           `<p>${safeSelectedText}</p>`,
           `<footer>From ${safeNoteName}</footer>`,
           "</blockquote>",
+          selection?.personalNote
+            ? `<p>${escapeHtml(selection.personalNote)}</p>`
+            : "",
         ].join("");
         return prev ? `${prev}${quoteHtml}` : quoteHtml;
       });
@@ -628,7 +615,24 @@ const NoteLayout = () => {
     setQaInput(`Explain this selected passage from ${noteName}:\n\n"${selectedText}"`);
     setAssistantDockTab("qa");
     setAssistantTool("qa");
-    setAssistantCollapsed(false);
+    if (immersiveMode) {
+      setAssistantModalOpen(true);
+    } else {
+      setAssistantCollapsed(false);
+    }
+  };
+
+  const handleGenerateQuizFromSelection = (selection) => {
+    const selectedText = String(selection?.selectedText || "").trim();
+    if (!selectedText) return;
+    setQuizInstruction(`Generate a short quiz based on this selected passage from ${noteName}:\n\n"${selectedText}"`);
+    setAssistantTool("quiz");
+    setAssistantDockTab("quiz");
+    if (immersiveMode || isMobile) {
+      setAssistantModalOpen(true);
+    } else {
+      setAssistantCollapsed(false);
+    }
   };
 
   useEffect(() => {
@@ -999,7 +1003,9 @@ const NoteLayout = () => {
 
   return (
     <Layout
-      className="note-layout"
+      className={`note-layout ${immersiveMode ? "note-layout--immersive" : ""} ${
+        collapsed ? "note-layout--sider-collapsed" : ""
+      }`}
       style={{
         "--header-bg": colorBgContainer,
         "--sider-bg": colorBgContainer,
@@ -1123,8 +1129,8 @@ const NoteLayout = () => {
                 notesTourStartToken={notesTourStartToken}
                 onNotesTourStepChange={handleNoteTourStepChange}
                 onOpenProfile={handleOpenProfile}
-                onToggleAssistant={handleToggleAssistant}
-                assistantActive={assistantPanelActive}
+                immersiveMode={immersiveMode}
+                onToggleImmersiveMode={() => setImmersiveMode((value) => !value)}
                 isCurrentNoteCompleted={isCurrentNoteCompleted}
                 completePending={completeNotePending}
                 onToggleCompletion={isOverviewPage ? undefined : handleToggleCurrentNoteCompletion}
@@ -1140,11 +1146,13 @@ const NoteLayout = () => {
                   noteQuotes,
                   onCreateQuoteFromSelection: handleCreateQuoteFromSelection,
                   onAskWithSelectedText: handleAskWithSelectedText,
+                  onGenerateQuizFromSelection: handleGenerateQuizFromSelection,
+                  immersiveMode,
                   registerWorkspaceMeta,
                 }}
               />
             </Content>
-            {!isMobile && assistantMode === "dock" ? (
+            {!isMobile && !immersiveMode && assistantMode === "dock" ? (
               <>
                 {assistantCollapsed ? (
                   <button
@@ -1230,6 +1238,9 @@ const NoteLayout = () => {
       {isMobile && (
         <FloatingOutlineButton outline={outline} visible={showFloatingButton} />
       )}
+      {immersiveMode && !isOverviewPage ? (
+        <BottomOutlineProgress outline={outline} />
+      ) : null}
       <audio
         ref={narrationAudioRef}
         src={narrationAudioUrls[currentNarrationChunkIndex] ?? ""}

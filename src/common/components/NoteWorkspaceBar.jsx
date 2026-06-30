@@ -9,11 +9,12 @@ import {
   PauseCircleOutlined,
   LoadingOutlined,
   UserOutlined,
-  CommentOutlined,
   ApartmentOutlined,
   MoreOutlined,
   CheckCircleOutlined,
   CheckOutlined,
+  FullscreenOutlined,
+  FullscreenExitOutlined,
 } from "@ant-design/icons";
 
 import AppFeatureTour from "./guide/AppFeatureTour";
@@ -38,8 +39,8 @@ function NoteWorkspaceBar({
   notesTourStartToken = 0,
   onNotesTourStepChange,
   onOpenProfile,
-  onToggleAssistant,
-  assistantActive = false,
+  immersiveMode = false,
+  onToggleImmersiveMode,
   isCurrentNoteCompleted = false,
   completePending = false,
   onToggleCompletion,
@@ -189,24 +190,23 @@ function NoteWorkspaceBar({
             </button>
           </Tooltip>
         ) : null}
-      </div>
-
-      <div className="note-workspace-bar__assist" aria-label="Assist">
-        <Tooltip title={assistantActive ? t("note.toolbar.assistantOpen") : t("note.toolbar.openAssistant")}>
+        <Tooltip title={immersiveMode ? t("note.toolbar.exitImmersive") : t("note.toolbar.enterImmersive")}>
           <button
             type="button"
             className={`note-workspace-bar__icon-btn ${
-              assistantActive ? "note-workspace-bar__icon-btn--active" : ""
+              immersiveMode ? "note-workspace-bar__icon-btn--active" : ""
             }`}
-            onClick={onToggleAssistant}
-            aria-label={t("note.toolbar.openAssistant")}
-            aria-pressed={assistantActive}
+            onClick={onToggleImmersiveMode}
+            aria-label={immersiveMode ? t("note.toolbar.exitImmersive") : t("note.toolbar.enterImmersive")}
+            aria-pressed={immersiveMode}
           >
-            <CommentOutlined />
-            {!isMobile ? <span>{t("note.toolbar.assistant")}</span> : null}
+            {immersiveMode ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+            {!isMobile ? <span>{t("note.toolbar.immersive")}</span> : null}
           </button>
         </Tooltip>
+      </div>
 
+      <div className="note-workspace-bar__assist" aria-label="Assist">
         <Tooltip title={t("note.toolbar.searchNotes")}>
           <button
             type="button"

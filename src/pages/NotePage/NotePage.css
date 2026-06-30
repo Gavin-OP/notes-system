@@ -7,6 +7,10 @@
   justify-content: center;
 }
 
+.note-page--immersive {
+  padding-bottom: 96px;
+}
+
 .note-page__micro-course-btn {
   border: 1px solid var(--ns-color-primary);
   background: var(--ns-color-primary);

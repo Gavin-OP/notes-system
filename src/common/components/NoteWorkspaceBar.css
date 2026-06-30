@@ -1,15 +1,52 @@
 /* Note workspace bar — learner-oriented tool groups below breadcrumb */
 
 .note-workspace-bar {
+  container-type: inline-size;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--ns-space-3);
+  gap: var(--ns-space-2);
   margin-bottom: var(--ns-space-4);
   padding: var(--ns-space-2) var(--ns-space-3);
   border: 1px solid var(--ns-color-border-secondary);
   border-radius: var(--ns-radius-md);
   background: var(--ns-color-bg-spotlight);
+}
+
+@container (max-width: 560px) {
+  .note-workspace-bar {
+    gap: var(--ns-space-2);
+  }
+
+  .note-workspace-bar__study,
+  .note-workspace-bar__assist,
+  .note-workspace-bar__meta {
+    gap: var(--ns-space-1);
+  }
+
+  .note-workspace-bar__assist,
+  .note-workspace-bar__meta {
+    padding-left: var(--ns-space-1);
+  }
+
+  .note-workspace-bar__icon-btn > span:not(.note-workspace-bar__more-badge) {
+    display: none;
+  }
+
+  .note-workspace-bar__icon-btn {
+    min-width: 36px;
+    justify-content: center;
+  }
+
+  .note-workspace-bar__completion {
+    min-width: 36px;
+    justify-content: center;
+    padding-inline: var(--ns-space-2);
+  }
+
+  .note-workspace-bar__completion span {
+    display: none;
+  }
 }
 
 .note-workspace-bar__study,
@@ -22,7 +59,7 @@
 }
 
 .note-workspace-bar__study {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
 }
 

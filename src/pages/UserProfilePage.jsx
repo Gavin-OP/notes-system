@@ -1563,9 +1563,14 @@ function UserProfilePage() {
                                             ? `${item.subject || "General"} · ${normalizeDate(item.created_at)}`
                                             : `${item.subject || "General"}`}
                                         </Text>
-                                      <Paragraph className="user-profile-page__quote-text">
-                                        {item.selected_text}
-                                      </Paragraph>
+                                        {item.personal_note || item.personalNote ? (
+                                          <Paragraph className="user-profile-page__personal-note-text">
+                                            {item.personal_note || item.personalNote}
+                                          </Paragraph>
+                                        ) : null}
+                                        <Paragraph className="user-profile-page__quote-text">
+                                          {item.selected_text}
+                                        </Paragraph>
                                       </div>
                                     </List.Item>
                                   )}

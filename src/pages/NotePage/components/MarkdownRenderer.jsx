@@ -16,6 +16,7 @@ import CopyLinkIcon from "./CopyLinkIcon";
 
 import { resolveRelativePath } from "../../../utils/markdownUtils";
 import { remarkHighlightMark } from "../../../utils/markdownUtils";
+import useTranslation from "../../../i18n/useTranslation";
 
 import "./MarkdownRenderer.css";
 
@@ -370,11 +371,17 @@ const MarkdownRenderer = ({
   searchMatchText = "",
   onCreateQuoteFromSelection,
   onAskWithSelectedText,
+  onGenerateQuizFromSelection,
+  immersiveMode = false,
 }) => {
   const bodyRef = useRef(null);
+  const { t } = useTranslation();
   const selectionRangeRef = useRef(null);
   const selectionStartedInBodyRef = useRef(false);
   const [selectionToolbar, setSelectionToolbar] = useState(null);
+  const [noteComposerOpen, setNoteComposerOpen] = useState(false);
+  const [personalNoteText, setPersonalNoteText] = useState("");
+  const [personalNoteSaving, setPersonalNoteSaving] = useState(false);
   const noteDirectory = useSelector(
     (state) => state.currentNote.meta?.directory,
   );
@@ -533,6 +540,8 @@ const MarkdownRenderer = ({
     if (!root || !selection || selection.rangeCount === 0 || selection.isCollapsed) {
       setSelectionToolbar(null);
       selectionRangeRef.current = null;
+      setNoteComposerOpen(false);
+      setPersonalNoteText("");
       return;
     }
 
@@ -540,17 +549,23 @@ const MarkdownRenderer = ({
     if (!root.contains(range.commonAncestorContainer)) {
       setSelectionToolbar(null);
       selectionRangeRef.current = null;
+      setNoteComposerOpen(false);
+      setPersonalNoteText("");
       return;
     }
     if (isSelectionInExcludedChrome(selection)) {
       setSelectionToolbar(null);
       selectionRangeRef.current = null;
+      setNoteComposerOpen(false);
+      setPersonalNoteText("");
       return;
     }
     const selectedText = selection.toString().replace(/\s+/g, " ").trim();
     if (!selectedText) {
       setSelectionToolbar(null);
       selectionRangeRef.current = null;
+      setNoteComposerOpen(false);
+      setPersonalNoteText("");
       return;
     }
     const rect = range.getBoundingClientRect();
@@ -565,6 +580,8 @@ const MarkdownRenderer = ({
       x: selectionRect.left + selectionRect.width / 2,
       y: Math.max(12, selectionRect.top - 44),
     });
+    setNoteComposerOpen(false);
+    setPersonalNoteText("");
   };
 
   const scheduleSelectionToolbarUpdate = () => {
@@ -614,12 +631,30 @@ const MarkdownRenderer = ({
   const clearSelectionToolbar = () => {
     setSelectionToolbar(null);
     selectionRangeRef.current = null;
+    setNoteComposerOpen(false);
+    setPersonalNoteText("");
+    setPersonalNoteSaving(false);
   };
 
   const handleAddSelectionToNotes = async () => {
     if (!selectionToolbar) return;
+    if (immersiveMode && !noteComposerOpen) {
+      setNoteComposerOpen(true);
+      return;
+    }
     restoreSavedSelection();
     await onCreateQuoteFromSelection?.(selectionToolbar);
+    clearSelectionToolbar();
+  };
+
+  const handleSavePersonalNote = async () => {
+    if (!selectionToolbar || personalNoteSaving) return;
+    setPersonalNoteSaving(true);
+    restoreSavedSelection();
+    await onCreateQuoteFromSelection?.({
+      ...selectionToolbar,
+      personalNote: personalNoteText.trim(),
+    });
     clearSelectionToolbar();
   };
 
@@ -630,9 +665,18 @@ const MarkdownRenderer = ({
     clearSelectionToolbar();
   };
 
+  const handleGenerateQuizSelection = () => {
+    if (!selectionToolbar) return;
+    restoreSavedSelection();
+    onGenerateQuizFromSelection?.(selectionToolbar);
+    clearSelectionToolbar();
+  };
+
   const preventToolbarSelectionLoss = (event) => {
-    event.preventDefault();
     event.stopPropagation();
+    if (!event.target?.closest?.("textarea, input")) {
+      event.preventDefault();
+    }
     restoreSavedSelection();
   };
 
@@ -780,7 +824,9 @@ const MarkdownRenderer = ({
       <MarkdownContent content={safeContent} components={components} />
       {selectionToolbar ? (
         <div
-          className="note-selection-toolbar"
+          className={`note-selection-toolbar ${
+            immersiveMode ? "note-selection-toolbar--immersive" : ""
+          }`}
           onPointerDown={preventToolbarSelectionLoss}
           onMouseDown={preventToolbarSelectionLoss}
           onPointerUp={preventToolbarSelectionLoss}
@@ -795,11 +841,43 @@ const MarkdownRenderer = ({
           }}
         >
           <button type="button" tabIndex={-1} onClick={handleAddSelectionToNotes}>
-            Add to notes
+            {t("note.selection.addToNotes")}
           </button>
           <button type="button" tabIndex={-1} onClick={handleAskSelection}>
-            Send to Q&A
+            {t("note.selection.ask")}
           </button>
+          <button
+            type="button"
+            tabIndex={-1}
+            className="note-selection-toolbar__quiz-btn"
+            onClick={handleGenerateQuizSelection}
+          >
+            {t("note.selection.generateQuiz")}
+          </button>
+          {noteComposerOpen ? (
+            <div className="note-selection-toolbar__composer">
+              <textarea
+                value={personalNoteText}
+                onChange={(event) => setPersonalNoteText(event.target.value)}
+                placeholder={t("note.selection.notePlaceholder")}
+                rows={3}
+                autoFocus
+              />
+              <div className="note-selection-toolbar__composer-actions">
+                <button type="button" tabIndex={-1} onClick={clearSelectionToolbar}>
+                  {t("common.cancel")}
+                </button>
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={handleSavePersonalNote}
+                  disabled={personalNoteSaving}
+                >
+                  {personalNoteSaving ? t("common.loading") : t("common.save")}
+                </button>
+              </div>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </div>

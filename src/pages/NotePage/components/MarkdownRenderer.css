@@ -109,13 +109,22 @@
   position: fixed;
   z-index: var(--ns-z-popover);
   display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: var(--ns-space-1);
+  max-width: min(520px, calc(100vw - 32px));
   padding: var(--ns-space-1);
   border: 1px solid var(--ns-color-border);
   border-radius: var(--ns-radius-md);
   background: var(--ns-color-bg-container);
   box-shadow: var(--ns-shadow-md);
   transform: translateX(-50%);
+}
+
+.note-selection-toolbar--immersive {
+  gap: 6px;
+  padding: 6px;
+  width: min(520px, calc(100vw - 32px));
 }
 
 .note-selection-toolbar button {
@@ -130,6 +139,17 @@
   transition: background-color var(--ns-duration-fast) var(--ns-ease-out);
 }
 
+.note-selection-toolbar--immersive button {
+  border-color: var(--ns-color-border-secondary);
+  background: var(--ns-color-bg-container);
+  white-space: nowrap;
+}
+
+.note-selection-toolbar button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 .note-selection-toolbar button:hover {
   background: var(--ns-color-fill-secondary);
 }
@@ -141,6 +161,62 @@
 }
 
 .note-selection-toolbar button:first-child:hover {
+  border-color: var(--ns-color-primary-hover);
+  background: var(--ns-color-primary-hover);
+}
+
+.note-selection-toolbar__quiz-btn {
+  border-color: var(--ns-chip-wisdom-border);
+  background: var(--ns-chip-wisdom-bg);
+  color: var(--ns-chip-wisdom-text);
+}
+
+.note-selection-toolbar__quiz-btn:hover {
+  border-color: var(--ns-color-wisdom);
+  background: var(--ns-color-wisdom-bg-strong);
+}
+
+.note-selection-toolbar__composer {
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ns-space-2);
+  padding: var(--ns-space-2);
+  border-top: 1px solid var(--ns-color-border-secondary);
+}
+
+.note-selection-toolbar__composer textarea {
+  width: 100%;
+  min-height: 84px;
+  resize: vertical;
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-sm);
+  padding: var(--ns-space-2);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.note-selection-toolbar__composer textarea:focus {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
+}
+
+.note-selection-toolbar__composer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ns-space-2);
+}
+
+.note-selection-toolbar__composer-actions button:last-child {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary);
+  color: #fff;
+}
+
+.note-selection-toolbar__composer-actions button:last-child:hover:not(:disabled) {
   border-color: var(--ns-color-primary-hover);
   background: var(--ns-color-primary-hover);
 }
@@ -262,4 +338,3 @@
 [data-theme="dark"] .note-quote-highlight {
   text-decoration-color: var(--ns-color-primary-hover);
 }
-

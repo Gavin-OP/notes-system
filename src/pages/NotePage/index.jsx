@@ -100,6 +100,11 @@ function NotePage() {
     typeof outletContext.onAskWithSelectedText === "function"
       ? outletContext.onAskWithSelectedText
       : null;
+  const onGenerateQuizFromSelection =
+    typeof outletContext.onGenerateQuizFromSelection === "function"
+      ? outletContext.onGenerateQuizFromSelection
+      : null;
+  const immersiveMode = Boolean(outletContext.immersiveMode);
   const registerWorkspaceMeta =
     typeof outletContext.registerWorkspaceMeta === "function"
       ? outletContext.registerWorkspaceMeta
@@ -422,7 +427,7 @@ function NotePage() {
 
   return (
     <>
-      <div className="note-page">
+      <div className={`note-page ${immersiveMode ? "note-page--immersive" : ""}`}>
         {noteContent && (
           <>
             <MarkdownRenderer
@@ -434,6 +439,8 @@ function NotePage() {
               searchMatchText={searchMatchText}
               onCreateQuoteFromSelection={onCreateQuoteFromSelection}
               onAskWithSelectedText={onAskWithSelectedText}
+              onGenerateQuizFromSelection={onGenerateQuizFromSelection}
+              immersiveMode={immersiveMode}
             />
             {showMicroCourseLink ? (
               <div className="note-page__complete-footer">

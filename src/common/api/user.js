@@ -170,6 +170,7 @@ export function createMyNoteQuote(payload) {
       note_title: payload?.noteTitle ?? "",
       subject: payload?.subject ?? "",
       selected_text: payload?.selectedText ?? "",
+      personal_note: payload?.personalNote ?? payload?.personal_note ?? "",
       context_before: payload?.contextBefore ?? "",
       context_after: payload?.contextAfter ?? "",
       note_version_id: payload?.noteVersionId ?? "current",

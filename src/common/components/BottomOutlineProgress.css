@@ -1,0 +1,95 @@
+.bottom-outline-progress {
+  position: fixed;
+  left: 374px;
+  right: 24px;
+  bottom: var(--ns-space-3);
+  z-index: var(--ns-z-sticky);
+  padding: var(--ns-space-2);
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 94%, transparent);
+  box-shadow: var(--ns-shadow-lg);
+  backdrop-filter: blur(16px);
+}
+
+.note-layout--sider-collapsed .bottom-outline-progress {
+  left: 48px;
+}
+
+.bottom-outline-progress__bar {
+  height: 3px;
+  border-radius: var(--ns-radius-pill);
+  background: var(--ns-color-fill-tertiary);
+  overflow: hidden;
+}
+
+.bottom-outline-progress__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    var(--ns-color-primary),
+    var(--ns-color-wisdom)
+  );
+  transition: width var(--ns-duration-normal) var(--ns-ease-out);
+}
+
+.bottom-outline-progress__items {
+  display: flex;
+  align-items: center;
+  gap: var(--ns-space-2);
+  margin-top: var(--ns-space-2);
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+
+.bottom-outline-progress__item {
+  flex: 0 0 auto;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 5px var(--ns-space-2);
+  border: 1px solid transparent;
+  border-radius: var(--ns-radius-pill);
+  color: var(--ns-color-text-secondary);
+  font-size: 12px;
+  line-height: 1.2;
+  text-decoration: none;
+  transition:
+    color var(--ns-duration-fast) var(--ns-ease-out),
+    border-color var(--ns-duration-fast) var(--ns-ease-out),
+    background-color var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.bottom-outline-progress__item[data-level="1"],
+.bottom-outline-progress__item[data-level="2"] {
+  font-weight: 600;
+}
+
+.bottom-outline-progress__item:hover {
+  color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg-hover);
+}
+
+.bottom-outline-progress__item--active {
+  color: var(--ns-chip-primary-text);
+  border-color: var(--ns-chip-primary-border);
+  background: var(--ns-chip-primary-bg);
+}
+
+.bottom-outline-progress__item:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .bottom-outline-progress,
+  .note-layout--sider-collapsed .bottom-outline-progress {
+    left: var(--ns-space-3);
+    right: var(--ns-space-3);
+    bottom: var(--ns-space-3);
+  }
+}
