@@ -162,6 +162,50 @@ export function requestAssistantQa(payload, files = {}) {
   });
 }
 
+export function requestProductAssistant(payload, files = {}) {
+  const images = Array.isArray(files.images) ? files.images : [];
+  const attachments = Array.isArray(files.attachments) ? files.attachments : [];
+  const hasFiles = images.length > 0 || attachments.length > 0;
+  validateAssistantFiles(images, attachments);
+  const safePayload = {
+    ...payload,
+    attachmentMeta: buildAttachmentMeta(images, attachments),
+  };
+  validateAssistantQaPayload(safePayload);
+
+  if (hasFiles) {
+    const formData = new FormData();
+    formData.append("payload", JSON.stringify(safePayload));
+    images.forEach((file) => formData.append("images[]", file));
+    attachments.forEach((file) => formData.append("attachments[]", file));
+    return assistantRequest("/api/v1/assistant/global", {
+      method: "POST",
+      body: formData,
+    });
+  }
+
+  return assistantRequest("/api/v1/assistant/global", {
+    method: "POST",
+    body: JSON.stringify(safePayload),
+  });
+}
+
+export function getAssistantConversations() {
+  return assistantRequest("/api/v1/assistant/conversations");
+}
+
+export function getAssistantContext() {
+  return assistantRequest("/api/v1/assistant/context");
+}
+
+export function getCanonicalCurriculumGraph() {
+  return assistantRequest("/api/v1/assistant/curriculum/canonical-graph");
+}
+
+export function getLearningPath() {
+  return assistantRequest("/api/v1/assistant/learning-path");
+}
+
 export function requestAssistantQuiz(payload) {
   validateAssistantQuizPayload(payload);
   return assistantRequest("/api/v1/assistant/quiz", {

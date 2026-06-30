@@ -9,7 +9,7 @@ import {
   RobotOutlined,
 } from "@ant-design/icons";
 
-import { requestAssistantQa } from "../../api/assistant";
+import { requestProductAssistant } from "../../api/assistant";
 import AssistantWorkspace from "./AssistantWorkspace";
 import { GlobalAssistantContext } from "./GlobalAssistantContext";
 import "./GlobalAssistantProvider.css";
@@ -62,6 +62,7 @@ export default function GlobalAssistantProvider({ children }) {
   const [qaAttachmentFiles, setQaAttachmentFiles] = useState([]);
   const [qaPending, setQaPending] = useState(false);
   const [qaError, setQaError] = useState("");
+  const [conversationId, setConversationId] = useState("");
   const [position, setPosition] = useState(getDefaultPosition);
   const dragStateRef = useRef(null);
   const dragMovedRef = useRef(false);
@@ -106,21 +107,40 @@ export default function GlobalAssistantProvider({ children }) {
     try {
       const payload = {
         question: trimmedQuestion,
-        history: nextMessages.slice(-12).map((item) => ({ role: item.role, content: item.text })),
+        conversation_id: conversationId || undefined,
         ...assistantContextPayload,
       };
-      const response = await requestAssistantQa(payload, {
+      const response = await requestProductAssistant(payload, {
         images: qaImageFiles,
         attachments: qaAttachmentFiles,
       });
-      setQaMessages((prev) => [
-        ...prev,
-        {
-          id: `global-qa-assistant-${Date.now()}`,
-          role: "assistant",
-          text: resolveQaAnswerText(response) || "No response content.",
-        },
-      ]);
+      if (response?.conversation_id) setConversationId(response.conversation_id);
+      const proposalText = Array.isArray(response?.action_proposals) && response.action_proposals.length > 0
+        ? `\n\nSuggested actions:\n${response.action_proposals
+            .map((proposal) => `- ${proposal.title || proposal.action_type}: ${proposal.description || ""}`)
+            .join("\n")}`
+        : "";
+      const responseMessages = Array.isArray(response?.messages)
+        ? response.messages.map((item) => ({
+            id: item.message_id || `global-qa-${Date.now()}-${Math.random()}`,
+            role: item.role || "assistant",
+            text: item.text || "",
+          }))
+        : [
+            ...nextMessages,
+            {
+              id: `global-qa-assistant-${Date.now()}`,
+              role: "assistant",
+              text: `${resolveQaAnswerText(response) || "No response content."}${proposalText}`,
+            },
+          ];
+      if (proposalText && responseMessages.length > 0) {
+        const lastMessage = responseMessages[responseMessages.length - 1];
+        if (lastMessage.role === "assistant" && !lastMessage.text.includes("Suggested actions:")) {
+          lastMessage.text = `${lastMessage.text}${proposalText}`;
+        }
+      }
+      setQaMessages(responseMessages);
       setQaImageFiles([]);
       setQaAttachmentFiles([]);
     } catch (error) {
