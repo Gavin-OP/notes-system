@@ -295,6 +295,10 @@
   flex-direction: column;
 }
 
+.note-layout__sider.ant-layout-sider-collapsed .note-layout__sider-menu-shell {
+  display: none;
+}
+
 .note-layout__sider-header {
   height: 45px;
   display: flex;
@@ -395,4 +399,3 @@
   border-color: var(--ns-color-primary);
   background: var(--ns-color-bg-container);
 }
-

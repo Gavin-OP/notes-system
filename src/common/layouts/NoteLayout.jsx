@@ -4,7 +4,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 import {
   Layout,
-  Menu,
   Breadcrumb,
   Button,
   theme,
@@ -18,15 +17,11 @@ import {
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  FolderOutlined,
-  FileTextOutlined,
-  InfoCircleOutlined,
-  ReadOutlined,
-  AppstoreOutlined,
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
 
+import LearningNavigationPanel from "../components/LearningNavigationPanel";
 import NoteWorkspaceBar from "../components/NoteWorkspaceBar";
 import OutlineSider from "../components/OutlineSider";
 import FloatingOutlineButton from "../components/FloatingOutlineButton";
@@ -59,33 +54,6 @@ const LEARNING_SUPPORT_TABS = [
   { id: "notes", labelKey: "learningSupport.tabs.notes", tool: "notes" },
   { id: "quiz", labelKey: "learningSupport.tabs.quiz", tool: "quiz" },
 ];
-
-// convert icon type to icon
-const getIcon = (iconType) => {
-  switch (iconType) {
-    case "index":
-      return <ReadOutlined />;
-    case "info":
-      return <InfoCircleOutlined />;
-    case "folder":
-      return <FolderOutlined />;
-    case "file":
-      return <FileTextOutlined />;
-    case "overview":
-      return <AppstoreOutlined />;
-    default:
-      return null;
-  }
-};
-
-// add icons to menu items recursively
-const addIconsToMenuItems = (items) => {
-  return items.map((item) => ({
-    ...item,
-    icon: getIcon(item.iconType),
-    children: item.children ? addIconsToMenuItems(item.children) : undefined,
-  }));
-};
 
 function flattenMenuLeafItems(items, list = []) {
   items.forEach((item) => {
@@ -209,105 +177,6 @@ function findBreadcrumbLabels(items, targetKey, trail = []) {
     }
   }
   return null;
-}
-
-function decorateMenuItemsWithProgress(items, options, inSubjectFolder = false) {
-  const { currentNoteUrl, completedNoteUrls } = options;
-  const eligibleFileItems = inSubjectFolder
-    ? items.filter((item) => item.iconType === "file")
-    : [];
-
-  return items.map((item) => {
-    const isFolder = item.iconType === "folder";
-    const isFile = item.iconType === "file";
-    const nextInSubjectFolder = inSubjectFolder || isFolder;
-    const nextChildren = item.children
-      ? decorateMenuItemsWithProgress(item.children, options, nextInSubjectFolder)
-      : undefined;
-
-    if (inSubjectFolder && item.iconType === "overview") {
-      const normalizedKey = normalizeMenuKey(item.key);
-      const isCurrent = normalizedKey === currentNoteUrl;
-      return {
-        ...item,
-        children: nextChildren,
-        label: (
-          <div
-            className={`note-layout__menu-overview-label ${isCurrent ? "note-layout__menu-overview-label--current" : ""}`}
-          >
-            <span className="note-layout__menu-overview-text">{item.label}</span>
-          </div>
-        ),
-      };
-    }
-
-    if (inSubjectFolder && isFile) {
-      const normalizedKey = normalizeMenuKey(item.key);
-      const status = completedNoteUrls.has(normalizedKey)
-        ? "done"
-        : normalizedKey === currentNoteUrl
-          ? "current"
-          : "todo";
-
-      const noteIndex = eligibleFileItems.findIndex(
-        (candidate) => normalizeMenuKey(candidate.key) === normalizedKey,
-      );
-      const prevItem = noteIndex > 0 ? eligibleFileItems[noteIndex - 1] : null;
-      const nextItem =
-        noteIndex >= 0 && noteIndex < eligibleFileItems.length - 1
-          ? eligibleFileItems[noteIndex + 1]
-          : null;
-      const prevStatus = prevItem
-        ? completedNoteUrls.has(normalizeMenuKey(prevItem.key))
-            ? "done"
-            : normalizeMenuKey(prevItem.key) === currentNoteUrl
-              ? "current"
-              : "todo"
-        : null;
-      const nextStatus = nextItem
-        ? completedNoteUrls.has(normalizeMenuKey(nextItem.key))
-            ? "done"
-            : normalizeMenuKey(nextItem.key) === currentNoteUrl
-              ? "current"
-              : "todo"
-        : null;
-      const topLineColor =
-        prevStatus && prevStatus !== "todo" && status !== "todo"
-          ? "var(--ns-color-primary)"
-          : "var(--ns-color-border)";
-      const bottomLineColor =
-        nextStatus && status === "done" && nextStatus !== "todo"
-          ? "var(--ns-color-primary)"
-          : "var(--ns-color-border)";
-      const isFirst = noteIndex === 0;
-      const isLast = noteIndex === eligibleFileItems.length - 1;
-
-      return {
-        ...item,
-        icon: undefined,
-        children: nextChildren,
-        label: (
-          <div className={`note-layout__menu-note-label note-layout__menu-note-label--${status}`}>
-            <span
-              className={`note-layout__menu-note-marker-wrap ${isFirst ? "is-first" : ""} ${isLast ? "is-last" : ""}`}
-              style={{
-                "--line-top-color": topLineColor,
-                "--line-bottom-color": bottomLineColor,
-              }}
-            >
-              <span className="note-layout__menu-note-marker" />
-            </span>
-            <span className="note-layout__menu-note-text">{item.label}</span>
-          </div>
-        ),
-      };
-    }
-
-    return {
-      ...item,
-      children: nextChildren,
-    };
-  });
 }
 
 function resolveQaAnswerText(payload) {
@@ -543,7 +412,6 @@ const NoteLayout = () => {
     () => applyTranslatedMenuLabels(plainMenuItems, translatedMenuLabelMap, t),
     [plainMenuItems, translatedMenuLabelMap, t],
   );
-  const iconMenuItems = useMemo(() => addIconsToMenuItems(localizedPlainMenuItems), [localizedPlainMenuItems]);
   const searchItems = useMemo(() => flattenSearchItems(localizedPlainMenuItems), [localizedPlainMenuItems]);
   const searchOptions = useMemo(
     () =>
@@ -762,15 +630,6 @@ const NoteLayout = () => {
     setAssistantTool("qa");
     setAssistantCollapsed(false);
   };
-
-  const menuItems = useMemo(
-    () =>
-      decorateMenuItemsWithProgress(iconMenuItems, {
-        currentNoteUrl: currentNoteUrlNormalized,
-        completedNoteUrls,
-      }),
-    [completedNoteUrls, currentNoteUrlNormalized, iconMenuItems],
-  );
 
   useEffect(() => {
     narrationAudioUrlsRef.current = narrationAudioUrls;
@@ -1192,7 +1051,7 @@ const NoteLayout = () => {
             <div className="note-layout__sider-menu-shell" ref={directoryAreaRef}>
               {!isMobile ? (
                 <div className="note-layout__sider-header">
-                  <span className="note-layout__sider-title">{t("note.sidebar.title")}</span>
+                  <span className="note-layout__sider-title">{t("learningPath.title")}</span>
                   <button
                     type="button"
                     className="note-layout__sider-collapse-btn"
@@ -1207,16 +1066,14 @@ const NoteLayout = () => {
                   </button>
                 </div>
               ) : null}
-              <Menu
-                mode="inline"
-                className={`note-layout__menu ${isMobile ? "note-layout__menu--mobile" : ""}`}
-                items={menuItems}
-                onClick={({ key }) => {
-                  handleNoteSelect(key);
-                  // auto-close menu on mobile after selection
-                  if (isMobile) {
-                    setCollapsed(true);
-                  }
+              <LearningNavigationPanel
+                items={localizedPlainMenuItems}
+                currentNoteUrl={currentNoteUrlNormalized}
+                completedNoteUrls={completedNoteUrls}
+                isMobile={isMobile}
+                onSelect={(path) => {
+                  handleNoteSelect(path);
+                  if (isMobile) setCollapsed(true);
                 }}
               />
             </div>

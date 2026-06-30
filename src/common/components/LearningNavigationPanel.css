@@ -1,0 +1,361 @@
+.learning-nav {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--ns-space-3);
+  background:
+    linear-gradient(180deg, var(--ns-color-bg-container) 0%, var(--ns-color-bg-layout) 100%);
+}
+
+.learning-nav--mobile {
+  padding-bottom: var(--ns-space-6);
+}
+
+.learning-nav__intro {
+  display: flex;
+  gap: var(--ns-space-3);
+  padding: var(--ns-space-3);
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-bg-container);
+  box-shadow: var(--ns-shadow-sm);
+}
+
+.learning-nav__intro-icon {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg);
+  border: 1px solid var(--ns-color-primary-border);
+}
+
+.learning-nav__eyebrow {
+  margin: 0;
+  color: var(--ns-color-text);
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 650;
+}
+
+.learning-nav__description {
+  margin: 3px 0 0;
+  color: var(--ns-color-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.learning-nav__legend {
+  display: flex;
+  gap: var(--ns-space-2);
+  flex-wrap: wrap;
+  margin: var(--ns-space-3) 0;
+}
+
+.learning-nav__legend-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ns-color-text-secondary);
+  font-size: 11px;
+  line-height: 1;
+  padding: 6px 8px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-pill);
+  background: var(--ns-color-bg-container);
+}
+
+.learning-nav__legend-item::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--ns-color-border);
+  background: var(--ns-color-bg-container);
+}
+
+.learning-nav__legend-item--done::before {
+  border-color: var(--ns-sem-sage);
+  background: var(--ns-sem-sage);
+}
+
+.learning-nav__legend-item--current::before {
+  border-color: var(--ns-color-primary);
+  box-shadow: 0 0 0 3px var(--ns-color-primary-bg);
+}
+
+.learning-nav__legend-item--next::before {
+  border-color: var(--ns-color-wisdom);
+  background: var(--ns-color-wisdom-bg);
+}
+
+.learning-nav__sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ns-space-3);
+}
+
+.learning-nav__section {
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-bg-container);
+  overflow: hidden;
+}
+
+.learning-nav__section--active {
+  border-color: var(--ns-color-primary-border);
+}
+
+.learning-nav__section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--ns-space-2);
+  padding: var(--ns-space-2);
+}
+
+.learning-nav__section-toggle {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: var(--ns-space-2);
+  padding: var(--ns-space-1);
+  border-radius: var(--ns-radius-sm);
+  text-align: left;
+  cursor: pointer;
+}
+
+.learning-nav__section-toggle--static {
+  cursor: default;
+}
+
+.learning-nav__section-toggle:not(.learning-nav__section-toggle--static):hover {
+  background: var(--ns-color-fill-secondary);
+}
+
+.learning-nav__section-icon {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border-radius: var(--ns-radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ns-sem-slate);
+  background: var(--ns-sem-slate-bg);
+  border: 1px solid var(--ns-sem-slate-border);
+}
+
+.learning-nav__section--active .learning-nav__section-icon {
+  color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg);
+  border-color: var(--ns-color-primary-border);
+}
+
+.learning-nav__section-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.learning-nav__section-title {
+  color: var(--ns-color-text);
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.learning-nav__section-meta {
+  color: var(--ns-color-text-tertiary);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.learning-nav__section-start {
+  flex: 0 0 auto;
+  border: 1px solid var(--ns-color-border-secondary);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text-secondary);
+  border-radius: var(--ns-radius-pill);
+  padding: 5px 9px;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.learning-nav__section-start:hover {
+  color: var(--ns-color-primary);
+  border-color: var(--ns-color-primary-border);
+  background: var(--ns-color-primary-bg);
+}
+
+.learning-nav__path {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--ns-space-3) var(--ns-space-3);
+}
+
+.learning-nav__step {
+  position: relative;
+  padding: 0 0 18px;
+}
+
+.learning-nav__step::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 2px;
+  height: 18px;
+  transform: translateX(-50%);
+  background: var(--ns-color-border);
+}
+
+.learning-nav__step--done::after,
+.learning-nav__step--done + .learning-nav__step--done::after,
+.learning-nav__step--done + .learning-nav__step--current::after {
+  background: var(--ns-sem-sage);
+}
+
+.learning-nav__step:last-child {
+  padding-bottom: 0;
+}
+
+.learning-nav__step:last-child::after {
+  display: none;
+}
+
+.learning-nav__node {
+  width: 100%;
+  min-width: 0;
+  position: relative;
+  display: block;
+  border: 1px solid var(--ns-color-border-secondary);
+  background: var(--ns-color-bg-container);
+  color: inherit;
+  text-align: center;
+  padding: 11px var(--ns-space-3);
+  border-radius: var(--ns-radius-md);
+  cursor: pointer;
+  box-shadow: var(--ns-shadow-sm);
+  transition:
+    border-color var(--ns-duration-normal) var(--ns-ease-out),
+    background-color var(--ns-duration-normal) var(--ns-ease-out),
+    box-shadow var(--ns-duration-normal) var(--ns-ease-out),
+    transform var(--ns-duration-normal) var(--ns-ease-out);
+}
+
+.learning-nav__node:hover {
+  border-color: var(--ns-color-primary-border-hover);
+  background: var(--ns-color-primary-bg-hover);
+  box-shadow: var(--ns-shadow-primary);
+  transform: translateY(-1px);
+}
+
+.learning-nav__step--current .learning-nav__node {
+  background: var(--ns-color-primary);
+  border-color: var(--ns-color-primary);
+  box-shadow: var(--ns-shadow-primary);
+}
+
+.learning-nav__connector {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--ns-color-bg-container);
+  background: var(--ns-color-bg-container);
+  box-shadow: 0 0 0 1px var(--ns-color-border);
+  transform: translateY(-50%);
+}
+
+.learning-nav__connector--left {
+  left: -6px;
+}
+
+.learning-nav__connector--right {
+  right: -6px;
+}
+
+.learning-nav__step--done .learning-nav__connector {
+  background: var(--ns-sem-sage);
+  box-shadow: 0 0 0 1px var(--ns-sem-sage);
+}
+
+.learning-nav__step--current .learning-nav__connector {
+  background: var(--ns-color-text);
+  box-shadow: 0 0 0 1px var(--ns-color-text);
+}
+
+.learning-nav__step--next .learning-nav__connector {
+  background: var(--ns-color-wisdom);
+  box-shadow: 0 0 0 1px var(--ns-color-wisdom);
+}
+
+.learning-nav__node-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.learning-nav__module {
+  color: var(--ns-color-text-tertiary);
+  font-size: 10px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.learning-nav__node-title {
+  color: var(--ns-color-text);
+  font-size: 13.5px;
+  line-height: 1.4;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.learning-nav__step--current .learning-nav__module,
+.learning-nav__step--current .learning-nav__node-title {
+  color: #ffffff;
+}
+
+.learning-nav__step--done .learning-nav__node-title {
+  color: var(--ns-color-success-ink);
+}
+
+.learning-nav__step--done .learning-nav__node {
+  border-color: var(--ns-chip-sage-border);
+  background: var(--ns-chip-sage-bg);
+}
+
+.learning-nav__step--next .learning-nav__node {
+  border-color: var(--ns-chip-wisdom-border);
+  background: var(--ns-chip-wisdom-bg);
+}
+
+.learning-nav__section-toggle:focus-visible,
+.learning-nav__section-start:focus-visible,
+.learning-nav__node:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
+}
+
+[data-theme="dark"] .learning-nav {
+  background: var(--ns-color-bg-layout);
+}
