@@ -26,7 +26,6 @@ import {
 import {
   BookOutlined,
   CommentOutlined,
-  DownOutlined,
   EditOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
@@ -1870,14 +1869,6 @@ function UserProfilePage() {
                 </Card>
               </Col>
             </Row>
-            <button
-              type="button"
-              className="ns-career-nav-link user-profile-page__explore-careers"
-              onClick={() => navigate("/careers")}
-            >
-              <span className="ns-career-nav-link__label">{t("profile.career.explore")}</span>
-              <DownOutlined className="ns-career-nav-link__icon" aria-hidden="true" />
-            </button>
           </Card>
         </div>
         ) : null}

@@ -277,7 +277,7 @@ const NoteLayout = () => {
   const [assistantTool, setAssistantTool] = useState("notes");
   const [assistantCollapsed, setAssistantCollapsed] = useState(false);
   const [immersiveMode, setImmersiveMode] = useState(false);
-  const [assistantDockWidth, setAssistantDockWidth] = useState(420);
+  const [assistantDockWidth, setAssistantDockWidth] = useState(350);
   const [assistantModalOpen, setAssistantModalOpen] = useState(false);
   const [referencePickerOpen, setReferencePickerOpen] = useState(false);
   const [selectedReferencePaths, setSelectedReferencePaths] = useState([]);
@@ -567,27 +567,6 @@ const NoteLayout = () => {
     };
   }, []);
 
-  const handleGenerateSubjectPath = useCallback(async () => {
-    if (!currentSubjectSlug || learningPathPending) return;
-    setLearningPathPending(true);
-    try {
-      const response = await generateLearningPath({
-        goal_type: "subject",
-        goal_id: currentSubjectSlug,
-        subject_slugs: [currentSubjectSlug],
-        save_as_draft: true,
-        commit: true,
-      });
-      setLearningPathDraft(response?.draft || response?.path?.draft || null);
-      message.success("Learning path created.");
-    } catch (error) {
-      const errorText = error instanceof Error ? error.message : "Could not create learning path.";
-      message.error(errorText);
-    } finally {
-      setLearningPathPending(false);
-    }
-  }, [currentSubjectSlug, learningPathPending]);
-
   const persistLearningPathDraft = useCallback(async (nextDraft, successMessage, commitMessage) => {
     setLearningPathDraft(nextDraft);
     try {
@@ -603,6 +582,105 @@ const NoteLayout = () => {
       return false;
     }
   }, [loadLearningPath]);
+
+  const handleStartPathBuilder = useCallback(async () => {
+    if (learningPathPending) return;
+    setLearningPathPending(true);
+    try {
+      const emptyDraft = {
+        path_id: "default",
+        goal_type: "custom",
+        goal_id: "",
+        goal_title: "",
+        nodes: [],
+        edges: [],
+      };
+      await persistLearningPathDraft(
+        emptyDraft,
+        t("learningPath.started", "Path builder ready. Add courses from the library."),
+        "Started empty learning path",
+      );
+      setPathEditMode(true);
+      setCollapsed(false);
+      setShowMenu(true);
+    } catch (error) {
+      const errorText = error instanceof Error ? error.message : "Could not start path builder.";
+      message.error(errorText);
+    } finally {
+      setLearningPathPending(false);
+    }
+  }, [learningPathPending, persistLearningPathDraft, t]);
+
+  const mergeGeneratedNodesIntoDraft = useCallback(
+    async (incomingNodes, successMessage, commitMessage) => {
+      if (!learningPathDraft || !Array.isArray(incomingNodes) || incomingNodes.length === 0) {
+        message.info(t("learningPath.noCoursesToAdd", "No new courses to add."));
+        return;
+      }
+      const existing = new Set(
+        (learningPathDraft.nodes || []).map((node) => normalizeMenuKey(node.note_url || node.noteUrl || "")),
+      );
+      const newNodes = incomingNodes.filter((node) => {
+        const noteUrl = normalizeMenuKey(node.note_url || node.noteUrl || "");
+        return noteUrl && !existing.has(noteUrl);
+      });
+      if (newNodes.length === 0) {
+        message.info(t("learningPath.alreadyInPath", "These courses are already in your path."));
+        return;
+      }
+      const nextNodes = [...(learningPathDraft.nodes || []), ...newNodes];
+      const nextDraft = {
+        ...learningPathDraft,
+        nodes: nextNodes,
+        edges: buildLearningPathEdges(nextNodes),
+      };
+      await persistLearningPathDraft(nextDraft, successMessage, commitMessage);
+    },
+    [learningPathDraft, persistLearningPathDraft, t],
+  );
+
+  const handleAddCareerToPath = useCallback(
+    async (profile) => {
+      if (!learningPathDraft || learningPathPending) return;
+      const jobId = profile?.job_id || profile?.jobId;
+      if (!jobId) return;
+      setLearningPathPending(true);
+      try {
+        const response = await generateLearningPath({
+          goal_type: "career",
+          goal_id: jobId,
+          goal_title: profile?.title || "",
+          save_as_draft: false,
+          commit: false,
+        });
+        const generatedNodes = response?.draft?.nodes || [];
+        if (!generatedNodes.length) {
+          message.info(t("learningPath.noCareerCourses", "No courses found for this career."));
+          return;
+        }
+        await mergeGeneratedNodesIntoDraft(
+          generatedNodes.map((node) => ({
+            ...node,
+            metadata: {
+              ...(node.metadata || {}),
+              source: "career_goal",
+              career_job_id: jobId,
+              career_title: profile?.title || "",
+              pending_canonical_sort: true,
+            },
+          })),
+          t("learningPath.careerAdded", "Career path added to your learning path."),
+          "Added career path to learning path",
+        );
+      } catch (error) {
+        const errorText = error instanceof Error ? error.message : "Could not add career path.";
+        message.error(errorText);
+      } finally {
+        setLearningPathPending(false);
+      }
+    },
+    [learningPathDraft, learningPathPending, mergeGeneratedNodesIntoDraft, t],
+  );
 
   const handleAddPathNode = useCallback(async (candidate) => {
     if (!learningPathDraft) return;
@@ -686,6 +764,38 @@ const NoteLayout = () => {
     };
     await persistLearningPathDraft(nextDraft, "Path node removed.", "Removed learning path node");
   }, [learningPathDraft, persistLearningPathDraft]);
+
+  const handleClearPath = useCallback(async () => {
+    if (!learningPathDraft?.nodes?.length || learningPathPending) return;
+    Modal.confirm({
+      title: t("learningPath.clearConfirmTitle", "Clear learning path?"),
+      content: t(
+        "learningPath.clearConfirmBody",
+        "This removes every node from your current path. You can rebuild it anytime.",
+      ),
+      okText: t("learningPath.clearPath", "Clear path"),
+      okButtonProps: { danger: true },
+      cancelText: t("common.cancel", "Cancel"),
+      onOk: async () => {
+        setLearningPathPending(true);
+        try {
+          const nextDraft = {
+            ...learningPathDraft,
+            nodes: [],
+            edges: [],
+          };
+          await persistLearningPathDraft(
+            nextDraft,
+            t("learningPath.cleared", "Learning path cleared."),
+            "Cleared learning path",
+          );
+          setPathEditMode(true);
+        } finally {
+          setLearningPathPending(false);
+        }
+      },
+    });
+  }, [learningPathDraft, learningPathPending, persistLearningPathDraft, t]);
 
   useEffect(() => {
     let mounted = true;
@@ -1197,10 +1307,13 @@ const NoteLayout = () => {
                 completedNoteUrls={completedNoteUrls}
                 learningPathDraft={learningPathDraft}
                 learningPathPending={learningPathPending}
-                onGeneratePath={currentSubjectSlug ? handleGenerateSubjectPath : undefined}
+                onGeneratePath={handleStartPathBuilder}
                 onAddPathNode={handleAddPathNode}
+                onAddCareerToPath={handleAddCareerToPath}
                 onReorderPathNodes={handleReorderPathNodes}
                 onRemovePathNode={handleRemovePathNode}
+                onClearPath={handleClearPath}
+                pathEditMode={pathEditMode}
                 onEditModeChange={setPathEditMode}
                 canonicalGraph={canonicalGraph}
                 isMobile={isMobile}

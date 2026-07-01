@@ -254,23 +254,32 @@
 }
 
 .note-layout__breadcrumb {
-  margin: var(--ns-space-3) 0 var(--ns-space-2);
+  margin: 0;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border-bottom: 1px solid var(--ns-color-split);
 }
 
 .note-layout__breadcrumb--mobile {
-  margin: var(--ns-space-3) 0;
+  margin: 0;
 }
 
 .note-layout__content {
   flex: 1;
   min-width: 0;
-  padding: var(--ns-space-5);
+  padding: 0 var(--ns-space-5) var(--ns-space-5);
   background: var(--content-bg);
   border-radius: var(--content-radius);
 }
 
 .note-layout__content--mobile {
-  padding: var(--ns-space-3);
+  padding: 0 var(--ns-space-3) var(--ns-space-3);
+}
+
+.note-layout__content .note-workspace-bar {
+  margin-top: var(--ns-space-3);
 }
 
 /* Outline sider */
