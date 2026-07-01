@@ -3,9 +3,9 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import ReactGA from "react-ga4";
 
-import store from "./redux/store.js";
+import store from "./app/store/store.js";
 import App from "./App.jsx";
-import { isLocalhost } from "./utils/analyticsUtils.js";
+import { isLocalhost } from "./shared/lib/analyticsUtils.js";
 
 import "./styles/tokens.css";
 import "./styles/semanticChips.css";

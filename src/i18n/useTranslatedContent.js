@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { translateContent } from "../common/api/translations";
+import { translateContent } from "../shared/api/translations";
 import useTranslation from "./useTranslation";
 
 

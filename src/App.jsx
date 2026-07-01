@@ -14,10 +14,10 @@ import enUS from "antd/locale/en_US";
 import zhCNMobile from "antd-mobile/es/locales/zh-CN";
 import enUSMobile from "antd-mobile/es/locales/en-US";
 
-import Routes from "./router/Routes";
-import { fetchNotesIndex } from "./redux/notesIndexSlice";
-import { setIsMobile } from "./redux/preferenceSlice";
-import { isLocalhost } from "./utils/analyticsUtils";
+import Routes from "./app/router/Routes";
+import { fetchNotesIndex } from "./app/store/notesIndexSlice";
+import { setIsMobile } from "./app/store/preferenceSlice";
+import { isLocalhost } from "./shared/lib/analyticsUtils";
 import { academicAntTokens } from "./styles/academicTheme";
 
 import "./App.css";

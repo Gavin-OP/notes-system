@@ -1,15 +1,3 @@
-/**
- * SubjectMindmap - Wrapper component for MindmapView
- * Gets subjectId from route context and passes to MindmapView
- */
-import { useOutletContext } from "react-router-dom";
-import { MindmapView } from "../../../common/components/mindmap";
-
-const SubjectMindmap = () => {
-  const { subjectId } = useOutletContext();
-
-  return <MindmapView subjectId={subjectId} />;
-};
-
-export default SubjectMindmap;
-
+/* eslint-disable react-refresh/only-export-components */
+export { default } from "../../../features/notes/pages/NotePage/SubjectEntry/SubjectMindmap.jsx";
+export * from "../../../features/notes/pages/NotePage/SubjectEntry/SubjectMindmap.jsx";

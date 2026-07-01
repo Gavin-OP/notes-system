@@ -1,0 +1,672 @@
+/**
+ * NetworkMindmapView - Obsidian-style force-directed network graph
+ * 
+ * Features:
+ * - Force-directed layout using D3-force simulation
+ * - Node size based on reference count (importance)
+ * - Hover/click highlights connected nodes, dims others
+ * - All concept-to-concept edges visible
+ * - Draggable, zoomable, pannable
+ */
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import ReactFlow, {
+  Background,
+  Controls,
+  ReactFlowProvider,
+  useNodesState,
+  useEdgesState,
+  useReactFlow,
+} from "reactflow";
+import * as d3 from "d3";
+import "reactflow/dist/style.css";
+
+import NetworkNode from "./nodes/NetworkNode";
+import { convertToNetworkFormat, convertEdgesToReactFlow } from "./utils/networkGraphLoader";
+import {
+  DEFAULT_NETWORK_LAYOUT_CONFIG,
+  getConnectedNodeIds,
+  getConnectedEdgeIds,
+} from "./utils/networkLayoutUtils";
+import "./NetworkMindmapView.css";
+
+// Register custom node type
+const nodeTypes = {
+  networkNode: NetworkNode,
+};
+
+const INITIAL_LAYOUT_TICKS = 140;
+const LIVE_LAYOUT_UPDATE_INTERVAL_MS = 48;
+
+function buildInitialPositions(
+  networkNodes,
+  clusters,
+  width,
+  height,
+  focusSubject,
+  hierarchyConfig = null
+) {
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const safeClusters = Array.isArray(clusters) ? clusters : [];
+  const fallbackRadius = Math.max(180, Math.min(width, height) * 0.24);
+
+  const nonFocusClusters = safeClusters.filter(
+    (cluster) => cluster?.subject !== focusSubject
+  );
+
+  const clusterCenters = new Map();
+  safeClusters.forEach((cluster) => {
+    if (!cluster?.id) return;
+    if (cluster.subject === focusSubject) {
+      clusterCenters.set(cluster.id, { x: centerX, y: centerY });
+      return;
+    }
+    const idx = nonFocusClusters.findIndex((item) => item?.id === cluster.id);
+    const angle = (Math.PI * 2 * Math.max(idx, 0)) / Math.max(nonFocusClusters.length, 1);
+    clusterCenters.set(cluster.id, {
+      x: centerX + Math.cos(angle) * fallbackRadius * 1.6,
+      y: centerY + Math.sin(angle) * fallbackRadius * 1.2,
+    });
+  });
+
+  const positionedNodes = networkNodes.map((node, index) => {
+    const clusterId = node.data?.clusterId ?? node.data?.categoryId;
+    const clusterCenter = clusterCenters.get(clusterId) ?? {
+      x: centerX + Math.cos(index) * 40,
+      y: centerY + Math.sin(index) * 40,
+    };
+    const spread = clusterId && clusterCenters.has(clusterId) ? fallbackRadius * 0.35 : 140;
+    return {
+      ...node,
+      x: clusterCenter.x + (Math.random() - 0.5) * spread,
+      y: clusterCenter.y + (Math.random() - 0.5) * spread,
+    };
+  });
+
+  if (!hierarchyConfig?.enabled) {
+    return positionedNodes;
+  }
+
+  const nodeById = new Map(positionedNodes.map((node) => [node.id, node]));
+  const parentToChildren = new Map();
+  const childRole = hierarchyConfig?.childRole ?? "sub";
+  positionedNodes.forEach((node) => {
+    const parentId = node.data?.parentConceptId;
+    if (!parentId || !nodeById.has(parentId)) return;
+    const conceptLevel = node.data?.conceptLevel;
+    if (conceptLevel && childRole && conceptLevel !== childRole) return;
+    if (!parentToChildren.has(parentId)) {
+      parentToChildren.set(parentId, []);
+    }
+    parentToChildren.get(parentId).push(node.id);
+  });
+
+  const orbitRadius = Math.max(Number(hierarchyConfig?.orbitRadius) || 140, 170);
+  parentToChildren.forEach((childIds, parentId) => {
+    const parentNode = nodeById.get(parentId);
+    if (!parentNode || childIds.length === 0) return;
+    childIds.forEach((childId, index) => {
+      const childNode = nodeById.get(childId);
+      if (!childNode) return;
+      const angle = (Math.PI * 2 * index) / Math.max(childIds.length, 1);
+      const jitter = (Math.random() - 0.5) * Math.min(24, orbitRadius * 0.25);
+      childNode.x = parentNode.x + Math.cos(angle) * orbitRadius + jitter;
+      childNode.y = parentNode.y + Math.sin(angle) * orbitRadius + jitter;
+    });
+  });
+
+  return positionedNodes;
+}
+
+function extractFocusNodeIds(networkData) {
+  const focusNodeIds = networkData?.metadata?.focusNodeIds ?? [];
+  if (Array.isArray(focusNodeIds) && focusNodeIds.length > 0) {
+    return focusNodeIds;
+  }
+  const focusSubject = networkData?.metadata?.focusSubject;
+  const focusCluster = (networkData?.metadata?.clusters ?? []).find(
+    (cluster) => cluster?.subject === focusSubject
+  );
+  return focusCluster?.nodeIds ?? [];
+}
+
+/**
+ * NetworkMindmapView Component
+ * @param {Object} graphData - The graph data from JSON
+ * @param {string} subjectId - Subject identifier
+ * @param {Function} onConceptClick - Callback when a concept node is clicked
+ */
+const NetworkMindmapView = ({ graphData, subjectId, onConceptClick }) => {
+  const containerRef = useRef(null);
+  const simulationRef = useRef(null);
+  const activeClusterSubjectRef = useRef(null);
+  const releaseFixRef = useRef(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [activeClusterSubjectOverride, setActiveClusterSubjectOverride] = useState(null);
+  const { fitView } = useReactFlow();
+
+  // Convert graph data to network format
+  const networkData = useMemo(() => {
+    if (!graphData) return null;
+    return convertToNetworkFormat(graphData, subjectId);
+  }, [graphData, subjectId]);
+
+  const clusterButtons = useMemo(
+    () => networkData?.metadata?.clusters ?? [],
+    [networkData]
+  );
+
+  const activeClusterSubject =
+    activeClusterSubjectOverride ?? networkData?.metadata?.focusSubject ?? null;
+
+  const clearReleaseTimer = useCallback(() => {
+    if (releaseFixRef.current) {
+      clearTimeout(releaseFixRef.current);
+      releaseFixRef.current = null;
+    }
+  }, []);
+
+  // Initialize force simulation
+  useEffect(() => {
+    if (!networkData || !containerRef.current) return;
+
+    const { nodes: networkNodes, edges: networkEdges, metadata } = networkData;
+    const hierarchyLayoutConfig = metadata?.parentSubLayout ?? null;
+    const hierarchyLayoutEnabled =
+      Boolean(hierarchyLayoutConfig?.enabled) && Boolean(metadata?.hasHierarchyData);
+    const hierarchyEdges = networkEdges.filter(
+      (edge) => edge.edgeKind === "hierarchy" || edge.type === metadata?.hierarchyEdgeType
+    );
+    const relatedEdges = networkEdges.filter(
+      (edge) => edge.edgeKind !== "hierarchy" && edge.type !== metadata?.hierarchyEdgeType
+    );
+    activeClusterSubjectRef.current = metadata?.focusSubject ?? null;
+    
+    // Get container dimensions
+    const rect = containerRef.current.getBoundingClientRect();
+    const width = rect.width || DEFAULT_NETWORK_LAYOUT_CONFIG.width;
+    const height = rect.height || DEFAULT_NETWORK_LAYOUT_CONFIG.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const simNodes = buildInitialPositions(
+      networkNodes,
+      metadata?.clusters,
+      width,
+      height,
+      metadata?.focusSubject,
+      hierarchyLayoutConfig
+    );
+
+    // Create simulation links
+    const forceEdges = hierarchyLayoutEnabled
+      ? (relatedEdges.length > 0 ? relatedEdges : networkEdges)
+      : networkEdges;
+    const relatedStrengthValues = forceEdges
+      .map((edge) => Number(edge.strength))
+      .filter((value) => Number.isFinite(value));
+    const maxRelatedStrength =
+      relatedStrengthValues.length > 0 ? Math.max(...relatedStrengthValues) : 1;
+    const simLinks = forceEdges.map((edge) => ({
+      source: edge.source,
+      target: edge.target,
+      strength: edge.strength,
+    }));
+    const hierarchyOrbitRadius = Math.max(
+      Number(hierarchyLayoutConfig?.orbitRadius) || 140,
+      170
+    );
+    const hierarchyLinks = hierarchyEdges.map((edge) => ({
+      source: edge.source,
+      target: edge.target,
+    }));
+
+    const config = DEFAULT_NETWORK_LAYOUT_CONFIG.simulation;
+
+    // Create D3 force simulation
+    let simulation = d3
+      .forceSimulation(simNodes)
+      .force(
+        "link",
+        d3
+          .forceLink(simLinks)
+          .id((d) => d.id)
+          .distance((link) => {
+            const rawStrength = Number(link.strength);
+            const normalizedStrength = Number.isFinite(rawStrength) && maxRelatedStrength > 0
+              ? rawStrength / maxRelatedStrength
+              : 0.5;
+            const sourceSize = Number(link.source?.data?.size) || 0;
+            const targetSize = Number(link.target?.data?.size) || 0;
+            const sizePadding = ((sourceSize + targetSize) / 2) * 0.5;
+            const baseDistance =
+              config.linkDistance * (1.72 - Math.min(0.72, normalizedStrength * 0.62));
+            return baseDistance + sizePadding;
+          })
+          .strength((link) => {
+            const rawStrength = Number(link.strength);
+            if (!Number.isFinite(rawStrength) || maxRelatedStrength <= 0) {
+              return config.linkStrength;
+            }
+            const normalizedStrength = rawStrength / maxRelatedStrength;
+            return Math.min(1, config.linkStrength * (0.35 + normalizedStrength));
+          })
+      )
+      .force(
+        "charge",
+        d3
+          .forceManyBody()
+          .strength(config.chargeStrength)
+          .distanceMax(config.chargeDistanceMax)
+      )
+      .force(
+        "center",
+        d3.forceCenter(centerX, centerY).strength(config.centerStrength)
+      )
+      .force(
+        "collision",
+        d3
+          .forceCollide()
+          .radius((d) => d.data.size + config.collisionRadius)
+          .strength(config.collisionStrength)
+      )
+      .alphaDecay(config.alphaDecay)
+      .velocityDecay(config.velocityDecay);
+
+    if (hierarchyLayoutEnabled && hierarchyLinks.length > 0) {
+      simulation = simulation.force(
+        "hierarchy-link",
+        d3
+          .forceLink(hierarchyLinks)
+          .id((d) => d.id)
+          .distance(hierarchyOrbitRadius)
+          .strength(0.9)
+      );
+    }
+
+    simulationRef.current = simulation;
+
+    let lastTickUpdate = 0;
+    let pendingFrame = null;
+    const focusIds = extractFocusNodeIds(networkData);
+
+    const buildFlowNodes = (prevNodes = []) => {
+      const prevById = new Map(prevNodes.map((node) => [node.id, node]));
+      return simNodes.map((simNode) => {
+        const prevNode = prevById.get(simNode.id);
+        const isActiveClusterNode =
+          activeClusterSubjectRef.current &&
+          simNode.data?.subject === activeClusterSubjectRef.current;
+        return {
+          ...(prevNode ?? simNode),
+          position: { x: simNode.x, y: simNode.y },
+          zIndex: isActiveClusterNode ? 20 : 6,
+        };
+      });
+    };
+
+    const updateFlowNodes = () => {
+      setNodes((prevNodes) => buildFlowNodes(prevNodes));
+    };
+
+    const fitInitialView = () => {
+      setTimeout(() => {
+        if (focusIds.length > 0) {
+          fitView({
+            nodes: focusIds.map((id) => ({ id })),
+            padding: 0.35,
+            maxZoom: 1.3,
+            duration: 500,
+          });
+        } else {
+          fitView({ padding: 0.2 });
+        }
+      }, 100);
+    };
+
+    // ReactFlow nodes are DOM-heavy, so throttle live simulation updates.
+    simulation.on("tick", () => {
+      const now = performance.now();
+      if (now - lastTickUpdate < LIVE_LAYOUT_UPDATE_INTERVAL_MS || pendingFrame) {
+        return;
+      }
+      lastTickUpdate = now;
+      pendingFrame = requestAnimationFrame(() => {
+        pendingFrame = null;
+        updateFlowNodes();
+      });
+    });
+
+    simulation.on("end", () => {
+      updateFlowNodes();
+    });
+
+    const flowEdges = convertEdgesToReactFlow(networkEdges);
+
+    simulation.stop();
+    simulation.tick(INITIAL_LAYOUT_TICKS);
+
+    setNodes(buildFlowNodes());
+    setEdges(flowEdges);
+    fitInitialView();
+
+    // Cleanup
+    return () => {
+      clearReleaseTimer();
+      if (pendingFrame) {
+        cancelAnimationFrame(pendingFrame);
+      }
+      simulation.stop();
+    };
+  }, [networkData, setNodes, setEdges, fitView, clearReleaseTimer]);
+
+  const focusCluster = useCallback(
+    (cluster) => {
+      if (!cluster || !simulationRef.current || !containerRef.current || !networkData) {
+        return;
+      }
+      const rect = containerRef.current.getBoundingClientRect();
+      const centerX = (rect.width || DEFAULT_NETWORK_LAYOUT_CONFIG.width) / 2;
+      const centerY = (rect.height || DEFAULT_NETWORK_LAYOUT_CONFIG.height) / 2;
+      const simNodes = simulationRef.current.nodes();
+      const nodeIdSet = new Set(cluster.nodeIds ?? []);
+      const clusterNodes = simNodes.filter((node) => nodeIdSet.has(node.id));
+      if (clusterNodes.length === 0) return;
+
+      const clusterRadius = Math.max(130, Math.min(rect.width, rect.height) * 0.18);
+      const outerRadius = Math.max(clusterRadius * 2.1, Math.min(rect.width, rect.height) * 0.4);
+
+      const selected = simNodes.filter((node) => nodeIdSet.has(node.id));
+      const others = simNodes.filter((node) => !nodeIdSet.has(node.id));
+
+      selected.forEach((node, idx) => {
+        const angle = (Math.PI * 2 * idx) / Math.max(selected.length, 1);
+        const ring = 0.45 + Math.floor(idx / 10) * 0.22;
+        const jitter = (Math.random() - 0.5) * 14;
+        const targetX = centerX + Math.cos(angle) * clusterRadius * ring + jitter;
+        const targetY = centerY + Math.sin(angle) * clusterRadius * ring + jitter;
+        node.x = targetX;
+        node.y = targetY;
+        node.fx = targetX;
+        node.fy = targetY;
+      });
+
+      const clusters = networkData.metadata?.clusters ?? [];
+      const otherCenters = new Map();
+      const nonSelectedClusters = clusters.filter((item) => item?.id !== cluster.id);
+      nonSelectedClusters.forEach((item, idx) => {
+        const angle = (Math.PI * 2 * idx) / Math.max(nonSelectedClusters.length, 1);
+        otherCenters.set(item.id, {
+          x: centerX + Math.cos(angle) * outerRadius,
+          y: centerY + Math.sin(angle) * outerRadius * 0.9,
+        });
+      });
+
+      others.forEach((node, idx) => {
+        const clusterId = node.data?.clusterId;
+        const groupCenter = otherCenters.get(clusterId) ?? {
+          x: centerX + Math.cos(idx) * outerRadius,
+          y: centerY + Math.sin(idx) * outerRadius * 0.85,
+        };
+        const jitterX = (Math.random() - 0.5) * 80;
+        const jitterY = (Math.random() - 0.5) * 80;
+        const targetX = groupCenter.x + jitterX;
+        const targetY = groupCenter.y + jitterY;
+        node.x = targetX;
+        node.y = targetY;
+        node.fx = targetX;
+        node.fy = targetY;
+      });
+
+      setActiveClusterSubjectOverride(cluster.subject ?? null);
+      activeClusterSubjectRef.current = cluster.subject ?? null;
+
+      setNodes((prevNodes) =>
+        prevNodes.map((node) => {
+          if (node.type !== "networkNode") return node;
+          const inCluster = nodeIdSet.has(node.id);
+          return {
+            ...node,
+            zIndex: inCluster ? 22 : 6,
+            data: {
+              ...node.data,
+              isDimmed: !inCluster,
+            },
+          };
+        })
+      );
+
+      setEdges((prevEdges) =>
+        prevEdges.map((edge) => {
+          const inCluster =
+            nodeIdSet.has(edge.source) && nodeIdSet.has(edge.target);
+          const baseStrokeWidth =
+            edge.data?.baseStrokeWidth ?? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth;
+          return {
+            ...edge,
+            style: {
+              ...edge.style,
+              opacity: inCluster
+                ? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.highlightOpacity
+                : DEFAULT_NETWORK_LAYOUT_CONFIG.edge.dimmedOpacity,
+              strokeWidth: inCluster ? baseStrokeWidth * 1.18 : baseStrokeWidth * 0.72,
+            },
+          };
+        })
+      );
+
+      simulationRef.current.alpha(0.22).restart();
+      clearReleaseTimer();
+      releaseFixRef.current = setTimeout(() => {
+        simNodes.forEach((node) => {
+          node.fx = null;
+          node.fy = null;
+        });
+        simulationRef.current?.alpha(0.06).restart();
+      }, 900);
+      fitView({
+        nodes: (cluster.nodeIds ?? []).map((id) => ({ id })),
+        padding: 0.35,
+        maxZoom: 1.45,
+        duration: 450,
+      });
+    },
+    [fitView, networkData, setEdges, setNodes, clearReleaseTimer]
+  );
+
+  // Handle node drag - update simulation
+  const onNodeDragStart = useCallback((event, node) => {
+    if (node.type !== "networkNode") return;
+    if (simulationRef.current) {
+      simulationRef.current.alphaTarget(0.3).restart();
+    }
+  }, []);
+
+  const onNodeDrag = useCallback((event, node) => {
+    if (node.type !== "networkNode") return;
+    if (simulationRef.current) {
+      const simNode = simulationRef.current.nodes().find((n) => n.id === node.id);
+      if (simNode) {
+        simNode.fx = node.position.x;
+        simNode.fy = node.position.y;
+      }
+    }
+  }, []);
+
+  const onNodeDragStop = useCallback((event, node) => {
+    if (node.type !== "networkNode") return;
+    if (simulationRef.current) {
+      const simNode = simulationRef.current.nodes().find((n) => n.id === node.id);
+      if (simNode) {
+        simNode.fx = null;
+        simNode.fy = null;
+      }
+      simulationRef.current.alphaTarget(0);
+    }
+  }, []);
+
+  // Handle hover - highlight connected nodes
+  const onNodeMouseEnter = useCallback(
+    (event, node) => {
+      if (node.type !== "networkNode") return;
+
+      if (!networkData) return;
+
+      const connectedNodes = getConnectedNodeIds(node.id, networkData.edges);
+      const connectedEdges = getConnectedEdgeIds(node.id, networkData.edges);
+
+      // Update node visual states
+      setNodes((prevNodes) =>
+        prevNodes.map((n) => ({
+          ...(n.type !== "networkNode"
+            ? n
+            : {
+                ...n,
+                data: {
+                  ...n.data,
+                  isHighlighted: n.id === node.id,
+                  isDimmed: !connectedNodes.has(n.id),
+                },
+              }),
+        }))
+      );
+
+      // Update edge visual states
+      setEdges((prevEdges) =>
+        prevEdges.map((e) => ({
+          ...e,
+          style: {
+            ...e.style,
+            opacity: connectedEdges.has(e.id)
+              ? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.highlightOpacity
+              : DEFAULT_NETWORK_LAYOUT_CONFIG.edge.dimmedOpacity,
+            strokeWidth: connectedEdges.has(e.id)
+              ? (e.data?.baseStrokeWidth ?? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth) * 1.25
+              : (e.data?.baseStrokeWidth ?? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth) * 0.52,
+          },
+        }))
+      );
+    },
+    [networkData, setNodes, setEdges]
+  );
+
+  const onNodeMouseLeave = useCallback(() => {
+    if (!networkData) return;
+
+    // Reset all nodes to default state
+    setNodes((prevNodes) =>
+      prevNodes.map((n) => ({
+          ...(n.type !== "networkNode"
+            ? n
+            : {
+                ...n,
+                data: {
+                  ...n.data,
+                  isHighlighted: false,
+                  isDimmed: false,
+                },
+              }),
+      }))
+    );
+
+    // Reset all edges to default state
+    setEdges((prevEdges) =>
+      prevEdges.map((e) => ({
+        ...e,
+        style: {
+          ...e.style,
+          opacity: DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeOpacity,
+          strokeWidth:
+            e.data?.baseStrokeWidth ?? DEFAULT_NETWORK_LAYOUT_CONFIG.edge.strokeWidth,
+        },
+      }))
+    );
+  }, [networkData, setNodes, setEdges]);
+
+  // Handle node click - open concept action modal
+  const onNodeClick = useCallback(
+    (event, node) => {
+      if (node.type !== "networkNode") return;
+      onConceptClick?.({
+        id: node.id,
+        label: node.data?.label,
+        noteUrl: node.data?.noteUrl,
+        noteTitle: node.data?.noteTitle,
+        anchorId: node.data?.anchorId,
+        categoryId: node.data?.categoryId,
+        conceptType: node.data?.conceptType,
+      });
+    },
+    [onConceptClick],
+  );
+
+  if (!graphData) {
+    return (
+      <div className="network-mindmap-view network-mindmap-view--empty">
+        <p>No graph data available</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="network-mindmap-view" ref={containerRef}>
+      {clusterButtons.length > 0 && (
+        <div className="network-mindmap-view__cluster-legend">
+          {clusterButtons.map((cluster) => {
+            const isActive = cluster.subject === activeClusterSubject;
+            return (
+              <button
+                key={cluster.id}
+                type="button"
+                className={`network-mindmap-view__cluster-btn ${isActive ? "network-mindmap-view__cluster-btn--active" : ""}`}
+                style={{ "--cluster-color": cluster.color }}
+                onClick={() => focusCluster(cluster)}
+              >
+                {cluster.label ?? cluster.subject ?? cluster.id}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onNodeClick={onNodeClick}
+        onNodeDragStart={onNodeDragStart}
+        onNodeDrag={onNodeDrag}
+        onNodeDragStop={onNodeDragStop}
+        onNodeMouseEnter={onNodeMouseEnter}
+        onNodeMouseLeave={onNodeMouseLeave}
+        nodeTypes={nodeTypes}
+        fitView
+        fitViewOptions={{
+          padding: 0.2,
+          maxZoom: 1.5,
+        }}
+        minZoom={0.2}
+        maxZoom={3}
+        nodesDraggable={true}
+        nodesConnectable={false}
+        elementsSelectable={true}
+        panOnDrag={true}
+        zoomOnScroll={true}
+        proOptions={{ hideAttribution: true }}
+      >
+        <Background color="#333" gap={30} size={1} variant="dots" />
+        <Controls showInteractive={false} position="bottom-right" />
+      </ReactFlow>
+    </div>
+  );
+};
+
+// Wrapper to provide ReactFlowProvider context
+const NetworkMindmapViewWrapper = (props) => (
+  <ReactFlowProvider>
+    <NetworkMindmapView {...props} />
+  </ReactFlowProvider>
+);
+
+export default NetworkMindmapViewWrapper;
+

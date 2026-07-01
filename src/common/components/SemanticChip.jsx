@@ -1,14 +1,3 @@
-import { isChipVariant } from "../utils/semanticChipUtils";
-
-function SemanticChip({ variant = "slate", className = "", children, ...rest }) {
-  const resolvedVariant = isChipVariant(variant) ? variant : "slate";
-  const classes = ["ns-chip", `ns-chip--${resolvedVariant}`, className].filter(Boolean).join(" ");
-
-  return (
-    <span className={classes} {...rest}>
-      {children}
-    </span>
-  );
-}
-
-export default SemanticChip;
+/* eslint-disable react-refresh/only-export-components */
+export { default } from "../../shared/ui/SemanticChip.jsx";
+export * from "../../shared/ui/SemanticChip.jsx";
