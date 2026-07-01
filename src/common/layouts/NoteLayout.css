@@ -65,6 +65,15 @@
   height: calc(100vh - var(--note-meta-topbar-height, 64px));
   overflow: auto;
   border-right: 1px solid var(--ns-color-border-secondary);
+  max-width: min(720px, 58vw) !important;
+  transition:
+    flex-basis var(--ns-duration-normal) var(--ns-ease-out),
+    max-width var(--ns-duration-normal) var(--ns-ease-out),
+    width var(--ns-duration-normal) var(--ns-ease-out);
+}
+
+.note-layout__sider--path-editing {
+  box-shadow: var(--ns-shadow-lg);
 }
 
 .note-layout__sider--mobile {
@@ -74,6 +83,7 @@
   bottom: 0;
   z-index: var(--ns-z-drawer);
   width: 100%;
+  max-width: 100% !important;
   height: auto;
 }
 

@@ -4,8 +4,6 @@ import {
   CompassOutlined,
   DragOutlined,
   NodeIndexOutlined,
-  SplitCellsOutlined,
-  CompressOutlined,
 } from "@ant-design/icons";
 
 import useTranslation from "../../i18n/useTranslation";
@@ -67,6 +65,74 @@ function collectLearningPathSteps(learningPathDraft) {
     }));
 }
 
+function pathKeyToNodeId(path) {
+  const match = normalizeKey(path).match(/^\/note\/([^/]+)\/([^/]+)\.md$/);
+  if (!match) return "";
+  return `${match[1]}.${match[2]}`;
+}
+
+function getStepNodeId(step) {
+  return step.nodeId || pathKeyToNodeId(step.key);
+}
+
+const GRAPH_NODE_WIDTH = 196;
+const GRAPH_NODE_HEIGHT = 76;
+const GRAPH_ROW_GAP = 44;
+const GRAPH_COLUMN_GAP = 28;
+const GRAPH_PADDING_X = 24;
+const GRAPH_PADDING_Y = 20;
+
+const ESTIMATED_ORDER_BY_NODE_ID = new Map(
+  [
+    "statistics.rules-of-thumb",
+    "finance.rules-of-thumb",
+    "statistics.basic-mathematics-tools",
+    "statistics.basic-definition",
+    "finance.basic-definition",
+    "python.getting-started-with-python",
+    "data-science.introduction-to-data-science",
+    "statistics.linear-algebra",
+    "statistics.basic-statistics",
+    "finance.time-value",
+    "python.python-data-types-operators",
+    "data-science.data-fundamentals-and-types",
+    "statistics.probability-theorem",
+    "python.control-flow-python",
+    "python.python-data-structures",
+    "finance.equity-market",
+    "statistics.distribution",
+    "statistics.sampling-methods",
+    "python.functions-in-python",
+    "finance.fixed-income",
+    "statistics.hypothesis-testing",
+    "python.modules-packages",
+    "python.file-exception-handling",
+    "data-science.programming-for-data-science-python",
+    "statistics.linear-regression",
+    "python.intro-scientific-computing",
+    "data-science.data-acquisition-and-storage",
+    "finance.risk-and-insurance",
+    "data-science.data-cleaning-preprocessing",
+    "data-science.exploratory-data-analysis",
+    "finance.behavioral-finance",
+    "data-science.statistical-foundations",
+    "statistics.time-series",
+    "statistics.markov-chain",
+    "statistics.simulation",
+    "statistics.bayesian-learning",
+    "data-science.introduction-to-machine-learning",
+    "finance.derivatives",
+    "finance.portfolio-management",
+    "data-science.supervised-learning-regression",
+    "data-science.supervised-learning-classification",
+    "data-science.unsupervised-learning-clustering",
+    "data-science.advanced-data-visualization",
+    "python.object-oriented-programming-python",
+    "python.advanced-python-concepts",
+    "data-science.model-evaluation-deployment",
+  ].map((nodeId, index) => [nodeId, index + 1]),
+);
+
 function buildSubjectLibrary(items = [], personalizedSteps = []) {
   const existing = new Set(personalizedSteps.map((step) => normalizeKey(step.key)));
   return (items || [])
@@ -83,6 +149,97 @@ function buildSubjectLibrary(items = [], personalizedSteps = []) {
     .filter((subject) => subject.stepCount > 0);
 }
 
+function buildLearningPathGraph(steps = [], canonicalGraph = null) {
+  const graphNodes = Array.isArray(canonicalGraph?.nodes) ? canonicalGraph.nodes : [];
+  const graphNodeById = new Map(graphNodes.map((node) => [node.node_id || node.nodeId, node]));
+  const defaultPathIds = Array.isArray(canonicalGraph?.default_path?.node_ids)
+    ? canonicalGraph.default_path.node_ids
+    : Array.isArray(canonicalGraph?.defaultPath?.nodeIds)
+      ? canonicalGraph.defaultPath.nodeIds
+      : [];
+  const defaultOrderById = new Map(defaultPathIds.map((nodeId, index) => [nodeId, index + 1]));
+  const entries = steps
+    .map((step, index) => ({ id: getStepNodeId(step), step, index }))
+    .filter((entry) => entry.id);
+
+  const nodes = entries.map((entry) => {
+    const graphNode = graphNodeById.get(entry.id) || null;
+    const estimatedOrder = Number(
+      graphNode?.metadata?.estimated_order ??
+        graphNode?.metadata?.estimatedOrder ??
+        graphNode?.estimated_order ??
+        graphNode?.estimatedOrder ??
+        defaultOrderById.get(entry.id) ??
+        ESTIMATED_ORDER_BY_NODE_ID.get(entry.id),
+    );
+    return {
+      ...entry,
+      graphNode,
+      estimatedOrder: Number.isFinite(estimatedOrder) ? estimatedOrder : 10_000 + entry.index,
+    };
+  });
+
+  if (nodes.length === 0) {
+    return { nodes: [], edges: [], width: 0, height: 0 };
+  }
+
+  const sortedNodes = [...nodes].sort(
+    (a, b) => a.estimatedOrder - b.estimatedOrder || a.index - b.index || a.id.localeCompare(b.id),
+  );
+  const groups = [];
+  sortedNodes.forEach((node) => {
+    const previousGroup = groups[groups.length - 1];
+    if (previousGroup && previousGroup.estimatedOrder === node.estimatedOrder) {
+      previousGroup.nodes.push(node);
+    } else {
+      groups.push({ estimatedOrder: node.estimatedOrder, nodes: [node] });
+    }
+  });
+
+  const positioned = [];
+  const maxGroupSize = Math.max(...groups.map((group) => group.nodes.length));
+  const width = Math.max(
+    360,
+    GRAPH_PADDING_X * 2 + maxGroupSize * GRAPH_NODE_WIDTH + Math.max(0, maxGroupSize - 1) * GRAPH_COLUMN_GAP,
+  );
+  groups.forEach((group, groupIndex) => {
+    const rowWidth =
+      group.nodes.length * GRAPH_NODE_WIDTH + Math.max(0, group.nodes.length - 1) * GRAPH_COLUMN_GAP;
+    const startX = (width - rowWidth) / 2;
+    group.nodes.forEach((node, nodeIndex) => {
+      positioned.push({
+        ...node,
+        groupIndex,
+        incomingCount: groupIndex > 0 ? groups[groupIndex - 1].nodes.length : 0,
+        outgoingCount: groupIndex < groups.length - 1 ? groups[groupIndex + 1].nodes.length : 0,
+        x: startX + nodeIndex * (GRAPH_NODE_WIDTH + GRAPH_COLUMN_GAP),
+        y: GRAPH_PADDING_Y + groupIndex * (GRAPH_NODE_HEIGHT + GRAPH_ROW_GAP),
+      });
+    });
+  });
+
+  const edges = [];
+  groups.forEach((group, groupIndex) => {
+    const nextGroup = groups[groupIndex + 1];
+    if (!nextGroup) return;
+    group.nodes.forEach((source) => {
+      nextGroup.nodes.forEach((target) => {
+        edges.push({
+          source: source.id,
+          target: target.id,
+          strength: group.nodes.length > 1 || nextGroup.nodes.length > 1 ? "parallel" : "main",
+          relation: "estimated_order",
+        });
+      });
+    });
+  });
+
+  const height =
+    GRAPH_PADDING_Y * 2 + groups.length * GRAPH_NODE_HEIGHT + Math.max(0, groups.length - 1) * GRAPH_ROW_GAP;
+
+  return { nodes: positioned, edges, width, height };
+}
+
 const LearningNavigationPanel = ({
   items,
   currentNoteUrl,
@@ -93,7 +250,8 @@ const LearningNavigationPanel = ({
   onAddPathNode,
   onReorderPathNodes,
   onRemovePathNode,
-  onUpdatePathNodeRelation,
+  onEditModeChange,
+  canonicalGraph,
   onSelect,
   isMobile = false,
 }) => {
@@ -133,6 +291,10 @@ const LearningNavigationPanel = ({
     () => buildSubjectLibrary(items, personalizedSteps),
     [items, personalizedSteps],
   );
+  const personalizedGraph = useMemo(
+    () => buildLearningPathGraph(personalizedSteps, canonicalGraph),
+    [personalizedSteps, canonicalGraph],
+  );
   const initialExpandedKey = useMemo(() => {
     const currentSection = subjectSections.find((section) =>
       section.steps.some((step) => normalizeKey(step.key) === normalizedCurrent),
@@ -153,6 +315,14 @@ const LearningNavigationPanel = ({
       if (next.has(sectionKey)) next.delete(sectionKey);
       else next.add(sectionKey);
       return next;
+    });
+  };
+
+  const toggleEditMode = () => {
+    setEditMode((value) => {
+      const nextValue = !value;
+      onEditModeChange?.(nextValue);
+      return nextValue;
     });
   };
 
@@ -196,40 +366,6 @@ const LearningNavigationPanel = ({
     if (payload?.type === "course") addCandidateToPath(payload.step);
     setDragPayload(null);
     setDraggedKey("");
-  };
-
-  const getRelationTitle = (relation) => {
-    if (relation === "branch") return "Start a side branch from this course.";
-    if (relation === "converge") return "Join branches back into one route here.";
-    return "Continue straight from the previous course.";
-  };
-
-  const renderRelationControls = (step) => {
-    const relationOptions = [
-      { value: "linear", label: "Linear", icon: <NodeIndexOutlined /> },
-      { value: "branch", label: "Split", icon: <SplitCellsOutlined /> },
-      { value: "converge", label: "Join", icon: <CompressOutlined /> },
-    ];
-    return (
-      <div className="learning-nav__edit-row" aria-label={`Edit relation for ${step.title}`}>
-        {relationOptions.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            className={
-              step.pathRelation === option.value
-                ? "learning-nav__edit-chip learning-nav__edit-chip--active"
-                : "learning-nav__edit-chip"
-            }
-            onClick={() => onUpdatePathNodeRelation?.(step.key, option.value)}
-            title={getRelationTitle(option.value)}
-          >
-            {option.icon}
-            <span>{option.label}</span>
-          </button>
-        ))}
-      </div>
-    );
   };
 
   const renderSteps = (steps, subjectLabel, options = {}) => {
@@ -306,7 +442,6 @@ const LearningNavigationPanel = ({
                 </span>
                 <span className="learning-nav__connector learning-nav__connector--right" aria-hidden="true" />
               </button>
-              {allowEdit ? renderRelationControls(step) : null}
               {allowRemove ? (
                 <button
                   type="button"
@@ -325,6 +460,110 @@ const LearningNavigationPanel = ({
           );
         })}
       </ol>
+    );
+  };
+
+  const renderDecisionGraph = (graph, options = {}) => {
+    const allowRemove = Boolean(options.allowRemove && typeof onRemovePathNode === "function");
+    const firstIncompleteIndex = personalizedSteps.findIndex(
+      (step) => !completedNoteUrls.has(normalizeKey(step.key)) && step.pathStatus !== "completed",
+    );
+    const firstIncompleteKey = firstIncompleteIndex >= 0 ? normalizeKey(personalizedSteps[firstIncompleteIndex].key) : "";
+    const nodeById = new Map(graph.nodes.map((node) => [node.id, node]));
+    const edgePath = (edge) => {
+      const source = nodeById.get(edge.source);
+      const target = nodeById.get(edge.target);
+      if (!source || !target) return "";
+      const sx = source.x + GRAPH_NODE_WIDTH / 2;
+      const sy = source.y + GRAPH_NODE_HEIGHT;
+      const tx = target.x + GRAPH_NODE_WIDTH / 2;
+      const ty = target.y;
+      const middleY = sy + Math.max(34, (ty - sy) / 2);
+      return `M ${sx} ${sy} C ${sx} ${middleY}, ${tx} ${middleY}, ${tx} ${ty}`;
+    };
+
+    return (
+      <div className="learning-nav__graph-scroll">
+        <div
+          className="learning-nav__graph-canvas"
+          style={{ width: graph.width, height: graph.height }}
+        >
+          <svg
+            className="learning-nav__graph-lines"
+            viewBox={`0 0 ${graph.width} ${graph.height}`}
+            aria-hidden="true"
+          >
+            <defs>
+              <marker
+                id="learning-nav-arrow"
+                viewBox="0 0 8 8"
+                refX="7"
+                refY="4"
+                markerWidth="6"
+                markerHeight="6"
+                orient="auto"
+              >
+                <path d="M 0 0 L 8 4 L 0 8 z" />
+              </marker>
+            </defs>
+            {graph.edges.map((edge) => {
+              const path = edgePath(edge);
+              if (!path) return null;
+              return (
+                <path
+                  key={`${edge.source}:${edge.target}`}
+                  className={`learning-nav__graph-edge learning-nav__graph-edge--${edge.strength}`}
+                  d={path}
+                  markerEnd="url(#learning-nav-arrow)"
+                />
+              );
+            })}
+          </svg>
+          {graph.nodes.map((node) => {
+          const step = node.step;
+          const stepKey = normalizeKey(step.key);
+          const isCurrent = stepKey === normalizedCurrent;
+          const isDone = completedNoteUrls.has(stepKey) || step.pathStatus === "completed";
+          const isNext = !isCurrent && !isDone && stepKey === firstIncompleteKey;
+          const status = isCurrent ? "current" : isDone ? "done" : isNext ? "next" : "todo";
+          return (
+            <div
+              key={`${node.id}:${step.key}`}
+              className={`learning-nav__graph-node-wrap learning-nav__graph-node-wrap--${status} ${
+                node.incomingCount > 1 ? "learning-nav__graph-node-wrap--join" : ""
+              } ${node.outgoingCount > 1 ? "learning-nav__graph-node-wrap--split" : ""}`}
+              style={{ left: node.x, top: node.y }}
+            >
+                <button
+                  type="button"
+                  className="learning-nav__node learning-nav__graph-node"
+                  onClick={() => onSelect(step.key)}
+                  aria-current={isCurrent ? "page" : undefined}
+                >
+                  <span className="learning-nav__node-body">
+                    {step.module ? <span className="learning-nav__module">{step.module}</span> : null}
+                    <span className="learning-nav__node-title">{step.title}</span>
+                  </span>
+                </button>
+                {allowRemove ? (
+                  <button
+                    type="button"
+                    className="learning-nav__remove-node learning-nav__remove-node--graph"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onRemovePathNode(step.key);
+                    }}
+                    aria-label={`Remove ${step.title} from path`}
+                    title="Remove from path"
+                  >
+                    ×
+                  </button>
+                ) : null}
+              </div>
+          );
+        })}
+        </div>
+      </div>
     );
   };
 
@@ -374,7 +613,6 @@ const LearningNavigationPanel = ({
 
   const renderPersonalizedSection = () => {
     if (!hasPersonalizedPath) return null;
-    const goalTitle = learningPathDraft?.goal_title || learningPathDraft?.goalTitle || "Personalized path";
     const containsCurrent = personalizedSteps.some((step) => normalizeKey(step.key) === normalizedCurrent);
     return (
       <section
@@ -386,7 +624,7 @@ const LearningNavigationPanel = ({
           <button
             type="button"
             className={`learning-nav__section-start ${editMode ? "learning-nav__section-start--active" : ""}`}
-            onClick={() => setEditMode((value) => !value)}
+            onClick={toggleEditMode}
           >
             {editMode ? "Done" : "Edit"}
           </button>
@@ -448,7 +686,7 @@ const LearningNavigationPanel = ({
           }}
           onDrop={handlePathDrop}
         >
-          {renderSteps(personalizedSteps, goalTitle, { allowRemove: true, allowEdit: editMode })}
+          {renderDecisionGraph(personalizedGraph, { allowRemove: true })}
         </div>
       </section>
     );

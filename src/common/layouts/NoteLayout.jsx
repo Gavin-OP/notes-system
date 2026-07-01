@@ -37,6 +37,7 @@ import {
   requestAssistantQuizEvaluate,
   commitLearningPath,
   generateLearningPath,
+  getCanonicalCurriculumGraph,
   getLearningPath,
   saveLearningPathDraft,
 } from "../api/assistant";
@@ -295,6 +296,8 @@ const NoteLayout = () => {
   const [completedNoteUrls, setCompletedNoteUrls] = useState(new Set());
   const [learningPathDraft, setLearningPathDraft] = useState(null);
   const [learningPathPending, setLearningPathPending] = useState(false);
+  const [pathEditMode, setPathEditMode] = useState(false);
+  const [canonicalGraph, setCanonicalGraph] = useState(null);
   const [noteQuotes, setNoteQuotes] = useState([]);
   const [completeNotePending, setCompleteNotePending] = useState(false);
   const [notesTourStartToken, setNotesTourStartToken] = useState(0);
@@ -548,6 +551,22 @@ const NoteLayout = () => {
     };
   }, [loadLearningPath]);
 
+  useEffect(() => {
+    let mounted = true;
+    async function loadCanonicalGraph() {
+      try {
+        const payload = await getCanonicalCurriculumGraph();
+        if (mounted) setCanonicalGraph(payload || null);
+      } catch {
+        if (mounted) setCanonicalGraph(null);
+      }
+    }
+    loadCanonicalGraph();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   const handleGenerateSubjectPath = useCallback(async () => {
     if (!currentSubjectSlug || learningPathPending) return;
     setLearningPathPending(true);
@@ -620,6 +639,7 @@ const NoteLayout = () => {
             source: candidate?.type === "subject" ? "manual_subject_drag" : "manual_edit",
             subject_title: item.module || candidate?.title || pathToSubject(noteUrl),
             path_relation: "linear",
+            pending_canonical_sort: true,
           },
         };
       }),
@@ -652,28 +672,6 @@ const NoteLayout = () => {
       edges: buildLearningPathEdges(nextNodes),
     };
     await persistLearningPathDraft(nextDraft, "Path reordered.", "Reordered learning path nodes");
-  }, [learningPathDraft, persistLearningPathDraft]);
-
-  const handleUpdatePathNodeRelation = useCallback(async (noteUrl, relation) => {
-    if (!learningPathDraft?.nodes?.length || !noteUrl) return;
-    const normalizedUrl = normalizeMenuKey(noteUrl);
-    const safeRelation = ["linear", "branch", "converge"].includes(relation) ? relation : "linear";
-    const nextNodes = learningPathDraft.nodes.map((node) => {
-      if (normalizeMenuKey(node.note_url || node.noteUrl || "") !== normalizedUrl) return node;
-      return {
-        ...node,
-        metadata: {
-          ...(node.metadata || {}),
-          path_relation: safeRelation,
-        },
-      };
-    });
-    const nextDraft = {
-      ...learningPathDraft,
-      nodes: nextNodes,
-      edges: buildLearningPathEdges(nextNodes),
-    };
-    await persistLearningPathDraft(nextDraft, "Path relation updated.", "Updated learning path relation");
   }, [learningPathDraft, persistLearningPathDraft]);
 
   const handleRemovePathNode = useCallback(async (noteUrl) => {
@@ -1165,9 +1163,11 @@ const NoteLayout = () => {
 
         {/* menu */}
         <Sider
-          width={isMobile ? "100%" : 350}
+          width={isMobile ? "100%" : pathEditMode ? 720 : 350}
           collapsedWidth={0}
-          className={`note-layout__sider ${isMobile ? "note-layout__sider--mobile" : ""}`}
+          className={`note-layout__sider ${isMobile ? "note-layout__sider--mobile" : ""} ${
+            pathEditMode ? "note-layout__sider--path-editing" : ""
+          }`}
           collapsible
           collapsed={collapsed}
           trigger={null}
@@ -1201,7 +1201,8 @@ const NoteLayout = () => {
                 onAddPathNode={handleAddPathNode}
                 onReorderPathNodes={handleReorderPathNodes}
                 onRemovePathNode={handleRemovePathNode}
-                onUpdatePathNodeRelation={handleUpdatePathNodeRelation}
+                onEditModeChange={setPathEditMode}
+                canonicalGraph={canonicalGraph}
                 isMobile={isMobile}
                 onSelect={(path) => {
                   handleNoteSelect(path);
