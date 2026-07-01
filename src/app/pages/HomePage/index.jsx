@@ -2,7 +2,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Input, List, Space, Spin, Typography } from "antd";
-import { ArrowRightOutlined, BookOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  ArrowRightOutlined,
+  BookOutlined,
+  ReadOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import { getCareerTaxonomy } from "../../../features/careers/api/careers";
@@ -131,6 +136,8 @@ function HomePage() {
     [notesIndex],
   );
 
+  const featuredSubjects = useMemo(() => collectSubjects(notesIndex).slice(0, 4), [notesIndex]);
+
   const localMatches = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (normalized.length < 2) return [];
@@ -202,117 +209,140 @@ function HomePage() {
       showSiteFooter
     >
       <section className="home-page__hero-inner" aria-label={t("home.searchLabel", "Search everything")}>
-        <div className="home-page__hero-copy">
-          <Text className="home-page__eyebrow">
-            {t("home.eyebrow", "Structured learning for life after school")}
-          </Text>
-          <h1 className="home-page__headline">
-            {t("home.headline", "Build a path through any discipline.")}
-          </h1>
-          <p className="home-page__subhead">
-            {t(
-              "home.subhead",
-              "A personal learning guide that turns goals into structured knowledge trees, then helps you study, record, test, and adjust your path as you grow.",
-            )}
-          </p>
-        </div>
+        <div className="home-page__hero-grid">
+          <div className="home-page__hero-copy">
+            <Text className="home-page__eyebrow">
+              {t("home.eyebrow", "Structured learning for life after school")}
+            </Text>
+            <h1 className="home-page__headline">
+              {t("home.headline", "Learn with a map made for you.")}
+            </h1>
+            <p className="home-page__subhead">
+              {t(
+                "home.subhead",
+                "Notes System turns unfamiliar fields into clear routes: landmarks, prerequisites, paths, and next steps that adapt as your understanding grows.",
+              )}
+            </p>
 
-        <div className="home-page__search-shell">
-          <Input
-            size="large"
-            className="home-page__search-input"
-            prefix={<SearchOutlined />}
-            value={query}
-            placeholder={t("home.searchPlaceholder", "Search courses, notes, careers...")}
-            onChange={(event) => setQuery(event.target.value)}
-            onPressEnter={submitSearch}
-            allowClear
-            autoFocus
-          />
-          {hasResults ? (
-            <div className="home-page__results">
-              {localMatches.length > 0 ? (
-                <List
-                  size="small"
-                  dataSource={localMatches}
-                  renderItem={(item) => (
-                    <List.Item className="home-page__result" onClick={() => openItem(item.url)}>
-                      <div className="home-page__result-main">
-                        <Space size={8} wrap>
-                          <Text strong>{item.title}</Text>
-                          <SemanticChip variant={typeVariant(item.type)}>
-                            {item.meta}
-                          </SemanticChip>
-                        </Space>
-                        {item.type === "note" ? (
-                          <Text type="secondary" className="home-page__result-meta">
-                            {item.url}
-                          </Text>
-                        ) : null}
-                      </div>
-                    </List.Item>
-                  )}
-                />
-              ) : null}
-              {searchLoading ? (
-                <div className="home-page__loading-row">
-                  <Spin size="small" />
-                  <Text type="secondary">{t("common.loading", "Loading...")}</Text>
+            <div className="home-page__search-shell">
+              <Input
+                size="large"
+                className="home-page__search-input"
+                prefix={<SearchOutlined />}
+                value={query}
+                placeholder={t("home.searchPlaceholder", "Search subjects, notes, careers...")}
+                onChange={(event) => setQuery(event.target.value)}
+                onPressEnter={submitSearch}
+                allowClear
+                autoFocus
+              />
+              {hasResults ? (
+                <div className="home-page__results">
+                  {localMatches.length > 0 ? (
+                    <List
+                      size="small"
+                      dataSource={localMatches}
+                      renderItem={(item) => (
+                        <List.Item className="home-page__result" onClick={() => openItem(item.url)}>
+                          <div className="home-page__result-main">
+                            <Space size={8} wrap>
+                              <Text strong>{item.title}</Text>
+                              <SemanticChip variant={typeVariant(item.type)}>
+                                {item.meta}
+                              </SemanticChip>
+                            </Space>
+                            {item.type === "note" ? (
+                              <Text type="secondary" className="home-page__result-meta">
+                                {item.url}
+                              </Text>
+                            ) : null}
+                          </div>
+                        </List.Item>
+                      )}
+                    />
+                  ) : null}
+                  {searchLoading ? (
+                    <div className="home-page__loading-row">
+                      <Spin size="small" />
+                      <Text type="secondary">{t("common.loading", "Loading...")}</Text>
+                    </div>
+                  ) : null}
+                  {noteResults.length > 0 ? (
+                    <List
+                      size="small"
+                      dataSource={noteResults}
+                      renderItem={(result) => (
+                        <List.Item
+                          className="home-page__result"
+                          onClick={() => openItem(buildSearchResultUrl(result, query))}
+                        >
+                          <div className="home-page__result-main">
+                            <Space size={8} wrap>
+                              <Text strong>{result.note_title}</Text>
+                              <SemanticChip variant="slate">{result.match_type || "note"}</SemanticChip>
+                            </Space>
+                            <Text type="secondary" className="home-page__result-meta">
+                              {[result.subject_title, result.section_title].filter(Boolean).join(" / ")}
+                            </Text>
+                            <div className="home-page__snippet">
+                              {renderHighlights(result.highlights, result.snippet)}
+                            </div>
+                          </div>
+                        </List.Item>
+                      )}
+                    />
+                  ) : null}
+                  <button
+                    type="button"
+                    className="home-page__view-all"
+                    onClick={() => navigate(`/search?q=${encodeURIComponent(query.trim())}`)}
+                  >
+                    {t("home.viewAllResults", "View all results")}
+                  </button>
                 </div>
               ) : null}
-              {noteResults.length > 0 ? (
-                <List
-                  size="small"
-                  dataSource={noteResults}
-                  renderItem={(result) => (
-                    <List.Item
-                      className="home-page__result"
-                      onClick={() => openItem(buildSearchResultUrl(result, query))}
-                    >
-                      <div className="home-page__result-main">
-                        <Space size={8} wrap>
-                          <Text strong>{result.note_title}</Text>
-                          <SemanticChip variant="slate">{result.match_type || "note"}</SemanticChip>
-                        </Space>
-                        <Text type="secondary" className="home-page__result-meta">
-                          {[result.subject_title, result.section_title].filter(Boolean).join(" / ")}
-                        </Text>
-                        <div className="home-page__snippet">
-                          {renderHighlights(result.highlights, result.snippet)}
-                        </div>
-                      </div>
-                    </List.Item>
-                  )}
-                />
-              ) : null}
+            </div>
+
+            <div className="home-page__primary-actions">
               <button
                 type="button"
-                className="home-page__view-all"
-                onClick={() => navigate(`/search?q=${encodeURIComponent(query.trim())}`)}
+                className="home-page__enter-learning"
+                onClick={() => navigate(learningEntryUrl)}
               >
-                {t("home.viewAllResults", "View all results")}
+                <span className="home-page__enter-learning-icon" aria-hidden="true">
+                  <BookOutlined />
+                </span>
+                <span className="home-page__enter-learning-copy">
+                  <span className="home-page__enter-learning-label">
+                    {t("home.enterLearning", "Enter learning workspace")}
+                  </span>
+                  <span className="home-page__enter-learning-hint">
+                    {t("home.enterLearningHint", "Continue from the map of subjects and notes")}
+                  </span>
+                </span>
+                <ArrowRightOutlined className="home-page__enter-learning-arrow" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="home-page__secondary-link"
+                onClick={() => navigate("/subjects")}
+              >
+                <ReadOutlined aria-hidden="true" />
+                <span>{t("home.browseSubjects", "Browse subjects")}</span>
               </button>
             </div>
-          ) : null}
+          </div>
 
-          <button
-            type="button"
-            className="home-page__enter-learning"
-            onClick={() => navigate(learningEntryUrl)}
-          >
-            <span className="home-page__enter-learning-icon" aria-hidden="true">
-              <BookOutlined />
-            </span>
-            <span className="home-page__enter-learning-copy">
-              <span className="home-page__enter-learning-label">
-                {t("home.enterLearning", "Enter learning workspace")}
-              </span>
-              <span className="home-page__enter-learning-hint">
-                {t("home.enterLearningHint", "Pick up where structured notes and paths live")}
-              </span>
-            </span>
-            <ArrowRightOutlined className="home-page__enter-learning-arrow" aria-hidden="true" />
-          </button>
+          <aside className="home-page__map-preview" aria-label={t("home.mapPreview", "Education map preview")}>
+            <img
+              className="home-page__map-image"
+              src={`${import.meta.env.BASE_URL}images/education-map-home.png`}
+              alt={t(
+                "home.mapImageAlt",
+                "Abstract education map showing learning routes from a starting point through core concepts, prerequisites, practice, application, and a goal.",
+              )}
+            />
+          </aside>
         </div>
       </section>
     </AppPageShell>
