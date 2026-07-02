@@ -248,6 +248,7 @@ function subjectSlugFromNodeId(nodeId) {
 }
 
 const SUBJECT_NODE_THEMES = new Set(["data-science", "finance", "python", "statistics"]);
+const LEGACY_SUBJECT_FALLBACK_ENABLED = false;
 
 function subjectThemeClass(nodeId) {
   const slug = subjectSlugFromNodeId(nodeId);
@@ -283,8 +284,9 @@ const LearningNavigationPanel = ({
     () => collectLearningPathSteps(learningPathDraft),
     [learningPathDraft],
   );
-  const hasPathWorkspace = learningPathDraft != null;
   const hasPersonalizedPath = personalizedSteps.length > 0;
+  const hasEditableDraft = learningPathDraft != null;
+  const hasPathWorkspace = hasPersonalizedPath || (hasEditableDraft && pathEditMode);
   const subjectSections = useMemo(
     () =>
       (items || [])
@@ -367,6 +369,14 @@ const LearningNavigationPanel = ({
 
   const toggleEditMode = () => {
     onEditModeChange?.(!pathEditMode);
+  };
+
+  const handlePathAction = () => {
+    if (hasPersonalizedPath || (hasEditableDraft && pathEditMode)) {
+      toggleEditMode();
+      return;
+    }
+    onGeneratePath?.();
   };
 
   const addCareerToPath = (profile) => {
@@ -810,27 +820,6 @@ const LearningNavigationPanel = ({
           containsCurrent ? "learning-nav__section--active" : ""
         }`}
       >
-        <div className="learning-nav__section-header">
-          <div className="learning-nav__section-actions">
-            {typeof onClearPath === "function" && hasPersonalizedPath ? (
-              <button
-                type="button"
-                className="learning-nav__section-start learning-nav__section-start--danger"
-                onClick={onClearPath}
-                disabled={learningPathPending}
-              >
-                {t("learningPath.clearPath", "Clear path")}
-              </button>
-            ) : null}
-            <button
-              type="button"
-              className={`learning-nav__section-start ${pathEditMode ? "learning-nav__section-start--active" : ""}`}
-              onClick={toggleEditMode}
-            >
-              {pathEditMode ? t("learningPath.doneEditing", "Done") : t("learningPath.editPath", "Edit")}
-            </button>
-          </div>
-        </div>
         {renderEditLibrary()}
         <div
           className={`learning-nav__drop-zone ${isPathDropActive ? "learning-nav__drop-zone--active" : ""}`}
@@ -870,6 +859,40 @@ const LearningNavigationPanel = ({
     );
   };
 
+  const renderMainTreePlaceholder = () => {
+    if (hasPathWorkspace) return null;
+    return (
+      <section className="learning-nav__section learning-nav__section--personalized learning-nav__section--active">
+        <div className="learning-nav__section-header">
+          <div className="learning-nav__section-toggle learning-nav__section-toggle--static">
+            <span className="learning-nav__section-icon" aria-hidden="true">
+              <CompassOutlined />
+            </span>
+            <span className="learning-nav__section-copy">
+              <span className="learning-nav__section-title">
+                {t("learningPath.mainTree", "Main learning tree")}
+              </span>
+              <span className="learning-nav__section-meta">
+                {t("learningPath.mainTreeLocked", "Create a path to light up the route")}
+              </span>
+            </span>
+          </div>
+        </div>
+        <div className="learning-nav__empty-path learning-nav__empty-path--main-tree">
+          <p className="learning-nav__empty-path-title">
+            {t("learningPath.noLitPathTitle", "No path is lit yet")}
+          </p>
+          <p className="learning-nav__empty-path-copy">
+            {t(
+              "learningPath.noLitPathHint",
+              "Start from the reviewed main tree. Only the selected route will appear here.",
+            )}
+          </p>
+        </div>
+      </section>
+    );
+  };
+
   return (
     <nav
       className={`learning-nav ${isMobile ? "learning-nav--mobile" : ""}`}
@@ -887,24 +910,43 @@ const LearningNavigationPanel = ({
             {t("learningPath.next")}
           </span>
         </div>
-        {!hasPathWorkspace && typeof onGeneratePath === "function" ? (
-          <button
-            type="button"
-            className="learning-nav__create-path"
-            onClick={onGeneratePath}
-            disabled={learningPathPending}
-          >
-            {learningPathPending
-              ? t("learningPath.creating", "Creating...")
-              : t("learningPath.createPath", "Create path")}
-          </button>
-        ) : null}
+        <div className="learning-nav__path-actions">
+          {typeof onClearPath === "function" && hasPersonalizedPath ? (
+            <button
+              type="button"
+              className="learning-nav__path-action learning-nav__path-action--danger"
+              onClick={onClearPath}
+              disabled={learningPathPending}
+            >
+              {t("learningPath.clearPath", "Clear path")}
+            </button>
+          ) : null}
+          {typeof onGeneratePath === "function" || hasPersonalizedPath || hasEditableDraft ? (
+            <button
+              type="button"
+              className={`learning-nav__path-action learning-nav__path-action--primary ${
+                pathEditMode ? "learning-nav__path-action--active" : ""
+              }`}
+              onClick={handlePathAction}
+              disabled={learningPathPending}
+            >
+              {learningPathPending
+                ? t("learningPath.creating", "Creating...")
+                : pathEditMode
+                  ? t("learningPath.doneEditing", "Done")
+                  : hasPersonalizedPath
+                    ? t("learningPath.editPath", "Edit")
+                    : t("learningPath.createPath", "Create path")}
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <div className="learning-nav__sections">
         {renderPersonalizedSection()}
-        {!hasPathWorkspace ? subjectSections.map(renderSubjectSection) : null}
-        {!hasPathWorkspace && standaloneSteps.length > 0 ? (
+        {renderMainTreePlaceholder()}
+        {LEGACY_SUBJECT_FALLBACK_ENABLED && !hasPathWorkspace ? subjectSections.map(renderSubjectSection) : null}
+        {LEGACY_SUBJECT_FALLBACK_ENABLED && !hasPathWorkspace && standaloneSteps.length > 0 ? (
           <section className="learning-nav__section learning-nav__section--active">
             <div className="learning-nav__section-header">
               <div className="learning-nav__section-toggle learning-nav__section-toggle--static">

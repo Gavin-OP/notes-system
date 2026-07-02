@@ -107,6 +107,22 @@
   font-weight: 600;
 }
 
+.app-page-shell__auth-btn {
+  max-width: 180px;
+}
+
+.app-page-shell__auth-btn > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-page-shell__auth-btn--user {
+  color: var(--ns-color-primary);
+  border-color: var(--ns-color-primary-border);
+  background: var(--ns-color-primary-bg);
+}
+
 .app-page-shell__main {
   flex: 1;
   padding: var(--ns-space-5) clamp(var(--ns-space-4), 4vw, var(--ns-space-6)) var(--ns-space-6);

@@ -100,13 +100,13 @@ function UserLoginPage() {
             icon={<BookOutlined />}
             onClick={() => navigate("/")}
           >
-            Continue browsing notes
+            Browse without signing in
           </Button>
         </section>
 
         <Card className="user-auth-page__card" bordered={false}>
           <Space direction="vertical" size={4} className="user-auth-page__title-block">
-            <Title level={3}>Welcome back</Title>
+            <Title level={3}>Welcome</Title>
             <Text type="secondary">
               Sign in or create an account to turn browsing into a saved learning record.
             </Text>

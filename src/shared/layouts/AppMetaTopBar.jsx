@@ -2,6 +2,7 @@ import { Button, Dropdown, Space } from "antd";
 import { GlobalOutlined, MoonOutlined, SunOutlined, UserOutlined } from "@ant-design/icons";
 
 import { setLanguage, setTheme } from "../../app/store/preferenceSlice";
+import useCurrentUserSummary from "../../features/profile/hooks/useCurrentUserSummary";
 
 import "./AppPageShell.css";
 
@@ -15,6 +16,7 @@ function AppMetaTopBar({
   toolSlot = null,
   topBarRef = null,
 }) {
+  const { displayName, isAuthenticated } = useCurrentUserSummary();
   const languageItems = [
     {
       key: "en",
@@ -56,11 +58,11 @@ function AppMetaTopBar({
           </Button>
         </Dropdown>
         <Button
-          className="app-page-shell__auth-btn"
+          className={`app-page-shell__auth-btn ${isAuthenticated ? "app-page-shell__auth-btn--user" : ""}`}
           icon={<UserOutlined />}
-          onClick={() => navigate("/user/login")}
+          onClick={() => navigate(isAuthenticated ? "/user/profile" : "/user/login")}
         >
-          {t("auth.signIn", "Sign in")}
+          {isAuthenticated ? displayName || t("profile.title", "Profile") : t("auth.signIn", "Sign in")}
         </Button>
       </Space>
     </header>

@@ -5,9 +5,7 @@ import { Input, List, Space, Spin, Typography } from "antd";
 import {
   ArrowRightOutlined,
   BookOutlined,
-  ReadOutlined,
   SearchOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
@@ -320,22 +318,6 @@ function HomePage() {
                   </span>
                 </span>
                 <ArrowRightOutlined className="home-page__enter-learning-arrow" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="home-page__secondary-link"
-                onClick={() => navigate("/subjects")}
-              >
-                <ReadOutlined aria-hidden="true" />
-                <span>{t("home.browseSubjects", "Browse subjects")}</span>
-              </button>
-              <button
-                type="button"
-                className="home-page__secondary-link"
-                onClick={() => navigate("/user/login")}
-              >
-                <UserOutlined aria-hidden="true" />
-                <span>{t("auth.createAccount", "Create account / Sign in")}</span>
               </button>
             </div>
           </div>

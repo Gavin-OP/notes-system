@@ -785,7 +785,7 @@ const NoteLayout = () => {
             t("learningPath.cleared", "Learning path cleared."),
             "Cleared learning path",
           );
-          setPathEditMode(true);
+          setPathEditMode(false);
         } finally {
           setLearningPathPending(false);
         }
