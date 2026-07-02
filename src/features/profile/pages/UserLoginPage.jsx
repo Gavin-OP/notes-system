@@ -62,6 +62,7 @@ function UserLoginPage() {
       await registerUser({
         email: values.email,
         password: values.password,
+        confirm_password: values.confirmPassword,
         displayName: values.displayName,
         display_name: values.displayName,
       });
