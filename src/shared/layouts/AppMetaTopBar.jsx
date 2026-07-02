@@ -56,12 +56,12 @@ function AppMetaTopBar({
           </Button>
         </Dropdown>
         <Button
-          shape="circle"
-          className="app-page-shell__tool-btn"
+          className="app-page-shell__auth-btn"
           icon={<UserOutlined />}
-          onClick={() => navigate("/user/profile")}
-          aria-label={t("note.toolbar.profile", "Profile")}
-        />
+          onClick={() => navigate("/user/login")}
+        >
+          {t("auth.signIn", "Sign in")}
+        </Button>
       </Space>
     </header>
   );

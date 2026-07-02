@@ -96,11 +96,13 @@
 }
 
 .app-page-shell__tool-btn,
-.app-page-shell__language-btn {
+.app-page-shell__language-btn,
+.app-page-shell__auth-btn {
   border-color: var(--ns-color-border-secondary);
 }
 
-.app-page-shell__language-btn {
+.app-page-shell__language-btn,
+.app-page-shell__auth-btn {
   border-radius: var(--ns-radius-pill);
   font-weight: 600;
 }

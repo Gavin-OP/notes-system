@@ -82,6 +82,9 @@ const { Title, Text, Paragraph } = Typography;
 const CONTRIBUTION_TOTAL_WEEKS = 52;
 const CAREER_MATCH_MIN_SCORE = 20;
 const CAREER_RECOMMENDATION_LIMIT = 50;
+const PROFILE_PREVIEW_ENABLED =
+  import.meta.env.VITE_ENABLE_PROFILE_PREVIEW === "true" &&
+  !String(import.meta.env.VITE_API_BASE_URL || "").trim();
 
 function normalizeDate(rawValue) {
   if (!rawValue) return "";
@@ -572,17 +575,26 @@ function UserProfilePage() {
       } catch (error) {
         if (!mounted) return;
         const messageText = error instanceof Error ? error.message : "Failed to load profile.";
-        // Public static deployment can run without backend APIs; render a preview shell instead of hard fail.
-        setPreviewMode(true);
-        setPreviewNotice(
-          messageText ||
-            "Backend services are unavailable in this deployment. Showing profile preview mode.",
-        );
-        setErrorText("");
-        setUserInfo(PREVIEW_USER);
-        setProfileInfo(PREVIEW_PROFILE);
-        setPersonalNoteQuotes([]);
-        setFallbackProgress(null);
+        if (PROFILE_PREVIEW_ENABLED) {
+          setPreviewMode(true);
+          setPreviewNotice(
+            messageText ||
+              "Backend services are unavailable in this deployment. Showing profile preview mode.",
+          );
+          setErrorText("");
+          setUserInfo(PREVIEW_USER);
+          setProfileInfo(PREVIEW_PROFILE);
+          setPersonalNoteQuotes([]);
+          setFallbackProgress(null);
+          return;
+        }
+        setPreviewMode(false);
+        setPreviewNotice("");
+        setErrorText(messageText);
+        navigate("/user/login", {
+          replace: true,
+          state: { from: location.pathname },
+        });
       } finally {
         if (mounted) setLoading(false);
       }
@@ -591,7 +603,7 @@ function UserProfilePage() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [location.pathname, navigate]);
 
   useEffect(() => {
     if (!userInfo?.id || previewMode) return;
