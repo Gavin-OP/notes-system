@@ -78,8 +78,8 @@ function getStepNodeId(step) {
   return step.nodeId || pathKeyToNodeId(step.key);
 }
 
-const GRAPH_NODE_WIDTH = 196;
-const GRAPH_NODE_HEIGHT = 76;
+const GRAPH_NODE_WIDTH = 224;
+const GRAPH_NODE_HEIGHT = 80;
 const GRAPH_ROW_GAP = 44;
 const GRAPH_COLUMN_GAP = 28;
 const GRAPH_PADDING_X = 24;
@@ -261,14 +261,11 @@ const LearningNavigationPanel = ({
   completedNoteUrls,
   learningPathDraft,
   learningPathPending = false,
-  onGeneratePath,
   onAddPathNode,
   onAddCareerToPath,
   onReorderPathNodes,
   onRemovePathNode,
-  onClearPath,
   pathEditMode = false,
-  onEditModeChange,
   canonicalGraph,
   onSelect,
   isMobile = false,
@@ -367,17 +364,21 @@ const LearningNavigationPanel = ({
     });
   };
 
-  const toggleEditMode = () => {
-    onEditModeChange?.(!pathEditMode);
-  };
-
-  const handlePathAction = () => {
-    if (hasPersonalizedPath || (hasEditableDraft && pathEditMode)) {
-      toggleEditMode();
-      return;
-    }
-    onGeneratePath?.();
-  };
+  const renderPathLegendBar = () => (
+    <div className="learning-nav__path-legend-bar">
+      <div className="learning-nav__legend" aria-label={t("learningPath.legend")}>
+        <span className="learning-nav__legend-item learning-nav__legend-item--done">
+          {t("learningPath.completed")}
+        </span>
+        <span className="learning-nav__legend-item learning-nav__legend-item--current">
+          {t("learningPath.current")}
+        </span>
+        <span className="learning-nav__legend-item learning-nav__legend-item--next">
+          {t("learningPath.next")}
+        </span>
+      </div>
+    </div>
+  );
 
   const addCareerToPath = (profile) => {
     if (!profile || typeof onAddCareerToPath !== "function") return;
@@ -854,6 +855,7 @@ const LearningNavigationPanel = ({
               </p>
             </div>
           )}
+          {renderPathLegendBar()}
         </div>
       </section>
     );
@@ -878,16 +880,18 @@ const LearningNavigationPanel = ({
             </span>
           </div>
         </div>
-        <div className="learning-nav__empty-path learning-nav__empty-path--main-tree">
-          <p className="learning-nav__empty-path-title">
-            {t("learningPath.noLitPathTitle", "No path is lit yet")}
-          </p>
-          <p className="learning-nav__empty-path-copy">
-            {t(
-              "learningPath.noLitPathHint",
-              "Start from the reviewed main tree. Only the selected route will appear here.",
-            )}
-          </p>
+        <div className="learning-nav__drop-zone learning-nav__drop-zone--placeholder">
+          <div className="learning-nav__empty-path learning-nav__empty-path--main-tree">
+            <p className="learning-nav__empty-path-title">
+              {t("learningPath.noLitPathTitle", "No path is lit yet")}
+            </p>
+            <p className="learning-nav__empty-path-copy">
+              {t(
+                "learningPath.noLitPathHint",
+                "Start from the reviewed main tree. Only the selected route will appear here.",
+              )}
+            </p>
+          </div>
         </div>
       </section>
     );
@@ -898,50 +902,6 @@ const LearningNavigationPanel = ({
       className={`learning-nav ${isMobile ? "learning-nav--mobile" : ""}`}
       aria-label={t("learningPath.title")}
     >
-      <div className="learning-nav__toolbar">
-        <div className="learning-nav__legend" aria-label={t("learningPath.legend")}>
-          <span className="learning-nav__legend-item learning-nav__legend-item--done">
-            {t("learningPath.completed")}
-          </span>
-          <span className="learning-nav__legend-item learning-nav__legend-item--current">
-            {t("learningPath.current")}
-          </span>
-          <span className="learning-nav__legend-item learning-nav__legend-item--next">
-            {t("learningPath.next")}
-          </span>
-        </div>
-        <div className="learning-nav__path-actions">
-          {typeof onClearPath === "function" && hasPersonalizedPath ? (
-            <button
-              type="button"
-              className="learning-nav__path-action learning-nav__path-action--danger"
-              onClick={onClearPath}
-              disabled={learningPathPending}
-            >
-              {t("learningPath.clearPath", "Clear path")}
-            </button>
-          ) : null}
-          {typeof onGeneratePath === "function" || hasPersonalizedPath || hasEditableDraft ? (
-            <button
-              type="button"
-              className={`learning-nav__path-action learning-nav__path-action--primary ${
-                pathEditMode ? "learning-nav__path-action--active" : ""
-              }`}
-              onClick={handlePathAction}
-              disabled={learningPathPending}
-            >
-              {learningPathPending
-                ? t("learningPath.creating", "Creating...")
-                : pathEditMode
-                  ? t("learningPath.doneEditing", "Done")
-                  : hasPersonalizedPath
-                    ? t("learningPath.editPath", "Edit")
-                    : t("learningPath.createPath", "Create path")}
-            </button>
-          ) : null}
-        </div>
-      </div>
-
       <div className="learning-nav__sections">
         {renderPersonalizedSection()}
         {renderMainTreePlaceholder()}

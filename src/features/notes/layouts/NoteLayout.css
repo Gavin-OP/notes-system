@@ -341,13 +341,32 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--ns-space-3);
+  gap: var(--ns-space-2);
+  padding: var(--ns-space-2) var(--ns-space-3);
   border-bottom: 1px solid var(--ns-color-split);
+  min-width: 0;
 }
 
 .note-layout__sider-title {
+  flex: 0 0 auto;
   font-size: 14px;
   font-weight: 600;
+}
+
+.note-layout__sider-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ns-space-2);
+  min-width: 0;
+  margin-left: auto;
+}
+
+.note-layout__sider-mobile-controls {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--ns-space-2) var(--ns-space-3);
+  border-bottom: 1px solid var(--ns-color-split);
 }
 
 .note-layout__sider-collapse-btn {

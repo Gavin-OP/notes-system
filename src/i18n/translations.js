@@ -243,6 +243,7 @@ export const translations = {
     "learningPath.editPath": "Edit",
     "learningPath.doneEditing": "Done",
     "learningPath.clearPath": "Clear path",
+    "learningPath.pathControls": "Learning path controls",
     "learningPath.clearConfirmTitle": "Clear learning path?",
     "learningPath.clearConfirmBody":
       "This removes every node from your current path. You can rebuild it anytime.",
@@ -534,6 +535,7 @@ export const translations = {
     "learningPath.editPath": "编辑",
     "learningPath.doneEditing": "完成",
     "learningPath.clearPath": "清空路径",
+    "learningPath.pathControls": "学习路径控制",
     "learningPath.clearConfirmTitle": "清空当前学习路径？",
     "learningPath.clearConfirmBody": "这会移除当前路径中的所有节点，之后可以随时重新搭建。",
     "learningPath.cleared": "学习路径已清空。",

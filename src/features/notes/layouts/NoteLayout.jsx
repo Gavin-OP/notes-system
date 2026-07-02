@@ -19,6 +19,7 @@ import {
 } from "@ant-design/icons";
 
 import LearningNavigationPanel from "../../navigation/components/LearningNavigationPanel";
+import LearningPathControls from "../../navigation/components/LearningPathControls";
 import BottomOutlineProgress from "../components/BottomOutlineProgress";
 import NoteWorkspaceBar from "../components/NoteWorkspaceBar";
 import OutlineSider from "../../navigation/components/OutlineSider";
@@ -761,6 +762,21 @@ const NoteLayout = () => {
     await persistLearningPathDraft(nextDraft, "Path node removed.", "Removed learning path node");
   }, [learningPathDraft, persistLearningPathDraft]);
 
+  const hasPersonalizedPath = useMemo(() => {
+    const nodes = Array.isArray(learningPathDraft?.nodes) ? learningPathDraft.nodes : [];
+    return nodes.some((node) => node?.note_url || node?.noteUrl);
+  }, [learningPathDraft]);
+
+  const hasEditableDraft = learningPathDraft != null;
+
+  const handlePathPrimaryAction = useCallback(() => {
+    if (hasPersonalizedPath || (hasEditableDraft && pathEditMode)) {
+      setPathEditMode((prev) => !prev);
+      return;
+    }
+    handleStartPathBuilder();
+  }, [hasPersonalizedPath, hasEditableDraft, pathEditMode, handleStartPathBuilder]);
+
   const handleClearPath = useCallback(async () => {
     if (!learningPathDraft?.nodes?.length || learningPathPending) return;
     Modal.confirm({
@@ -1283,34 +1299,52 @@ const NoteLayout = () => {
               {!isMobile ? (
                 <div className="note-layout__sider-header">
                   <span className="note-layout__sider-title">{t("learningPath.title")}</span>
-                  <button
-                    type="button"
-                    className="note-layout__sider-collapse-btn"
-                    onClick={() => {
-                      setShowMenu(false);
-                      setCollapsed(true);
-                    }}
-                    aria-label="Collapse sidebar"
-                    title="Collapse sidebar"
-                  >
-                    <MenuFoldOutlined />
-                  </button>
+                  <div className="note-layout__sider-header-actions">
+                    <LearningPathControls
+                      hasPersonalizedPath={hasPersonalizedPath}
+                      hasEditableDraft={hasEditableDraft}
+                      pathEditMode={pathEditMode}
+                      learningPathPending={learningPathPending}
+                      onPrimaryAction={handlePathPrimaryAction}
+                      onClearPath={handleClearPath}
+                    />
+                    <button
+                      type="button"
+                      className="note-layout__sider-collapse-btn"
+                      onClick={() => {
+                        setShowMenu(false);
+                        setCollapsed(true);
+                      }}
+                      aria-label="Collapse sidebar"
+                      title="Collapse sidebar"
+                    >
+                      <MenuFoldOutlined />
+                    </button>
+                  </div>
                 </div>
-              ) : null}
+              ) : (
+                <div className="note-layout__sider-mobile-controls">
+                  <LearningPathControls
+                    hasPersonalizedPath={hasPersonalizedPath}
+                    hasEditableDraft={hasEditableDraft}
+                    pathEditMode={pathEditMode}
+                    learningPathPending={learningPathPending}
+                    onPrimaryAction={handlePathPrimaryAction}
+                    onClearPath={handleClearPath}
+                  />
+                </div>
+              )}
               <LearningNavigationPanel
                 items={localizedPlainMenuItems}
                 currentNoteUrl={currentNoteUrlNormalized}
                 completedNoteUrls={completedNoteUrls}
                 learningPathDraft={learningPathDraft}
                 learningPathPending={learningPathPending}
-                onGeneratePath={handleStartPathBuilder}
                 onAddPathNode={handleAddPathNode}
                 onAddCareerToPath={handleAddCareerToPath}
                 onReorderPathNodes={handleReorderPathNodes}
                 onRemovePathNode={handleRemovePathNode}
-                onClearPath={handleClearPath}
                 pathEditMode={pathEditMode}
-                onEditModeChange={setPathEditMode}
                 canonicalGraph={canonicalGraph}
                 isMobile={isMobile}
                 onSelect={(path) => {

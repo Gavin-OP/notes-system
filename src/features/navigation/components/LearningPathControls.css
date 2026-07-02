@@ -1,0 +1,93 @@
+.learning-path-controls {
+  display: inline-flex;
+  align-items: stretch;
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
+.learning-path-controls--solo .learning-path-controls__segment {
+  border-radius: var(--ns-radius-pill);
+  border: 1px solid var(--ns-color-border-secondary);
+}
+
+.learning-path-controls--solo .learning-path-controls__segment--filled {
+  border-color: transparent;
+}
+
+.learning-path-controls--group {
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-pill);
+  background: rgba(255, 255, 255, 0.72);
+  overflow: hidden;
+}
+
+.learning-path-controls__segment {
+  min-height: 28px;
+  padding: 6px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--ns-color-text-secondary);
+  font: inherit;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color var(--ns-duration-normal) var(--ns-ease-out),
+    background var(--ns-duration-normal) var(--ns-ease-out);
+}
+
+.learning-path-controls__segment--filled {
+  color: #fff;
+  background: var(--ns-color-primary);
+  border-color: transparent;
+}
+
+.learning-path-controls__segment--filled:hover:not(:disabled) {
+  background: var(--ns-color-primary-hover);
+}
+
+.learning-path-controls__segment--lead {
+  color: var(--ns-color-text);
+}
+
+.learning-path-controls__segment--lead:hover:not(:disabled) {
+  color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg);
+}
+
+.learning-path-controls--group .learning-path-controls__segment--filled {
+  border-radius: 0;
+}
+
+.learning-path-controls__segment--destructive {
+  color: var(--ns-chip-coral-text);
+  border-left: 1px solid var(--ns-color-border-secondary);
+}
+
+.learning-path-controls__segment--destructive:hover:not(:disabled) {
+  color: var(--ns-chip-coral-text);
+  background: color-mix(in srgb, var(--ns-chip-coral-bg) 55%, transparent);
+}
+
+.learning-path-controls__segment--destructive:active:not(:disabled) {
+  background: color-mix(in srgb, var(--ns-chip-coral-bg) 75%, transparent);
+}
+
+.learning-path-controls__segment:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.learning-path-controls__segment:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: var(--ns-focus-ring);
+  outline-offset: -2px;
+}
+
+[data-theme="dark"] .learning-path-controls--group {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--ns-color-border-secondary);
+}

@@ -67,7 +67,7 @@ import AchievementsPanel, { normalizeAchievements } from "../components/achievem
 import { extractSubjectsFromNotesIndex } from "../components/achievements/achievementCatalog";
 import { isConcreteNoteRoute, normalizeNoteRoute } from "../../navigation/lib/notesIndexUtils";
 import AppFeatureTour, { PENDING_NOTES_TOUR_KEY } from "../components/guide/AppFeatureTour";
-import { CAREER_LEVEL_OPTIONS, formatCareerRoleLabel } from "../../careers/lib/careerDisplayUtils";
+import { CAREER_LEVEL_OPTIONS, formatCareerRoleLabel, formatTaxonomyLabel } from "../../careers/lib/careerDisplayUtils";
 import useTranslatedContent from "../../../i18n/useTranslatedContent";
 import useTranslation from "../../../i18n/useTranslation";
 import { generateLearningPath } from "../../assistant/api/assistant";
@@ -328,13 +328,16 @@ function normalizeText(value) {
 }
 
 function uniqueValues(values = []) {
-  return [
-    ...new Set(
-      values
-        .map((value) => String(value || "").trim())
-        .filter(Boolean),
-    ),
-  ];
+  const seen = new Set();
+  const result = [];
+  values.forEach((value) => {
+    const label = formatTaxonomyLabel(value);
+    const key = label.toLowerCase();
+    if (!label || seen.has(key)) return;
+    seen.add(key);
+    result.push(label);
+  });
+  return result.sort((a, b) => a.localeCompare(b));
 }
 
 function toSelectOptions(values = []) {

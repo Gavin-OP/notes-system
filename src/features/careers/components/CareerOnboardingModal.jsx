@@ -1,6 +1,6 @@
 import { Button, Form, Modal, Select, Space, Typography } from "antd";
 
-import { CAREER_LEVEL_OPTIONS, formatCareerRoleLabel } from "../lib/careerDisplayUtils";
+import { CAREER_LEVEL_OPTIONS, formatCareerRoleLabel, formatTaxonomyLabel } from "../lib/careerDisplayUtils";
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -28,7 +28,7 @@ function dedupeValues(values = []) {
   const seen = new Set();
   const result = [];
   values.forEach((value) => {
-    const label = String(value || "").trim();
+    const label = formatTaxonomyLabel(value);
     const key = label.toLowerCase();
     if (!label || seen.has(key)) return;
     seen.add(key);

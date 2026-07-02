@@ -31,6 +31,34 @@ function normalizeToken(value = "") {
     .replace(/\s+/g, "_");
 }
 
+const TAXONOMY_ACRONYMS = {
+  ai: "AI",
+  api: "API",
+  bi: "BI",
+  ml: "ML",
+  phd: "PhD",
+  sql: "SQL",
+  numpy: "NumPy",
+  pandas: "Pandas",
+  pytorch: "PyTorch",
+};
+
+export function formatTaxonomyLabel(value = "") {
+  const trimmed = String(value || "").trim();
+  if (!trimmed) return "";
+
+  return trimmed
+    .replace(/[_-]+/g, " ")
+    .split(/\s+/)
+    .map((word) => {
+      const key = word.toLowerCase();
+      if (TAXONOMY_ACRONYMS[key]) return TAXONOMY_ACRONYMS[key];
+      if (word === word.toUpperCase() && word.length > 1) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(" ");
+}
+
 export function formatExperienceLevel(level = "") {
   const normalized = normalizeToken(level);
   if (!normalized) return EXPERIENCE_LEVEL_LABELS.unspecified;
