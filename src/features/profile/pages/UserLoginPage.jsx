@@ -2,11 +2,18 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Alert, Button, Card, Divider, Form, Input, Space, Tabs, Tag, Typography, message } from "antd";
 import { ArrowRightOutlined, BookOutlined, CheckCircleOutlined, LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
-import { getCurrentUser, loginUser, registerUser } from "../api/user";
+import { getCurrentUser, loginUser, registerUser, UserApiError } from "../api/user";
 
 import "./UserLoginPage.css";
 
 const { Title, Text, Paragraph } = Typography;
+
+function getLoginErrorMessage(error, fallback) {
+  if (error instanceof UserApiError && error.status === 401) {
+    return "Login succeeded, but this browser could not keep the session cookie. Please check backend CORS and cookie settings.";
+  }
+  return error instanceof Error ? error.message : fallback;
+}
 
 function UserLoginPage() {
   const navigate = useNavigate();
@@ -46,10 +53,16 @@ function UserLoginPage() {
         email: values.email,
         password: values.password,
       });
+      await getCurrentUser();
       message.success("Login successful.");
       navigate(redirectTo, { replace: true });
     } catch (error) {
-      setErrorText(error instanceof Error ? error.message : "Login failed.");
+      setErrorText(
+        getLoginErrorMessage(
+          error,
+          "Login succeeded, but the browser could not keep the session. Please check cookie and CORS settings.",
+        ),
+      );
     } finally {
       setLoginLoading(false);
     }
@@ -66,10 +79,16 @@ function UserLoginPage() {
         displayName: values.displayName,
         display_name: values.displayName,
       });
+      await getCurrentUser();
       message.success("Account created successfully.");
       navigate(redirectTo, { replace: true });
     } catch (error) {
-      setErrorText(error instanceof Error ? error.message : "Registration failed.");
+      setErrorText(
+        getLoginErrorMessage(
+          error,
+          "Account was created, but this browser could not keep the session. Please check cookie and CORS settings.",
+        ),
+      );
     } finally {
       setRegisterLoading(false);
     }

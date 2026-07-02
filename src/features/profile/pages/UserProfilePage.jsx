@@ -50,6 +50,7 @@ import {
   logoutUser,
   updateMyGuideState,
   updateMyProfile,
+  UserApiError,
 } from "../api/user";
 import {
   getCareerTaxonomy,
@@ -594,10 +595,12 @@ function UserProfilePage() {
         setPreviewMode(false);
         setPreviewNotice("");
         setErrorText(messageText);
-        navigate("/user/login", {
-          replace: true,
-          state: { from: location.pathname },
-        });
+        if (error instanceof UserApiError && error.status === 401) {
+          navigate("/user/login", {
+            replace: true,
+            state: { from: location.pathname },
+          });
+        }
       } finally {
         if (mounted) setLoading(false);
       }
