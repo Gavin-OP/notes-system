@@ -1,3 +1,5 @@
+import { applyUserSessionAuth, clearUserSessionToken, setUserSessionToken } from "../../../shared/api/userSessionToken";
+
 export class UserApiError extends Error {
   constructor(status, message, data) {
     super(message);
@@ -64,6 +66,7 @@ async function userApiRequest(path, init = {}) {
   if (!isFormData && init.body && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
+  applyUserSessionAuth(headers);
 
   const response = await fetch(buildUserApiUrl(path), {
     ...init,
@@ -83,21 +86,41 @@ async function userApiRequest(path, init = {}) {
   return payload;
 }
 
-export function registerUser(payload) {
-  return userApiRequest("/api/v1/users/auth/register", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+function persistSessionToken(payload) {
+  if (payload?.session_token) setUserSessionToken(payload.session_token);
+  return payload;
 }
 
-export function loginUser(payload) {
-  return userApiRequest("/api/v1/users/auth/login", {
+export async function registerUser(payload) {
+  return persistSessionToken(await userApiRequest("/api/v1/users/auth/register", {
     method: "POST",
     body: JSON.stringify(payload),
-  });
+  }));
 }
 
-export function logoutUser() {
+export async function loginUser(payload) {
+  return persistSessionToken(await userApiRequest("/api/v1/users/auth/login", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  }));
+}
+
+export async function logoutUser() {
+  try {
+    return await userApiRequest("/api/v1/users/auth/logout", {
+      method: "POST",
+    });
+  } finally {
+    clearUserSessionToken();
+  }
+}
+
+export function clearStoredUserSession() {
+  clearUserSessionToken();
+}
+
+export function logoutUserViaTokenOnly() {
+  clearUserSessionToken();
   return userApiRequest("/api/v1/users/auth/logout", {
     method: "POST",
   });

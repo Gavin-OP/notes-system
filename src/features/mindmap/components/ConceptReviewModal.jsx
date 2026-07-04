@@ -20,6 +20,7 @@ import {
 import { requestAssistantQuizEvaluate } from "../../assistant/api/assistant";
 import {
   generateConceptQuiz,
+  loadConceptNoteContext,
   loadConceptReviewContent,
 } from "../lib/conceptReviewUtils";
 import { normalizeQuizEvaluation } from "../lib/quizUtils";
@@ -125,7 +126,7 @@ function ConceptReviewModal({ open, concept, onClose, onGoToNotes }) {
       let sectionText = contentOverride?.section ?? sectionCache;
 
       if (!noteContent && concept.noteUrl) {
-        const payload = await loadConceptReviewContent(concept);
+        const payload = await loadConceptNoteContext(concept);
         noteContent = payload.noteContent;
         sectionText = payload.section;
         setNoteContentCache(noteContent);

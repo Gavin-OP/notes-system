@@ -1,3 +1,5 @@
+import { applyUserSessionAuth } from "../../../shared/api/userSessionToken";
+
 export class CareerApiError extends Error {
   constructor(status, message, data) {
     super(message);
@@ -41,6 +43,7 @@ async function careerApiRequest(path, init = {}) {
   if (!isFormData && init.body && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
+  applyUserSessionAuth(headers);
 
   const response = await fetch(buildCareerApiUrl(path), {
     ...init,

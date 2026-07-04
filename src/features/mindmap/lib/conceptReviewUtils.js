@@ -267,6 +267,7 @@ async function generateConceptReviewViaLlm(concept, contextText) {
   const response = await requestAssistantQa({
     question: [
       `Write a Quick Review for the single concept "${concept.label}" only.`,
+      "Use the current note content as your only source material.",
       "Return ONLY valid JSON:",
       '{"description":"2-3 sentence introduction and recap","bullets":["3-5 concise bullet points"]}',
       "Rules:",
@@ -275,9 +276,6 @@ async function generateConceptReviewViaLlm(concept, contextText) {
       "- Do NOT list learning objectives, lesson introductions, or data scientist job duties unless they directly define the concept.",
       "- Explain what the concept means, why it matters, and one practical takeaway.",
       "- Keep each bullet under 20 words.",
-      "",
-      "Note context:",
-      context,
     ].join("\n"),
     currentNote: {
       title: concept.label,
@@ -297,6 +295,15 @@ async function generateConceptReviewViaLlm(concept, contextText) {
     throw new Error("Assistant returned a review in an unexpected format. Please try again.");
   }
   return parsed;
+}
+
+export async function loadConceptNoteContext(concept) {
+  const noteContent = concept?.noteUrl ? await fetchNoteMarkdown(concept.noteUrl) : "";
+  const { section, mentionSnippets } = buildReviewContext(concept, noteContent);
+  return {
+    noteContent,
+    section: section || mentionSnippets.join("\n\n"),
+  };
 }
 
 export async function loadConceptReviewContent(concept, options = {}) {
