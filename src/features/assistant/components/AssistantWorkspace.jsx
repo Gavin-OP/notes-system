@@ -19,6 +19,21 @@ import "./AssistantWorkspace.css";
 
 const { Text, Paragraph } = Typography;
 
+function focusEditorAtNoteCursorAnchor(editor) {
+  if (!editor) return;
+  editor.focus();
+  const anchor = editor.querySelector("[data-note-cursor-anchor]");
+  if (!anchor) return;
+
+  anchor.removeAttribute("data-note-cursor-anchor");
+  const range = document.createRange();
+  const selection = window.getSelection();
+  range.selectNodeContents(anchor);
+  range.collapse(false);
+  selection?.removeAllRanges();
+  selection?.addRange(range);
+}
+
 function AssistantWorkspace({
   activeTool = "qa",
   onToolChange,
@@ -80,8 +95,14 @@ function AssistantWorkspace({
 
   useEffect(() => {
     if (activeTool !== "notes" || !editorRef.current) return;
+    const shouldFocus = String(scratchText || "").includes('data-note-cursor-anchor="true"');
     if (editorRef.current.innerHTML !== scratchText) {
       editorRef.current.innerHTML = scratchText || "";
+      if (shouldFocus) {
+        window.requestAnimationFrame(() => {
+          focusEditorAtNoteCursorAnchor(editorRef.current);
+        });
+      }
     }
   }, [activeTool, scratchText]);
 

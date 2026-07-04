@@ -185,6 +185,19 @@
   border-top: 1px solid var(--ns-color-border-secondary);
 }
 
+.note-selection-toolbar__quote-preview {
+  margin: 0;
+  padding: var(--ns-space-2);
+  border-left: 3px solid var(--ns-color-primary-border);
+  border-radius: var(--ns-radius-sm);
+  background: var(--ns-color-primary-bg-hover);
+  color: var(--ns-color-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+  max-height: 96px;
+  overflow: auto;
+}
+
 .note-selection-toolbar__composer textarea {
   width: 100%;
   min-height: 84px;

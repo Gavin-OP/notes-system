@@ -890,13 +890,14 @@ const NoteLayout = () => {
         const safeSelectedText = escapeHtml(selectedText);
         const safeNoteName = escapeHtml(noteName);
         const quoteHtml = [
-          `<blockquote class="personal-note-quote" data-quote-id="${quote.quote_id}">`,
+          `<blockquote class="personal-note-quote" contenteditable="false" data-quote-id="${quote.quote_id}">`,
           `<p>${safeSelectedText}</p>`,
           `<footer>From ${safeNoteName}</footer>`,
           "</blockquote>",
           selection?.personalNote
             ? `<p>${escapeHtml(selection.personalNote)}</p>`
             : "",
+          '<p data-note-cursor-anchor="true"><br></p>',
         ].join("");
         return prev ? `${prev}${quoteHtml}` : quoteHtml;
       });

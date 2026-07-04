@@ -390,6 +390,7 @@ const MarkdownRenderer = ({
   const { t } = useTranslation();
   const selectionRangeRef = useRef(null);
   const selectionStartedInBodyRef = useRef(false);
+  const noteComposerOpenRef = useRef(false);
   const [selectionToolbar, setSelectionToolbar] = useState(null);
   const [noteComposerOpen, setNoteComposerOpen] = useState(false);
   const [personalNoteText, setPersonalNoteText] = useState("");
@@ -404,6 +405,10 @@ const MarkdownRenderer = ({
     () => (Array.isArray(noteQuotes) ? noteQuotes.filter((quote) => quote?.selected_text || quote?.selectedText) : []),
     [noteQuotes],
   );
+
+  useEffect(() => {
+    noteComposerOpenRef.current = noteComposerOpen;
+  }, [noteComposerOpen]);
 
   // code cell style
   useEffect(() => {
@@ -563,7 +568,7 @@ const MarkdownRenderer = ({
   };
 
   useLayoutEffect(() => {
-    if (!selectionToolbar) return;
+    if (!selectionToolbar || noteComposerOpenRef.current) return;
     restoreSavedSelection();
   }, [selectionToolbar]);
 
@@ -571,6 +576,7 @@ const MarkdownRenderer = ({
     if (!selectionToolbar) return undefined;
 
     const handleOutsideToolbarPointerDown = (event) => {
+      if (noteComposerOpenRef.current) return;
       if (event.target?.closest?.(".note-selection-toolbar")) return;
       setSelectionToolbar(null);
       selectionRangeRef.current = null;
@@ -583,6 +589,8 @@ const MarkdownRenderer = ({
   }, [selectionToolbar]);
 
   const updateSelectionToolbarFromCurrentSelection = () => {
+    if (noteComposerOpenRef.current) return;
+
     const root = bodyRef.current;
     const selection = window.getSelection();
     if (!root || !selection || selection.rangeCount === 0 || selection.isCollapsed) {
@@ -652,6 +660,7 @@ const MarkdownRenderer = ({
 
   useEffect(() => {
     const handleDocumentSelectionEnd = (event) => {
+      if (noteComposerOpenRef.current) return;
       if (event.target?.closest?.(".note-selection-toolbar")) return;
       if (!selectionStartedInBodyRef.current) return;
       selectionStartedInBodyRef.current = false;
@@ -659,6 +668,7 @@ const MarkdownRenderer = ({
     };
 
     const handleKeyboardSelection = () => {
+      if (noteComposerOpenRef.current) return;
       const root = bodyRef.current;
       const selection = window.getSelection();
       if (!root || !selection || selection.rangeCount === 0) return;
@@ -686,8 +696,10 @@ const MarkdownRenderer = ({
 
   const handleAddSelectionToNotes = async () => {
     if (!selectionToolbar) return;
-    if (immersiveMode && !noteComposerOpen) {
-      setNoteComposerOpen(true);
+    if (immersiveMode) {
+      if (!noteComposerOpen) {
+        setNoteComposerOpen(true);
+      }
       return;
     }
     restoreSavedSelection();
@@ -722,10 +734,15 @@ const MarkdownRenderer = ({
 
   const preventToolbarSelectionLoss = (event) => {
     event.stopPropagation();
+    if (noteComposerOpenRef.current && event.target?.closest?.("textarea, input")) {
+      return;
+    }
     if (!event.target?.closest?.("textarea, input")) {
       event.preventDefault();
     }
-    restoreSavedSelection();
+    if (!noteComposerOpenRef.current) {
+      restoreSavedSelection();
+    }
   };
 
   // code block theme change
@@ -904,22 +921,29 @@ const MarkdownRenderer = ({
             top: `${selectionToolbar.y}px`,
           }}
         >
-          <button type="button" tabIndex={-1} onClick={handleAddSelectionToNotes}>
-            {t("note.selection.addToNotes")}
-          </button>
-          <button type="button" tabIndex={-1} onClick={handleAskSelection}>
-            {t("note.selection.ask")}
-          </button>
-          <button
-            type="button"
-            tabIndex={-1}
-            className="note-selection-toolbar__quiz-btn"
-            onClick={handleGenerateQuizSelection}
-          >
-            {t("note.selection.generateQuiz")}
-          </button>
-          {noteComposerOpen ? (
+          {!(immersiveMode && noteComposerOpen) ? (
+            <>
+              <button type="button" tabIndex={-1} onClick={handleAddSelectionToNotes}>
+                {t("note.selection.addToNotes")}
+              </button>
+              <button type="button" tabIndex={-1} onClick={handleAskSelection}>
+                {t("note.selection.ask")}
+              </button>
+              <button
+                type="button"
+                tabIndex={-1}
+                className="note-selection-toolbar__quiz-btn"
+                onClick={handleGenerateQuizSelection}
+              >
+                {t("note.selection.generateQuiz")}
+              </button>
+            </>
+          ) : null}
+          {immersiveMode && noteComposerOpen ? (
             <div className="note-selection-toolbar__composer">
+              <blockquote className="note-selection-toolbar__quote-preview">
+                {selectionToolbar.selectedText}
+              </blockquote>
               <textarea
                 value={personalNoteText}
                 onChange={(event) => setPersonalNoteText(event.target.value)}

@@ -129,6 +129,7 @@
   border-left: 1px solid var(--ns-color-primary-border);
   border-radius: var(--ns-radius-md);
   background: var(--ns-color-primary-bg-hover);
+  user-select: text;
 }
 
 .assistant-workspace__editor .personal-note-quote p {
