@@ -83,7 +83,45 @@
   --ns-color-text-quaternary: var(--ant-color-text-quaternary, rgba(0, 0, 0, 0.25));
   --ns-color-fill-secondary: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.04));
   --ns-color-fill-tertiary: rgba(5, 5, 5, 0.08);
+  --ns-color-fill-quaternary: var(--ant-color-fill-quaternary, rgba(0, 0, 0, 0.02));
   --ns-color-split: rgba(5, 5, 5, 0.08);
+  --ns-color-danger: #b85454;
+  --ns-color-danger-bg: rgba(184, 84, 84, 0.1);
+  --ns-color-danger-border: rgba(184, 84, 84, 0.28);
+  --ns-color-primary-contrast: #ffffff;
+
+  /* Semantic slate surfaces (nav sections, muted icons) */
+  --ns-sem-slate-bg: var(--ns-chip-slate-bg);
+  --ns-sem-slate-border: var(--ns-chip-slate-border);
+
+  /* Learning / profile activity heatmap */
+  --ns-contrib-empty: var(--ns-color-fill-secondary);
+  --ns-contrib-1: rgba(123, 174, 127, 0.28);
+  --ns-contrib-2: rgba(123, 174, 127, 0.48);
+  --ns-contrib-3: rgba(123, 174, 127, 0.68);
+  --ns-contrib-4: var(--ns-sem-sage);
+
+  /* Typography */
+  --ns-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --ns-font-size-xs: 11px;
+  --ns-font-size-sm: 12px;
+  --ns-font-size-md: 14px;
+  --ns-font-size-lg: 15px;
+  --ns-font-size-xl: 16px;
+  --ns-font-size-2xl: 20px;
+  --ns-font-size-3xl: 28px;
+  --ns-font-weight-medium: 500;
+  --ns-font-weight-semibold: 600;
+  --ns-font-weight-bold: 700;
+  --ns-line-height-tight: 1.25;
+  --ns-line-height-normal: 1.55;
+  --ns-line-height-relaxed: 1.65;
+
+  /* Layout accents */
+  --ns-gradient-layout-subtle: linear-gradient(180deg, rgba(58, 110, 165, 0.06), transparent 38%);
+  --ns-color-surface-warm: color-mix(in srgb, var(--ns-color-bg-container) 96%, var(--ns-color-wisdom) 4%);
+  --ns-color-path-canvas: var(--ns-color-surface-warm);
 
   /* Highlights — wisdom gold for search marks & reading emphasis */
   --ns-color-highlight: var(--ns-color-wisdom-bg-strong);
@@ -115,6 +153,8 @@
   --ns-shadow-md: 0 6px 16px rgba(0, 0, 0, 0.12);
   --ns-shadow-lg: 0 24px 80px rgba(15, 23, 42, 0.1);
   --ns-shadow-primary: 0 12px 28px var(--ns-color-primary-shadow);
+  --ns-shadow-popover: var(--ns-shadow-md);
+  --ns-shadow-modal: var(--ns-shadow-lg);
 
   /* Focus */
   --ns-focus-ring: 2px solid rgba(58, 110, 165, 0.45);
@@ -186,7 +226,20 @@
   --ns-color-text-quaternary: var(--ant-color-text-quaternary, rgba(255, 255, 255, 0.25));
   --ns-color-fill-secondary: var(--ant-color-fill-secondary, rgba(255, 255, 255, 0.06));
   --ns-color-fill-tertiary: rgba(255, 255, 255, 0.08);
+  --ns-color-fill-quaternary: var(--ant-color-fill-quaternary, rgba(255, 255, 255, 0.04));
   --ns-color-split: rgba(255, 255, 255, 0.15);
+  --ns-color-danger: #d97070;
+  --ns-color-danger-bg: rgba(217, 112, 112, 0.14);
+  --ns-color-danger-border: rgba(217, 112, 112, 0.32);
+
+  --ns-contrib-empty: rgba(255, 255, 255, 0.06);
+  --ns-contrib-1: rgba(123, 174, 127, 0.22);
+  --ns-contrib-2: rgba(123, 174, 127, 0.38);
+  --ns-contrib-3: rgba(123, 174, 127, 0.56);
+  --ns-contrib-4: #8fbf93;
+
+  --ns-color-surface-warm: color-mix(in srgb, var(--ns-color-bg-container) 94%, var(--ns-color-wisdom) 6%);
+  --ns-color-path-canvas: var(--ns-color-surface-warm);
 
   --ns-color-highlight: rgba(244, 208, 111, 0.24);
   --ns-color-highlight-active: rgba(244, 208, 111, 0.2);
@@ -305,4 +358,52 @@
 .ns-btn-primary:disabled {
   cursor: not-allowed;
   opacity: 0.7;
+}
+
+/* Secondary / ghost controls */
+.ns-btn-secondary {
+  border: 1px solid var(--ns-color-primary-border);
+  background: transparent;
+  color: var(--ns-color-primary);
+  border-radius: var(--ns-radius-sm);
+  padding: var(--ns-space-2) var(--ns-space-4);
+  font-size: var(--ns-font-size-md);
+  font-weight: var(--ns-font-weight-semibold);
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background-color var(--ns-duration-fast) var(--ns-ease-out),
+    border-color var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.ns-btn-secondary:hover:not(:disabled) {
+  background: var(--ns-color-primary-bg);
+  border-color: var(--ns-color-primary-border-hover);
+}
+
+.ns-btn-secondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.ns-btn-ghost {
+  border: 1px solid var(--ns-color-border-secondary);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text-secondary);
+  border-radius: var(--ns-radius-sm);
+  padding: var(--ns-space-2) var(--ns-space-4);
+  font-size: var(--ns-font-size-md);
+  font-weight: var(--ns-font-weight-semibold);
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background-color var(--ns-duration-fast) var(--ns-ease-out),
+    border-color var(--ns-duration-fast) var(--ns-ease-out),
+    color var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.ns-btn-ghost:hover:not(:disabled) {
+  color: var(--ns-color-primary);
+  border-color: var(--ns-color-primary-border);
+  background: var(--ns-color-primary-bg-hover);
 }

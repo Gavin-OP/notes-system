@@ -394,7 +394,7 @@
   color: var(--ns-color-text);
   font-size: 13px;
   line-height: 1.3;
-  font-weight: 650;
+  font-weight: var(--ns-font-weight-semibold);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -460,7 +460,7 @@
   padding: 6px 8px;
   font: inherit;
   font-size: 11px;
-  font-weight: 650;
+  font-weight: var(--ns-font-weight-semibold);
   line-height: 1.2;
   cursor: pointer;
 }
@@ -524,7 +524,7 @@
   margin: 0;
   color: var(--ns-color-text);
   font-size: 14px;
-  font-weight: 650;
+  font-weight: var(--ns-font-weight-semibold);
 }
 
 .learning-nav__empty-path-copy {
@@ -617,7 +617,7 @@
   color: var(--ns-color-text);
   font-size: 12px;
   line-height: 1.3;
-  font-weight: 650;
+  font-weight: var(--ns-font-weight-semibold);
   overflow-wrap: anywhere;
 }
 
@@ -636,7 +636,7 @@
   margin: 0;
   border: 0;
   border-radius: 0;
-  background: #fffdf5;
+  background: var(--ns-color-path-canvas);
   transition:
     border-color var(--ns-duration-fast) var(--ns-ease-out),
     background-color var(--ns-duration-fast) var(--ns-ease-out);
@@ -1052,7 +1052,7 @@
   color: var(--ns-color-text);
   font-size: 13.5px;
   line-height: 1.4;
-  font-weight: 650;
+  font-weight: var(--ns-font-weight-semibold);
   overflow-wrap: anywhere;
 }
 
@@ -1187,7 +1187,7 @@
   padding: 4px 7px;
   font-size: 10px;
   line-height: 1;
-  font-weight: 650;
+  font-weight: var(--ns-font-weight-semibold);
   cursor: pointer;
   display: inline-flex;
   align-items: center;

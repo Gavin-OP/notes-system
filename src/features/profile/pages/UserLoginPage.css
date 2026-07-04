@@ -2,10 +2,8 @@
   min-height: 100vh;
   display: grid;
   place-items: center;
-  padding: clamp(20px, 4vw, 48px);
-  background:
-    radial-gradient(circle at 12% 18%, rgba(58, 110, 165, 0.12), transparent 30%),
-    linear-gradient(135deg, #f7fafc 0%, #eef4f8 48%, #f8f5ef 100%);
+  padding: clamp(var(--ns-space-4), 4vw, var(--ns-space-6));
+  background: var(--ns-gradient-layout-subtle), var(--ns-color-bg-layout);
 }
 
 .user-auth-page__shell {
@@ -14,33 +12,32 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(380px, 460px);
   overflow: hidden;
-  border: 1px solid rgba(35, 54, 74, 0.12);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow: 0 24px 70px rgba(31, 49, 68, 0.14);
-  backdrop-filter: blur(16px);
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-xl);
+  background: var(--ns-color-bg-container);
+  box-shadow: var(--ns-shadow-lg);
 }
 
 .user-auth-page__intro {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 18px;
-  padding: clamp(32px, 5vw, 64px);
-  color: #163047;
+  gap: var(--ns-space-4);
+  padding: clamp(var(--ns-space-5), 5vw, var(--ns-space-6));
+  color: var(--ns-color-text);
 }
 
 .user-auth-page__brand {
   width: fit-content;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--ns-space-2);
   border: 0;
   background: transparent;
   color: inherit;
   padding: 0;
   font: inherit;
-  font-weight: 700;
+  font-weight: var(--ns-font-weight-bold);
   cursor: pointer;
 }
 
@@ -49,80 +46,83 @@
   height: 38px;
   display: inline-grid;
   place-items: center;
-  border-radius: 12px;
-  background: #2f6f9f;
-  color: #fff;
-  font-size: 13px;
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-primary);
+  color: var(--ns-color-primary-contrast);
+  font-size: var(--ns-font-size-sm);
   letter-spacing: 0.02em;
 }
 
 .user-auth-page__tag {
   width: fit-content;
-  margin-top: 18px;
-  border-radius: 999px;
-  font-weight: 650;
+  margin-top: var(--ns-space-4);
+  border-radius: var(--ns-radius-pill);
+  font-weight: var(--ns-font-weight-semibold);
 }
 
 .user-auth-page__headline.ant-typography {
   max-width: 520px;
   margin: 0;
-  color: #142d42;
+  color: var(--ns-color-text);
   font-size: clamp(34px, 5vw, 54px);
   line-height: 1.04;
   letter-spacing: 0;
+  font-weight: var(--ns-font-weight-semibold) !important;
 }
 
 .user-auth-page__subhead {
   max-width: 560px;
-  color: #546979;
-  font-size: 16px;
-  line-height: 1.75;
+  color: var(--ns-color-text-secondary);
+  font-size: var(--ns-font-size-xl);
+  line-height: var(--ns-line-height-relaxed);
 }
 
 .user-auth-page__benefits {
   display: grid;
-  gap: 10px;
-  margin-top: 8px;
-  color: #29465c;
-  font-weight: 620;
+  gap: var(--ns-space-2);
+  margin-top: var(--ns-space-2);
+  color: var(--ns-color-text);
+  font-weight: var(--ns-font-weight-medium);
 }
 
 .user-auth-page__benefits span {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--ns-space-2);
 }
 
 .user-auth-page__benefits .anticon {
-  color: #2b8a5f;
+  color: var(--ns-sem-sage);
 }
 
 .user-auth-page__browse-btn.ant-btn {
   width: fit-content;
   height: 42px;
-  margin-top: 12px;
-  border-radius: 999px;
-  border-color: rgba(47, 111, 159, 0.26);
-  color: #245a83;
-  font-weight: 650;
-  background: rgba(255, 255, 255, 0.72);
+  margin-top: var(--ns-space-3);
+  border-radius: var(--ns-radius-pill);
+  border-color: var(--ns-color-primary-border);
+  color: var(--ns-color-primary);
+  font-weight: var(--ns-font-weight-semibold);
+  background: var(--ns-color-bg-container);
 }
 
 .user-auth-page__card.ant-card {
   display: flex;
   align-items: center;
   border-radius: 0;
-  background: rgba(255, 255, 255, 0.94);
+  background: var(--ns-color-bg-spotlight);
   box-shadow: none;
+  border: 0;
+  border-left: 1px solid var(--ns-color-border-secondary);
 }
 
 .user-auth-page__card .ant-card-body {
   width: 100%;
-  padding: clamp(28px, 4vw, 44px);
+  padding: clamp(var(--ns-space-5), 4vw, 44px);
 }
 
 .user-auth-page__title-block {
-  margin-bottom: 18px;
+  margin-bottom: var(--ns-space-4);
 }
 
 .user-auth-page__title-block .ant-typography {
@@ -130,57 +130,28 @@
 }
 
 .user-auth-page .ant-tabs-nav {
-  margin-bottom: 22px;
-}
-
-.user-auth-page .ant-tabs-tab {
-  font-weight: 650;
+  margin-bottom: var(--ns-space-4);
 }
 
 .user-auth-page .ant-form-item {
-  margin-bottom: 18px;
-}
-
-.user-auth-page .ant-input-affix-wrapper,
-.user-auth-page .ant-btn {
-  border-radius: 12px;
+  margin-bottom: var(--ns-space-4);
 }
 
 .user-auth-page__footer {
   margin-bottom: 0;
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: var(--ns-font-size-sm);
+  line-height: var(--ns-line-height-normal);
+  color: var(--ns-color-text-secondary);
 }
 
 .user-auth-page__error {
-  margin-top: 14px;
-  border-radius: 12px;
-}
-
-[data-theme="dark"] .user-auth-page {
-  background:
-    radial-gradient(circle at 12% 18%, rgba(82, 145, 196, 0.16), transparent 30%),
-    linear-gradient(135deg, #0f1419 0%, #151b22 52%, #171512 100%);
-}
-
-[data-theme="dark"] .user-auth-page__shell {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(19, 24, 30, 0.82);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
-}
-
-[data-theme="dark"] .user-auth-page__intro,
-[data-theme="dark"] .user-auth-page__headline.ant-typography {
-  color: #eef5fb;
-}
-
-[data-theme="dark"] .user-auth-page__subhead,
-[data-theme="dark"] .user-auth-page__benefits {
-  color: #b8c5cf;
+  margin-top: var(--ns-space-3);
+  border-radius: var(--ns-radius-md);
 }
 
 [data-theme="dark"] .user-auth-page__card.ant-card {
-  background: rgba(18, 22, 28, 0.96);
+  background: var(--ns-color-bg-spotlight);
+  border-left-color: var(--ns-color-border-secondary);
 }
 
 @media (max-width: 820px) {
@@ -194,10 +165,11 @@
     grid-template-columns: 1fr;
     border: 0;
     border-radius: 0;
+    box-shadow: none;
   }
 
   .user-auth-page__intro {
-    padding: 28px 22px 20px;
+    padding: var(--ns-space-5) var(--ns-space-4) var(--ns-space-4);
   }
 
   .user-auth-page__headline.ant-typography {
@@ -205,10 +177,12 @@
   }
 
   .user-auth-page__card.ant-card {
-    border-radius: 24px 24px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--ns-color-border-secondary);
+    border-radius: var(--ns-radius-xl) var(--ns-radius-xl) 0 0;
   }
 
   .user-auth-page__card .ant-card-body {
-    padding: 26px 22px 32px;
+    padding: var(--ns-space-5) var(--ns-space-4) var(--ns-space-6);
   }
 }

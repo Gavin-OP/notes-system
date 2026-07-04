@@ -1,14 +1,14 @@
 .achievements-panel {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--ns-space-3);
 }
 
 .achievements-panel__best-streak {
   display: flex;
   justify-content: center;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+  padding-bottom: var(--ns-space-1);
+  border-bottom: 1px solid var(--ns-color-border-secondary);
 }
 
 .achievements-panel__best-streak .trophy-badge {

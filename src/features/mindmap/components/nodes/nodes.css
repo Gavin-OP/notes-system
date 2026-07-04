@@ -40,26 +40,23 @@
 
 .mindmap-node--center {
   min-width: 160px;
-  padding: 20px 36px;
-  background: linear-gradient(135deg, #2d4a66 0%, #3a6ea5 100%);
-  border-radius: 16px;
-  box-shadow: 
-    0 4px 20px rgba(44, 62, 80, 0.3),
-    0 0 0 4px rgba(44, 62, 80, 0.1);
+  padding: var(--ns-space-4) var(--ns-space-6);
+  background: var(--ns-color-primary);
+  border: 2px solid var(--ns-color-primary-active);
+  border-radius: var(--ns-radius-lg);
+  box-shadow: var(--ns-shadow-md);
 }
 
 .mindmap-node--center .mindmap-node__label {
-  color: #ffffff;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  color: var(--ns-color-primary-contrast);
+  font-size: var(--ns-font-size-2xl);
+  font-weight: var(--ns-font-weight-bold);
+  letter-spacing: 0.02em;
 }
 
 .mindmap-node--center:hover {
   transform: scale(1.02);
-  box-shadow: 
-    0 6px 28px rgba(44, 62, 80, 0.4),
-    0 0 0 6px rgba(44, 62, 80, 0.15);
+  box-shadow: var(--ns-shadow-primary);
 }
 
 /* ==========================================================================

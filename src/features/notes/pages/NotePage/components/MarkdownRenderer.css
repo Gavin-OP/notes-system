@@ -128,20 +128,23 @@
 }
 
 .note-selection-toolbar button {
-  border: 1px solid transparent;
+  border: 1px solid var(--ns-color-border-secondary);
   border-radius: var(--ns-radius-sm);
   padding: 5px var(--ns-space-3);
-  background: transparent;
+  background: var(--ns-color-bg-container);
   color: var(--ns-color-text);
   font-size: 13px;
+  font-weight: var(--ns-font-weight-semibold);
   line-height: 1.35;
   cursor: pointer;
-  transition: background-color var(--ns-duration-fast) var(--ns-ease-out);
+  white-space: nowrap;
+  transition:
+    background-color var(--ns-duration-fast) var(--ns-ease-out),
+    border-color var(--ns-duration-fast) var(--ns-ease-out),
+    color var(--ns-duration-fast) var(--ns-ease-out);
 }
 
 .note-selection-toolbar--immersive button {
-  border-color: var(--ns-color-border-secondary);
-  background: var(--ns-color-bg-container);
   white-space: nowrap;
 }
 
@@ -150,30 +153,15 @@
   cursor: not-allowed;
 }
 
-.note-selection-toolbar button:hover {
-  background: var(--ns-color-fill-secondary);
+.note-selection-toolbar button:hover:not(:disabled) {
+  color: var(--ns-color-primary);
+  border-color: var(--ns-color-primary-border);
+  background: var(--ns-color-primary-bg-hover);
 }
 
-.note-selection-toolbar button:first-child {
-  border-color: var(--ns-color-primary);
-  background: var(--ns-color-primary);
-  color: #fff;
-}
-
-.note-selection-toolbar button:first-child:hover {
-  border-color: var(--ns-color-primary-hover);
-  background: var(--ns-color-primary-hover);
-}
-
-.note-selection-toolbar__quiz-btn {
-  border-color: var(--ns-chip-wisdom-border);
-  background: var(--ns-chip-wisdom-bg);
-  color: var(--ns-chip-wisdom-text);
-}
-
-.note-selection-toolbar__quiz-btn:hover {
-  border-color: var(--ns-color-wisdom);
-  background: var(--ns-color-wisdom-bg-strong);
+.note-selection-toolbar button:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
 }
 
 .note-selection-toolbar__composer {
@@ -221,6 +209,12 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--ns-space-2);
+}
+
+.note-selection-toolbar__composer-actions button:first-child:hover:not(:disabled) {
+  color: var(--ns-color-text-secondary);
+  border-color: var(--ns-color-border-secondary);
+  background: var(--ns-color-fill-secondary);
 }
 
 .note-selection-toolbar__composer-actions button:last-child {
@@ -396,11 +390,6 @@
   .markdown-body img {
     margin: 8px auto;
   }
-}
-
-[data-theme="dark"] .note-selection-toolbar button:first-child {
-  border-color: var(--ns-color-primary);
-  background: var(--ns-color-primary);
 }
 
 [data-theme="dark"] .note-quote-highlight {

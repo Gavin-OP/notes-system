@@ -58,7 +58,7 @@
 
 .app-page-shell__brand-name {
   font-size: 16px;
-  font-weight: 650;
+  font-weight: var(--ns-font-weight-semibold);
 }
 
 .app-page-shell__tools {

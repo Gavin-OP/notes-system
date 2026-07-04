@@ -4,23 +4,25 @@
   align-items: center;
   justify-content: flex-start;
   text-align: center;
-  gap: 10px;
+  gap: var(--ns-space-2);
   width: 100%;
   height: 118px;
   min-height: 118px;
   max-height: 118px;
-  padding: 12px 10px 10px;
-  border-radius: 14px;
-  border: 1px solid rgba(250, 173, 20, 0.22);
-  background: linear-gradient(180deg, var(--ns-color-wisdom-bg) 0%, var(--ns-color-bg-container) 100%);
+  padding: var(--ns-space-3) var(--ns-space-2) var(--ns-space-2);
+  border-radius: var(--ns-radius-lg);
+  border: 1px solid var(--ns-chip-wisdom-border);
+  background: var(--ns-color-wisdom-bg);
   box-sizing: border-box;
   overflow: hidden;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    transform var(--ns-duration-normal) var(--ns-ease-out),
+    box-shadow var(--ns-duration-normal) var(--ns-ease-out);
 }
 
 .trophy-badge:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(250, 173, 20, 0.14);
+  transform: translateY(-1px);
+  box-shadow: var(--ns-shadow-sm);
 }
 
 .trophy-badge--static:hover {
@@ -36,15 +38,14 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: radial-gradient(circle at 30% 20%, #fff7cc 0%, #ffd666 42%, #faad14 100%);
-  box-shadow:
-    inset 0 2px 8px rgba(255, 255, 255, 0.65),
-    0 6px 14px rgba(250, 173, 20, 0.24);
+  background: var(--ns-color-wisdom-bg-strong);
+  border: 1px solid var(--ns-chip-wisdom-border);
+  box-shadow: var(--ns-shadow-sm);
 }
 
 .trophy-badge__icon {
   font-size: 30px;
-  color: #ad6800;
+  color: var(--ns-color-wisdom-ink);
 }
 
 .trophy-badge__value {
@@ -54,12 +55,12 @@
   transform: translateX(-50%);
   min-width: 30px;
   padding: 1px 7px;
-  border-radius: 999px;
-  background: #fff;
-  border: 1px solid rgba(250, 173, 20, 0.45);
-  color: #ad6800;
-  font-size: 11px;
-  font-weight: 700;
+  border-radius: var(--ns-radius-pill);
+  background: var(--ns-color-bg-container);
+  border: 1px solid var(--ns-chip-wisdom-border);
+  color: var(--ns-color-wisdom-ink);
+  font-size: var(--ns-font-size-xs);
+  font-weight: var(--ns-font-weight-bold);
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -86,32 +87,41 @@
 .trophy-badge__description,
 .trophy-badge__date {
   display: block;
-  font-size: 11px;
+  font-size: var(--ns-font-size-xs);
   line-height: 1.3;
 }
 
 .trophy-badge--locked {
   opacity: 0.72;
-  border-color: rgba(5, 5, 5, 0.08);
-  background: linear-gradient(180deg, var(--ns-color-bg-spotlight) 0%, var(--ns-color-bg-container) 100%);
+  border-color: var(--ns-color-border-secondary);
+  background: var(--ns-color-bg-spotlight);
 }
 
 .trophy-badge--locked .trophy-badge__icon-shell {
-  background: radial-gradient(circle at 30% 20%, #f0f0f0 0%, #d9d9d9 42%, #bfbfbf 100%);
-  box-shadow:
-    inset 0 2px 8px rgba(255, 255, 255, 0.65),
-    0 6px 14px rgba(0, 0, 0, 0.08);
+  background: var(--ns-color-fill-secondary);
+  border-color: var(--ns-color-border-secondary);
+  box-shadow: none;
 }
 
 .trophy-badge--locked .trophy-badge__icon {
-  color: #8c8c8c;
+  color: var(--ns-color-text-quaternary);
 }
 
 .trophy-badge--locked .trophy-badge__value {
-  border-color: rgba(0, 0, 0, 0.12);
-  color: #8c8c8c;
+  border-color: var(--ns-color-border-secondary);
+  color: var(--ns-color-text-quaternary);
 }
 
 .trophy-badge--locked .trophy-badge__title {
-  color: rgba(5, 5, 5, 0.45);
+  color: var(--ns-color-text-tertiary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trophy-badge {
+    transition: none;
+  }
+
+  .trophy-badge:hover {
+    transform: none;
+  }
 }

@@ -1,11 +1,1 @@
-#root {
-  width: 100%;
-}
-
-.route-loading {
-  display: grid;
-  min-height: 240px;
-  place-items: center;
-  color: #5f6b7a;
-  font-size: 14px;
-}
+/* App-level styles live in index.css and src/styles/surface.css */

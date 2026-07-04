@@ -19,16 +19,12 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.career-job-detail-page__header {
-  width: 100%;
+  gap: var(--ns-space-4);
 }
 
 .career-job-detail-page__hero,
 .career-job-detail-page__section {
-  border-radius: 14px;
+  border-radius: var(--ns-radius-lg);
 }
 
 .career-job-detail-page__title {

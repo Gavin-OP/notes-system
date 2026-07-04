@@ -7,9 +7,8 @@
   padding: var(--ns-space-2);
   border: 1px solid var(--ns-color-border-secondary);
   border-radius: var(--ns-radius-md);
-  background: color-mix(in srgb, var(--ns-color-bg-container) 94%, transparent);
-  box-shadow: var(--ns-shadow-lg);
-  backdrop-filter: blur(16px);
+  background: var(--ns-color-bg-elevated);
+  box-shadow: var(--ns-shadow-md);
 }
 
 .note-layout--sider-collapsed .bottom-outline-progress {
@@ -27,11 +26,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(
-    90deg,
-    var(--ns-color-primary),
-    var(--ns-color-wisdom)
-  );
+  background: var(--ns-color-primary);
   transition: width var(--ns-duration-normal) var(--ns-ease-out);
 }
 

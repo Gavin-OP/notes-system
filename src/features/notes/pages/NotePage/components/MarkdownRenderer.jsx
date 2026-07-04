@@ -929,12 +929,7 @@ const MarkdownRenderer = ({
               <button type="button" tabIndex={-1} onClick={handleAskSelection}>
                 {t("note.selection.ask")}
               </button>
-              <button
-                type="button"
-                tabIndex={-1}
-                className="note-selection-toolbar__quiz-btn"
-                onClick={handleGenerateQuizSelection}
-              >
+              <button type="button" tabIndex={-1} onClick={handleGenerateQuizSelection}>
                 {t("note.selection.generateQuiz")}
               </button>
             </>

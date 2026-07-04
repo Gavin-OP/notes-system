@@ -34,12 +34,12 @@
 }
 
 .mindmap-view__spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--ns-color-fill-tertiary);
   border-top-color: var(--ns-color-primary);
   border-radius: 50%;
-  animation: mindmap-spinner 0.8s linear infinite;
+  animation: mindmap-spinner 0.75s linear infinite;
 }
 
 @keyframes mindmap-spinner {
@@ -49,13 +49,14 @@
 }
 
 .mindmap-view--loading p {
-  color: var(--text-color, #666);
-  font-size: 14px;
+  color: var(--ns-color-text-secondary);
+  font-size: var(--ns-font-size-md);
 }
 
 .mindmap-view--error p {
-  color: #ff4d4f;
-  font-size: 16px;
+  color: var(--ns-color-danger);
+  font-size: var(--ns-font-size-xl);
+  font-weight: var(--ns-font-weight-semibold);
 }
 
 /* ==========================================================================

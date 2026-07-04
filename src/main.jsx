@@ -9,6 +9,7 @@ import { isLocalhost } from "./shared/lib/analyticsUtils.js";
 
 import "./styles/tokens.css";
 import "./styles/semanticChips.css";
+import "./styles/surface.css";
 import "./index.css";
 
 // Only initialize Google Analytics when not running on localhost

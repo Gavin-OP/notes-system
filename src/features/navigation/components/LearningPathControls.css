@@ -39,7 +39,7 @@
 }
 
 .learning-path-controls__segment--filled {
-  color: #fff;
+  color: var(--ns-color-primary-contrast);
   background: var(--ns-color-primary);
   border-color: transparent;
 }

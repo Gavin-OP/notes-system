@@ -1,0 +1,235 @@
+/**
+ * Shared surface patterns — aligned with the learning shell (NoteLayout / AppPageShell).
+ * Global Ant Design harmonization and reusable empty/loading/error states.
+ */
+
+/* ── Base document ── */
+body {
+  font-family: var(--ns-font-family);
+  font-size: var(--ns-font-size-md);
+  line-height: var(--ns-line-height-normal);
+  color: var(--ns-color-text);
+  background: var(--ns-color-bg-layout);
+}
+
+/* ── Typography helpers ── */
+.ns-eyebrow {
+  display: inline-block;
+  margin: 0 0 var(--ns-space-2);
+  color: var(--ns-color-primary);
+  font-size: var(--ns-font-size-sm);
+  font-weight: var(--ns-font-weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.ns-page-title {
+  margin: 0 0 var(--ns-space-2);
+  color: var(--ns-color-text);
+  font-size: var(--ns-font-size-3xl);
+  font-weight: var(--ns-font-weight-semibold);
+  line-height: var(--ns-line-height-tight);
+}
+
+.ns-page-subtitle {
+  margin: 0;
+  max-width: 720px;
+  color: var(--ns-color-text-secondary);
+  font-size: var(--ns-font-size-lg);
+  line-height: var(--ns-line-height-relaxed);
+}
+
+/* ── Surface card (catalog, profile, admin panels) ── */
+.ns-surface-card {
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-lg);
+  background: var(--ns-color-bg-container);
+  box-shadow: var(--ns-shadow-sm);
+}
+
+.ns-surface-card--flat {
+  box-shadow: none;
+}
+
+/* ── Shared states ── */
+.ns-state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ns-space-3);
+  padding: var(--ns-space-6) var(--ns-space-4);
+  text-align: center;
+  color: var(--ns-color-text-secondary);
+}
+
+.ns-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ns-space-3);
+  padding: var(--ns-space-6) var(--ns-space-4);
+  text-align: center;
+  color: var(--ns-color-text-secondary);
+}
+
+.ns-empty-state__title {
+  margin: 0;
+  color: var(--ns-color-text);
+  font-size: var(--ns-font-size-xl);
+  font-weight: var(--ns-font-weight-semibold);
+}
+
+.ns-empty-state__copy {
+  margin: 0;
+  max-width: 420px;
+  font-size: var(--ns-font-size-md);
+  line-height: var(--ns-line-height-relaxed);
+}
+
+.ns-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ns-space-3);
+  padding: var(--ns-space-6) var(--ns-space-4);
+  color: var(--ns-color-text-secondary);
+  font-size: var(--ns-font-size-md);
+}
+
+.ns-loading-state__spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--ns-color-fill-tertiary);
+  border-top-color: var(--ns-color-primary);
+  border-radius: 50%;
+  animation: ns-spin 0.75s linear infinite;
+}
+
+@keyframes ns-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ns-error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ns-space-2);
+  padding: var(--ns-space-6) var(--ns-space-4);
+  text-align: center;
+}
+
+.ns-error-state__title {
+  margin: 0;
+  color: var(--ns-color-danger);
+  font-size: var(--ns-font-size-xl);
+  font-weight: var(--ns-font-weight-semibold);
+}
+
+.ns-error-state__copy {
+  margin: 0;
+  max-width: 420px;
+  color: var(--ns-color-text-secondary);
+  font-size: var(--ns-font-size-md);
+  line-height: var(--ns-line-height-relaxed);
+}
+
+/* ── Ant Design harmonization ── */
+.ant-btn {
+  font-weight: var(--ns-font-weight-semibold);
+  border-radius: var(--ns-radius-sm);
+}
+
+.ant-btn-lg {
+  border-radius: var(--ns-radius-md);
+}
+
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-select-selector,
+.ant-picker,
+.ant-input-number {
+  border-radius: var(--ns-radius-sm) !important;
+}
+
+.ant-card {
+  border-radius: var(--ns-radius-lg);
+  border-color: var(--ns-color-border-secondary);
+  box-shadow: var(--ns-shadow-sm);
+}
+
+.ant-card .ant-card-head {
+  min-height: 52px;
+  border-bottom-color: var(--ns-color-border-secondary);
+}
+
+.ant-card .ant-card-head-title {
+  font-weight: var(--ns-font-weight-semibold);
+  font-size: var(--ns-font-size-xl);
+}
+
+.ant-modal-content {
+  border-radius: var(--ns-radius-lg);
+  box-shadow: var(--ns-shadow-modal);
+}
+
+.ant-modal-header {
+  border-bottom-color: var(--ns-color-border-secondary);
+}
+
+.ant-table-wrapper .ant-table {
+  border-radius: var(--ns-radius-lg);
+  overflow: hidden;
+}
+
+.ant-table-wrapper .ant-table-thead > tr > th {
+  background: var(--ns-color-fill-quaternary);
+  font-weight: var(--ns-font-weight-semibold);
+  color: var(--ns-color-text-secondary);
+  border-bottom-color: var(--ns-color-border-secondary);
+}
+
+.ant-table-wrapper .ant-table-tbody > tr > td {
+  border-bottom-color: var(--ns-color-border-secondary);
+}
+
+.ant-descriptions-bordered .ant-descriptions-item-label {
+  background: var(--ns-color-fill-quaternary);
+  font-weight: var(--ns-font-weight-semibold);
+  color: var(--ns-color-text-secondary);
+}
+
+.ant-alert-error {
+  border-color: var(--ns-color-danger-border);
+  background: var(--ns-color-danger-bg);
+}
+
+.ant-tabs-tab {
+  font-weight: var(--ns-font-weight-semibold);
+}
+
+.ant-empty-description {
+  color: var(--ns-color-text-secondary);
+}
+
+[data-theme="dark"] .ant-card {
+  box-shadow: none;
+}
+
+[data-theme="dark"] .ant-table-wrapper .ant-table-thead > tr > th,
+[data-theme="dark"] .ant-descriptions-bordered .ant-descriptions-item-label {
+  background: var(--ns-color-fill-quaternary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ns-loading-state__spinner {
+    animation: none;
+    border-top-color: var(--ns-color-primary);
+  }
+}

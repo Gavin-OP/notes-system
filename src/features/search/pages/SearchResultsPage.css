@@ -1,14 +1,14 @@
 .search-results-page {
   min-height: 100vh;
-  padding: var(--ns-space-6) min(6vw, 72px);
-  background: var(--ns-color-bg-container);
+  padding: var(--ns-space-6) clamp(var(--ns-space-4), 4vw, 72px);
+  background: var(--ns-color-bg-layout);
 }
 
 .search-results-page__header {
   display: flex;
   flex-direction: column;
   gap: var(--ns-space-2);
-  margin-bottom: 22px;
+  margin-bottom: var(--ns-space-4);
 }
 
 .search-results-page__header .ant-btn {
@@ -66,7 +66,7 @@
 
 .search-results-page__mark {
   padding: 0 2px;
-  border-radius: 3px;
+  border-radius: var(--ns-radius-sm);
   background: var(--ns-color-highlight-active);
   color: inherit;
 }

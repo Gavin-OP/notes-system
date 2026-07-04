@@ -60,7 +60,7 @@
 }
 
 .assistant-workspace__chat-msg--assistant {
-  background: rgba(82, 196, 26, 0.12);
+  background: var(--ns-color-success-bg);
 }
 
 .assistant-workspace__chat-text {
