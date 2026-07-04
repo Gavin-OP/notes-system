@@ -20,6 +20,7 @@ import {
 
 import LearningNavigationPanel from "../../navigation/components/LearningNavigationPanel";
 import LearningPathControls from "../../navigation/components/LearningPathControls";
+import { sortPathNodesCanonically } from "../../navigation/lib/learningPathUtils";
 import BottomOutlineProgress from "../components/BottomOutlineProgress";
 import NoteWorkspaceBar from "../components/NoteWorkspaceBar";
 import OutlineSider from "../../navigation/components/OutlineSider";
@@ -51,6 +52,10 @@ import "./NoteLayout.css";
 import "../components/LearningSupportPanel.css";
 
 const { Sider, Content } = Layout;
+
+const LEARNING_SIDER_MIN_WIDTH = 350;
+const LEARNING_SIDER_MAX_WIDTH = 960;
+const LEARNING_SIDER_NEARBY_MIN_WIDTH = 520;
 
 const LEARNING_SUPPORT_TABS = [
   { id: "outline", labelKey: "learningSupport.tabs.outline" },
@@ -298,6 +303,7 @@ const NoteLayout = () => {
   const [learningPathDraft, setLearningPathDraft] = useState(null);
   const [learningPathPending, setLearningPathPending] = useState(false);
   const [pathEditMode, setPathEditMode] = useState(false);
+  const [learningSiderWidth, setLearningSiderWidth] = useState(350);
   const [canonicalGraph, setCanonicalGraph] = useState(null);
   const [noteQuotes, setNoteQuotes] = useState([]);
   const [completeNotePending, setCompleteNotePending] = useState(false);
@@ -321,6 +327,11 @@ const NoteLayout = () => {
     active: false,
     startX: 0,
     startWidth: 420,
+  });
+  const leftSiderResizeRef = useRef({
+    active: false,
+    startX: 0,
+    startWidth: LEARNING_SIDER_MIN_WIDTH,
   });
 
   // track previous isMobile value
@@ -580,6 +591,23 @@ const NoteLayout = () => {
     }
   }, [loadLearningPath]);
 
+  const applyPathNodeOrder = useCallback(
+    (nodes, orderMode = "custom") => {
+      const normalizedMode = orderMode === "canonical" ? "canonical" : "custom";
+      const orderedNodes =
+        normalizedMode === "canonical" ? sortPathNodesCanonically(nodes, canonicalGraph) : nodes;
+      return {
+        nodes: orderedNodes,
+        edges: buildLearningPathEdges(orderedNodes),
+        metadata: {
+          ...(learningPathDraft?.metadata || {}),
+          order_mode: normalizedMode,
+        },
+      };
+    },
+    [canonicalGraph, learningPathDraft?.metadata],
+  );
+
   const handleStartPathBuilder = useCallback(async () => {
     if (learningPathPending) return;
     setLearningPathPending(true);
@@ -625,15 +653,20 @@ const NoteLayout = () => {
         message.info(t("learningPath.alreadyInPath", "These courses are already in your path."));
         return;
       }
-      const nextNodes = [...(learningPathDraft.nodes || []), ...newNodes];
+      const mergedNodes = [...(learningPathDraft.nodes || []), ...newNodes];
+      const orderMode =
+        String(learningPathDraft?.metadata?.order_mode || learningPathDraft?.metadata?.orderMode || "")
+          .trim()
+          .toLowerCase() === "custom"
+          ? "custom"
+          : "canonical";
       const nextDraft = {
         ...learningPathDraft,
-        nodes: nextNodes,
-        edges: buildLearningPathEdges(nextNodes),
+        ...applyPathNodeOrder(mergedNodes, orderMode),
       };
       await persistLearningPathDraft(nextDraft, successMessage, commitMessage);
     },
-    [learningPathDraft, persistLearningPathDraft, t],
+    [applyPathNodeOrder, learningPathDraft, persistLearningPathDraft, t],
   );
 
   const handleAddCareerToPath = useCallback(
@@ -700,7 +733,7 @@ const NoteLayout = () => {
       message.info(duplicateMessage);
       return;
     }
-    const nextNodes = [
+    const mergedNodes = [
       ...(learningPathDraft.nodes || []),
       ...newCandidates.map((item) => {
         const noteUrl = normalizeMenuKey(item.key);
@@ -719,10 +752,15 @@ const NoteLayout = () => {
         };
       }),
     ];
+    const orderMode =
+      String(learningPathDraft?.metadata?.order_mode || learningPathDraft?.metadata?.orderMode || "")
+        .trim()
+        .toLowerCase() === "custom"
+        ? "custom"
+        : "canonical";
     const nextDraft = {
       ...learningPathDraft,
-      nodes: nextNodes,
-      edges: buildLearningPathEdges(nextNodes),
+      ...applyPathNodeOrder(mergedNodes, orderMode),
     };
     await persistLearningPathDraft(
       nextDraft,
@@ -731,7 +769,7 @@ const NoteLayout = () => {
         ? "Added subject to learning path"
         : "Added learning path node",
     );
-  }, [learningPathDraft, persistLearningPathDraft]);
+  }, [applyPathNodeOrder, learningPathDraft, persistLearningPathDraft]);
 
   const handleReorderPathNodes = useCallback(async (orderedNoteUrls) => {
     if (!learningPathDraft?.nodes?.length || !Array.isArray(orderedNoteUrls)) return;
@@ -743,11 +781,23 @@ const NoteLayout = () => {
     });
     const nextDraft = {
       ...learningPathDraft,
-      nodes: nextNodes,
-      edges: buildLearningPathEdges(nextNodes),
+      ...applyPathNodeOrder(nextNodes, "custom"),
     };
-    await persistLearningPathDraft(nextDraft, "Path reordered.", "Reordered learning path nodes");
-  }, [learningPathDraft, persistLearningPathDraft]);
+    await persistLearningPathDraft(nextDraft, t("learningPath.reordered", "Path reordered."), "Reordered learning path nodes");
+  }, [applyPathNodeOrder, learningPathDraft, persistLearningPathDraft, t]);
+
+  const handleRestoreRecommendedOrder = useCallback(async () => {
+    if (!learningPathDraft?.nodes?.length || learningPathPending) return;
+    const nextDraft = {
+      ...learningPathDraft,
+      ...applyPathNodeOrder(learningPathDraft.nodes, "canonical"),
+    };
+    await persistLearningPathDraft(
+      nextDraft,
+      t("learningPath.restoredRecommended", "Restored recommended order."),
+      "Restored recommended learning path order",
+    );
+  }, [applyPathNodeOrder, learningPathDraft, learningPathPending, persistLearningPathDraft, t]);
 
   const handleRemovePathNode = useCallback(async (noteUrl) => {
     if (!learningPathDraft?.nodes?.length || !noteUrl) return;
@@ -1065,14 +1115,30 @@ const NoteLayout = () => {
   }, [assistantMode]);
 
   useEffect(() => {
+    if (pathEditMode && !isMobile) {
+      setLearningSiderWidth((width) => Math.max(width, 720));
+    }
+  }, [pathEditMode, isMobile]);
+
+  useEffect(() => {
     const onMouseMove = (event) => {
-      if (!resizeStateRef.current.active) return;
-      const delta = event.clientX - resizeStateRef.current.startX;
-      const nextWidth = Math.min(700, Math.max(320, resizeStateRef.current.startWidth - delta));
-      setAssistantDockWidth(nextWidth);
+      if (resizeStateRef.current.active) {
+        const delta = event.clientX - resizeStateRef.current.startX;
+        const nextWidth = Math.min(700, Math.max(320, resizeStateRef.current.startWidth - delta));
+        setAssistantDockWidth(nextWidth);
+      }
+      if (leftSiderResizeRef.current.active) {
+        const delta = event.clientX - leftSiderResizeRef.current.startX;
+        const nextWidth = Math.min(
+          LEARNING_SIDER_MAX_WIDTH,
+          Math.max(LEARNING_SIDER_MIN_WIDTH, leftSiderResizeRef.current.startWidth + delta),
+        );
+        setLearningSiderWidth(nextWidth);
+      }
     };
     const onMouseUp = () => {
       resizeStateRef.current.active = false;
+      leftSiderResizeRef.current.active = false;
     };
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mouseup", onMouseUp);
@@ -1087,6 +1153,14 @@ const NoteLayout = () => {
       active: true,
       startX: event.clientX,
       startWidth: assistantDockWidth,
+    };
+  };
+
+  const startLeftSiderResize = (event) => {
+    leftSiderResizeRef.current = {
+      active: true,
+      startX: event.clientX,
+      startWidth: learningSiderWidth,
     };
   };
 
@@ -1286,11 +1360,11 @@ const NoteLayout = () => {
 
         {/* menu */}
         <Sider
-          width={isMobile ? "100%" : pathEditMode ? 720 : 350}
+          width={isMobile ? "100%" : learningSiderWidth}
           collapsedWidth={0}
           className={`note-layout__sider ${isMobile ? "note-layout__sider--mobile" : ""} ${
             pathEditMode ? "note-layout__sider--path-editing" : ""
-          }`}
+          } ${learningSiderWidth >= LEARNING_SIDER_NEARBY_MIN_WIDTH ? "note-layout__sider--wide" : ""}`}
           collapsible
           collapsed={collapsed}
           trigger={null}
@@ -1345,9 +1419,11 @@ const NoteLayout = () => {
                 onAddCareerToPath={handleAddCareerToPath}
                 onReorderPathNodes={handleReorderPathNodes}
                 onRemovePathNode={handleRemovePathNode}
+                onRestoreRecommendedOrder={handleRestoreRecommendedOrder}
                 pathEditMode={pathEditMode}
                 canonicalGraph={canonicalGraph}
                 isMobile={isMobile}
+                showNearbyPanel={!isMobile && learningSiderWidth >= LEARNING_SIDER_NEARBY_MIN_WIDTH}
                 onSelect={(path) => {
                   handleNoteSelect(path);
                   if (isMobile) setCollapsed(true);
@@ -1355,6 +1431,15 @@ const NoteLayout = () => {
               />
             </div>
           )}
+          {!isMobile && !collapsed ? (
+            <div
+              className="note-layout__sider-resizer"
+              onMouseDown={startLeftSiderResize}
+              role="separator"
+              aria-orientation="vertical"
+              aria-label={t("learningPath.resizeSidebar", "Resize learning path sidebar")}
+            />
+          ) : null}
         </Sider>
         {!isMobile && collapsed ? (
           <button

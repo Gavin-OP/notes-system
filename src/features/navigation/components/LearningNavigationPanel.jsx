@@ -10,6 +10,10 @@ import {
 import { getCareerTaxonomy } from "../../careers/api/careers";
 import { formatCareerRoleLabel } from "../../careers/lib/careerDisplayUtils";
 import useTranslation from "../../../i18n/useTranslation";
+import {
+  buildNearbyPathSuggestions,
+  resolvePathOrderMode,
+} from "../lib/learningPathUtils";
 
 import "./LearningNavigationPanel.css";
 
@@ -152,7 +156,8 @@ function buildSubjectLibrary(items = [], personalizedSteps = []) {
     .filter((subject) => subject.stepCount > 0);
 }
 
-function buildLearningPathGraph(steps = [], canonicalGraph = null) {
+function buildLearningPathGraph(steps = [], canonicalGraph = null, options = {}) {
+  const useCustomOrder = Boolean(options.useCustomOrder);
   const graphNodes = Array.isArray(canonicalGraph?.nodes) ? canonicalGraph.nodes : [];
   const graphNodeById = new Map(graphNodes.map((node) => [node.node_id || node.nodeId, node]));
   const defaultPathIds = Array.isArray(canonicalGraph?.default_path?.node_ids)
@@ -167,14 +172,16 @@ function buildLearningPathGraph(steps = [], canonicalGraph = null) {
 
   const nodes = entries.map((entry) => {
     const graphNode = graphNodeById.get(entry.id) || null;
-    const estimatedOrder = Number(
-      graphNode?.metadata?.estimated_order ??
-        graphNode?.metadata?.estimatedOrder ??
-        graphNode?.estimated_order ??
-        graphNode?.estimatedOrder ??
-        defaultOrderById.get(entry.id) ??
-        ESTIMATED_ORDER_BY_NODE_ID.get(entry.id),
-    );
+    const estimatedOrder = useCustomOrder
+      ? entry.index + 1
+      : Number(
+          graphNode?.metadata?.estimated_order ??
+            graphNode?.metadata?.estimatedOrder ??
+            graphNode?.estimated_order ??
+            graphNode?.estimatedOrder ??
+            defaultOrderById.get(entry.id) ??
+            ESTIMATED_ORDER_BY_NODE_ID.get(entry.id),
+        );
     return {
       ...entry,
       graphNode,
@@ -265,10 +272,12 @@ const LearningNavigationPanel = ({
   onAddCareerToPath,
   onReorderPathNodes,
   onRemovePathNode,
+  onRestoreRecommendedOrder,
   pathEditMode = false,
   canonicalGraph,
   onSelect,
   isMobile = false,
+  showNearbyPanel = false,
 }) => {
   const { t } = useTranslation();
   const [editLibraryTab, setEditLibraryTab] = useState("subject");
@@ -276,11 +285,21 @@ const LearningNavigationPanel = ({
   const [draggedKey, setDraggedKey] = useState("");
   const [dragPayload, setDragPayload] = useState(null);
   const [isPathDropActive, setIsPathDropActive] = useState(false);
+  const [nearbyAnchorUrl, setNearbyAnchorUrl] = useState("");
   const normalizedCurrent = normalizeKey(currentNoteUrl);
   const personalizedSteps = useMemo(
     () => collectLearningPathSteps(learningPathDraft),
     [learningPathDraft],
   );
+  const pathKeySet = useMemo(
+    () => new Set(personalizedSteps.map((step) => normalizeKey(step.key))),
+    [personalizedSteps],
+  );
+  const pathOrderMode = useMemo(
+    () => resolvePathOrderMode(learningPathDraft, personalizedSteps, canonicalGraph),
+    [learningPathDraft, personalizedSteps, canonicalGraph],
+  );
+  const useCustomPathOrder = pathOrderMode === "custom";
   const hasPersonalizedPath = personalizedSteps.length > 0;
   const hasEditableDraft = learningPathDraft != null;
   const hasPathWorkspace = hasPersonalizedPath || (hasEditableDraft && pathEditMode);
@@ -301,6 +320,7 @@ const LearningNavigationPanel = ({
       collectPathSteps((items || []).filter((item) => !Array.isArray(item.children) || item.children.length === 0)),
     [items],
   );
+  const allMenuSteps = useMemo(() => collectPathSteps(items || []), [items]);
   const addCandidateSteps = useMemo(() => {
     const existing = new Set(personalizedSteps.map((step) => normalizeKey(step.key)));
     return collectPathSteps(items || []).filter((step) => !existing.has(normalizeKey(step.key)));
@@ -320,8 +340,28 @@ const LearningNavigationPanel = ({
     return Array.from(groups.entries());
   }, [addCandidateSteps, t]);
   const personalizedGraph = useMemo(
-    () => buildLearningPathGraph(personalizedSteps, canonicalGraph),
-    [personalizedSteps, canonicalGraph],
+    () => buildLearningPathGraph(personalizedSteps, canonicalGraph, { useCustomOrder: useCustomPathOrder }),
+    [personalizedSteps, canonicalGraph, useCustomPathOrder],
+  );
+  const nearbyAnchorNormalized = useMemo(() => {
+    if (nearbyAnchorUrl && pathKeySet.has(normalizeKey(nearbyAnchorUrl))) {
+      return normalizeKey(nearbyAnchorUrl);
+    }
+    if (pathKeySet.has(normalizedCurrent)) return normalizedCurrent;
+    const firstIncomplete = personalizedSteps.find(
+      (step) => !completedNoteUrls.has(normalizeKey(step.key)) && step.pathStatus !== "completed",
+    );
+    return normalizeKey((firstIncomplete || personalizedSteps[0])?.key || "");
+  }, [nearbyAnchorUrl, pathKeySet, normalizedCurrent, personalizedSteps, completedNoteUrls]);
+  const nearbySuggestions = useMemo(
+    () =>
+      buildNearbyPathSuggestions({
+        anchorNoteUrl: nearbyAnchorNormalized,
+        pathNodeIds: personalizedSteps.map((step) => getStepNodeId(step)).filter(Boolean),
+        canonicalGraph,
+        menuSteps: allMenuSteps,
+      }),
+    [nearbyAnchorNormalized, personalizedSteps, canonicalGraph, allMenuSteps],
   );
   const initialExpandedKey = useMemo(() => {
     const currentSection = subjectSections.find((section) =>
@@ -336,6 +376,22 @@ const LearningNavigationPanel = ({
     if (initialExpandedKey) next.add(initialExpandedKey);
     return next;
   }, [expandedKeys, hasPathWorkspace, initialExpandedKey]);
+
+  useEffect(() => {
+    if (!showNearbyPanel || !personalizedSteps.length) return;
+    if (pathKeySet.has(normalizedCurrent)) {
+      setNearbyAnchorUrl(normalizedCurrent);
+    }
+  }, [normalizedCurrent, pathKeySet, showNearbyPanel, personalizedSteps.length]);
+
+  useEffect(() => {
+    if (!nearbyAnchorUrl) return;
+    if (pathKeySet.has(normalizeKey(nearbyAnchorUrl))) return;
+    const fallback = pathKeySet.has(normalizedCurrent)
+      ? normalizedCurrent
+      : normalizeKey(personalizedSteps[0]?.key || "");
+    if (fallback) setNearbyAnchorUrl(fallback);
+  }, [nearbyAnchorUrl, pathKeySet, normalizedCurrent, personalizedSteps]);
 
   useEffect(() => {
     let mounted = true;
@@ -377,8 +433,54 @@ const LearningNavigationPanel = ({
           {t("learningPath.next")}
         </span>
       </div>
+      {hasPersonalizedPath ? (
+        <div className="learning-nav__order-mode-row">
+          <span
+            className={`learning-nav__order-mode learning-nav__order-mode--${pathOrderMode}`}
+            title={
+              useCustomPathOrder
+                ? t("learningPath.freeLearningModeHint", "You arranged this path manually.")
+                : t("learningPath.recommendedOrderHint", "Courses follow the official recommended sequence.")
+            }
+          >
+            {useCustomPathOrder
+              ? t("learningPath.freeLearningMode", "Free learning mode")
+              : t("learningPath.recommendedOrder", "Recommended order")}
+          </span>
+          {useCustomPathOrder && typeof onRestoreRecommendedOrder === "function" ? (
+            <button
+              type="button"
+              className="learning-nav__order-restore"
+              onClick={onRestoreRecommendedOrder}
+              disabled={learningPathPending}
+            >
+              {t("learningPath.restoreRecommended", "Restore recommended order")}
+            </button>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
+
+  const reorderPersonalizedSteps = (sourceKey, targetKey) => {
+    if (!sourceKey || !targetKey || typeof onReorderPathNodes !== "function") return;
+    const normalizedSource = normalizeKey(sourceKey);
+    const normalizedTarget = normalizeKey(targetKey);
+    if (normalizedSource === normalizedTarget) return;
+    const sourceIndex = personalizedSteps.findIndex(
+      (step) => normalizeKey(step.key) === normalizedSource,
+    );
+    const targetIndex = personalizedSteps.findIndex(
+      (step) => normalizeKey(step.key) === normalizedTarget,
+    );
+    if (sourceIndex < 0 || targetIndex < 0) return;
+    const nextSteps = [...personalizedSteps];
+    const [moved] = nextSteps.splice(sourceIndex, 1);
+    nextSteps.splice(targetIndex, 0, moved);
+    onReorderPathNodes(nextSteps.map((step) => step.key));
+    setDraggedKey("");
+    setDragPayload(null);
+  };
 
   const addCareerToPath = (profile) => {
     if (!profile || typeof onAddCareerToPath !== "function") return;
@@ -402,14 +504,15 @@ const LearningNavigationPanel = ({
 
   const handleLibraryDragStart = (event, payload) => {
     setDragPayload(payload);
-    setDraggedKey(payload?.type === "course" ? payload.step?.key : "");
+    setDraggedKey(
+      payload?.type === "course" || payload?.type === "nearby-course" ? payload.step?.key : "",
+    );
     event.dataTransfer.effectAllowed = "copy";
     event.dataTransfer.setData("application/x-learning-path-item", JSON.stringify(payload));
     event.dataTransfer.setData("text/plain", payload?.step?.key || payload?.subject?.key || "");
   };
 
   const handlePathDrop = (event) => {
-    if (!pathEditMode) return;
     event.preventDefault();
     setIsPathDropActive(false);
     let payload = dragPayload;
@@ -421,10 +524,19 @@ const LearningNavigationPanel = ({
         payload = dragPayload;
       }
     }
+    const isAddPayload =
+      payload?.type === "subject" || payload?.type === "course" || payload?.type === "nearby-course";
+    if (!pathEditMode && !isAddPayload) return;
     if (payload?.type === "subject") addSubjectToPath(payload.subject);
-    if (payload?.type === "course") addCandidateToPath(payload.step);
+    if (payload?.type === "course" || payload?.type === "nearby-course") addCandidateToPath(payload.step);
     setDragPayload(null);
     setDraggedKey("");
+  };
+
+  const selectPathStep = (stepKey) => {
+    const normalized = normalizeKey(stepKey);
+    if (pathKeySet.has(normalized)) setNearbyAnchorUrl(normalized);
+    onSelect(stepKey);
   };
 
   const renderSteps = (steps, subjectLabel, options = {}) => {
@@ -434,15 +546,7 @@ const LearningNavigationPanel = ({
       (step) => !completedNoteUrls.has(normalizeKey(step.key)) && step.pathStatus !== "completed",
     );
     const handleDropOnStep = (targetKey) => {
-      if (!draggedKey || draggedKey === targetKey || typeof onReorderPathNodes !== "function") return;
-      const sourceIndex = steps.findIndex((step) => normalizeKey(step.key) === normalizeKey(draggedKey));
-      const targetIndex = steps.findIndex((step) => normalizeKey(step.key) === normalizeKey(targetKey));
-      if (sourceIndex < 0 || targetIndex < 0) return;
-      const nextSteps = [...steps];
-      const [moved] = nextSteps.splice(sourceIndex, 1);
-      nextSteps.splice(targetIndex, 0, moved);
-      onReorderPathNodes(nextSteps.map((step) => step.key));
-      setDraggedKey("");
+      reorderPersonalizedSteps(draggedKey, targetKey);
     };
     return (
       <ol className="learning-nav__path" aria-label={`${subjectLabel} path`}>
@@ -524,6 +628,7 @@ const LearningNavigationPanel = ({
 
   const renderDecisionGraph = (graph, options = {}) => {
     const allowRemove = Boolean(options.allowRemove && typeof onRemovePathNode === "function");
+    const allowReorder = Boolean(options.allowReorder && typeof onReorderPathNodes === "function");
     const firstIncompleteIndex = personalizedSteps.findIndex(
       (step) => !completedNoteUrls.has(normalizeKey(step.key)) && step.pathStatus !== "completed",
     );
@@ -591,8 +696,35 @@ const LearningNavigationPanel = ({
               key={`${node.id}:${step.key}`}
               className={`learning-nav__graph-node-wrap ${subjectClass} ${
                 node.incomingCount > 1 ? "learning-nav__graph-node-wrap--join" : ""
-              } ${node.outgoingCount > 1 ? "learning-nav__graph-node-wrap--split" : ""}`}
+              } ${node.outgoingCount > 1 ? "learning-nav__graph-node-wrap--split" : ""} ${
+                draggedKey && normalizeKey(draggedKey) === normalizeKey(step.key)
+                  ? "learning-nav__graph-node-wrap--dragging"
+                  : ""
+              }`}
               style={{ left: node.x, top: node.y }}
+              draggable={allowReorder}
+              onDragStart={(event) => {
+                if (!allowReorder) return;
+                setDraggedKey(step.key);
+                setDragPayload({ type: "path-node", step });
+                event.dataTransfer.effectAllowed = "move";
+                event.dataTransfer.setData("text/plain", step.key);
+              }}
+              onDragOver={(event) => {
+                if (!allowReorder || !draggedKey || dragPayload?.type !== "path-node") return;
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+              }}
+              onDrop={(event) => {
+                if (!allowReorder) return;
+                event.preventDefault();
+                event.stopPropagation();
+                reorderPersonalizedSteps(draggedKey, step.key);
+              }}
+              onDragEnd={() => {
+                setDraggedKey("");
+                setDragPayload(null);
+              }}
             >
                 <span
                   className={`learning-nav__graph-port learning-nav__graph-port--top learning-nav__graph-port--${status}`}
@@ -605,7 +737,7 @@ const LearningNavigationPanel = ({
                 <button
                   type="button"
                   className="learning-nav__node learning-nav__graph-node"
-                  onClick={() => onSelect(step.key)}
+                  onClick={() => selectPathStep(step.key)}
                   aria-current={isCurrent ? "page" : undefined}
                 >
                   <span className="learning-nav__node-body">
@@ -812,6 +944,81 @@ const LearningNavigationPanel = ({
     );
   };
 
+  const renderNearbyPanel = () => {
+    if (!showNearbyPanel || !hasPersonalizedPath) return null;
+    const anchorStep = personalizedSteps.find((step) => normalizeKey(step.key) === nearbyAnchorNormalized);
+    return (
+      <aside className="learning-nav__nearby-panel" aria-label={t("learningPath.nearbyTitle", "Nearby learning")}>
+        <div className="learning-nav__nearby-header">
+          <span className="learning-nav__nearby-title">{t("learningPath.nearbyTitle", "Nearby")}</span>
+          {anchorStep ? (
+            <span className="learning-nav__nearby-anchor">
+              {t("learningPath.nearbyNearLabel", "Near")} {anchorStep.title}
+            </span>
+          ) : null}
+          <span className="learning-nav__nearby-copy">
+            {t(
+              "learningPath.nearbyHint",
+              "Related courses and concepts not yet in your path.",
+            )}
+          </span>
+        </div>
+        {nearbySuggestions.length ? (
+          <div className="learning-nav__nearby-list">
+            {nearbySuggestions.map((item) => {
+              const isPreviewing = normalizeKey(item.noteUrl) === normalizedCurrent;
+              return (
+                <div
+                  key={item.nodeId}
+                  className={`learning-nav__nearby-item ${isPreviewing ? "learning-nav__nearby-item--previewing" : ""}`}
+                  draggable
+                  onDragStart={(event) =>
+                    handleLibraryDragStart(event, {
+                      type: "nearby-course",
+                      step: {
+                        key: item.noteUrl,
+                        title: item.title,
+                        module: item.subject,
+                      },
+                    })
+                  }
+                >
+                  <button
+                    type="button"
+                    className="learning-nav__nearby-link"
+                    onClick={() => onSelect(item.noteUrl)}
+                  >
+                    <span className="learning-nav__nearby-item-title">{item.title}</span>
+                    <span className="learning-nav__nearby-item-meta">{item.subject}</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="learning-nav__nearby-add"
+                    onClick={() =>
+                      addCandidateToPath({
+                        key: item.noteUrl,
+                        title: item.title,
+                        module: item.subject,
+                      })
+                    }
+                    disabled={learningPathPending}
+                    title={t("learningPath.addToPath", "Add")}
+                  >
+                    {t("learningPath.addToPath", "Add")}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="learning-nav__nearby-empty">
+            {t("learningPath.nearbyEmpty", "No nearby suggestions for this course right now.")}
+          </p>
+        )}
+      </aside>
+    );
+  };
+
   const renderPersonalizedSection = () => {
     if (!hasPathWorkspace) return null;
     const containsCurrent = personalizedSteps.some((step) => normalizeKey(step.key) === normalizedCurrent);
@@ -823,12 +1030,19 @@ const LearningNavigationPanel = ({
       >
         {renderEditLibrary()}
         <div
-          className={`learning-nav__drop-zone ${isPathDropActive ? "learning-nav__drop-zone--active" : ""}`}
+          className={`learning-nav__drop-zone ${isPathDropActive ? "learning-nav__drop-zone--active" : ""} ${
+            showNearbyPanel ? "learning-nav__drop-zone--wide" : ""
+          }`}
           onDragOver={(event) => {
-            if (!pathEditMode) return;
+            const isMove = dragPayload?.type === "path-node";
+            const isAdd =
+              dragPayload?.type === "subject" ||
+              dragPayload?.type === "course" ||
+              dragPayload?.type === "nearby-course";
+            if (isMove && !pathEditMode) return;
+            if (!pathEditMode && !isAdd) return;
             event.preventDefault();
-            event.dataTransfer.dropEffect =
-              dragPayload?.type === "path-node" ? "move" : "copy";
+            event.dataTransfer.dropEffect = isMove ? "move" : "copy";
             setIsPathDropActive(true);
           }}
           onDragLeave={(event) => {
@@ -836,25 +1050,33 @@ const LearningNavigationPanel = ({
           }}
           onDrop={handlePathDrop}
         >
-          {hasPersonalizedPath ? (
-            renderDecisionGraph(personalizedGraph, { allowRemove: pathEditMode })
-          ) : (
-            <div className="learning-nav__empty-path">
-              <p className="learning-nav__empty-path-title">
-                {pathEditMode
-                  ? t("learningPath.emptyDropTitle", "Your path is empty")
-                  : t("learningPath.emptyPathTitle", "No courses in this path yet")}
-              </p>
-              <p className="learning-nav__empty-path-copy">
-                {pathEditMode
-                  ? t(
-                      "learningPath.emptyDropHint",
-                      "Add a subject, individual courses, or a career path from the library above.",
-                    )
-                  : t("learningPath.emptyPathHint", "Click Edit to start building your path from scratch.")}
-              </p>
+          <div className="learning-nav__workspace">
+            <div className="learning-nav__path-column">
+              {hasPersonalizedPath ? (
+                renderDecisionGraph(personalizedGraph, {
+                  allowRemove: pathEditMode,
+                  allowReorder: pathEditMode,
+                })
+              ) : (
+                <div className="learning-nav__empty-path">
+                  <p className="learning-nav__empty-path-title">
+                    {pathEditMode
+                      ? t("learningPath.emptyDropTitle", "Your path is empty")
+                      : t("learningPath.emptyPathTitle", "No courses in this path yet")}
+                  </p>
+                  <p className="learning-nav__empty-path-copy">
+                    {pathEditMode
+                      ? t(
+                          "learningPath.emptyDropHint",
+                          "Add a subject, individual courses, or a career path from the library above.",
+                        )
+                      : t("learningPath.emptyPathHint", "Click Edit to start building your path from scratch.")}
+                  </p>
+                </div>
+              )}
             </div>
-          )}
+            {renderNearbyPanel()}
+          </div>
           {renderPathLegendBar()}
         </div>
       </section>
