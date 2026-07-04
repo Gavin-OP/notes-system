@@ -31,16 +31,23 @@ function resolveQaAnswerText(payload) {
   );
 }
 
+const LAUNCHER_WIDTH = 56;
+const LAUNCHER_HEIGHT = 56;
+
 function getDefaultPosition() {
   if (typeof window === "undefined") return { left: 24, top: 24 };
-  return {
-    left: Math.max(16, window.innerWidth - 80),
-    top: Math.max(16, window.innerHeight - 80),
-  };
+  return clampPosition(
+    {
+      left: window.innerWidth - LAUNCHER_WIDTH - 24,
+      top: window.innerHeight - LAUNCHER_HEIGHT - 24,
+    },
+    false,
+    false,
+  );
 }
 
 function getAssistantSize(isOpen, isExpanded) {
-  if (!isOpen) return { width: 64, height: 64 };
+  if (!isOpen) return { width: LAUNCHER_WIDTH, height: LAUNCHER_HEIGHT };
   return isExpanded ? { width: 560, height: 680 } : { width: 380, height: 560 };
 }
 
@@ -51,6 +58,56 @@ function clampPosition(nextPosition, isOpen, isExpanded = false) {
     left: Math.min(Math.max(12, nextPosition.left), Math.max(12, window.innerWidth - width - 12)),
     top: Math.min(Math.max(12, nextPosition.top), Math.max(12, window.innerHeight - height - 12)),
   };
+}
+
+function alignPositionForState(
+  position,
+  { isOpen, isExpanded, previousOpen, previousExpanded },
+) {
+  if (isOpen === previousOpen && isExpanded === previousExpanded) {
+    return clampPosition(position, isOpen, isExpanded);
+  }
+
+  if (isOpen && !previousOpen) {
+    const launcher = getAssistantSize(false, false);
+    const panel = getAssistantSize(true, isExpanded);
+    return clampPosition(
+      {
+        left: position.left + launcher.width - panel.width,
+        top: position.top + launcher.height - panel.height,
+      },
+      true,
+      isExpanded,
+    );
+  }
+
+  if (!isOpen && previousOpen) {
+    const panel = getAssistantSize(true, previousExpanded);
+    const launcher = getAssistantSize(false, false);
+    return clampPosition(
+      {
+        left: position.left + panel.width - launcher.width,
+        top: position.top + panel.height - launcher.height,
+      },
+      false,
+      false,
+    );
+  }
+
+  if (isOpen && previousOpen && isExpanded !== previousExpanded) {
+    const previousPanel = getAssistantSize(true, previousExpanded);
+    const nextPanel = getAssistantSize(true, isExpanded);
+    return clampPosition(
+      {
+        left: position.left + previousPanel.width - nextPanel.width,
+        top: position.top + previousPanel.height - nextPanel.height,
+      },
+      true,
+      isExpanded,
+    );
+  }
+
+  return clampPosition(position, isOpen, isExpanded);
 }
 
 export default function GlobalAssistantProvider({ children }) {
@@ -87,10 +144,44 @@ export default function GlobalAssistantProvider({ children }) {
   );
 
   const openAssistant = useCallback(({ prompt = "" } = {}) => {
-    setPosition((prev) => clampPosition(prev, true, assistantExpanded));
+    setPosition((prev) =>
+      alignPositionForState(prev, {
+        isOpen: true,
+        isExpanded: assistantExpanded,
+        previousOpen: false,
+        previousExpanded: false,
+      }),
+    );
     setAssistantOpen(true);
     if (prompt) setQaInput(prompt);
   }, [assistantExpanded]);
+
+  const closeAssistant = useCallback(() => {
+    setPosition((prev) =>
+      alignPositionForState(prev, {
+        isOpen: false,
+        isExpanded: false,
+        previousOpen: true,
+        previousExpanded: assistantExpanded,
+      }),
+    );
+    setAssistantOpen(false);
+  }, [assistantExpanded]);
+
+  const toggleAssistantExpanded = useCallback(() => {
+    setAssistantExpanded((previousExpanded) => {
+      const nextExpanded = !previousExpanded;
+      setPosition((prev) =>
+        alignPositionForState(prev, {
+          isOpen: true,
+          isExpanded: nextExpanded,
+          previousOpen: true,
+          previousExpanded,
+        }),
+      );
+      return nextExpanded;
+    });
+  }, []);
 
   const removeSelectedFile = (list, fileName) => list.filter((file) => file.name !== fileName);
 
@@ -257,10 +348,6 @@ export default function GlobalAssistantProvider({ children }) {
     return () => window.removeEventListener("resize", onResize);
   }, [assistantOpen, assistantExpanded]);
 
-  useEffect(() => {
-    setPosition((prev) => clampPosition(prev, assistantOpen, assistantExpanded));
-  }, [assistantExpanded, assistantOpen]);
-
   const contextValue = useMemo(() => ({ openAssistant }), [openAssistant]);
 
   return (
@@ -289,14 +376,14 @@ export default function GlobalAssistantProvider({ children }) {
                 type="text"
                 size="small"
                 icon={assistantExpanded ? <ShrinkOutlined /> : <ArrowsAltOutlined />}
-                onClick={() => setAssistantExpanded((value) => !value)}
+                onClick={toggleAssistantExpanded}
                 aria-label={assistantExpanded ? "Restore assistant" : "Expand assistant"}
               />
               <Button
                 type="text"
                 size="small"
                 icon={<MinusOutlined />}
-                onClick={() => setAssistantOpen(false)}
+                onClick={closeAssistant}
                 aria-label="Minimize assistant"
               />
               <Button
@@ -304,7 +391,7 @@ export default function GlobalAssistantProvider({ children }) {
                 size="small"
                 icon={<CloseOutlined />}
                 onClick={() => {
-                  setAssistantOpen(false);
+                  closeAssistant();
                   setQaInput("");
                 }}
                 aria-label="Close assistant"
@@ -384,8 +471,7 @@ export default function GlobalAssistantProvider({ children }) {
               dragMovedRef.current = false;
               return;
             }
-            setPosition((prev) => clampPosition(prev, true, assistantExpanded));
-            setAssistantOpen(true);
+            openAssistant();
           }}
           aria-label="Open learning assistant"
           title="Open learning assistant"
