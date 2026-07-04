@@ -144,6 +144,42 @@
   box-shadow: inset 2px 0 0 var(--ns-color-primary);
 }
 
+.user-profile-page__quote-note-shell {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  padding-right: 28px;
+}
+
+.user-profile-page__quote-note-delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: var(--ns-radius-sm);
+  background: transparent;
+  color: var(--ns-color-text-tertiary);
+  cursor: pointer;
+  transition:
+    color var(--ns-duration-fast) var(--ns-ease-out),
+    background var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.user-profile-page__quote-note-delete:hover:not(:disabled) {
+  color: var(--ant-color-error, #ff4d4f);
+  background: rgba(255, 77, 79, 0.12);
+}
+
+.user-profile-page__quote-note-delete:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .user-profile-page__quote-note-body {
   display: flex;
   flex-direction: column;

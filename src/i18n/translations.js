@@ -6,6 +6,7 @@ export const LANGUAGE_LABELS = {
 export const translations = {
   en: {
     "common.cancel": "Cancel",
+    "common.delete": "Delete",
     "common.save": "Save",
     "common.back": "Back",
     "common.backToHome": "Back to Home",
@@ -136,6 +137,12 @@ export const translations = {
     "profile.learning.openConversationWorkspace": "Open conversation workspace",
     "profile.learning.noConversations": "No assistant conversations yet.",
     "profile.learning.noSavedNotes": "No saved notes yet.",
+    "profile.learning.deleteSavedNote": "Delete saved note",
+    "profile.learning.deleteSavedNoteConfirmTitle": "Delete this saved note?",
+    "profile.learning.deleteSavedNoteConfirmBody":
+      "This will permanently remove the saved quote and your personal note from your profile.",
+    "profile.learning.deleteSavedNoteSuccess": "Saved note deleted.",
+    "profile.learning.deleteSavedNoteFailed": "Failed to delete saved note.",
     "profile.learning.unknownTime": "Unknown time",
     "profile.learning.noLinkedNote": "No linked note",
     "profile.learning.noSummary": "No summary available.",
@@ -307,6 +314,7 @@ export const translations = {
   },
   cn: {
     "common.cancel": "取消",
+    "common.delete": "删除",
     "common.save": "保存",
     "common.back": "返回",
     "common.backToHome": "返回首页",
@@ -431,6 +439,11 @@ export const translations = {
     "profile.learning.openConversationWorkspace": "打开对话工作区",
     "profile.learning.noConversations": "暂无助手对话。",
     "profile.learning.noSavedNotes": "暂无保存的笔记。",
+    "profile.learning.deleteSavedNote": "删除保存的笔记",
+    "profile.learning.deleteSavedNoteConfirmTitle": "删除这条保存的笔记？",
+    "profile.learning.deleteSavedNoteConfirmBody": "这将永久删除该引用内容以及你的个人笔记。",
+    "profile.learning.deleteSavedNoteSuccess": "已删除保存的笔记。",
+    "profile.learning.deleteSavedNoteFailed": "删除保存的笔记失败。",
     "profile.learning.unknownTime": "未知时间",
     "profile.learning.noLinkedNote": "未关联笔记",
     "profile.learning.noSummary": "暂无摘要。",

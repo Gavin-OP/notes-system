@@ -25,6 +25,7 @@ import {
 } from "antd";
 import {
   BookOutlined,
+  CloseOutlined,
   CommentOutlined,
   EditOutlined,
   LogoutOutlined,
@@ -43,6 +44,7 @@ import {
   getToolChipVariant,
 } from "../../../shared/lib/semanticChipUtils";
 import {
+  deleteMyAnnotation,
   getCurrentUser,
   getMyNoteQuotes,
   getMyProfile,
@@ -506,6 +508,7 @@ function UserProfilePage() {
   const [userInfo, setUserInfo] = useState(null);
   const [profileInfo, setProfileInfo] = useState({});
   const [personalNoteQuotes, setPersonalNoteQuotes] = useState([]);
+  const [deletingNoteQuoteId, setDeletingNoteQuoteId] = useState("");
   const [fallbackProgress, setFallbackProgress] = useState(null);
   const [careerRecommendations, setCareerRecommendations] = useState([]);
   const [careerBackground, setCareerBackground] = useState({});
@@ -940,6 +943,42 @@ function UserProfilePage() {
 
     return FALLBACK_NOTE;
   }, [careerBackground, fallbackProgress, learningTracks, profileInfo]);
+
+  const resolvePersonalNoteQuoteId = (item) =>
+    String(item?.quote_id || item?.annotation_id || item?.id || "").trim();
+
+  const handleDeletePersonalNoteQuote = (item, event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const quoteId = resolvePersonalNoteQuoteId(item);
+    if (!quoteId || deletingNoteQuoteId) return;
+
+    Modal.confirm({
+      title: t("profile.learning.deleteSavedNoteConfirmTitle"),
+      content: t("profile.learning.deleteSavedNoteConfirmBody"),
+      okText: t("common.delete"),
+      okButtonProps: { danger: true },
+      cancelText: t("common.cancel"),
+      onOk: async () => {
+        setDeletingNoteQuoteId(quoteId);
+        try {
+          await deleteMyAnnotation(quoteId);
+          setPersonalNoteQuotes((prev) =>
+            prev.filter((entry) => resolvePersonalNoteQuoteId(entry) !== quoteId),
+          );
+          message.success(t("profile.learning.deleteSavedNoteSuccess"));
+        } catch (error) {
+          message.error(
+            error instanceof Error
+              ? error.message
+              : t("profile.learning.deleteSavedNoteFailed"),
+          );
+        } finally {
+          setDeletingNoteQuoteId("");
+        }
+      },
+    });
+  };
 
   const handleLogout = async () => {
     if (previewMode) {
@@ -1580,7 +1619,9 @@ function UserProfilePage() {
                               personalNoteQuotes.length > 0 ? (
                                 <List
                                   dataSource={personalNoteQuotes}
-                                  renderItem={(item) => (
+                                  renderItem={(item) => {
+                                    const quoteId = resolvePersonalNoteQuoteId(item);
+                                    return (
                                     <List.Item
                                       className="user-profile-page__quote-note"
                                       onClick={() => {
@@ -1588,7 +1629,19 @@ function UserProfilePage() {
                                         navigate(quoteUrl);
                                       }}
                                     >
-                                      <div className="user-profile-page__quote-note-body">
+                                      <div className="user-profile-page__quote-note-shell">
+                                        <Tooltip title={t("profile.learning.deleteSavedNote")}>
+                                          <button
+                                            type="button"
+                                            className="user-profile-page__quote-note-delete"
+                                            aria-label={t("profile.learning.deleteSavedNote")}
+                                            disabled={deletingNoteQuoteId === quoteId}
+                                            onClick={(event) => handleDeletePersonalNoteQuote(item, event)}
+                                          >
+                                            <CloseOutlined />
+                                          </button>
+                                        </Tooltip>
+                                        <div className="user-profile-page__quote-note-body">
                                         <Text strong className="user-profile-page__quote-title">
                                           {item.note_title || item.note_url}
                                         </Text>
@@ -1605,9 +1658,11 @@ function UserProfilePage() {
                                         <Paragraph className="user-profile-page__quote-text">
                                           {item.selected_text}
                                         </Paragraph>
+                                        </div>
                                       </div>
                                     </List.Item>
-                                  )}
+                                    );
+                                  }}
                                 />
                               ) : (
                                 <Empty description={t("profile.learning.noSavedNotes")} />
