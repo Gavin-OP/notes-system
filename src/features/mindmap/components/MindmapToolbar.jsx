@@ -21,7 +21,16 @@ import "./MindmapToolbar.css";
  * @param {Function} onTypeChange - Callback when mindmap type changes
  * @param {string} subjectName - Display name of the subject (optional)
  */
-const MindmapToolbar = ({ subjectId, currentType, onTypeChange, subjectName }) => {
+const MindmapToolbar = ({
+  subjectId,
+  currentType,
+  onTypeChange,
+  subjectName,
+  firstConceptNote,
+  selectedConceptNoteUrl,
+  onOpenFirstNote,
+  onOpenSelectedConcept,
+}) => {
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -77,6 +86,25 @@ const MindmapToolbar = ({ subjectId, currentType, onTypeChange, subjectName }) =
       </div>
 
       <div className="mindmap-toolbar__right">
+        <div className="mindmap-toolbar__hub-actions">
+          <button type="button" className="mindmap-toolbar__action-btn" onClick={handleBack}>
+            Subject overview
+          </button>
+          {firstConceptNote?.noteUrl ? (
+            <button type="button" className="mindmap-toolbar__action-btn" onClick={onOpenFirstNote}>
+              Start first note
+            </button>
+          ) : null}
+          {selectedConceptNoteUrl ? (
+            <button
+              type="button"
+              className="mindmap-toolbar__action-btn mindmap-toolbar__action-btn--primary"
+              onClick={onOpenSelectedConcept}
+            >
+              Open selected concept
+            </button>
+          ) : null}
+        </div>
         <div className="mindmap-toolbar__view-switcher">
           <span className="mindmap-toolbar__view-label">View Type:</span>
           <div className="mindmap-toolbar__view-options">

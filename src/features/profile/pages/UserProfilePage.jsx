@@ -25,9 +25,13 @@ import {
 } from "antd";
 import {
   BookOutlined,
+  CheckCircleOutlined,
   CloseOutlined,
   CommentOutlined,
+  DownloadOutlined,
   EditOutlined,
+  FileTextOutlined,
+  HomeOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 
@@ -522,6 +526,8 @@ function UserProfilePage() {
   const [careerOnboardingSubmitting, setCareerOnboardingSubmitting] = useState(false);
   const [profileEditOpen, setProfileEditOpen] = useState(false);
   const [profileEditSaving, setProfileEditSaving] = useState(false);
+  const [learningReportOpen, setLearningReportOpen] = useState(false);
+  const [learningReportExporting, setLearningReportExporting] = useState(false);
   const [recommendedFirstNote, setRecommendedFirstNote] = useState(null);
   const [tourPromptOpen, setTourPromptOpen] = useState(false);
   const [profileTourStartToken, setProfileTourStartToken] = useState(0);
@@ -538,6 +544,7 @@ function UserProfilePage() {
   const profileLearningRef = useRef(null);
   const profileCareerRef = useRef(null);
   const profileRecordsRef = useRef(null);
+  const learningReportRef = useRef(null);
   const avatarSeed = getAvatarSeed(userInfo);
   const avatarTone = AVATAR_PALETTE[getPaletteIndex(avatarSeed)];
   const avatarInitial = getAvatarInitial(userInfo);
@@ -547,6 +554,16 @@ function UserProfilePage() {
       setActiveDashboard("career");
     }
   }, [location.state]);
+
+  const scrollToCareerDashboard = useCallback(() => {
+    setActiveDashboard("career");
+    window.setTimeout(() => {
+      profileCareerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 80);
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -647,22 +664,6 @@ function UserProfilePage() {
       mounted = false;
     };
   }, [previewMode, userInfo?.id]);
-
-  useEffect(() => {
-    if (previewMode || !userInfo?.id || careerLoading || careerErrorText) return;
-    if (!careerTaxonomy.length) return;
-    const normalized = normalizeCareerBackgroundForForm(careerBackground);
-    if (!normalized.onboardingCompleted) {
-      setCareerOnboardingOpen(true);
-    }
-  }, [
-    careerBackground,
-    careerErrorText,
-    careerLoading,
-    careerTaxonomy.length,
-    previewMode,
-    userInfo?.id,
-  ]);
 
   const learningTracks = useMemo(
     () => normalizeLearningTracks(profileInfo),
@@ -944,6 +945,140 @@ function UserProfilePage() {
     return FALLBACK_NOTE;
   }, [careerBackground, fallbackProgress, learningTracks, profileInfo]);
 
+  const onboardingChecklist = useMemo(() => {
+    const careerReady = profileEditBackground.onboardingCompleted;
+    return [
+      {
+        key: "first-note",
+        title: "Open your next note",
+        description: "Start from the note we think is most useful right now.",
+        done: recentNotes.length > 0 || completedNotes.length > 0,
+        actionLabel: "Open note",
+        onAction: () => navigate(continueLearningUrl),
+      },
+      {
+        key: "save-highlight",
+        title: "Save one useful highlight",
+        description: "Select text in a note and keep it in your personal study notes.",
+        done: personalNoteQuotes.length > 0,
+        actionLabel: "Try in note",
+        onAction: () => navigate(continueLearningUrl),
+      },
+      {
+        key: "complete-note",
+        title: "Mark a note complete",
+        description: "Turn reading into visible progress and achievements.",
+        done: completedNotes.length > 0,
+        actionLabel: "Continue",
+        onAction: () => navigate(continueLearningUrl),
+      },
+      {
+        key: "career-profile",
+        title: "Personalize career goals",
+        description: "Answer a few optional questions to unlock role matches and skill gaps.",
+        done: careerReady,
+        actionLabel: careerReady ? "Review career" : "Personalize",
+        onAction: () => {
+          if (careerReady) {
+            scrollToCareerDashboard();
+            return;
+          }
+          setCareerOnboardingOpen(true);
+        },
+      },
+    ];
+  }, [
+    completedNotes.length,
+    continueLearningUrl,
+    navigate,
+    personalNoteQuotes.length,
+    profileEditBackground.onboardingCompleted,
+    recentNotes.length,
+    scrollToCareerDashboard,
+  ]);
+  const checklistDoneCount = onboardingChecklist.filter((item) => item.done).length;
+  const checklistProgress = Math.round((checklistDoneCount / onboardingChecklist.length) * 100);
+  const checklistComplete = checklistDoneCount === onboardingChecklist.length;
+  const checklistDismissed = Boolean(
+    (profileInfo.guide_state || profileInfo.guideState || {})?.guides?.learning_quests?.completed,
+  );
+  const learningReport = useMemo(() => {
+    const activeDays = contributionMatrix.weeks.reduce(
+      (sum, week) => sum + week.days.filter((day) => day.count > 0).length,
+      0,
+    );
+    const topCareer = visibleCareerRecommendations[0];
+    const focusArea =
+      learningTracks[0]?.title ||
+      decoratedCompletedNotes[0]?.displaySubject ||
+      careerGoals[0] ||
+      "Learning";
+    return {
+      learnerName: userInfo?.displayName || userInfo?.email || "Learner",
+      dateRange: "Last 52 weeks",
+      summary:
+        completedNotes.length > 0
+          ? `You completed ${completedNotes.length} notes and saved ${personalNoteQuotes.length} highlights.`
+          : "Your learning map is ready for the next study session.",
+      completedCount: completedNotes.length,
+      highlightCount: personalNoteQuotes.length,
+      activeDays,
+      focusArea,
+      recentNotes: decoratedCompletedNotes.slice(0, 5),
+      highlights: personalNoteQuotes.slice(0, 3),
+      careerGoal: careerGoals[0] || "Not selected yet",
+      matchedSkills: selectedCareerSkills.slice(0, 5).join(", ") || focusArea,
+      nextStep:
+        topCareer?.next_step ||
+        topCareer?.nextStep ||
+        recommendedFirstNote?.note_title ||
+        recommendedFirstNote?.noteTitle ||
+        "Open your next note",
+    };
+  }, [
+    careerGoals,
+    completedNotes.length,
+    contributionMatrix.weeks,
+    decoratedCompletedNotes,
+    learningTracks,
+    personalNoteQuotes,
+    recommendedFirstNote,
+    selectedCareerSkills,
+    userInfo,
+    visibleCareerRecommendations,
+  ]);
+
+  const handleDismissLearningQuests = useCallback(async () => {
+    setProfileInfo((prev) => {
+      const guideState = prev.guide_state || prev.guideState || {};
+      return {
+        ...prev,
+        guide_state: {
+          ...guideState,
+          guides: {
+            ...(guideState.guides || {}),
+            learning_quests: {
+              ...(guideState.guides?.learning_quests || {}),
+              seen: true,
+              completed: true,
+              current_step: onboardingChecklist.length,
+            },
+          },
+        },
+      };
+    });
+    try {
+      await updateMyGuideState({
+        guideKey: "learning_quests",
+        seen: true,
+        completed: true,
+        currentStep: onboardingChecklist.length,
+      });
+    } catch {
+      message.info("Quest checklist hidden on this page. We could not sync that preference yet.");
+    }
+  }, [onboardingChecklist.length]);
+
   const resolvePersonalNoteQuoteId = (item) =>
     String(item?.quote_id || item?.annotation_id || item?.id || "").trim();
 
@@ -993,6 +1128,78 @@ function UserProfilePage() {
       message.error(error instanceof Error ? error.message : "Logout failed.");
     }
   };
+
+  const handleExportLearningData = useCallback(() => {
+    const exportedAt = new Date().toISOString();
+    const payload = {
+      exported_at: exportedAt,
+      user: userInfo,
+      profile: profileInfo,
+      completed_notes: completedNotes,
+      saved_highlights: personalNoteQuotes,
+      learning_tracks: learningTracks,
+      career_background: careerBackground,
+      career_recommendations: careerRecommendations,
+      progress_snapshot: fallbackProgress,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `notes-system-learning-data-${exportedAt.slice(0, 10)}.json`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+    message.success("Learning data exported.");
+  }, [
+    careerBackground,
+    careerRecommendations,
+    completedNotes,
+    fallbackProgress,
+    learningTracks,
+    personalNoteQuotes,
+    profileInfo,
+    userInfo,
+  ]);
+
+  const handleDownloadLearningReportPdf = useCallback(async () => {
+    const element = learningReportRef.current;
+    if (!element || learningReportExporting) return;
+    setLearningReportExporting(true);
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
+      const canvas = await html2canvas(element, {
+        backgroundColor: "#fbfdff",
+        scale: Math.min(2, window.devicePixelRatio || 1.5),
+        useCORS: true,
+      });
+      const pdf = new jsPDF({
+        orientation: canvas.width >= canvas.height ? "landscape" : "portrait",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+        compress: true,
+      });
+      const imageData = canvas.toDataURL("image/png");
+      pdf.addImage(imageData, "PNG", 0, 0, canvas.width, canvas.height);
+      const safeName = String(learningReport.learnerName || "learner")
+        .trim()
+        .replace(/[^a-z0-9]+/gi, "-")
+        .replace(/^-+|-+$/g, "")
+        .toLowerCase() || "learner";
+      pdf.save(`notes-system-learning-report-${safeName}.pdf`);
+      message.success("Learning report PDF downloaded.");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Failed to download learning report PDF.");
+    } finally {
+      setLearningReportExporting(false);
+    }
+  }, [learningReport.learnerName, learningReportExporting]);
 
   const handleEditProfile = () => {
     setProfileEditOpen(true);
@@ -1252,6 +1459,7 @@ function UserProfilePage() {
         taxonomy={careerTaxonomy}
         loading={careerOnboardingSubmitting}
         onSubmit={handleCareerOnboardingSubmit}
+        onCancel={() => setCareerOnboardingOpen(false)}
       />
       <Modal
         open={profileEditOpen}
@@ -1374,6 +1582,145 @@ function UserProfilePage() {
           </Paragraph>
         </Space>
       </Modal>
+      <Modal
+        open={learningReportOpen}
+        title="Learning Report"
+        onCancel={() => setLearningReportOpen(false)}
+        footer={[
+          <Button key="close" onClick={() => setLearningReportOpen(false)}>
+            Close
+          </Button>,
+          <Button
+            key="download"
+            type="primary"
+            loading={learningReportExporting}
+            onClick={handleDownloadLearningReportPdf}
+          >
+            Download PDF
+          </Button>,
+        ]}
+        width={1040}
+        className="learning-report-modal"
+      >
+        <article className="learning-report-poster" ref={learningReportRef}>
+          <header className="learning-report-poster__header">
+            <div>
+              <div className="learning-report-poster__brand">
+                <FileTextOutlined />
+                <span>Notes System</span>
+              </div>
+              <h1>Learning Report</h1>
+            </div>
+            <div className="learning-report-poster__meta">
+              <span>{learningReport.learnerName}</span>
+              <span>{learningReport.dateRange}</span>
+            </div>
+            <p>{learningReport.summary}</p>
+          </header>
+
+          <section className="learning-report-poster__section">
+            <div className="learning-report-poster__section-title">
+              <span>1</span>
+              <h2>Key Metrics</h2>
+            </div>
+            <div className="learning-report-poster__metrics">
+              <div><strong>{learningReport.completedCount}</strong><span>Completed notes</span></div>
+              <div><strong>{learningReport.highlightCount}</strong><span>Saved highlights</span></div>
+              <div><strong>{learningReport.activeDays}</strong><span>Active days</span></div>
+              <div><strong>{learningReport.focusArea}</strong><span>Current focus area</span></div>
+            </div>
+          </section>
+
+          <section className="learning-report-poster__section">
+            <div className="learning-report-poster__section-title">
+              <span>2</span>
+              <h2>Learning History Visualization</h2>
+            </div>
+            <div className="learning-report-poster__heatmap">
+              <div className="learning-report-poster__months" style={{ gridTemplateColumns: `repeat(${contributionMatrix.weeks.length}, minmax(7px, 1fr))` }}>
+                {contributionMatrix.monthLabels.map((item) => (
+                  <span key={`report-${item.id}`} style={{ gridColumnStart: item.column }}>{item.label}</span>
+                ))}
+              </div>
+              <div className="learning-report-poster__heatmap-body">
+                <div className="learning-report-poster__weekdays">
+                  <span>Mon</span>
+                  <span>Wed</span>
+                  <span>Fri</span>
+                </div>
+                <div className="learning-report-poster__grid" style={{ gridTemplateColumns: `repeat(${contributionMatrix.weeks.length}, minmax(7px, 1fr))` }}>
+                  {contributionMatrix.weeks.map((week) => (
+                    <div key={`report-${week.id}`} className="learning-report-poster__week">
+                      {week.days.map((day) => (
+                        <span
+                          key={`report-${day.key}`}
+                          className={`learning-report-poster__cell level-${day.level}`}
+                          title={`${day.dateLabel}: ${day.count} activities`}
+                        />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="learning-report-poster__legend">
+                <span>Less activity</span>
+                {[0, 1, 2, 3, 4].map((level) => (
+                  <i key={`legend-${level}`} className={`learning-report-poster__cell level-${level}`} />
+                ))}
+                <span>More activity</span>
+              </div>
+            </div>
+          </section>
+
+          <div className="learning-report-poster__columns">
+            <section className="learning-report-poster__section">
+              <div className="learning-report-poster__section-title">
+                <span>3</span>
+                <h2>Recent Learning</h2>
+              </div>
+              <ul className="learning-report-poster__list">
+                {(learningReport.recentNotes.length ? learningReport.recentNotes : [{ displayTitle: "No completed notes yet", displaySubject: "Start your first note" }]).map((note, index) => (
+                  <li key={`report-note-${note.noteUrl || index}`}>
+                    <strong>{note.displayTitle}</strong>
+                    <small>{note.displaySubject}</small>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="learning-report-poster__section">
+              <div className="learning-report-poster__section-title">
+                <span>4</span>
+                <h2>Highlights / Quotes</h2>
+              </div>
+              <div className="learning-report-poster__quotes">
+                {(learningReport.highlights.length ? learningReport.highlights : [{ selected_text: "Save highlights from notes to make this section come alive." }]).map((quote, index) => (
+                  <blockquote key={`report-quote-${quote.quote_id || quote.annotation_id || index}`}>
+                    {quote.selected_text || quote.selectedText || "Saved highlight"}
+                  </blockquote>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          <section className="learning-report-poster__section">
+            <div className="learning-report-poster__section-title">
+              <span>5</span>
+              <h2>Career / Goal Alignment</h2>
+            </div>
+            <div className="learning-report-poster__career">
+              <div><strong>Current career goal</strong><span>{learningReport.careerGoal}</span></div>
+              <div><strong>Top matched skills or subjects</strong><span>{learningReport.matchedSkills}</span></div>
+              <div><strong>Next recommended step</strong><span>{learningReport.nextStep}</span></div>
+            </div>
+          </section>
+
+          <footer className="learning-report-poster__footer">
+            <span>Generated by Notes System</span>
+            <strong>Keep building your map.</strong>
+          </footer>
+        </article>
+      </Modal>
       <div className="user-profile-page__container">
         <div>
           <Card className="user-profile-page__hero" ref={profileHeroRef}>
@@ -1405,36 +1752,110 @@ function UserProfilePage() {
               <Paragraph className="user-profile-page__hero-desc">
                 {t("profile.hero.description")}
               </Paragraph>
-              <Space wrap>
-                <Button
-                  type="primary"
-                  icon={<EditOutlined />}
-                  disabled={previewMode}
-                  onClick={handleEditProfile}
-                >
-                  {t("profile.actions.edit")}
-                </Button>
-                <Button icon={<BookOutlined />} onClick={() => navigate(continueLearningUrl)}>
-                  {t("profile.actions.continue")}
-                </Button>
-                <Button icon={<LogoutOutlined />} onClick={handleLogout} disabled={previewMode}>
-                  {t("profile.actions.logout")}
-                </Button>
-                <AppFeatureTour
-                  guideKey="profile_page"
-                  steps={profileGuideSteps}
-                  startLabel={t("profile.actions.guide")}
-                  iconOnly
-                  buttonAriaLabel={t("profile.actions.openGuide")}
-                  startToken={profileTourStartToken}
-                  onBeforeStepChange={handleProfileTourStepChange}
-                  onAfterFinish={handleProfileTourAfterFinish}
-                />
-              </Space>
+              <div className="user-profile-page__hero-actions">
+                <div className="user-profile-page__action-group user-profile-page__action-group--primary">
+                  <Button
+                    type="primary"
+                    icon={<BookOutlined />}
+                    onClick={() => navigate(continueLearningUrl)}
+                  >
+                    {t("profile.actions.continue")}
+                  </Button>
+                  <Button icon={<HomeOutlined />} onClick={() => navigate("/")}>
+                    Home
+                  </Button>
+                </div>
+                <div className="user-profile-page__action-group">
+                  <Button
+                    icon={<EditOutlined />}
+                    disabled={previewMode}
+                    onClick={handleEditProfile}
+                  >
+                    {t("profile.actions.edit")}
+                  </Button>
+                  <Button icon={<FileTextOutlined />} onClick={() => setLearningReportOpen(true)}>
+                    Learning report
+                  </Button>
+                  <Button icon={<DownloadOutlined />} onClick={handleExportLearningData} disabled={previewMode}>
+                    Export data
+                  </Button>
+                </div>
+                <div className="user-profile-page__action-group user-profile-page__action-group--account">
+                  <AppFeatureTour
+                    guideKey="profile_page"
+                    steps={profileGuideSteps}
+                    startLabel={t("profile.actions.guide")}
+                    iconOnly
+                    buttonAriaLabel={t("profile.actions.openGuide")}
+                    startToken={profileTourStartToken}
+                    onBeforeStepChange={handleProfileTourStepChange}
+                    onAfterFinish={handleProfileTourAfterFinish}
+                  />
+                  <Button icon={<LogoutOutlined />} onClick={handleLogout} disabled={previewMode}>
+                    {t("profile.actions.logout")}
+                  </Button>
+                </div>
+              </div>
             </div>
           </Space>
           </Card>
         </div>
+
+        {!checklistDismissed ? (
+          <Card className="user-profile-page__checklist-card">
+            <div className="user-profile-page__checklist-head">
+              <div>
+                <Text className="user-profile-page__checklist-eyebrow">Learning quests</Text>
+                <Title level={4} className="user-profile-page__checklist-title">
+                  Learn the workspace one step at a time
+                </Title>
+                <Paragraph type="secondary" className="user-profile-page__checklist-copy">
+                  Complete small quests to discover notes, highlights, completion tracking, and career guidance.
+                </Paragraph>
+              </div>
+              <div className="user-profile-page__checklist-score" aria-label={`${checklistProgress}% complete`}>
+                <span>{checklistDoneCount}/{onboardingChecklist.length}</span>
+                <small>done</small>
+              </div>
+            </div>
+            <Progress
+              percent={checklistProgress}
+              showInfo={false}
+              strokeColor="var(--ns-color-primary)"
+              className="user-profile-page__checklist-progress"
+            />
+            <div className="user-profile-page__checklist-grid">
+              {onboardingChecklist.map((item, index) => (
+                <div
+                  key={item.key}
+                  className={`user-profile-page__quest ${item.done ? "is-done" : ""}`}
+                >
+                  <span className="user-profile-page__quest-index" aria-hidden="true">
+                    {item.done ? <CheckCircleOutlined /> : index + 1}
+                  </span>
+                  <div className="user-profile-page__quest-body">
+                    <Text strong>{item.title}</Text>
+                    <Text type="secondary">{item.description}</Text>
+                  </div>
+                  <Button size="small" type={item.done ? "default" : "primary"} onClick={item.onAction}>
+                    {item.done ? "Review" : item.actionLabel}
+                  </Button>
+                </div>
+              ))}
+            </div>
+            {checklistComplete ? (
+              <div className="user-profile-page__checklist-complete">
+                <div>
+                  <Text strong>All learning quests complete.</Text>
+                  <Text type="secondary">You know the core workspace now. Hide this checklist whenever you are ready.</Text>
+                </div>
+                <Button type="primary" onClick={handleDismissLearningQuests}>
+                  All done
+                </Button>
+              </div>
+            ) : null}
+          </Card>
+        ) : null}
 
         {activeDashboard === "learning" ? (
         <div ref={profileLearningRef}>

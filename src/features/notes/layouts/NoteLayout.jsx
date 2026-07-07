@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import {
   Layout,
@@ -43,7 +43,7 @@ import {
   getLearningPath,
   saveLearningPathDraft,
 } from "../../assistant/api/assistant";
-import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncompleteMyNote, updateMyGuideState } from "../../profile/api/user";
+import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncompleteMyNote, updateMyGuideState, UserApiError } from "../../profile/api/user";
 import useTranslatedContent from "../../../i18n/useTranslatedContent";
 import useTranslation from "../../../i18n/useTranslation";
 
@@ -263,6 +263,7 @@ const NoteLayout = () => {
   } = theme.useToken();
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const { openAssistant } = useGlobalAssistant();
 
@@ -481,6 +482,20 @@ const NoteLayout = () => {
   const registerWorkspaceMeta = useCallback((meta) => {
     setWorkspaceMeta(meta);
   }, []);
+
+  const promptSignInToSave = useCallback((actionLabel = "save this") => {
+    Modal.confirm({
+      title: "Sign in to save your learning",
+      content: `You can keep reading as a guest. Sign in when you want to ${actionLabel}, sync progress, and return to this note later.`,
+      okText: "Sign in",
+      cancelText: "Keep browsing",
+      onOk: () => {
+        navigate("/user/login", {
+          state: { from: `${location.pathname}${location.search}${location.hash}` },
+        });
+      },
+    });
+  }, [location.hash, location.pathname, location.search, navigate]);
 
   const noteName = useMemo(() => {
     const h1Match = String(currentNoteContent || "").match(/^#\s+(.+)$/m);
@@ -910,6 +925,10 @@ const NoteLayout = () => {
         message.success("Marked this note as completed.");
       }
     } catch (error) {
+      if (error instanceof UserApiError && error.status === 401) {
+        promptSignInToSave(currentlyCompleted ? "update completion marks" : "mark notes as complete");
+        return;
+      }
       const errorText = error instanceof Error
         ? error.message
         : currentlyCompleted
@@ -957,6 +976,10 @@ const NoteLayout = () => {
       message.success("Added selected text to your notes.");
       return quote;
     } catch (error) {
+      if (error instanceof UserApiError && error.status === 401) {
+        promptSignInToSave("save highlights and personal notes");
+        return null;
+      }
       const errorText = error instanceof Error ? error.message : "Failed to save selected text.";
       message.error(errorText);
       return null;
@@ -1420,6 +1443,7 @@ const NoteLayout = () => {
                 onReorderPathNodes={handleReorderPathNodes}
                 onRemovePathNode={handleRemovePathNode}
                 onRestoreRecommendedOrder={handleRestoreRecommendedOrder}
+                onStartPathBuilder={handleStartPathBuilder}
                 pathEditMode={pathEditMode}
                 canonicalGraph={canonicalGraph}
                 isMobile={isMobile}

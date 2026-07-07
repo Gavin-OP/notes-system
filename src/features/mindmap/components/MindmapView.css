@@ -22,6 +22,38 @@
   width: 100%;
 }
 
+.mindmap-view__error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ns-space-2);
+}
+
+.mindmap-view__error-actions button {
+  min-height: 36px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-sm);
+  padding: 0 var(--ns-space-3);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mindmap-view__error-actions button:hover {
+  border-color: var(--ns-color-primary);
+  color: var(--ns-color-primary);
+}
+
+.mindmap-view__error-actions button:first-child {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary);
+  color: #fff;
+}
+
 /* Loading State */
 .mindmap-view--loading,
 .mindmap-view--error {

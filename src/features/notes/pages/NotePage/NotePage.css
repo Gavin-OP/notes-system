@@ -163,6 +163,106 @@
   border-color: var(--ns-color-success-hover);
 }
 
+.note-page__state {
+  width: min(820px, 100%);
+  margin: var(--ns-space-6) auto;
+  padding: var(--ns-space-5);
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-lg);
+  background: var(--ns-color-bg-container);
+  box-shadow: var(--ns-shadow-sm);
+}
+
+.note-page__skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--ns-radius-sm);
+  background: var(--ns-color-fill-secondary);
+}
+
+.note-page__skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--ns-color-bg-container) 64%, transparent),
+    transparent
+  );
+  animation: note-page-skeleton 1.4s infinite;
+}
+
+.note-page__skeleton-title {
+  width: min(420px, 80%);
+  height: 34px;
+  margin-bottom: var(--ns-space-4);
+}
+
+.note-page__skeleton-line {
+  width: 100%;
+  height: 16px;
+  margin-top: var(--ns-space-3);
+}
+
+.note-page__skeleton-line.is-short {
+  width: 68%;
+}
+
+.note-page__skeleton-block {
+  height: 220px;
+  margin-top: var(--ns-space-5);
+}
+
+.note-page__error h2 {
+  margin: 0 0 var(--ns-space-2);
+  color: var(--ns-color-text);
+  font-size: 22px;
+}
+
+.note-page__error p {
+  margin: 0;
+  color: var(--ns-color-text-secondary);
+  line-height: 1.6;
+}
+
+.note-page__state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ns-space-2);
+  margin-top: var(--ns-space-4);
+}
+
+.note-page__state-actions button {
+  min-height: 40px;
+  border: 1px solid var(--ns-color-primary);
+  border-radius: var(--ns-radius-sm);
+  padding: 0 var(--ns-space-4);
+  background: var(--ns-color-primary);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.note-page__state-actions button + button {
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-primary);
+}
+
+@keyframes note-page-skeleton {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note-page__skeleton::after {
+    animation: none;
+  }
+}
+
 [data-theme="dark"] .note-page__complete-btn.is-completed {
   background: var(--ns-color-success);
   border-color: var(--ns-color-success);

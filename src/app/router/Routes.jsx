@@ -1,10 +1,11 @@
-import { BrowserRouter, Routes, Route, useLocation, Navigate, useParams } from "react-router-dom";
-import { lazy, Suspense, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation, Navigate, useParams, Outlet } from "react-router-dom";
+import { lazy, Suspense, useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 
 import GlobalAssistantProvider from "../../features/assistant/components/GlobalAssistantProvider";
 import HomePage from "../pages/HomePage";
 import { isLocalhost } from "../../shared/lib/analyticsUtils";
+import { getCurrentUser, UserApiError } from "../../features/profile/api/user";
 import "../../features/admin/styles/admin.css";
 
 const NoteLayout = lazy(() => import("../../features/notes/layouts/NoteLayout"));
@@ -14,6 +15,7 @@ const SubjectMindmap = lazy(() => import("../../features/notes/pages/NotePage/Su
 const SubjectOverviewPage = lazy(() => import("../../features/subjects/pages/SubjectOverview/SubjectOverviewPage"));
 const SubjectDatabasePage = lazy(() => import("../../features/subjects/pages/SubjectDatabasePage"));
 const DisclaimerPage = lazy(() => import("../../shared/pages/DisclaimerPage"));
+const NotFoundPage = lazy(() => import("../../shared/pages/NotFoundPage"));
 const UserLoginPage = lazy(() => import("../../features/profile/pages/UserLoginPage"));
 const UserProfilePage = lazy(() => import("../../features/profile/pages/UserProfilePage"));
 const ExploreCareersPage = lazy(() => import("../../features/careers/pages/ExploreCareersPage"));
@@ -43,6 +45,70 @@ function RouteLoading() {
 function LegacySubjectOverviewRedirect() {
   const { subjectId = "" } = useParams();
   return <Navigate to={`/subject/${subjectId}`} replace />;
+}
+
+function UserRouteGuard() {
+  const location = useLocation();
+  const currentLocationKey = `${location.pathname}${location.search}${location.hash}`;
+  const [sessionCheck, setSessionCheck] = useState({
+    locationKey: "",
+    status: "checking",
+    errorText: "",
+  });
+
+  useEffect(() => {
+    let mounted = true;
+    getCurrentUser()
+      .then(() => {
+        if (mounted) {
+          setSessionCheck({
+            locationKey: currentLocationKey,
+            status: "authenticated",
+            errorText: "",
+          });
+        }
+      })
+      .catch((error) => {
+        if (!mounted) return;
+        if (error instanceof UserApiError && error.status === 401) {
+          setSessionCheck({
+            locationKey: currentLocationKey,
+            status: "anonymous",
+            errorText: "",
+          });
+          return;
+        }
+        setSessionCheck({
+          locationKey: currentLocationKey,
+          status: "error",
+          errorText: error instanceof Error ? error.message : "Could not check your session.",
+        });
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [currentLocationKey]);
+
+  if (sessionCheck.locationKey !== currentLocationKey || sessionCheck.status === "checking") {
+    return <RouteLoading />;
+  }
+  if (sessionCheck.status === "anonymous") {
+    return (
+      <Navigate
+        to="/user/login"
+        replace
+        state={{ from: currentLocationKey }}
+      />
+    );
+  }
+  if (sessionCheck.status === "error") {
+    return (
+      <div className="route-loading" role="alert">
+        {sessionCheck.errorText}
+      </div>
+    );
+  }
+  return <Outlet />;
 }
 
 function ScrollToTop() {
@@ -109,7 +175,9 @@ function RoutesWithTracking() {
 
         {/* User routes (UI only) */}
         <Route path="user/login" element={<UserLoginPage />} />
-        <Route path="user/profile" element={<UserProfilePage />} />
+        <Route element={<UserRouteGuard />}>
+          <Route path="user/profile" element={<UserProfilePage />} />
+        </Route>
         <Route path="user" element={<Navigate to="/user/login" replace />} />
 
         {/* Careers */}
@@ -129,7 +197,7 @@ function RoutesWithTracking() {
 
         {/* Home and fallback */}
         <Route path="home" element={<HomePage />} />
-        <Route path="*" element={<HomePage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
     </>

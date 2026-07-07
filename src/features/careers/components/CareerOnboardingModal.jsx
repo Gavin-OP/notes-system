@@ -74,6 +74,7 @@ function CareerOnboardingModal({
   taxonomy = [],
   loading = false,
   onSubmit,
+  onCancel,
 }) {
   const [form] = Form.useForm();
   const options = buildOptions(taxonomy);
@@ -83,10 +84,11 @@ function CareerOnboardingModal({
       open={open}
       title={null}
       footer={null}
-      closable={false}
-      maskClosable={false}
+      closable
+      maskClosable={!loading}
       width={680}
       centered
+      onCancel={onCancel}
     >
       <Space direction="vertical" size={16} className="career-onboarding-modal">
         <div>

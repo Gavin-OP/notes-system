@@ -12,8 +12,15 @@ import AppPageShell from "../../../shared/layouts/AppPageShell";
 import { getCareerTaxonomy } from "../../../features/careers/api/careers";
 import { buildSearchResultUrl, searchNotes } from "../../../features/search/api/search";
 import SemanticChip from "../../../shared/ui/SemanticChip";
-import { buildMenuItems, getDefaultLearningEntryUrl, isNavigableSubjectSlug } from "../../../features/navigation/lib/notesIndexUtils";
+import {
+  buildMenuItems,
+  getDefaultLearningEntryUrl,
+  isConcreteNoteRoute,
+  isNavigableSubjectSlug,
+  normalizeNoteRoute,
+} from "../../../features/navigation/lib/notesIndexUtils";
 import { getSubjectDisplayTitle } from "../../../features/subjects/lib/subjectOverviewUtils";
+import useCurrentUserSummary from "../../../features/profile/hooks/useCurrentUserSummary";
 import useTranslation from "../../../i18n/useTranslation";
 
 import "./HomePage.css";
@@ -80,9 +87,38 @@ function typeVariant(type) {
   return "slate";
 }
 
+function resolveProfileLearningUrl(profile, fallbackUrl) {
+  const candidates = [
+    profile?.currentNoteUrl,
+    profile?.current_note_url,
+    profile?.currentLessonUrl,
+    profile?.current_lesson_url,
+    profile?.lastNoteUrl,
+    profile?.last_note_url,
+    profile?.lastLearningUrl,
+    profile?.last_learning_url,
+    profile?.career_background?.recommended_note_url,
+    profile?.careerBackground?.recommendedNoteUrl,
+    ...(Array.isArray(profile?.learning_tracks)
+      ? profile.learning_tracks.map((track) => track?.continue_path || track?.continuePath || track?.note_url || track?.noteUrl)
+      : []),
+    ...(Array.isArray(profile?.learningTracks)
+      ? profile.learningTracks.map((track) => track?.continuePath || track?.continue_path || track?.noteUrl || track?.note_url)
+      : []),
+  ];
+
+  for (const candidate of candidates) {
+    if (!isConcreteNoteRoute(candidate)) continue;
+    const normalized = normalizeNoteRoute(candidate);
+    if (normalized) return normalized.split("#")[0];
+  }
+  return fallbackUrl;
+}
+
 function HomePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const currentUser = useCurrentUserSummary();
   const rawNotesIndex = useSelector((state) => state.notesIndex.data);
   const notesIndex = useMemo(() => rawNotesIndex || [], [rawNotesIndex]);
   const [query, setQuery] = useState("");
@@ -134,6 +170,27 @@ function HomePage() {
     () => getDefaultLearningEntryUrl(notesIndex),
     [notesIndex],
   );
+  const primaryEntry = useMemo(() => {
+    if (currentUser.isAuthenticated) {
+      const continueUrl = resolveProfileLearningUrl(currentUser.profile, learningEntryUrl);
+      return {
+        url: continueUrl,
+        label: t("home.continueLearning", "Continue learning"),
+        hint: t(
+          "home.continueLearningHint",
+          "Resume from the last note in your learning workspace",
+        ),
+      };
+    }
+    return {
+      url: "/subjects",
+      label: t("home.chooseSubject", "Choose a subject"),
+      hint: t(
+        "home.chooseSubjectHint",
+        "Start with the subject map before opening your first note",
+      ),
+    };
+  }, [currentUser.isAuthenticated, currentUser.profile, learningEntryUrl, t]);
 
   const localMatches = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -145,7 +202,7 @@ function HomePage() {
 
   useEffect(() => {
     const cleanQuery = query.trim();
-    if (cleanQuery.length < 3) {
+    if (cleanQuery.length < 2) {
       setNotePayload(null);
       setSearchLoading(false);
       return;
@@ -178,6 +235,7 @@ function HomePage() {
 
   const noteResults = Array.isArray(notePayload?.results) ? notePayload.results : [];
   const hasResults = query.trim().length >= 2 && (localMatches.length > 0 || noteResults.length > 0 || searchLoading);
+  const showNoResults = query.trim().length >= 2 && !searchLoading && localMatches.length === 0 && noteResults.length === 0;
 
   const openItem = (url) => {
     if (url) navigate(url);
@@ -233,7 +291,7 @@ function HomePage() {
                 allowClear
                 autoFocus
               />
-              {hasResults ? (
+              {hasResults || showNoResults ? (
                 <div className="home-page__results">
                   {localMatches.length > 0 ? (
                     <List
@@ -289,6 +347,14 @@ function HomePage() {
                       )}
                     />
                   ) : null}
+                  {showNoResults ? (
+                    <div className="home-page__no-results">
+                      <Text strong>{t("home.noQuickResults", "No quick matches yet")}</Text>
+                      <Text type="secondary">
+                        {t("home.noQuickResultsHint", "Open full search to scan every note section.")}
+                      </Text>
+                    </div>
+                  ) : null}
                   <button
                     type="button"
                     className="home-page__view-all"
@@ -304,20 +370,27 @@ function HomePage() {
               <button
                 type="button"
                 className="home-page__enter-learning"
-                onClick={() => navigate(learningEntryUrl)}
+                onClick={() => navigate(primaryEntry.url)}
               >
                 <span className="home-page__enter-learning-icon" aria-hidden="true">
                   <BookOutlined />
                 </span>
                 <span className="home-page__enter-learning-copy">
                   <span className="home-page__enter-learning-label">
-                    {t("home.enterLearning", "Enter learning workspace")}
+                    {primaryEntry.label}
                   </span>
                   <span className="home-page__enter-learning-hint">
-                    {t("home.enterLearningHint", "Continue from the map of subjects and notes")}
+                    {primaryEntry.hint}
                   </span>
                 </span>
                 <ArrowRightOutlined className="home-page__enter-learning-arrow" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="home-page__secondary-learning"
+                onClick={() => navigate(learningEntryUrl)}
+              >
+                {t("home.quickOpenFirstNote", "Quick open first note")}
               </button>
             </div>
           </div>

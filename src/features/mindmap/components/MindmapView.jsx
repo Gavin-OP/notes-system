@@ -51,6 +51,15 @@ const defaultEdgeOptions = {
   },
 };
 
+function findFirstConceptNote(graphData) {
+  const node = (graphData?.nodes || []).find((item) => item?.noteUrl || item?.note_url);
+  if (!node) return null;
+  return {
+    title: node.displayTitle || node.title || node.noteTitle || "First concept note",
+    noteUrl: node.noteUrl || node.note_url,
+  };
+}
+
 function buildMindmapLabelBundle(graphData) {
   if (!graphData) return "";
   return JSON.stringify({
@@ -134,6 +143,7 @@ const MindmapView = ({ subjectId }) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [reloadToken, setReloadToken] = useState(0);
   
   // Store graph data for 2-pass layout
   const [graphData, setGraphData] = useState(null);
@@ -164,6 +174,8 @@ const MindmapView = ({ subjectId }) => {
     () => applyMindmapLabelBundle(networkGraphData, translatedNetworkGraphLabelBundle.content),
     [networkGraphData, translatedNetworkGraphLabelBundle.content],
   );
+  const firstConceptNote = useMemo(() => findFirstConceptNote(localizedGraphData), [localizedGraphData]);
+  const selectedConceptNoteUrl = selectedConcept?.noteUrl || "";
 
   useEffect(() => {
     migrateConceptReviewCaches();
@@ -180,6 +192,7 @@ const MindmapView = ({ subjectId }) => {
     async function loadGraph() {
       try {
         setLoading(true);
+        setError(null);
         const [data, networkData] = await Promise.all([
           loadGraphData(subjectId),
           loadNetworkGraphData(subjectId),
@@ -202,7 +215,7 @@ const MindmapView = ({ subjectId }) => {
     }
 
     loadGraph();
-  }, [subjectId]);
+  }, [subjectId, reloadToken]);
 
   // PASS 1: Initial layout with estimated dimensions
   useEffect(() => {
@@ -304,6 +317,14 @@ const MindmapView = ({ subjectId }) => {
     setConceptModalOpen(false);
   }, []);
 
+  const handleOpenFirstNote = useCallback(() => {
+    if (firstConceptNote?.noteUrl) navigate(firstConceptNote.noteUrl);
+  }, [firstConceptNote?.noteUrl, navigate]);
+
+  const handleOpenSelectedConcept = useCallback(() => {
+    if (selectedConceptNoteUrl) navigate(selectedConceptNoteUrl);
+  }, [navigate, selectedConceptNoteUrl]);
+
   // Handle node click - open concept action modal (only for concept nodes)
   const onNodeClick = useCallback(
     (event, node) => {
@@ -334,6 +355,14 @@ const MindmapView = ({ subjectId }) => {
     return (
       <div className="mindmap-view mindmap-view--error">
         <p>{error}</p>
+        <div className="mindmap-view__error-actions">
+          <button type="button" onClick={() => setReloadToken((value) => value + 1)}>
+            Retry
+          </button>
+          <button type="button" onClick={() => navigate(`/subject/${subjectId}`)}>
+            Back to subject
+          </button>
+        </div>
       </div>
     );
   }
@@ -435,6 +464,10 @@ const MindmapView = ({ subjectId }) => {
         currentType={viewType}
         onTypeChange={handleViewTypeChange}
         subjectName={localizedGraphData?.meta?.subjectName}
+        firstConceptNote={firstConceptNote}
+        selectedConceptNoteUrl={selectedConceptNoteUrl}
+        onOpenFirstNote={handleOpenFirstNote}
+        onOpenSelectedConcept={handleOpenSelectedConcept}
       />
       
       {/* Render the selected mindmap view */}

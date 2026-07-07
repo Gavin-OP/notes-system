@@ -111,6 +111,9 @@ function NotePage() {
 
   // state
   const [noteContent, setNoteContent] = useState("");
+  const [noteLoadState, setNoteLoadState] = useState("idle");
+  const [noteErrorText, setNoteErrorText] = useState("");
+  const [noteReloadToken, setNoteReloadToken] = useState(0);
   const [noteVersions, setNoteVersions] = useState([]);
   const [selectedVersionId, setSelectedVersionId] = useState("current");
   const [versionApiAvailable, setVersionApiAvailable] = useState(false);
@@ -200,6 +203,8 @@ function NotePage() {
     if (noteSlugTrimmed) return;
     dispatch(clearCurrentNoteMeta());
     setNoteContent("");
+    setNoteLoadState("idle");
+    setNoteErrorText("");
     dispatch(setCurrentNoteOutline([]));
     dispatch(setCurrentNoteContent(""));
   }, [noteSlugTrimmed, dispatch]);
@@ -231,7 +236,10 @@ function NotePage() {
 
   useEffect(() => {
     if (notesIndex && noteSlugTrimmed) {
+      let cancelled = false;
       setNoteContent("");
+      setNoteLoadState("loading");
+      setNoteErrorText("");
       const url = `/note/${noteSlugTrimmed}`;
       const meta = findMeta(notesIndex, url);
       dispatch(setCurrentNoteMeta(meta));
@@ -239,33 +247,50 @@ function NotePage() {
       async function fetchNote() {
         const filePath = resolveNoteFilePath(meta, noteSlugTrimmed);
         if (!filePath) {
-          setNoteContent("");
+          if (!cancelled) {
+            setNoteContent("");
+            setNoteLoadState("error");
+            setNoteErrorText("We could not find the note file for this page.");
+          }
           return;
         }
 
         try {
           if (versionApiAvailable && selectedVersionId !== "current" && subjectSlug && topicSlug) {
             const versionPayload = await getNoteVersionContent(subjectSlug, topicSlug, selectedVersionId);
+            if (cancelled) return;
             setNoteContent(removeYamlFrontMatter(versionPayload?.content || ""));
+            setNoteLoadState("ready");
             return;
           }
           const res = await fetch(
             `${import.meta.env.BASE_URL}notes/${filePath}`,
           );
+          if (cancelled) return;
           if (res.ok) {
             const rawText = await res.text();
             setNoteContent(removeYamlFrontMatter(rawText));
+            setNoteLoadState("ready");
           } else {
-            setNoteContent("Note file not found.");
+            setNoteContent("");
+            setNoteLoadState("error");
+            setNoteErrorText("This note is not available yet. You can retry or go back to the subject list.");
           }
         } catch (e) {
-          setNoteContent("Error loading note content.");
+          if (cancelled) return;
+          setNoteContent("");
+          setNoteLoadState("error");
+          setNoteErrorText("Network error while loading this note. Please retry.");
           console.log(e);
         }
       }
       fetchNote();
+      return () => {
+        cancelled = true;
+      };
     }
-  }, [notesIndex, noteSlugTrimmed, dispatch, selectedVersionId, subjectSlug, topicSlug, versionApiAvailable]);
+    return undefined;
+  }, [notesIndex, noteSlugTrimmed, dispatch, selectedVersionId, subjectSlug, topicSlug, versionApiAvailable, noteReloadToken]);
 
   useEffect(() => {
     let mounted = true;
@@ -384,7 +409,29 @@ function NotePage() {
   return (
     <>
       <div className={`note-page ${immersiveMode ? "note-page--immersive" : ""}`}>
-        {noteContent && (
+        {noteLoadState === "loading" ? (
+          <div className="note-page__state" role="status" aria-live="polite">
+            <div className="note-page__skeleton note-page__skeleton-title" />
+            <div className="note-page__skeleton note-page__skeleton-line" />
+            <div className="note-page__skeleton note-page__skeleton-line is-short" />
+            <div className="note-page__skeleton note-page__skeleton-block" />
+          </div>
+        ) : null}
+        {noteLoadState === "error" ? (
+          <div className="note-page__state note-page__error" role="alert">
+            <h2>Could not load this note</h2>
+            <p>{noteErrorText || "Something went wrong while loading the note."}</p>
+            <div className="note-page__state-actions">
+              <button type="button" onClick={() => setNoteReloadToken((value) => value + 1)}>
+                Retry
+              </button>
+              <button type="button" onClick={() => navigate("/subjects")}>
+                Browse subjects
+              </button>
+            </div>
+          </div>
+        ) : null}
+        {noteLoadState === "ready" && noteContent ? (
           <>
             <MarkdownRenderer
               content={displayNoteContent}
@@ -410,7 +457,7 @@ function NotePage() {
               </div>
             ) : null}
           </>
-        )}
+        ) : null}
       </div>
     </>
   );

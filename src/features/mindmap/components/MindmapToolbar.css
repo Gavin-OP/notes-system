@@ -28,6 +28,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  min-width: 0;
 }
 
 .mindmap-toolbar__back-btn {
@@ -60,6 +61,47 @@
   font-size: 16px;
   font-weight: 600;
   color: var(--text-color, #333);
+  white-space: nowrap;
+}
+
+.mindmap-toolbar__hub-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.mindmap-toolbar__action-btn,
+.mindmap-toolbar__view-btn {
+  min-height: 36px;
+  border: 1.5px solid var(--border-color, #d9d9d9);
+  border-radius: 6px;
+  background: var(--content-bg, #ffffff);
+  color: var(--text-color, #666);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.mindmap-toolbar__action-btn {
+  padding: 8px 14px;
+}
+
+.mindmap-toolbar__action-btn:hover,
+.mindmap-toolbar__view-btn:hover:not(.mindmap-toolbar__view-btn--disabled) {
+  background: var(--hover-bg, #f5f5f5);
+  border-color: var(--ns-color-primary);
+  color: var(--ns-color-primary);
+}
+
+.mindmap-toolbar__action-btn--primary,
+.mindmap-toolbar__view-btn--active {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary);
+  color: #fff;
 }
 
 /* ==========================================================================
@@ -69,6 +111,10 @@
 .mindmap-toolbar__right {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
 .mindmap-toolbar__view-switcher {
@@ -94,28 +140,7 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  background: var(--content-bg, #ffffff);
-  border: 1.5px solid var(--border-color, #d9d9d9);
-  border-radius: 6px;
-  color: var(--text-color, #666);
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
   position: relative;
-  white-space: nowrap;
-}
-
-.mindmap-toolbar__view-btn:hover:not(.mindmap-toolbar__view-btn--disabled) {
-  background: var(--hover-bg, #f5f5f5);
-  border-color: var(--ns-color-primary);
-  color: var(--ns-color-primary);
-}
-
-.mindmap-toolbar__view-btn--active {
-  background: var(--ns-color-primary);
-  border-color: var(--ns-color-primary);
-  color: #ffffff;
-  font-weight: 600;
 }
 
 .mindmap-toolbar__view-btn--active:hover {
@@ -170,18 +195,21 @@
   color: var(--text-secondary, #999);
 }
 
+[data-theme="dark"] .mindmap-toolbar__action-btn,
 [data-theme="dark"] .mindmap-toolbar__view-btn {
   background: var(--content-bg, #1e1e1e);
   border-color: var(--border-color, #444);
   color: var(--text-color, #bbb);
 }
 
+[data-theme="dark"] .mindmap-toolbar__action-btn:hover,
 [data-theme="dark"] .mindmap-toolbar__view-btn:hover:not(.mindmap-toolbar__view-btn--disabled) {
   background: var(--hover-bg, #2a2a2a);
   border-color: var(--ns-color-primary);
   color: var(--ns-color-primary);
 }
 
+[data-theme="dark"] .mindmap-toolbar__action-btn--primary,
 [data-theme="dark"] .mindmap-toolbar__view-btn--active {
   background: var(--ns-color-primary);
   border-color: var(--ns-color-primary);
@@ -206,6 +234,7 @@
 
   .mindmap-toolbar__right {
     width: 100%;
+    justify-content: flex-start;
   }
 
   .mindmap-toolbar__view-switcher {
@@ -227,6 +256,10 @@
 
   .mindmap-toolbar__title h2 {
     font-size: 14px;
+  }
+
+  .mindmap-toolbar__hub-actions {
+    width: 100%;
   }
 
   .mindmap-toolbar__view-label {

@@ -60,6 +60,12 @@ function SearchResultsPage() {
       setError("");
       return;
     }
+    if (query.trim().length < 2) {
+      setPayload(null);
+      setResults([]);
+      setError("Please enter at least 2 characters.");
+      return;
+    }
 
     let mounted = true;
     async function runSearch() {
@@ -121,7 +127,7 @@ function SearchResultsPage() {
   return (
     <main className="search-results-page">
       <div className="search-results-page__header">
-        <Button onClick={() => navigate(-1)}>Back</Button>
+        <Button onClick={() => navigate("/")}>Home</Button>
         <Title level={2}>Search notes</Title>
         <Text type="secondary">Search titles, headings, and full note content.</Text>
       </div>

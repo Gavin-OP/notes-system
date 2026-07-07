@@ -273,6 +273,7 @@ const LearningNavigationPanel = ({
   onReorderPathNodes,
   onRemovePathNode,
   onRestoreRecommendedOrder,
+  onStartPathBuilder,
   pathEditMode = false,
   canonicalGraph,
   onSelect,
@@ -376,22 +377,6 @@ const LearningNavigationPanel = ({
     if (initialExpandedKey) next.add(initialExpandedKey);
     return next;
   }, [expandedKeys, hasPathWorkspace, initialExpandedKey]);
-
-  useEffect(() => {
-    if (!showNearbyPanel || !personalizedSteps.length) return;
-    if (pathKeySet.has(normalizedCurrent)) {
-      setNearbyAnchorUrl(normalizedCurrent);
-    }
-  }, [normalizedCurrent, pathKeySet, showNearbyPanel, personalizedSteps.length]);
-
-  useEffect(() => {
-    if (!nearbyAnchorUrl) return;
-    if (pathKeySet.has(normalizeKey(nearbyAnchorUrl))) return;
-    const fallback = pathKeySet.has(normalizedCurrent)
-      ? normalizedCurrent
-      : normalizeKey(personalizedSteps[0]?.key || "");
-    if (fallback) setNearbyAnchorUrl(fallback);
-  }, [nearbyAnchorUrl, pathKeySet, normalizedCurrent, personalizedSteps]);
 
   useEffect(() => {
     let mounted = true;
@@ -1104,15 +1089,28 @@ const LearningNavigationPanel = ({
         </div>
         <div className="learning-nav__drop-zone learning-nav__drop-zone--placeholder">
           <div className="learning-nav__empty-path learning-nav__empty-path--main-tree">
+            <span className="learning-nav__empty-path-kicker">
+              {t("learningPath.firstRunKicker", "3-step setup")}
+            </span>
             <p className="learning-nav__empty-path-title">
-              {t("learningPath.noLitPathTitle", "No path is lit yet")}
+              {t("learningPath.noLitPathTitle", "Build your first learning path")}
             </p>
             <p className="learning-nav__empty-path-copy">
               {t(
                 "learningPath.noLitPathHint",
-                "Start from the reviewed main tree. Only the selected route will appear here.",
+                "Pick a goal, add recommended notes, then open your first step. You can edit the path later.",
               )}
             </p>
+            <button
+              type="button"
+              className="learning-nav__empty-path-primary"
+              disabled={learningPathPending}
+              onClick={onStartPathBuilder}
+            >
+              {learningPathPending
+                ? t("learningPath.starting", "Starting...")
+                : t("learningPath.startWizard", "Start path setup")}
+            </button>
           </div>
         </div>
       </section>

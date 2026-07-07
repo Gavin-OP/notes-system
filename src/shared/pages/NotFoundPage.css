@@ -1,0 +1,32 @@
+.not-found-page {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ns-space-6);
+  background:
+    radial-gradient(circle at top left, var(--ns-color-primary-bg-hover), transparent 34%),
+    var(--ns-color-bg-layout);
+}
+
+.not-found-page__card {
+  width: min(620px, 100%);
+  border-radius: var(--ns-radius-lg);
+}
+
+.not-found-page__content {
+  width: 100%;
+}
+
+.not-found-page__eyebrow {
+  display: inline-block;
+  margin-bottom: var(--ns-space-2);
+  color: var(--ns-color-primary);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.not-found-page .ant-typography {
+  margin-bottom: 0;
+}
