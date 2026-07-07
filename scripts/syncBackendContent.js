@@ -73,7 +73,7 @@ function copyDirRecursive(srcDir, destDir) {
   ensureDir(destDir);
   let count = 0;
   for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
-    if (entry.name === ".DS_Store") {
+    if (entry.name === ".DS_Store" || entry.name === "manifest.json") {
       continue;
     }
     const src = path.join(srcDir, entry.name);
