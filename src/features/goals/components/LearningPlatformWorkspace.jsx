@@ -20,6 +20,7 @@ import {
 } from "antd";
 import {
   AimOutlined,
+  AudioOutlined,
   ArrowRightOutlined,
   BookOutlined,
   DeleteOutlined,
@@ -416,6 +417,7 @@ function LearningPlatformWorkspace({
           <Space wrap>
             <Button onClick={onOpenGoalDiscovery}>Match a course to a goal</Button>
             <Button onClick={() => navigate("/courses/community")}>Explore Course Community</Button>
+            <Button icon={<AudioOutlined />} onClick={() => navigate("/podcasts")}>Learning Podcasts</Button>
             <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate("/course-studio")}>
               Open Course Studio
             </Button>

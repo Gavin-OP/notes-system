@@ -220,6 +220,15 @@
     var(--ns-color-bg-container);
 }
 
+.community-course-detail__lessons article {
+  scroll-margin-top: 96px;
+}
+
+.community-course-detail__lessons article:target {
+  border-color: var(--ns-color-primary-border-hover);
+  background: var(--ns-color-primary-bg);
+}
+
 .community-course-detail__hero h1.ant-typography {
   max-width: 800px;
   margin: var(--ns-space-3) 0;

@@ -25,6 +25,8 @@ const CourseStudioPage = lazy(() => import("../../features/courseStudio/pages/Co
 const CourseCommunityPage = lazy(() => import("../../features/community/pages/CourseCommunityPage"));
 const CommunityCourseDetailPage = lazy(() => import("../../features/community/pages/CommunityCourseDetailPage"));
 const CourseAuthoringPage = lazy(() => import("../../features/community/pages/CourseAuthoringPage"));
+const PodcastLibraryPage = lazy(() => import("../../features/podcasts/pages/PodcastLibraryPage"));
+const PodcastEpisodePage = lazy(() => import("../../features/podcasts/pages/PodcastEpisodePage"));
 const MicroCourseDemoPage = lazy(() => import("../../features/notes/pages/MicroCourseDemoPage"));
 const DataCleaningMicroCoursePage = lazy(() => import("../../features/notes/pages/DataCleaningMicroCoursePage"));
 const SearchResultsPage = lazy(() => import("../../features/search/pages/SearchResultsPage"));
@@ -189,6 +191,8 @@ function RoutesWithTracking() {
           <Route path="courses/community" element={<CourseCommunityPage />} />
           <Route path="courses/community/:courseId" element={<CommunityCourseDetailPage />} />
           <Route path="course-authoring/:courseId" element={<CourseAuthoringPage />} />
+          <Route path="podcasts" element={<PodcastLibraryPage />} />
+          <Route path="podcasts/:episodeId" element={<PodcastEpisodePage />} />
         </Route>
         <Route path="user" element={<Navigate to="/user/login" replace />} />
 

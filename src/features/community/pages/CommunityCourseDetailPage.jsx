@@ -16,6 +16,7 @@ import {
   Typography,
 } from "antd";
 import {
+  AudioOutlined,
   BookOutlined,
   CheckCircleOutlined,
   EditOutlined,
@@ -24,7 +25,7 @@ import {
   SafetyCertificateOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import CourseMetadata from "../../goals/components/CourseMetadata";
@@ -50,6 +51,7 @@ function slugify(value) {
 
 export default function CommunityCourseDetailPage() {
   const { courseId = "" } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { message } = App.useApp();
   const [forkForm] = Form.useForm();
@@ -75,6 +77,18 @@ export default function CommunityCourseDetailPage() {
   useEffect(() => {
     load();
   }, [load]);
+
+  useEffect(() => {
+    if (!data || !location.hash) return undefined;
+    const frame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      target?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "center",
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [data, location.hash]);
 
   const updateLibrary = async (action, enabled) => {
     setActing(action);
@@ -194,6 +208,12 @@ export default function CommunityCourseDetailPage() {
                 Open authoring workspace
               </Button>
             ) : null}
+            <Button
+              icon={<AudioOutlined />}
+              onClick={() => navigate(`/podcasts?course=${encodeURIComponent(course.id)}`)}
+            >
+              Create podcast
+            </Button>
           </div>
 
           <div className="community-course-detail__stats">
@@ -205,14 +225,17 @@ export default function CommunityCourseDetailPage() {
 
           <Card title="Course notes" className="community-course-detail__card">
             <Collapse
-              defaultActiveKey={version.outline.modules?.[0]?.id ? [version.outline.modules[0].id] : []}
+              defaultActiveKey={[
+                new URLSearchParams(location.search).get("module")
+                || version.outline.modules?.[0]?.id,
+              ].filter(Boolean)}
               items={(version.outline.modules || []).map((module, moduleIndex) => ({
                 key: module.id,
                 label: `${String(moduleIndex + 1).padStart(2, "0")} · ${module.title}`,
                 children: (
                   <div className="community-course-detail__lessons">
                     {(module.lessons || []).map((lesson) => (
-                      <article key={lesson.id}>
+                      <article key={lesson.id} id={lesson.id}>
                         <Title level={4}>{lesson.title}</Title>
                         <Paragraph>{lesson.content_markdown || lesson.summary}</Paragraph>
                         {lesson.learning_objectives?.length ? (
