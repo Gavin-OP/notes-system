@@ -25,6 +25,9 @@ function SiteFooter({ t, navigate }) {
       <button type="button" onClick={() => navigate("/course-studio")}>
         {t("home.footer.courseStudio", "Course Studio")}
       </button>
+      <button type="button" onClick={() => navigate("/courses/community")}>
+        {t("home.footer.courseCommunity", "Course Community")}
+      </button>
       <button type="button" onClick={() => navigate("/subjects")}>
         {t("home.footer.subjects", "Subject Database")}
       </button>

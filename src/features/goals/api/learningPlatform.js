@@ -112,6 +112,10 @@ export function createCourse(payload) {
   });
 }
 
+export function getCourse(courseId) {
+  return request(`/api/v1/courses/${encodeURIComponent(courseId)}`);
+}
+
 export function updateCourse(courseId, payload) {
   return request(`/api/v1/courses/${encodeURIComponent(courseId)}`, {
     method: "PATCH",
@@ -128,6 +132,84 @@ export function createCourseVersion(courseId, payload) {
     method: "POST",
     body: JSON.stringify(payload),
   });
+}
+
+export function listCommunityCourses({ domainSlug = "" } = {}) {
+  const query = domainSlug ? `?domain_slug=${encodeURIComponent(domainSlug)}` : "";
+  return request(`/api/v1/courses/community${query}`);
+}
+
+export function getCommunityCourse(courseId) {
+  return request(`/api/v1/courses/${encodeURIComponent(courseId)}/community`);
+}
+
+export function listCourseLibrary() {
+  return request("/api/v1/courses/library");
+}
+
+export function updateCourseLibrary(courseId, action, enabled) {
+  return request(`/api/v1/courses/${encodeURIComponent(courseId)}/library`, {
+    method: "POST",
+    body: JSON.stringify({ action, enabled }),
+  });
+}
+
+export function forkCourse(courseId, payload) {
+  return request(`/api/v1/courses/${encodeURIComponent(courseId)}/fork`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function getMyAuthorProfile() {
+  return request("/api/v1/courses/authors/me");
+}
+
+export function updateMyAuthorProfile(payload) {
+  return request("/api/v1/courses/authors/me", {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function getAuthorProfile(authorUserId) {
+  return request(`/api/v1/courses/authors/${encodeURIComponent(authorUserId)}`);
+}
+
+export function createAuthoringVersion(courseId, payload) {
+  return request(`/api/v1/courses/${encodeURIComponent(courseId)}/authoring-versions`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function reviseCourse(courseId, instruction) {
+  return request(`/api/v1/courses/${encodeURIComponent(courseId)}/revisions`, {
+    method: "POST",
+    body: JSON.stringify({ instruction }),
+  });
+}
+
+export function submitPublicationReview(courseId, submissionNote) {
+  return request(`/api/v1/courses/${encodeURIComponent(courseId)}/publication-reviews`, {
+    method: "POST",
+    body: JSON.stringify({ submission_note: submissionNote }),
+  });
+}
+
+export function listPublicationReviews(courseId) {
+  return request(`/api/v1/courses/${encodeURIComponent(courseId)}/publication-reviews`);
+}
+
+export function createCanonicalSuggestion(courseId, payload) {
+  return request(`/api/v1/courses/${encodeURIComponent(courseId)}/canonical-suggestions`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function listCanonicalSuggestions(courseId) {
+  return request(`/api/v1/courses/${encodeURIComponent(courseId)}/canonical-suggestions`);
 }
 
 export function getPersonalLearningPath() {

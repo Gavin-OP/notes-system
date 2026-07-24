@@ -82,6 +82,7 @@ function LearningPlatformWorkspace({
   const [errorText, setErrorText] = useState("");
   const [goals, setGoals] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [authoredCourseIds, setAuthoredCourseIds] = useState([]);
   const [learningPath, setLearningPath] = useState(normalizePath({}));
   const [selectedGoalId, setSelectedGoalId] = useState("");
   const [selectedCourseId, setSelectedCourseId] = useState("");
@@ -106,6 +107,7 @@ function LearningPlatformWorkspace({
       ]);
       setGoals(nextGoals);
       setCourses(nextCourses);
+      setAuthoredCourseIds((Array.isArray(authoredCourses) ? authoredCourses : []).map((item) => item.id));
       setLearningPath(normalizePath(pathPayload));
       setSelectedGoalId((current) => (
         nextGoals.some((item) => item.id === current)
@@ -146,8 +148,8 @@ function LearningPlatformWorkspace({
     [goals],
   );
   const authoredCourses = useMemo(
-    () => courses.filter((item) => item.status === "draft" || item.visibility !== "public"),
-    [courses],
+    () => courses.filter((item) => authoredCourseIds.includes(item.id)),
+    [authoredCourseIds, courses],
   );
   const currentPathNodes = learningPath?.draft?.nodes || [];
 
@@ -413,12 +415,38 @@ function LearningPlatformWorkspace({
           </div>
           <Space wrap>
             <Button onClick={onOpenGoalDiscovery}>Match a course to a goal</Button>
+            <Button onClick={() => navigate("/courses/community")}>Explore Course Community</Button>
             <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate("/course-studio")}>
               Open Course Studio
             </Button>
           </Space>
         </div>
-        {courseList}
+        {authoredCourses.length ? (
+          <div className="goal-workspace__course-grid" role="list" aria-label="Authored courses">
+            {authoredCourses.map((course) => (
+              <div key={course.id} className="goal-workspace__course-card goal-workspace__course-card--managed">
+                <span className="goal-workspace__course-title-row">
+                  <span className="goal-workspace__course-title">{course.title}</span>
+                  <SemanticChip variant={course.status === "published" ? "sage" : "slate"}>
+                    {course.status}
+                  </SemanticChip>
+                </span>
+                <CourseMetadata course={course} compact />
+                <span className="goal-workspace__course-description">
+                  {course.description || course.target_learner || "A structured course over canonical knowledge."}
+                </span>
+                <Space wrap className="goal-workspace__managed-actions">
+                  <Button onClick={() => navigate(`/course-authoring/${course.id}`)}>Author course</Button>
+                  {course.status === "published" ? (
+                    <Button type="link" onClick={() => navigate(`/courses/community/${course.id}`)}>
+                      View public course
+                    </Button>
+                  ) : null}
+                </Space>
+              </div>
+            ))}
+          </div>
+        ) : null}
         {authoredCourses.length === 0 ? (
           <Alert
             type="info"

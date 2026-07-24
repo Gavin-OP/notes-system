@@ -22,6 +22,9 @@ const ExploreCareersPage = lazy(() => import("../../features/careers/pages/Explo
 const CareerJobDetailPage = lazy(() => import("../../features/careers/pages/CareerJobDetailPage"));
 const GoalDiscoveryPage = lazy(() => import("../../features/goals/pages/GoalDiscoveryPage"));
 const CourseStudioPage = lazy(() => import("../../features/courseStudio/pages/CourseStudioPage"));
+const CourseCommunityPage = lazy(() => import("../../features/community/pages/CourseCommunityPage"));
+const CommunityCourseDetailPage = lazy(() => import("../../features/community/pages/CommunityCourseDetailPage"));
+const CourseAuthoringPage = lazy(() => import("../../features/community/pages/CourseAuthoringPage"));
 const MicroCourseDemoPage = lazy(() => import("../../features/notes/pages/MicroCourseDemoPage"));
 const DataCleaningMicroCoursePage = lazy(() => import("../../features/notes/pages/DataCleaningMicroCoursePage"));
 const SearchResultsPage = lazy(() => import("../../features/search/pages/SearchResultsPage"));
@@ -35,6 +38,7 @@ const AdminDashboardPage = lazy(() => import("../../features/admin/pages/AdminDa
 const AdminContentPage = lazy(() => import("../../features/admin/pages/AdminContentPage"));
 const AdminSubjectDetailPage = lazy(() => import("../../features/admin/pages/AdminSubjectDetailPage"));
 const AdminSystemStatusPage = lazy(() => import("../../features/admin/pages/AdminSystemStatusPage"));
+const AdminCommunityPage = lazy(() => import("../../features/admin/pages/AdminCommunityPage"));
 
 function RouteLoading() {
   return (
@@ -169,6 +173,7 @@ function RoutesWithTracking() {
               <Route index element={<AdminDashboardPage />} />
               <Route path="content" element={<AdminContentPage />} />
               <Route path="content/:subjectSlug" element={<AdminSubjectDetailPage />} />
+              <Route path="community" element={<AdminCommunityPage />} />
               <Route path="system" element={<AdminSystemStatusPage />} />
             </Route>
           </Route>
@@ -181,6 +186,9 @@ function RoutesWithTracking() {
           <Route path="user/profile" element={<UserProfilePage />} />
           <Route path="goals" element={<GoalDiscoveryPage />} />
           <Route path="course-studio" element={<CourseStudioPage />} />
+          <Route path="courses/community" element={<CourseCommunityPage />} />
+          <Route path="courses/community/:courseId" element={<CommunityCourseDetailPage />} />
+          <Route path="course-authoring/:courseId" element={<CourseAuthoringPage />} />
         </Route>
         <Route path="user" element={<Navigate to="/user/login" replace />} />
 

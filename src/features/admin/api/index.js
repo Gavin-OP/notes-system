@@ -34,3 +34,31 @@ export function getAdminSubjectDetail(subjectSlug) {
 export function getAdminSystemStatus() {
   return adminApiRequest("/api/v1/admin/system/status");
 }
+
+export function getPublicationReviewQueue(status = "pending") {
+  return adminApiRequest(`/api/v1/admin/community/publication-reviews?status=${encodeURIComponent(status)}`);
+}
+
+export function decidePublicationReview(reviewId, payload) {
+  return adminApiRequest(
+    `/api/v1/admin/community/publication-reviews/${encodeURIComponent(reviewId)}/decision`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  );
+}
+
+export function getCanonicalSuggestionQueue(status = "pending") {
+  return adminApiRequest(`/api/v1/admin/community/canonical-suggestions?status=${encodeURIComponent(status)}`);
+}
+
+export function decideCanonicalSuggestion(suggestionId, payload) {
+  return adminApiRequest(
+    `/api/v1/admin/community/canonical-suggestions/${encodeURIComponent(suggestionId)}/decision`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  );
+}

@@ -248,6 +248,20 @@
     box-shadow var(--ns-duration-fast) var(--ns-ease-out);
 }
 
+.goal-workspace__course-card--managed {
+  cursor: default;
+}
+
+.goal-workspace__managed-actions {
+  margin-top: auto;
+  padding-top: var(--ns-space-3);
+  border-top: 1px solid var(--ns-color-border-secondary);
+}
+
+.goal-workspace__managed-actions .ant-btn {
+  min-height: 44px;
+}
+
 .goal-workspace__course-card:hover {
   border-color: var(--ns-color-primary-border-hover);
   box-shadow: var(--ns-shadow-sm);

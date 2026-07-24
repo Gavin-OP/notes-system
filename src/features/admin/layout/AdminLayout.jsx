@@ -3,6 +3,7 @@ import { Layout, Menu, Button, Typography, Space, Grid } from "antd";
 import {
   AppstoreOutlined,
   DatabaseOutlined,
+  ForkOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -28,6 +29,11 @@ const menuItems = [
     label: "Content",
   },
   {
+    key: "/admin/community",
+    icon: <ForkOutlined />,
+    label: "Community",
+  },
+  {
     key: "/admin/system",
     icon: <SafetyCertificateOutlined />,
     label: "System",
@@ -48,6 +54,7 @@ export default function AdminLayout() {
 
   const selectedKeys = useMemo(() => {
     if (location.pathname.startsWith("/admin/system")) return ["/admin/system"];
+    if (location.pathname.startsWith("/admin/community")) return ["/admin/community"];
     if (location.pathname.startsWith("/admin/content")) return ["/admin/content"];
     return ["/admin"];
   }, [location.pathname]);
