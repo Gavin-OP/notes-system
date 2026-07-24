@@ -132,12 +132,16 @@
 .user-profile-page__folder-tabs {
   display: flex;
   align-items: center;
-  width: fit-content;
+  width: min(100%, fit-content);
+  max-width: 100%;
   gap: 2px;
   margin: 10px 0;
   padding: 3px;
   border-radius: var(--ns-radius-md);
   background: var(--ns-color-fill-secondary);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
 }
 
 .user-profile-page__folder-tab {
@@ -148,9 +152,11 @@
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
+  min-height: 44px;
   padding: 9px var(--ns-space-4);
   border-radius: calc(var(--ns-radius-md) - 2px);
   cursor: pointer;
+  white-space: nowrap;
   transition:
     color var(--ns-duration-normal) var(--ns-ease-out),
     background-color var(--ns-duration-normal) var(--ns-ease-out);
@@ -726,7 +732,7 @@
   }
 
   .user-profile-page__folder-tab {
-    flex: 1;
+    flex: 0 0 auto;
   }
 
   .user-profile-page__checklist-head {

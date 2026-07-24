@@ -19,6 +19,9 @@ function SiteFooter({ t, navigate }) {
       <button type="button" onClick={() => navigate("/careers")}>
         {t("home.footer.careers", "Career Database")}
       </button>
+      <button type="button" onClick={() => navigate("/goals")}>
+        {t("home.footer.goals", "Goal Discovery")}
+      </button>
       <button type="button" onClick={() => navigate("/subjects")}>
         {t("home.footer.subjects", "Subject Database")}
       </button>

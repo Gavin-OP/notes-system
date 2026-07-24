@@ -20,16 +20,16 @@ export function createProfileGuideSteps(refs, t = (key, fallback) => fallback ||
       title: t("guide.profile.0.title", "Pick up where you left off"),
       description: t(
         "guide.profile.0.description",
-        "Continue learning returns you to your current note. Everything else—progress, saved passages, and career planning—lives here on your profile.",
+        "Continue learning returns you to your current note. Your goals, courses, progress, saved passages, and optional career planning all live here.",
       ),
       target: () => profileHeroRef?.current,
       placement: "bottom",
     },
     {
-      title: t("guide.profile.1.title", "Learning and Career"),
+      title: t("guide.profile.1.title", "Your learning workspace"),
       description: t(
         "guide.profile.1.description",
-        "Learning tracks study progress, achievements, and saved work. Career is optional—open it when you want job matches and skill-gap guidance.",
+        "Overview connects your current direction. My Goals, My Learning, and My Courses separate outcomes, progress, and course perspectives; Career remains an optional goal-discovery lens.",
       ),
       target: () => profileDashboardTabsRef?.current,
       placement: "bottom",
@@ -70,6 +70,8 @@ export async function prepareProfileTourStep(stepIndex, controls) {
   switch (stepIndex) {
     case 0:
     case 1:
+      setActiveDashboard("overview");
+      break;
     case 2:
       setActiveDashboard("learning");
       setLearningRecordsTab("study");
