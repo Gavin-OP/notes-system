@@ -21,6 +21,7 @@ const UserProfilePage = lazy(() => import("../../features/profile/pages/UserProf
 const ExploreCareersPage = lazy(() => import("../../features/careers/pages/ExploreCareersPage"));
 const CareerJobDetailPage = lazy(() => import("../../features/careers/pages/CareerJobDetailPage"));
 const GoalDiscoveryPage = lazy(() => import("../../features/goals/pages/GoalDiscoveryPage"));
+const CourseStudioPage = lazy(() => import("../../features/courseStudio/pages/CourseStudioPage"));
 const MicroCourseDemoPage = lazy(() => import("../../features/notes/pages/MicroCourseDemoPage"));
 const DataCleaningMicroCoursePage = lazy(() => import("../../features/notes/pages/DataCleaningMicroCoursePage"));
 const SearchResultsPage = lazy(() => import("../../features/search/pages/SearchResultsPage"));
@@ -179,6 +180,7 @@ function RoutesWithTracking() {
         <Route element={<UserRouteGuard />}>
           <Route path="user/profile" element={<UserProfilePage />} />
           <Route path="goals" element={<GoalDiscoveryPage />} />
+          <Route path="course-studio" element={<CourseStudioPage />} />
         </Route>
         <Route path="user" element={<Navigate to="/user/login" replace />} />
 

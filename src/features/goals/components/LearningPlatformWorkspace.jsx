@@ -237,7 +237,7 @@ function LearningPlatformWorkspace({
       <Alert
         type="error"
         showIcon
-        message="Learning workspace unavailable"
+        title="Learning workspace unavailable"
         description={errorText}
         action={<Button icon={<ReloadOutlined />} onClick={loadWorkspace}>Retry</Button>}
       />
@@ -411,15 +411,21 @@ function LearningPlatformWorkspace({
               Courses keep their own outline while sharing admin-managed canonical concepts.
             </Paragraph>
           </div>
-          <Button onClick={onOpenGoalDiscovery}>Match a course to a goal</Button>
+          <Space wrap>
+            <Button onClick={onOpenGoalDiscovery}>Match a course to a goal</Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate("/course-studio")}>
+              Open Course Studio
+            </Button>
+          </Space>
         </div>
         {courseList}
         {authoredCourses.length === 0 ? (
           <Alert
             type="info"
             showIcon
-            message="Course Studio is the next authoring phase"
-            description="Your authored course drafts and versions will appear here without changing canonical concepts or graphs."
+            title="Build your first course proposal"
+            description="Upload your notes in Course Studio to receive a private outline and canonical concept mapping."
+            action={<Button type="link" onClick={() => navigate("/course-studio")}>Start in Course Studio</Button>}
           />
         ) : null}
       </div>
@@ -468,7 +474,7 @@ function LearningPlatformWorkspace({
               <Alert
                 type="warning"
                 showIcon
-                message="This course does not have a version yet"
+                title="This course does not have a version yet"
                 description="A course version with a structured outline is required before it can drive a learning path."
               />
             ) : null}

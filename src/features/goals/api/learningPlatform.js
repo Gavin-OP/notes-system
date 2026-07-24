@@ -42,9 +42,9 @@ function resolveErrorMessage(payload, fallback) {
   return payload?.message || fallback;
 }
 
-async function request(path, init = {}) {
+export async function request(path, init = {}) {
   const headers = new Headers(init.headers || {});
-  if (init.body && !headers.has("Content-Type")) {
+  if (init.body && !(init.body instanceof FormData) && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
   applyUserSessionAuth(headers);
