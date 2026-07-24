@@ -5,9 +5,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  background:
-    linear-gradient(180deg, rgba(58, 110, 165, 0.05), transparent 180px),
-    var(--ns-color-bg-layout);
+  background: color-mix(in srgb, var(--ns-color-bg-layout) 74%, var(--ns-color-bg-container) 26%);
 }
 
 .learning-nav--mobile {
@@ -313,9 +311,7 @@
   box-shadow: none;
   border-top: 1px solid var(--ns-color-border-secondary);
   border-color: rgba(58, 110, 165, 0.24);
-  background:
-    linear-gradient(180deg, rgba(58, 110, 165, 0.08), transparent 110px),
-    var(--ns-color-bg-container);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 92%, var(--ns-color-primary) 8%);
 }
 
 .learning-nav__section--active {
@@ -970,10 +966,10 @@
   cursor: pointer;
   box-shadow: var(--ns-shadow-sm);
   transition:
+    transform 100ms ease-out,
     border-color var(--ns-duration-normal) var(--ns-ease-out),
     background-color var(--ns-duration-normal) var(--ns-ease-out),
-    box-shadow var(--ns-duration-normal) var(--ns-ease-out),
-    transform var(--ns-duration-normal) var(--ns-ease-out);
+    box-shadow var(--ns-duration-normal) var(--ns-ease-out);
 }
 
 .learning-nav__node:hover {
@@ -981,6 +977,10 @@
   background: var(--ns-color-primary-bg-hover);
   box-shadow: var(--ns-shadow-primary);
   transform: translateY(-1px);
+}
+
+.learning-nav__node:active {
+  transform: scale(0.98);
 }
 
 .learning-nav__remove-node {
@@ -1249,15 +1249,11 @@
 }
 
 [data-theme="dark"] .learning-nav {
-  background:
-    linear-gradient(180deg, rgba(107, 168, 217, 0.1), transparent 180px),
-    var(--ns-color-bg-layout);
+  background: color-mix(in srgb, var(--ns-color-bg-layout) 82%, var(--ns-color-bg-container) 18%);
 }
 
 [data-theme="dark"] .learning-nav__section--personalized {
-  background:
-    linear-gradient(180deg, rgba(107, 168, 217, 0.1), transparent 110px),
-    var(--ns-color-bg-container);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 92%, var(--ns-color-primary) 8%);
 }
 
 [data-theme="dark"] .learning-nav__section-header {
@@ -1277,9 +1273,14 @@
 }
 
 [data-theme="dark"] .learning-nav__drop-zone {
-  background: #2f2a1f;
+  background: color-mix(in srgb, var(--ns-color-bg-container) 94%, var(--ns-color-wisdom) 6%);
 }
 
 [data-theme="dark"] .learning-nav__legend-item {
   background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .learning-nav__empty-path,
+[data-theme="dark"] .learning-nav__empty-path--main-tree {
+  background: rgba(255, 255, 255, 0.035);
 }

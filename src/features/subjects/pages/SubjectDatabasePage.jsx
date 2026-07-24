@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Button, Card, Col, Empty, Input, Row, Space, Spin, Typography } from "antd";
-import { ApartmentOutlined, SearchOutlined } from "@ant-design/icons";
+import { ApartmentOutlined, ArrowRightOutlined, SearchOutlined } from "@ant-design/icons";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import SemanticChip from "../../../shared/ui/SemanticChip";
@@ -144,7 +144,15 @@ function SubjectDatabasePage() {
               <Card
                 hoverable
                 className="app-catalog-card"
+                role="link"
+                tabIndex={0}
                 onClick={() => navigate(`/subject/${subject.subjectId}`)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    navigate(`/subject/${subject.subjectId}`);
+                  }
+                }}
               >
                 <Space direction="vertical" size={10} className="app-catalog-card__body">
                   <div className="app-catalog-card__head">
@@ -171,9 +179,9 @@ function SubjectDatabasePage() {
                     ) : null}
                   </Space>
                   <Button
-                    type="primary"
-                    ghost
-                    block
+                    type="text"
+                    icon={<ArrowRightOutlined />}
+                    iconPosition="end"
                     className="app-catalog-card__cta-btn"
                     tabIndex={-1}
                     onClick={(event) => event.stopPropagation()}

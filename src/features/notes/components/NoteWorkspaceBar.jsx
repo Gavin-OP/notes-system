@@ -8,6 +8,8 @@ import {
   CheckOutlined,
   FullscreenOutlined,
   FullscreenExitOutlined,
+  HistoryOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
 
 import useTranslation from "../../../i18n/useTranslation";
@@ -98,42 +100,7 @@ function NoteWorkspaceBar({
             {!isMobile ? <span>{t("note.toolbar.immersive")}</span> : null}
           </button>
         </Tooltip>
-      </div>
 
-      {hasVersions ? (
-        <div className="note-workspace-bar__version" aria-label={t("note.toolbar.noteVersion")}>
-          <span className="note-workspace-bar__version-label">{t("note.toolbar.noteVersion")}</span>
-          <label className="note-workspace-bar__version-field">
-            <span className="note-workspace-bar__version-field-label">{t("note.toolbar.view")}</span>
-            <select
-              className="note-workspace-bar__version-select"
-              value={workspaceMeta?.selectedVersionId || "current"}
-              onChange={(event) => workspaceMeta?.onVersionChange?.(event.target.value)}
-            >
-              {versions.map((version) => (
-                <option key={version.version_id} value={version.version_id}>
-                  {version.is_current ? t("note.toolbar.current") : version.version_id}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button
-            type="button"
-            className="note-workspace-bar__restore-btn"
-            onClick={() => workspaceMeta?.onRestoreAnnotations?.()}
-            disabled={workspaceMeta?.restorePending}
-          >
-            {workspaceMeta?.restorePending ? t("note.toolbar.restoring") : t("note.toolbar.restoreHighlights")}
-          </button>
-          {restoreCount > 0 ? (
-            <span className="note-workspace-bar__restore-hint">
-              {restoreCount} {t("note.toolbar.candidates")}
-            </span>
-          ) : null}
-        </div>
-      ) : null}
-
-      <div className="note-workspace-bar__narration" aria-label={t("note.toolbar.narration")}>
         <Tooltip title={narrationLabel}>
           <button
             type="button"
@@ -155,6 +122,45 @@ function NoteWorkspaceBar({
           </button>
         </Tooltip>
       </div>
+
+      {hasVersions ? (
+        <details className="note-workspace-bar__version" aria-label={t("note.toolbar.noteVersion")}>
+          <summary className="note-workspace-bar__version-trigger">
+            <HistoryOutlined aria-hidden="true" />
+            <span>{t("note.toolbar.noteVersion")}</span>
+            <DownOutlined className="note-workspace-bar__version-chevron" aria-hidden="true" />
+          </summary>
+          <div className="note-workspace-bar__version-popover">
+            <label className="note-workspace-bar__version-field">
+              <span className="note-workspace-bar__version-field-label">{t("note.toolbar.view")}</span>
+              <select
+                className="note-workspace-bar__version-select"
+                value={workspaceMeta?.selectedVersionId || "current"}
+                onChange={(event) => workspaceMeta?.onVersionChange?.(event.target.value)}
+              >
+                {versions.map((version) => (
+                  <option key={version.version_id} value={version.version_id}>
+                    {version.is_current ? t("note.toolbar.current") : version.version_id}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button
+              type="button"
+              className="note-workspace-bar__restore-btn"
+              onClick={() => workspaceMeta?.onRestoreAnnotations?.()}
+              disabled={workspaceMeta?.restorePending}
+            >
+              {workspaceMeta?.restorePending ? t("note.toolbar.restoring") : t("note.toolbar.restoreHighlights")}
+            </button>
+            {restoreCount > 0 ? (
+              <span className="note-workspace-bar__restore-hint">
+                {restoreCount} {t("note.toolbar.candidates")}
+              </span>
+            ) : null}
+          </div>
+        </details>
+      ) : null}
 
       <span className="note-workspace-bar__sr-only" aria-live="polite">
         {narrationLabel}

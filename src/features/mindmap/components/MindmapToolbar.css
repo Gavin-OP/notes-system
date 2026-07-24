@@ -11,10 +11,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 24px;
-  background: var(--content-bg, #ffffff);
-  border-bottom: 1px solid var(--border-color, #e8e8e8);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  min-height: 64px;
+  padding: 10px clamp(14px, 2vw, 24px);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 82%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--ns-color-border-secondary) 72%, transparent);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--ns-color-bg-container) 52%, transparent);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
   position: relative;
   z-index: 10;
   gap: 16px;
@@ -27,7 +30,7 @@
 .mindmap-toolbar__left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   min-width: 0;
 }
 
@@ -35,21 +38,35 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
+  min-height: 36px;
+  padding: 6px 10px;
   background: transparent;
-  border: 1px solid var(--border-color, #d9d9d9);
-  border-radius: 6px;
-  color: var(--text-color, #333);
+  border: 0;
+  border-radius: var(--ns-radius-sm);
+  color: var(--ns-color-text-secondary);
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    color var(--ns-duration-fast) var(--ns-ease-out),
+    background-color var(--ns-duration-fast) var(--ns-ease-out),
+    transform 100ms ease-out;
   white-space: nowrap;
 }
 
 .mindmap-toolbar__back-btn:hover {
-  background: var(--hover-bg, #f5f5f5);
-  border-color: var(--ns-color-primary);
+  background: var(--ns-color-fill-secondary);
   color: var(--ns-color-primary);
+}
+
+.mindmap-toolbar__back-btn:active,
+.mindmap-toolbar__action-btn:active,
+.mindmap-toolbar__view-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.mindmap-toolbar button:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
 }
 
 .mindmap-toolbar__back-btn span {
@@ -60,7 +77,7 @@
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: var(--text-color, #333);
+  color: var(--ns-color-text);
   white-space: nowrap;
 }
 
@@ -68,21 +85,25 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .mindmap-toolbar__action-btn,
 .mindmap-toolbar__view-btn {
   min-height: 36px;
-  border: 1.5px solid var(--border-color, #d9d9d9);
-  border-radius: 6px;
-  background: var(--content-bg, #ffffff);
-  color: var(--text-color, #666);
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-sm);
+  background: transparent;
+  color: var(--ns-color-text-secondary);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    color var(--ns-duration-fast) var(--ns-ease-out),
+    border-color var(--ns-duration-fast) var(--ns-ease-out),
+    background-color var(--ns-duration-fast) var(--ns-ease-out),
+    transform 100ms ease-out;
   white-space: nowrap;
 }
 
@@ -92,16 +113,16 @@
 
 .mindmap-toolbar__action-btn:hover,
 .mindmap-toolbar__view-btn:hover:not(.mindmap-toolbar__view-btn--disabled) {
-  background: var(--hover-bg, #f5f5f5);
+  background: var(--ns-color-fill-secondary);
   border-color: var(--ns-color-primary);
   color: var(--ns-color-primary);
 }
 
 .mindmap-toolbar__action-btn--primary,
 .mindmap-toolbar__view-btn--active {
-  border-color: var(--ns-color-primary);
-  background: var(--ns-color-primary);
-  color: #fff;
+  border-color: var(--ns-color-primary-border);
+  background: var(--ns-color-primary-bg-hover);
+  color: var(--ns-color-primary);
 }
 
 /* ==========================================================================
@@ -120,32 +141,44 @@
 .mindmap-toolbar__view-switcher {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .mindmap-toolbar__view-label {
-  font-size: 14px;
-  color: var(--text-secondary, #666);
+  font-size: 12px;
+  color: var(--ns-color-text-tertiary);
   font-weight: 500;
   white-space: nowrap;
 }
 
 .mindmap-toolbar__view-options {
   display: flex;
-  gap: 8px;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-fill-secondary);
 }
 
 .mindmap-toolbar__view-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 14px;
+  padding: 7px 11px;
+  border-color: transparent;
   position: relative;
 }
 
 .mindmap-toolbar__view-btn--active:hover {
-  background: var(--primary-hover, #40a9ff);
-  border-color: var(--primary-hover, #40a9ff);
+  background: var(--ns-color-bg-container);
+  border-color: transparent;
+  color: var(--ns-color-text);
+}
+
+.mindmap-toolbar__view-btn--active {
+  border-color: transparent;
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--ns-color-text) 10%, transparent);
 }
 
 .mindmap-toolbar__view-btn--disabled {
@@ -172,13 +205,12 @@
    ========================================================================== */
 
 [data-theme="dark"] .mindmap-toolbar {
-  background: var(--content-bg, #1e1e1e);
-  border-bottom-color: var(--border-color, #333);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 82%, transparent);
+  border-bottom-color: var(--ns-color-border-secondary);
 }
 
 [data-theme="dark"] .mindmap-toolbar__back-btn {
-  border-color: var(--border-color, #444);
-  color: var(--text-color, #ddd);
+  color: var(--ns-color-text-secondary);
 }
 
 [data-theme="dark"] .mindmap-toolbar__back-btn:hover {
@@ -197,9 +229,9 @@
 
 [data-theme="dark"] .mindmap-toolbar__action-btn,
 [data-theme="dark"] .mindmap-toolbar__view-btn {
-  background: var(--content-bg, #1e1e1e);
-  border-color: var(--border-color, #444);
-  color: var(--text-color, #bbb);
+  background: transparent;
+  border-color: var(--ns-color-border-secondary);
+  color: var(--ns-color-text-secondary);
 }
 
 [data-theme="dark"] .mindmap-toolbar__action-btn:hover,
@@ -211,9 +243,15 @@
 
 [data-theme="dark"] .mindmap-toolbar__action-btn--primary,
 [data-theme="dark"] .mindmap-toolbar__view-btn--active {
-  background: var(--ns-color-primary);
-  border-color: var(--ns-color-primary);
-  color: #ffffff;
+  background: var(--ns-color-primary-bg-hover);
+  border-color: var(--ns-color-primary-border);
+  color: var(--ns-color-primary);
+}
+
+[data-theme="dark"] .mindmap-toolbar__view-btn--active {
+  border-color: transparent;
+  background: var(--ns-color-bg-elevated);
+  color: var(--ns-color-text);
 }
 
 /* ==========================================================================
@@ -267,6 +305,24 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .mindmap-toolbar button {
+    transition: none;
+  }
+
+  .mindmap-toolbar button:active {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .mindmap-toolbar {
+    background: var(--ns-color-bg-container);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
 @media (max-width: 480px) {
   .mindmap-toolbar__back-btn span {
     display: none;
@@ -281,4 +337,3 @@
     padding: 1px 4px;
   }
 }
-

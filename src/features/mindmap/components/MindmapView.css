@@ -10,7 +10,7 @@
 .mindmap-view {
   width: 100%;
   height: calc(100vh - 64px);
-  background: var(--ns-color-bg-layout);
+  background: color-mix(in srgb, var(--ns-color-bg-layout) 74%, var(--ns-color-bg-container) 26%);
   display: flex;
   flex-direction: column;
 }
@@ -130,10 +130,11 @@
    ========================================================================== */
 
 .react-flow__minimap {
-  background: var(--content-bg, #ffffff);
-  border: 1px solid var(--border-color, #e8e8e8);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 86%, transparent);
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--ns-color-text) 10%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
 }
 
 /* ==========================================================================
@@ -141,19 +142,20 @@
    ========================================================================== */
 
 .react-flow__controls {
-  background: var(--content-bg, #ffffff);
-  border: 1px solid var(--border-color, #e8e8e8);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 88%, transparent);
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--ns-color-text) 10%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
   overflow: hidden;
 }
 
 .react-flow__controls-button {
-  background: var(--content-bg, #ffffff);
+  background: transparent;
   border: none;
   border-bottom: 1px solid var(--border-color, #e8e8e8);
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   transition: background-color 0.2s ease;
 }
 
@@ -162,7 +164,7 @@
 }
 
 .react-flow__controls-button:hover {
-  background: var(--hover-bg, #f5f5f5);
+  background: var(--ns-color-fill-secondary);
 }
 
 .react-flow__controls-button svg {
@@ -176,7 +178,15 @@
    ========================================================================== */
 
 .react-flow__background {
-  opacity: 0.5;
+  opacity: 0.34;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .react-flow__minimap,
+  .react-flow__controls {
+    background: var(--ns-color-bg-container);
+    backdrop-filter: none;
+  }
 }
 
 /* ==========================================================================
@@ -236,4 +246,3 @@
     display: none;
   }
 }
-

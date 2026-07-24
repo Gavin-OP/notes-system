@@ -71,6 +71,7 @@ const MindmapToolbar = ({
     <div className="mindmap-toolbar">
       <div className="mindmap-toolbar__left">
         <button
+          type="button"
           className="mindmap-toolbar__back-btn"
           onClick={handleBack}
           title="Back"
@@ -110,12 +111,14 @@ const MindmapToolbar = ({
           <div className="mindmap-toolbar__view-options">
             {viewOptions.map((option) => (
               <button
+                type="button"
                 key={option.type}
                 className={`mindmap-toolbar__view-btn ${
                   currentType === option.type ? "mindmap-toolbar__view-btn--active" : ""
                 } ${option.disabled ? "mindmap-toolbar__view-btn--disabled" : ""}`}
                 onClick={() => !option.disabled && onTypeChange(option.type)}
                 disabled={option.disabled}
+                aria-pressed={currentType === option.type}
                 title={option.disabled ? `${option.label} (Coming Soon)` : option.description}
               >
                 {option.icon}
@@ -131,4 +134,3 @@ const MindmapToolbar = ({
 };
 
 export default MindmapToolbar;
-

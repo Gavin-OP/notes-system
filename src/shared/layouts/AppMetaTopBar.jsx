@@ -53,7 +53,11 @@ function AppMetaTopBar({
           trigger={["click"]}
           placement="bottomRight"
         >
-          <Button className="app-page-shell__language-btn" icon={<GlobalOutlined />}>
+          <Button
+            className="app-page-shell__language-btn"
+            icon={<GlobalOutlined />}
+            aria-label={t("home.languageSelector", "Choose language")}
+          >
             {language === "cn" ? t("language.chinese") : t("language.english")}
           </Button>
         </Dropdown>
@@ -61,6 +65,7 @@ function AppMetaTopBar({
           className={`app-page-shell__auth-btn ${isAuthenticated ? "app-page-shell__auth-btn--user" : ""}`}
           icon={<UserOutlined />}
           onClick={() => navigate(isAuthenticated ? "/user/profile" : "/user/login")}
+          aria-label={isAuthenticated ? displayName || t("profile.title", "Profile") : t("auth.signIn", "Sign in")}
         >
           {isAuthenticated ? displayName || t("profile.title", "Profile") : t("auth.signIn", "Sign in")}
         </Button>

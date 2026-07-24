@@ -1,7 +1,7 @@
 .user-profile-page {
   min-height: 100vh;
   background: var(--ns-color-bg-layout);
-  padding: 0;
+  padding: clamp(var(--ns-space-3), 2vw, var(--ns-space-5));
 }
 
 .user-profile-page--state {
@@ -20,11 +20,16 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--ns-space-4);
+  gap: var(--ns-space-5);
 }
 
 .user-profile-page__hero {
-  border-radius: var(--ns-radius-lg);
+  border-radius: var(--ns-radius-md);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ns-color-text) 4%, transparent);
+}
+
+.user-profile-page__hero .ant-card-body {
+  padding: clamp(var(--ns-space-4), 3vw, var(--ns-space-6));
 }
 
 .user-profile-page__avatar {
@@ -106,28 +111,45 @@
   border-bottom: 1px solid var(--ns-color-split);
 }
 
+.user-profile-page__dashboard-card.ant-card {
+  border-radius: var(--ns-radius-md);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ns-color-text) 4%, transparent);
+}
+
+.user-profile-page__dashboard-card > .ant-card-body {
+  padding: clamp(var(--ns-space-3), 2vw, var(--ns-space-5));
+}
+
+.user-profile-page__dashboard-card .ant-card-type-inner {
+  border-radius: var(--ns-radius-sm);
+  box-shadow: none;
+}
+
 .user-profile-page__dashboard-card > .ant-card-head .ant-card-head-title {
   padding: 0;
 }
 
 .user-profile-page__folder-tabs {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  width: fit-content;
   gap: 2px;
-  padding-top: 10px;
+  margin: 10px 0;
+  padding: 3px;
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-fill-secondary);
 }
 
 .user-profile-page__folder-tab {
   position: relative;
-  border: 1px solid var(--ns-color-split);
-  border-bottom: 0;
-  background: var(--ns-color-bg-spotlight);
-  color: var(--ns-color-text-tertiary);
+  border: 0;
+  background: transparent;
+  color: var(--ns-color-text-secondary);
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
-  padding: var(--ns-space-3) var(--ns-space-5);
-  border-radius: var(--ns-radius-lg) var(--ns-radius-lg) 0 0;
+  padding: 9px var(--ns-space-4);
+  border-radius: calc(var(--ns-radius-md) - 2px);
   cursor: pointer;
   transition:
     color var(--ns-duration-normal) var(--ns-ease-out),
@@ -138,6 +160,17 @@
   z-index: 1;
   background: var(--ns-color-bg-container);
   color: var(--ns-color-text);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--ns-color-text) 10%, transparent);
+}
+
+.user-profile-page__folder-tab:active {
+  transform: scale(0.97);
+  transition-duration: 100ms;
+}
+
+.user-profile-page__folder-tab:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
 }
 
 .user-profile-page__main-grid {
@@ -153,7 +186,7 @@
 }
 
 .user-profile-page__checklist-card {
-  border-radius: var(--ns-radius-lg);
+  border-radius: var(--ns-radius-md);
 }
 
 .user-profile-page__checklist-head {
@@ -187,7 +220,7 @@
   min-width: 84px;
   padding: var(--ns-space-3);
   border: 1px solid var(--ns-color-primary-border);
-  border-radius: var(--ns-radius-lg);
+  border-radius: var(--ns-radius-md);
   background: var(--ns-color-primary-bg-hover);
   color: var(--ns-color-primary);
   text-align: center;
@@ -228,14 +261,15 @@
   gap: var(--ns-space-3);
   min-height: 84px;
   padding: var(--ns-space-3);
-  border: 1px solid var(--ns-color-border-secondary);
-  border-radius: var(--ns-radius-md);
-  background: var(--ns-color-bg-container);
+  border: 0;
+  border-top: 1px solid var(--ns-color-border-secondary);
+  border-radius: 0;
+  background: transparent;
 }
 
 .user-profile-page__quest.is-done {
-  border-color: color-mix(in srgb, var(--ns-color-success) 45%, transparent);
-  background: var(--ns-color-success-bg);
+  border-top-color: color-mix(in srgb, var(--ns-color-success) 34%, var(--ns-color-border-secondary));
+  background: transparent;
 }
 
 .user-profile-page__quest-index {
@@ -598,14 +632,23 @@
 }
 
 [data-theme="dark"] .user-profile-page__folder-tab {
-  border-color: var(--ns-color-border-secondary);
-  background: var(--ns-color-bg-elevated);
+  background: transparent;
   color: var(--ns-color-text-tertiary);
 }
 
 [data-theme="dark"] .user-profile-page__folder-tab.is-active {
   background: var(--ns-color-bg-container);
   color: var(--ns-color-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .user-profile-page__folder-tab {
+    transition: none;
+  }
+
+  .user-profile-page__folder-tab:active {
+    transform: none;
+  }
 }
 
 [data-theme="dark"] .user-profile-page__contrib-month,
@@ -669,6 +712,23 @@
 }
 
 @media (max-width: 640px) {
+  .user-profile-page {
+    padding: var(--ns-space-2);
+  }
+
+  .user-profile-page__hero .ant-space-align-start {
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .user-profile-page__folder-tabs {
+    width: 100%;
+  }
+
+  .user-profile-page__folder-tab {
+    flex: 1;
+  }
+
   .user-profile-page__checklist-head {
     flex-direction: column;
   }

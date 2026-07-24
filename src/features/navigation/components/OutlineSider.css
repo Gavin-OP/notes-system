@@ -129,7 +129,7 @@
 
 .outline-sider__anchor .ant-anchor-link-title {
   display: block;
-  padding: 5px 8px;
+  padding: 6px 8px;
   border-radius: var(--ns-radius-sm);
   font-size: 13px;
   line-height: 1.45;
@@ -145,8 +145,8 @@
 }
 
 .outline-sider__anchor .ant-anchor-link-active > .ant-anchor-link-title {
-  color: var(--ns-chip-primary-text);
-  background: var(--ns-chip-primary-bg);
+  color: var(--ns-color-primary);
+  background: transparent;
   font-weight: 600;
 }
 
@@ -182,8 +182,8 @@
 }
 
 [data-theme="dark"] .outline-sider__anchor .ant-anchor-link-active > .ant-anchor-link-title {
-  color: var(--ns-chip-primary-text);
-  background: var(--ns-chip-primary-bg);
+  color: var(--ns-color-primary);
+  background: transparent;
 }
 
 [data-theme="dark"] .outline-sider__item[data-level="3"],

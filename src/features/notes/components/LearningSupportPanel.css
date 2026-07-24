@@ -6,20 +6,23 @@
   flex-direction: column;
   min-height: 0;
   border-left: 1px solid var(--ns-color-border-secondary);
-  background: var(--ns-color-bg-container);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 88%, var(--ns-color-bg-layout) 12%);
   position: sticky;
   top: 0;
   align-self: flex-start;
-  height: 100vh;
+  height: calc(100vh - var(--note-meta-topbar-height, 64px) - var(--ns-space-2));
+  border-radius: var(--ns-radius-lg);
+  overflow: hidden;
 }
 
 .learning-support-panel__header {
   display: flex;
   align-items: center;
+  min-height: 48px;
   gap: var(--ns-space-2);
-  padding: var(--ns-space-3) var(--ns-space-3) var(--ns-space-2);
+  padding: 6px var(--ns-space-3);
   border-bottom: 1px solid var(--ns-color-border-secondary);
-  background: var(--ns-color-bg-spotlight);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 78%, transparent);
 }
 
 .learning-support-panel__collapse,
@@ -37,8 +40,15 @@
   line-height: 1;
   border-radius: var(--ns-radius-sm);
   transition:
+    transform 100ms ease-out,
     color var(--ns-duration-fast) var(--ns-ease-out),
     background-color var(--ns-duration-fast) var(--ns-ease-out);
+}
+
+.learning-support-panel__collapse:active,
+.learning-support-panel__expand-trigger:active,
+.learning-support-panel__tab:active {
+  transform: scale(0.94);
 }
 
 .learning-support-panel__collapse:hover,
@@ -59,7 +69,10 @@
   min-width: 0;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--ns-space-1);
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-fill-secondary);
 }
 
 .learning-support-panel__tab {
@@ -71,9 +84,10 @@
   font-weight: 500;
   line-height: 1.3;
   padding: 6px 10px;
-  border-radius: var(--ns-radius-sm);
+  border-radius: 6px;
   cursor: pointer;
   transition:
+    transform 100ms ease-out,
     color var(--ns-duration-fast) var(--ns-ease-out),
     background-color var(--ns-duration-fast) var(--ns-ease-out),
     border-color var(--ns-duration-fast) var(--ns-ease-out);
@@ -85,10 +99,11 @@
 }
 
 .learning-support-panel__tab.is-active {
-  border-color: var(--ns-chip-primary-border);
-  background: var(--ns-chip-primary-bg);
-  color: var(--ns-chip-primary-text);
+  border-color: var(--ns-color-border-secondary);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text);
   font-weight: 600;
+  box-shadow: var(--ns-shadow-sm);
 }
 
 .learning-support-panel__tab:focus-visible {
@@ -208,5 +223,11 @@
   .learning-support-panel__tab,
   .learning-support-panel__resizer::after {
     transition: none;
+  }
+
+  .learning-support-panel__collapse:active,
+  .learning-support-panel__expand-trigger:active,
+  .learning-support-panel__tab:active {
+    transform: none;
   }
 }

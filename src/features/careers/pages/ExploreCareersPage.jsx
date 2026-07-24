@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, Card, Col, Empty, Input, Row, Space, Spin, Typography } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { ArrowRightOutlined, SearchOutlined } from "@ant-design/icons";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import { getCareerTaxonomy } from "../api/careers";
@@ -151,7 +151,15 @@ function ExploreCareersPage() {
                 <Card
                   hoverable
                   className="app-catalog-card"
+                  role="link"
+                  tabIndex={0}
                   onClick={() => navigate(`/careers/${encodeURIComponent(profile.jobId)}`)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      navigate(`/careers/${encodeURIComponent(profile.jobId)}`);
+                    }
+                  }}
                 >
                   <Space direction="vertical" size={10} className="app-catalog-card__body">
                     <div className="app-catalog-card__head">
@@ -184,9 +192,9 @@ function ExploreCareersPage() {
                       ))}
                     </Space>
                     <Button
-                      type="primary"
-                      ghost
-                      block
+                      type="text"
+                      icon={<ArrowRightOutlined />}
+                      iconPosition="end"
                       className="app-catalog-card__cta-btn"
                       tabIndex={-1}
                       onClick={(event) => event.stopPropagation()}

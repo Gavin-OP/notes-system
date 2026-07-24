@@ -264,7 +264,18 @@ function HomePage() {
       showSiteFooter
     >
       <section className="home-page__hero-inner" aria-label={t("home.searchLabel", "Search everything")}>
-        <div className="home-page__hero-grid">
+        <div className="home-page__hero-scene">
+          <aside className="home-page__map-preview" aria-label={t("home.mapPreview", "Education map preview")}>
+            <img
+              className="home-page__map-image"
+              src={`${import.meta.env.BASE_URL}images/education-map-home.png`}
+              alt={t(
+                "home.mapImageAlt",
+                "Abstract education map showing learning routes from a starting point through core concepts, prerequisites, practice, application, and a goal.",
+              )}
+            />
+          </aside>
+
           <div className="home-page__hero-copy">
             <Text className="home-page__eyebrow">
               {t("home.eyebrow", "Structured learning for life after school")}
@@ -372,17 +383,8 @@ function HomePage() {
                 className="home-page__enter-learning"
                 onClick={() => navigate(primaryEntry.url)}
               >
-                <span className="home-page__enter-learning-icon" aria-hidden="true">
-                  <BookOutlined />
-                </span>
-                <span className="home-page__enter-learning-copy">
-                  <span className="home-page__enter-learning-label">
-                    {primaryEntry.label}
-                  </span>
-                  <span className="home-page__enter-learning-hint">
-                    {primaryEntry.hint}
-                  </span>
-                </span>
+                <BookOutlined aria-hidden="true" />
+                <span>{primaryEntry.label}</span>
                 <ArrowRightOutlined className="home-page__enter-learning-arrow" aria-hidden="true" />
               </button>
               <button
@@ -393,19 +395,33 @@ function HomePage() {
                 {t("home.quickOpenFirstNote", "Quick open first note")}
               </button>
             </div>
+            <p className="home-page__entry-hint">{primaryEntry.hint}</p>
           </div>
-
-          <aside className="home-page__map-preview" aria-label={t("home.mapPreview", "Education map preview")}>
-            <img
-              className="home-page__map-image"
-              src={`${import.meta.env.BASE_URL}images/education-map-home.png`}
-              alt={t(
-                "home.mapImageAlt",
-                "Abstract education map showing learning routes from a starting point through core concepts, prerequisites, practice, application, and a goal.",
-              )}
-            />
-          </aside>
         </div>
+
+        <ol className="home-page__learning-loop" aria-label={t("home.guideStripLabel", "Learning guide features")}>
+          <li>
+            <span className="home-page__step-index">01</span>
+            <span>
+              <strong>{t("home.steps.goal.title", "Goal")}</strong>
+              <small>{t("home.steps.goal.detail", "Define the direction")}</small>
+            </span>
+          </li>
+          <li>
+            <span className="home-page__step-index">02</span>
+            <span>
+              <strong>{t("home.steps.tree.title", "Tree")}</strong>
+              <small>{t("home.steps.tree.detail", "Map concepts and prerequisites")}</small>
+            </span>
+          </li>
+          <li>
+            <span className="home-page__step-index">03</span>
+            <span>
+              <strong>{t("home.steps.study.title", "Path")}</strong>
+              <small>{t("home.steps.study.detail", "Learn, test, and adjust")}</small>
+            </span>
+          </li>
+        </ol>
       </section>
     </AppPageShell>
   );

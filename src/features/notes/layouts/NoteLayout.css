@@ -5,6 +5,13 @@
   min-height: 100vh;
 }
 
+.note-layout > .app-page-shell__topbar {
+  border-bottom-color: color-mix(in srgb, var(--ns-color-border-secondary) 72%, transparent);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 82%, transparent);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+
 /* Header */
 .note-layout__header {
   background: var(--header-bg);
@@ -43,6 +50,7 @@
 /* Main layout */
 .note-layout__main {
   position: relative;
+  background: var(--ns-color-bg-layout);
 }
 
 /* Mobile backdrop overlay */
@@ -58,7 +66,7 @@
 
 /* Sidebar (menu) */
 .note-layout__sider {
-  background: var(--sider-bg);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 88%, var(--ns-color-bg-layout) 12%);
   position: sticky;
   top: var(--note-meta-topbar-height, 64px);
   align-self: flex-start;
@@ -246,7 +254,8 @@
 
 /* Content wrapper */
 .note-layout__content-wrapper {
-  padding: 0 var(--ns-space-2) var(--ns-space-3) 0;
+  padding: var(--ns-space-2) var(--ns-space-2) var(--ns-space-3);
+  background: transparent;
 }
 
 .note-layout__content-wrapper--mobile {
@@ -255,7 +264,7 @@
 
 .note-layout__breadcrumb {
   margin: 0;
-  min-height: 45px;
+  min-height: 48px;
   display: flex;
   align-items: center;
   padding: 0;
@@ -269,9 +278,11 @@
 .note-layout__content {
   flex: 1;
   min-width: 0;
-  padding: 0 var(--ns-space-5) var(--ns-space-5);
+  padding: 0 clamp(var(--ns-space-4), 2.4vw, var(--ns-space-6)) var(--ns-space-5);
   background: var(--content-bg);
-  border-radius: var(--content-radius);
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-lg);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ns-color-text) 3%, transparent);
 }
 
 .note-layout__content--mobile {
@@ -366,7 +377,7 @@
 }
 
 .note-layout__sider-header {
-  height: 45px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -411,6 +422,7 @@
   line-height: 1;
   border-radius: var(--ns-radius-sm);
   transition:
+    transform 100ms ease-out,
     color var(--ns-duration-normal) var(--ns-ease-out),
     background-color var(--ns-duration-normal) var(--ns-ease-out);
 }
@@ -420,9 +432,14 @@
   background: var(--ns-color-fill-secondary);
 }
 
+.note-layout__sider-collapse-btn:active,
+.note-layout__left-sider-collapsed-trigger:active {
+  transform: scale(0.92);
+}
+
 .note-layout__left-sider-collapsed-trigger {
   border: 0;
-  background: transparent;
+  background: color-mix(in srgb, var(--ns-color-bg-container) 82%, transparent);
   color: var(--ns-color-text);
   padding: var(--ns-space-1);
   cursor: pointer;
@@ -433,9 +450,14 @@
   line-height: 1;
   border-radius: var(--ns-radius-sm);
   align-self: flex-start;
-  margin-right: 2px;
+  margin-right: var(--ns-space-1);
   margin-top: var(--ns-space-4);
-  transition: background-color var(--ns-duration-normal) var(--ns-ease-out);
+  box-shadow: var(--ns-shadow-sm);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition:
+    transform 100ms ease-out,
+    background-color var(--ns-duration-normal) var(--ns-ease-out);
 }
 
 .note-layout__left-sider-collapsed-trigger:hover {
@@ -463,6 +485,28 @@
 
 [data-theme="dark"] .note-layout__sider {
   border-right-color: var(--ns-color-border-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note-layout__sider,
+  .note-layout__sider-collapse-btn,
+  .note-layout__left-sider-collapsed-trigger {
+    transition: none;
+  }
+
+  .note-layout__sider-collapse-btn:active,
+  .note-layout__left-sider-collapsed-trigger:active {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .note-layout > .app-page-shell__topbar,
+  .note-layout__left-sider-collapsed-trigger {
+    background: var(--ns-color-bg-container);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
 [data-theme="dark"] .note-layout__menu-note-marker {
