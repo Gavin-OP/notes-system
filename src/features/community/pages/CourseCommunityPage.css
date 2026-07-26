@@ -209,9 +209,6 @@
 }
 
 .community-course-detail__hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
-  gap: var(--ns-space-6);
   padding: var(--ns-space-6);
   border: 1px solid var(--ns-color-border-secondary);
   border-radius: var(--ns-radius-lg);
@@ -263,7 +260,7 @@
 
 .community-course-detail__stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(180px, 280px);
   gap: var(--ns-space-3);
 }
 

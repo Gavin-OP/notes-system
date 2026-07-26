@@ -154,13 +154,6 @@ export function updateCourseLibrary(courseId, action, enabled) {
   });
 }
 
-export function forkCourse(courseId, payload) {
-  return request(`/api/v1/courses/${encodeURIComponent(courseId)}/fork`, {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-}
-
 export function getMyAuthorProfile() {
   return request("/api/v1/courses/authors/me");
 }

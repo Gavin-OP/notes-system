@@ -19,18 +19,6 @@ function SiteFooter({ t, navigate }) {
       <button type="button" onClick={() => navigate("/careers")}>
         {t("home.footer.careers", "Career Database")}
       </button>
-      <button type="button" onClick={() => navigate("/goals")}>
-        {t("home.footer.goals", "Goal Discovery")}
-      </button>
-      <button type="button" onClick={() => navigate("/course-studio")}>
-        {t("home.footer.courseStudio", "Course Studio")}
-      </button>
-      <button type="button" onClick={() => navigate("/courses/community")}>
-        {t("home.footer.courseCommunity", "Course Community")}
-      </button>
-      <button type="button" onClick={() => navigate("/podcasts")}>
-        {t("home.footer.podcasts", "Learning Podcasts")}
-      </button>
       <button type="button" onClick={() => navigate("/subjects")}>
         {t("home.footer.subjects", "Subject Database")}
       </button>

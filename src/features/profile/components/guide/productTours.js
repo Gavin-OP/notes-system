@@ -29,7 +29,7 @@ export function createProfileGuideSteps(refs, t = (key, fallback) => fallback ||
       title: t("guide.profile.1.title", "Your learning workspace"),
       description: t(
         "guide.profile.1.description",
-        "Overview connects your current direction. My Goals, My Learning, and My Courses separate outcomes, progress, and course perspectives; Career remains an optional goal-discovery lens.",
+        "My Goals, Learning, and My Courses separate outcomes, progress, and course perspectives; Career remains an optional goal-discovery lens.",
       ),
       target: () => profileDashboardTabsRef?.current,
       placement: "bottom",
@@ -65,12 +65,12 @@ export function createProfileGuideSteps(refs, t = (key, fallback) => fallback ||
 }
 
 export async function prepareProfileTourStep(stepIndex, controls) {
-  const { setActiveDashboard, setLearningRecordsTab } = controls;
+  const { setActiveDashboard, setLearningRecordsTab, setGoalDiscoveryType } = controls;
 
   switch (stepIndex) {
     case 0:
     case 1:
-      setActiveDashboard("overview");
+      setActiveDashboard("goals");
       break;
     case 2:
       setActiveDashboard("learning");
@@ -81,7 +81,8 @@ export async function prepareProfileTourStep(stepIndex, controls) {
       setLearningRecordsTab("interactions");
       break;
     case 4:
-      setActiveDashboard("career");
+      setActiveDashboard("goals");
+      setGoalDiscoveryType?.("career");
       break;
     default:
       break;

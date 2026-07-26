@@ -1,15 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
-  App,
   Button,
   Card,
   Collapse,
   Empty,
-  Form,
-  Modal,
   Progress,
-  Select,
   Skeleton,
   Space,
   Tabs,
@@ -17,7 +13,6 @@ import {
   Typography,
 } from "antd";
 import {
-  AudioOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
   FileTextOutlined,
@@ -27,14 +22,13 @@ import {
   SafetyCertificateOutlined,
   SoundOutlined,
 } from "@ant-design/icons";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import SemanticChip from "../../../shared/ui/SemanticChip";
 import {
   getPodcast,
   podcastAudioUrl,
-  renderPodcast,
   updatePodcastPlayback,
 } from "../api/podcasts";
 import { formatPodcastDuration } from "../lib/podcastUtils";
@@ -51,15 +45,12 @@ function chapterForPosition(chapters, positionMs) {
 
 export default function PodcastEpisodePage() {
   const { episodeId = "" } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
-  const { message } = App.useApp();
-  const [renderForm] = Form.useForm();
   const audioRef = useRef(null);
   const lastSyncRef = useRef(0);
   const resumeAppliedRef = useRef("");
   const [loading, setLoading] = useState(true);
-  const [rendering, setRendering] = useState(false);
-  const [renderOpen, setRenderOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [episode, setEpisode] = useState(null);
   const [currentSegmentIndex, setCurrentSegmentIndex] = useState(0);
@@ -171,26 +162,6 @@ export default function PodcastEpisodePage() {
     }));
   };
 
-  const submitRender = async (values) => {
-    setRendering(true);
-    try {
-      const updated = await renderPodcast(episodeId, {
-        provider: values.provider === "default" ? null : values.provider,
-        voice_id: values.voice_id || "",
-      });
-      setEpisode(updated);
-      setCurrentSegmentIndex(0);
-      setPositionMs(0);
-      setRenderOpen(false);
-      message.success("Podcast audio is ready.");
-    } catch (error) {
-      message.error(error instanceof Error ? error.message : "Could not render podcast audio.");
-      await load();
-    } finally {
-      setRendering(false);
-    }
-  };
-
   const progressPercent = episode?.duration_ms
     ? Math.min(100, Math.round((positionMs / episode.duration_ms) * 100))
     : 0;
@@ -198,9 +169,9 @@ export default function PodcastEpisodePage() {
   return (
     <AppPageShell
       title={episode?.title || "Podcast Episode"}
-      subtitle="A verified audio edition linked to a fixed course version."
-      backLabel="Back to podcasts"
-      onBack={() => navigate("/podcasts")}
+      subtitle="An official, source-linked audio edition from Notes System."
+      backLabel={location.state?.returnTo ? "Back to note" : "Back to learning"}
+      onBack={() => navigate(location.state?.returnTo || "/user/profile?section=learning")}
       showSiteFooter
       contentWidth="wide"
       contentClassName="podcast-episode"
@@ -250,30 +221,6 @@ export default function PodcastEpisodePage() {
             </div>
           </section>
 
-          {!episode.verification.passed ? (
-            <Alert
-              type="warning"
-              showIcon
-              title="This script needs more source content before audio rendering"
-              description={episode.verification.warnings.join(" ")}
-              action={(
-                <Button onClick={() => navigate(`/course-authoring/${episode.course_id}`)}>
-                  Open course authoring
-                </Button>
-              )}
-            />
-          ) : null}
-
-          {episode.status === "failed" ? (
-            <Alert
-              type="error"
-              showIcon
-              title="The previous audio render did not finish"
-              description={episode.error_message}
-              action={<Button onClick={() => setRenderOpen(true)}>Retry render</Button>}
-            />
-          ) : null}
-
           <Card className="podcast-episode__player" aria-label="Podcast player">
             <div className="podcast-episode__now-playing">
               <div className="podcast-episode__audio-icon"><SoundOutlined /></div>
@@ -281,19 +228,6 @@ export default function PodcastEpisodePage() {
                 <Text type="secondary">Now playing</Text>
                 <Title level={3}>{currentChapter?.title || "Audio not rendered yet"}</Title>
               </div>
-              {episode.status !== "ready" ? (
-                <Button
-                  type="primary"
-                  icon={<AudioOutlined />}
-                  disabled={!episode.verification.passed}
-                  onClick={() => {
-                    renderForm.setFieldsValue({ provider: "default", voice_id: "" });
-                    setRenderOpen(true);
-                  }}
-                >
-                  Render audio
-                </Button>
-              ) : null}
             </div>
 
             {episode.status === "ready" && currentSegment ? (
@@ -315,7 +249,7 @@ export default function PodcastEpisodePage() {
             ) : (
               <Empty
                 image={<PlayCircleOutlined className="podcast-episode__empty-icon" />}
-                description="Review the verified transcript, then render a single-narrator audio edition."
+                description="This official episode is not available for playback yet."
               />
             )}
             <div className="podcast-episode__overall-progress">
@@ -404,60 +338,6 @@ export default function PodcastEpisodePage() {
         </>
       ) : null}
 
-      <Modal
-        open={renderOpen}
-        title="Render single-narrator audio"
-        footer={null}
-        maskClosable={!rendering}
-        closable={!rendering}
-        onCancel={() => setRenderOpen(false)}
-      >
-        <Form form={renderForm} layout="vertical" onFinish={submitRender}>
-          <Form.Item
-            label="Voice provider"
-            name="provider"
-            extra="Default uses the backend provider configuration and its fallback."
-          >
-            <Select
-              options={[
-                { value: "default", label: "System default" },
-                { value: "amazon_polly", label: "Amazon Polly" },
-                { value: "elevenlabs", label: "ElevenLabs" },
-              ]}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Voice ID"
-            name="voice_id"
-            extra="Optional. Leave blank to use the configured single narrator."
-          >
-            <Select
-              allowClear
-              showSearch
-              options={[
-                { value: "Joanna", label: "Joanna (Polly)" },
-                { value: "Matthew", label: "Matthew (Polly)" },
-              ]}
-              placeholder="Configured default voice"
-            />
-          </Form.Item>
-          <Alert
-            type="info"
-            showIcon
-            title="Rendering may take a little while"
-            description="Each verified chapter is rendered separately for reliable playback and source navigation."
-          />
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={rendering}
-            icon={<AudioOutlined />}
-            block
-          >
-            Render episode audio
-          </Button>
-        </Form>
-      </Modal>
     </AppPageShell>
   );
 }

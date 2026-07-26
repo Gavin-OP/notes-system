@@ -17,6 +17,7 @@ import {
 import { getMyProfile } from "../../../profile/api/user";
 import { getFirstSubjectTopicUrl, normalizeNoteRoute } from "../../../navigation/lib/notesIndexUtils";
 import useTranslation from "../../../../i18n/useTranslation";
+import { getDomainArchetypes } from "../../lib/domainArchetypes";
 
 import "./SubjectOverviewPage.css";
 
@@ -192,6 +193,13 @@ function SubjectOverviewContent({ subjectId }) {
               <Title level={2} className="subject-overview__title">
                 {subjectTitle}
               </Title>
+              <div className="subject-overview__archetypes" aria-label="Learning archetypes">
+                {getDomainArchetypes(subjectId).map((archetype, index) => (
+                  <SemanticChip key={archetype} variant={index === 0 ? "teal" : "slate"}>
+                    {archetype}
+                  </SemanticChip>
+                ))}
+              </div>
               {resolvedSyllabus?.summary ? (
                 <Paragraph className="subject-overview__summary" type="secondary">
                   {resolvedSyllabus.summary}

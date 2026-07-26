@@ -173,6 +173,8 @@ function NotePage() {
     registerWorkspaceMeta({
       showMindmap: isNavigableSubjectSlug(subjectSlug),
       mindmapSubjectSlug: subjectSlug,
+      subjectSlug,
+      topicSlug,
       versions: noteVersions,
       selectedVersionId,
       onVersionChange: handleVersionChange,
@@ -184,6 +186,7 @@ function NotePage() {
   }, [
     registerWorkspaceMeta,
     subjectSlug,
+    topicSlug,
     noteVersions,
     selectedVersionId,
     handleVersionChange,

@@ -20,7 +20,6 @@ const UserLoginPage = lazy(() => import("../../features/profile/pages/UserLoginP
 const UserProfilePage = lazy(() => import("../../features/profile/pages/UserProfilePage"));
 const ExploreCareersPage = lazy(() => import("../../features/careers/pages/ExploreCareersPage"));
 const CareerJobDetailPage = lazy(() => import("../../features/careers/pages/CareerJobDetailPage"));
-const GoalDiscoveryPage = lazy(() => import("../../features/goals/pages/GoalDiscoveryPage"));
 const CourseStudioPage = lazy(() => import("../../features/courseStudio/pages/CourseStudioPage"));
 const CourseCommunityPage = lazy(() => import("../../features/community/pages/CourseCommunityPage"));
 const CommunityCourseDetailPage = lazy(() => import("../../features/community/pages/CommunityCourseDetailPage"));
@@ -186,7 +185,7 @@ function RoutesWithTracking() {
         <Route path="user/login" element={<UserLoginPage />} />
         <Route element={<UserRouteGuard />}>
           <Route path="user/profile" element={<UserProfilePage />} />
-          <Route path="goals" element={<GoalDiscoveryPage />} />
+          <Route path="goals" element={<Navigate to="/user/profile?section=goals" replace />} />
           <Route path="course-studio" element={<CourseStudioPage />} />
           <Route path="courses/community" element={<CourseCommunityPage />} />
           <Route path="courses/community/:courseId" element={<CommunityCourseDetailPage />} />

@@ -17,8 +17,7 @@ import {
   BookOutlined,
   CompassOutlined,
   EditOutlined,
-  ForkOutlined,
-  SafetyCertificateOutlined,
+  HeartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +38,6 @@ const { Paragraph, Text, Title } = Typography;
 
 function CourseCard({ item, onOpen }) {
   const course = item.course || item;
-  const quality = item.quality;
   const isLibraryItem = typeof item.saved === "boolean";
   return (
     <button
@@ -47,35 +45,14 @@ function CourseCard({ item, onOpen }) {
       className="course-community__course-card"
       onClick={() => onOpen(course.id)}
     >
-      <span className="course-community__card-top">
-        <SemanticChip variant="primary">{course.domain_title}</SemanticChip>
-        {quality ? <SemanticChip variant="sage">Quality {quality.score}</SemanticChip> : null}
-        {isLibraryItem ? (
-          <SemanticChip variant={item.installed ? "sage" : "slate"}>
-            {item.installed ? "Installed" : "Saved"}
-          </SemanticChip>
-        ) : null}
-      </span>
       <span className="course-community__card-title">{course.title}</span>
       <CourseMetadata course={course} compact />
       <span className="course-community__card-description">
         {course.description || course.target_learner || "A structured community course."}
       </span>
       <span className="course-community__card-footer">
-        {isLibraryItem ? (
-          <>
-            <span><BookOutlined /> In your library</span>
-            <span>{item.saved ? "Saved" : ""}{item.saved && item.installed ? " · " : ""}{item.installed ? "Installed" : ""}</span>
-          </>
-        ) : (
-          <>
-            <span><UserOutlined /> {item.author?.display_name || "Course author"}</span>
-            <span>
-              <BookOutlined /> {item.install_count || 0}
-              <ForkOutlined /> {item.fork_count || 0}
-            </span>
-          </>
-        )}
+        <span><UserOutlined /> {item.author?.display_name || "Course author"}</span>
+        <span><HeartOutlined /> {item.save_count || 0}{isLibraryItem && item.saved ? " · Saved" : ""}</span>
       </span>
     </button>
   );
@@ -146,30 +123,10 @@ export default function CourseCommunityPage() {
     <AppPageShell
       title="Course Community"
       subtitle="Learn through different author perspectives over the same stable canonical knowledge."
-      backLabel="Back to profile"
-      onBack={() => navigate("/user/profile")}
       showSiteFooter
       contentWidth="wide"
       contentClassName="course-community"
     >
-      <section className="course-community__hero">
-        <div>
-          <Text className="course-community__eyebrow">Phase 4 · Authoring & Community</Text>
-          <Title level={2}>Choose a perspective. Keep the knowledge foundation stable.</Title>
-          <Paragraph>
-            Published courses are moderated, versioned, and transparent about their sources.
-            Saving, installing, and forking are separate choices.
-          </Paragraph>
-        </div>
-        <div className="course-community__hero-principle">
-          <SafetyCertificateOutlined />
-          <div>
-            <Text strong>Community creativity, canonical stability</Text>
-            <Text type="secondary">Authors may suggest canonical changes, but only admins review them.</Text>
-          </div>
-        </div>
-      </section>
-
       {errorText ? <Alert type="error" showIcon title="Community unavailable" description={errorText} /> : null}
 
       {loading ? <Card><Skeleton active paragraph={{ rows: 10 }} /></Card> : (
@@ -203,7 +160,7 @@ export default function CourseCommunityPage() {
                   ))}
                 </div>
               ) : (
-                <Empty description="Save or install a community course to add it here." />
+                <Empty description="Save a community course to add it here." />
               ),
             },
             {

@@ -9,6 +9,7 @@ import SemanticChip from "../../../shared/ui/SemanticChip";
 import { loadGraphData } from "../../mindmap/components/utils/graphLoader";
 import { isNavigableSubjectSlug } from "../../navigation/lib/notesIndexUtils";
 import { getSubjectDisplayTitle } from "../lib/subjectOverviewUtils";
+import { getDomainArchetypes } from "../lib/domainArchetypes";
 import useTranslation from "../../../i18n/useTranslation";
 
 const { Paragraph, Text } = Typography;
@@ -169,6 +170,11 @@ function SubjectDatabasePage() {
                     {subject.summary}
                   </Paragraph>
                   <Space wrap size={[6, 6]}>
+                    {getDomainArchetypes(subject.subjectId).map((archetype, index) => (
+                      <SemanticChip key={archetype} variant={index === 0 ? "teal" : "slate"}>
+                        {archetype}
+                      </SemanticChip>
+                    ))}
                     <SemanticChip variant="primary">
                       {subject.noteCount} {t("subject.database.notes", "notes")}
                     </SemanticChip>

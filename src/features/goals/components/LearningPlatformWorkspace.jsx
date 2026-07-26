@@ -20,12 +20,13 @@ import {
 } from "antd";
 import {
   AimOutlined,
-  AudioOutlined,
   ArrowRightOutlined,
   BookOutlined,
   DeleteOutlined,
   PlusOutlined,
+  ProjectOutlined,
   ReloadOutlined,
+  RocketOutlined,
 } from "@ant-design/icons";
 
 import SemanticChip from "../../../shared/ui/SemanticChip";
@@ -39,10 +40,17 @@ import {
 } from "../api/learningPlatform";
 import { GOAL_TYPE_CONFIG, getGoalTypeConfig } from "../lib/goalMetadata";
 import CourseMetadata from "./CourseMetadata";
+import { listCourseStudioDomains } from "../../courseStudio/api/courseStudio";
 
 import "../pages/GoalDiscoveryPage.css";
 
 const { Paragraph, Text, Title } = Typography;
+
+const GOAL_ICONS = {
+  career: RocketOutlined,
+  project: ProjectOutlined,
+  interest: AimOutlined,
+};
 
 function uniqueById(items = []) {
   const seen = new Set();
@@ -75,6 +83,8 @@ function LearningPlatformWorkspace({
   mode = "builder",
   preferredGoalType = "",
   onOpenGoalDiscovery,
+  onGoalTypeChange,
+  careerTaxonomy = [],
 }) {
   const navigate = useNavigate();
   const { message } = App.useApp();
@@ -83,6 +93,7 @@ function LearningPlatformWorkspace({
   const [errorText, setErrorText] = useState("");
   const [goals, setGoals] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [domains, setDomains] = useState([]);
   const [authoredCourseIds, setAuthoredCourseIds] = useState([]);
   const [learningPath, setLearningPath] = useState(normalizePath({}));
   const [selectedGoalId, setSelectedGoalId] = useState("");
@@ -90,16 +101,21 @@ function LearningPlatformWorkspace({
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [goalSaving, setGoalSaving] = useState(false);
   const [pathGenerating, setPathGenerating] = useState(false);
+  const [discoveryType, setDiscoveryType] = useState(preferredGoalType);
+  const [selectedDiscoveryDomain, setSelectedDiscoveryDomain] = useState("");
+  const [selectedProjectSkills, setSelectedProjectSkills] = useState([]);
+  const [discoverySaving, setDiscoverySaving] = useState(false);
 
   const loadWorkspace = useCallback(async () => {
     setLoading(true);
     setErrorText("");
     try {
-      const [goalPayload, publicCourses, authoredCourses, pathPayload] = await Promise.all([
+      const [goalPayload, publicCourses, authoredCourses, pathPayload, domainPayload] = await Promise.all([
         listGoals(),
         listCourses(),
         listCourses({ mine: true }),
         getPersonalLearningPath().catch(() => ({})),
+        listCourseStudioDomains(),
       ]);
       const nextGoals = Array.isArray(goalPayload) ? goalPayload : [];
       const nextCourses = uniqueById([
@@ -108,6 +124,7 @@ function LearningPlatformWorkspace({
       ]);
       setGoals(nextGoals);
       setCourses(nextCourses);
+      setDomains(Array.isArray(domainPayload) ? domainPayload : []);
       setAuthoredCourseIds((Array.isArray(authoredCourses) ? authoredCourses : []).map((item) => item.id));
       setLearningPath(normalizePath(pathPayload));
       setSelectedGoalId((current) => (
@@ -134,7 +151,41 @@ function LearningPlatformWorkspace({
   useEffect(() => {
     if (!preferredGoalType) return;
     goalForm.setFieldValue("goal_type", preferredGoalType);
+    setDiscoveryType(preferredGoalType);
   }, [goalForm, preferredGoalType]);
+
+  const selectDiscoveryType = (goalType) => {
+    setDiscoveryType(goalType);
+    setSelectedDiscoveryDomain("");
+    setSelectedProjectSkills([]);
+    onGoalTypeChange?.(goalType);
+  };
+
+  const discoveryDomain = useMemo(
+    () => domains.find((domain) => domain.slug === selectedDiscoveryDomain) || null,
+    [domains, selectedDiscoveryDomain],
+  );
+  const projectSkillOptions = useMemo(() => {
+    if (!discoveryDomain) return [];
+    const domainTerms = [discoveryDomain.slug, discoveryDomain.title]
+      .flatMap((value) => String(value || "").toLowerCase().split(/[^a-z0-9]+/))
+      .filter((value) => value.length > 2);
+    const matchingProfiles = careerTaxonomy.filter((profile) => {
+      const searchable = [
+        profile.title,
+        profile.job_title,
+        profile.jobTitle,
+        ...(profile.knowledge_areas || profile.knowledgeAreas || []),
+      ].join(" ").toLowerCase();
+      return domainTerms.some((term) => searchable.includes(term));
+    });
+    return [...new Set(matchingProfiles.flatMap((profile) => [
+      ...(profile.hard_skills || profile.hardSkills || []),
+      ...(profile.tools || []),
+    ]).map((value) => String(value).trim()).filter(Boolean))]
+      .sort((a, b) => a.localeCompare(b))
+      .map((value) => ({ value, label: value }));
+  }, [careerTaxonomy, discoveryDomain]);
 
   const selectedGoal = useMemo(
     () => goals.find((item) => item.id === selectedGoalId) || null,
@@ -157,7 +208,7 @@ function LearningPlatformWorkspace({
   const openGoalModal = (goalType = "") => {
     goalForm.resetFields();
     goalForm.setFieldsValue({
-      goal_type: goalType || preferredGoalType || "exploration",
+      goal_type: goalType || preferredGoalType || "interest",
       preferred_archetype: undefined,
       success_criteria: [],
     });
@@ -185,6 +236,45 @@ function LearningPlatformWorkspace({
       message.error(error instanceof Error ? error.message : "Could not create the goal.");
     } finally {
       setGoalSaving(false);
+    }
+  };
+
+  const handleCreateDiscoveryGoal = async () => {
+    if (!discoveryDomain || !["project", "interest"].includes(discoveryType)) return;
+    setDiscoverySaving(true);
+    try {
+      const isProject = discoveryType === "project";
+      const created = await createGoal({
+        title: isProject
+          ? `Complete a ${discoveryDomain.title} project`
+          : `Explore ${discoveryDomain.title}`,
+        goal_type: discoveryType,
+        description: isProject
+          ? `Build a project in ${discoveryDomain.title} using the selected skills.`
+          : `Develop a structured understanding of ${discoveryDomain.title}.`,
+        desired_outcome: isProject
+          ? `Complete a practical ${discoveryDomain.title} project that demonstrates ${selectedProjectSkills.join(", ")}.`
+          : `Explore the core concepts and learning paths available in ${discoveryDomain.title}.`,
+        success_criteria: isProject
+          ? selectedProjectSkills.map((skill) => `Demonstrate ${skill} in the project`)
+          : [`Complete an introductory course in ${discoveryDomain.title}`],
+        preferred_archetype: isProject ? "practice_based" : "conceptual",
+        metadata: {
+          source: "goal_discovery",
+          domain_slug: discoveryDomain.slug,
+          domain_title: discoveryDomain.title,
+          skills: isProject ? selectedProjectSkills : [],
+        },
+      });
+      setGoals((current) => [created, ...current]);
+      setSelectedGoalId(created.id);
+      setSelectedDiscoveryDomain("");
+      setSelectedProjectSkills([]);
+      message.success(`${isProject ? "Project" : "Interest"} goal created.`);
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Could not create this goal.");
+    } finally {
+      setDiscoverySaving(false);
     }
   };
 
@@ -286,12 +376,8 @@ function LearningPlatformWorkspace({
       }) : (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description="Create a goal to describe the outcome you want from learning."
-        >
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => openGoalModal()}>
-            Create your first goal
-          </Button>
-        </Empty>
+          description="Choose Career, Project, or Interest below to create your first goal."
+        />
       )}
     </div>
   );
@@ -380,26 +466,100 @@ function LearningPlatformWorkspace({
   if (mode === "goals") {
     return (
       <div className="goal-workspace">
-        <div className="goal-workspace__section-head">
-          <div>
-            <Title level={4}>My Goals</Title>
-            <Paragraph type="secondary">Outcomes you want your learning to support.</Paragraph>
-          </div>
-          <Space wrap>
-            <Button onClick={onOpenGoalDiscovery}>Explore goal types</Button>
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => openGoalModal()}>
-              New goal
-            </Button>
-          </Space>
+        <div className="goal-workspace__section-head goal-workspace__section-head--saved">
+          <Title level={4}>My Goals</Title>
         </div>
         {goalList}
-        <GoalModal
-          open={goalModalOpen}
-          form={goalForm}
-          saving={goalSaving}
-          onCancel={() => setGoalModalOpen(false)}
-          onSubmit={handleCreateGoal}
-        />
+        <div className="goal-workspace__section-head">
+          <Title level={4}>Goal Discovery</Title>
+        </div>
+        <div className="goal-workspace__goal-types" role="group" aria-label="Goal types">
+          {GOAL_TYPE_CONFIG.map((item) => {
+            const Icon = GOAL_ICONS[item.type] || AimOutlined;
+            const selected = discoveryType === item.type;
+            return (
+              <button
+                key={item.type}
+                type="button"
+                aria-pressed={selected}
+                className={`goal-workspace__goal-type ${selected ? "is-selected" : ""}`}
+                onClick={() => selectDiscoveryType(selected ? "" : item.type)}
+              >
+                <span className="goal-workspace__goal-type-icon" aria-hidden="true"><Icon /></span>
+                <span>
+                  <strong>{item.label}</strong>
+                  <small>{item.description}</small>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        {["project", "interest"].includes(discoveryType) ? (
+          <Card className="goal-workspace__discovery-builder">
+            <div className="goal-workspace__discovery-builder-head">
+              <div>
+                <Text className="goal-workspace__eyebrow">
+                  {discoveryType === "project" ? "Project direction" : "Interest direction"}
+                </Text>
+                <Title level={4}>
+                  {discoveryType === "project"
+                    ? "Choose a field and the skills your project should demonstrate"
+                    : "Choose the field you want to explore"}
+                </Title>
+              </div>
+            </div>
+            <div className="goal-workspace__discovery-fields">
+              <label>
+                <span>Field</span>
+                <Select
+                  showSearch
+                  optionFilterProp="label"
+                  size="large"
+                  value={selectedDiscoveryDomain || undefined}
+                  placeholder="Choose from current subjects"
+                  options={domains.map((domain) => ({ value: domain.slug, label: domain.title }))}
+                  onChange={(value) => {
+                    setSelectedDiscoveryDomain(value);
+                    setSelectedProjectSkills([]);
+                  }}
+                />
+              </label>
+              {discoveryType === "project" && discoveryDomain ? (
+                <label>
+                  <span>Skills to demonstrate</span>
+                  <Select
+                    mode="multiple"
+                    size="large"
+                    value={selectedProjectSkills}
+                    placeholder="Choose skills from related careers"
+                    options={projectSkillOptions}
+                    onChange={setSelectedProjectSkills}
+                    notFoundContent="No related career skills are available for this field yet."
+                  />
+                  <small>Skills come from the current Career Database; free-form entries are not added.</small>
+                </label>
+              ) : null}
+            </div>
+            {discoveryType === "project" && discoveryDomain && projectSkillOptions.length === 0 ? (
+              <Alert
+                type="info"
+                showIcon
+                title="No mapped career skills yet"
+                description="This field remains selectable for Interest goals, but Project goals wait until Career Database skills are mapped."
+              />
+            ) : null}
+            <div className="goal-workspace__discovery-actions">
+              <Button
+                type="primary"
+                loading={discoverySaving}
+                disabled={!discoveryDomain || (discoveryType === "project" && selectedProjectSkills.length === 0)}
+                onClick={handleCreateDiscoveryGoal}
+              >
+                Add to My Goals
+              </Button>
+            </div>
+          </Card>
+        ) : null}
       </div>
     );
   }
@@ -415,11 +575,9 @@ function LearningPlatformWorkspace({
             </Paragraph>
           </div>
           <Space wrap>
-            <Button onClick={onOpenGoalDiscovery}>Match a course to a goal</Button>
             <Button onClick={() => navigate("/courses/community")}>Explore Course Community</Button>
-            <Button icon={<AudioOutlined />} onClick={() => navigate("/podcasts")}>Learning Podcasts</Button>
             <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate("/course-studio")}>
-              Open Course Studio
+              Create or import a course
             </Button>
           </Space>
         </div>

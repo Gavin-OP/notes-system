@@ -1,6 +1,7 @@
-import { Tooltip } from "antd";
+import { Dropdown, Tooltip } from "antd";
 import {
   AudioOutlined,
+  CustomerServiceOutlined,
   PauseCircleOutlined,
   LoadingOutlined,
   ApartmentOutlined,
@@ -20,6 +21,8 @@ function NoteWorkspaceBar({
   narrationState = "idle",
   isNarrationPlaying = false,
   onToggleNarration,
+  officialPodcast = null,
+  onOpenPodcast,
   workspaceBarRef = null,
   exploreGuideRef = null,
   immersiveMode = false,
@@ -101,26 +104,43 @@ function NoteWorkspaceBar({
           </button>
         </Tooltip>
 
-        <Tooltip title={narrationLabel}>
+        <Dropdown
+          trigger={["click"]}
+          placement="bottomRight"
+          menu={{
+            items: [
+              {
+                key: "narration",
+                icon: isNarrationPlaying ? <PauseCircleOutlined /> : <AudioOutlined />,
+                label: narrationLabel,
+                disabled: narrationDisabled,
+              },
+              {
+                key: "podcast",
+                icon: <CustomerServiceOutlined />,
+                label: officialPodcast
+                  ? t("note.podcast.open", "Open the official podcast for this note")
+                  : t("note.podcast.unavailable", "No official podcast is available for this note yet"),
+                disabled: !officialPodcast,
+              },
+            ],
+            onClick: ({ key }) => {
+              if (key === "narration" && !narrationDisabled) onToggleNarration?.();
+              if (key === "podcast" && officialPodcast) onOpenPodcast?.();
+            },
+          }}
+        >
           <button
             type="button"
             className="note-workspace-bar__icon-btn"
-            disabled={narrationDisabled}
-            onClick={() => {
-              if (!narrationDisabled) onToggleNarration?.();
-            }}
-            aria-label={narrationLabel}
+            aria-label={t("note.audio.choose", "Choose narration or podcast")}
+            aria-haspopup="menu"
           >
-            {narrationState === "loading" ? (
-              <LoadingOutlined />
-            ) : isNarrationPlaying ? (
-              <PauseCircleOutlined />
-            ) : (
-              <AudioOutlined />
-            )}
-            {!isMobile ? <span>{t("note.toolbar.narration")}</span> : null}
+            {narrationState === "loading" ? <LoadingOutlined /> : <AudioOutlined />}
+            {!isMobile ? <span>{t("note.toolbar.audio", "Audio")}</span> : null}
+            <DownOutlined aria-hidden="true" />
           </button>
-        </Tooltip>
+        </Dropdown>
       </div>
 
       {hasVersions ? (

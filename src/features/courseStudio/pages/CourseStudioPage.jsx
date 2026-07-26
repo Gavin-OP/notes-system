@@ -247,15 +247,15 @@ function CourseStudioPage() {
     <AppPageShell
       title="Course Studio"
       subtitle="Turn human notes into a structured course proposal connected to stable canonical knowledge."
-      backLabel="Back to profile"
-      onBack={() => navigate("/user/profile")}
+      backLabel="Back to My Courses"
+      onBack={() => navigate("/user/profile?section=courses")}
       showSiteFooter
       contentWidth="wide"
       contentClassName="course-studio"
     >
       <div className="course-studio__intro">
         <div>
-          <Text className="course-studio__eyebrow">Phase 3 · Course Studio</Text>
+          <Text className="course-studio__eyebrow">Course Studio</Text>
           <Title level={2}>Your notes, organized into a course perspective.</Title>
           <Paragraph>
             Source material stays private by default. You choose the Domain and Learning Archetype;
@@ -270,6 +270,34 @@ function CourseStudioPage() {
           </div>
         </div>
       </div>
+
+      <Card className="course-studio__workflow-card" title="The workflow behind every Notes System course">
+        <Paragraph type="secondary">
+          Course Studio uses the same pipeline as our internal course production. AI proposes structure and
+          concept links; a human reviews the result before an immutable course version is created.
+        </Paragraph>
+        <ol className="course-studio__workflow-list">
+          {[
+            ["Ingest", "Parse the source while preserving consent and provenance."],
+            ["Classify", "Identify the Domain and recommend Conceptual, Practice-based, or Creative learning."],
+            ["Organize", "Turn the material into modules, notes, objectives, and practice."],
+            ["Connect", "Map concepts to the stable canonical knowledge graph and surface gaps."],
+            ["Review", "Let the author edit, accept or reject mappings, and request revisions."],
+            ["Version", "Create a private course and an immutable first version."],
+          ].map(([title, description], index) => (
+            <li key={title}>
+              <span>{index + 1}</span>
+              <div><Text strong>{title}</Text><Text type="secondary">{description}</Text></div>
+            </li>
+          ))}
+        </ol>
+        <Alert
+          type="info"
+          showIcon
+          title="Course perspectives never rewrite canonical knowledge"
+          description="User prompts may change the course outline and teaching approach. Canonical definitions, mind maps, and network relationships remain admin-managed."
+        />
+      </Card>
 
       <Card className="course-studio__progress-card">
         <Steps

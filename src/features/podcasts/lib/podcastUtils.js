@@ -11,13 +11,3 @@ export function podcastProgress(episode) {
   if (!duration) return 0;
   return Math.min(100, Math.round((position / duration) * 100));
 }
-
-export function dedupePodcastCourses(authored = [], community = []) {
-  const byId = new Map();
-  authored.forEach((course) => byId.set(course.id, course));
-  community.forEach((item) => {
-    const course = item.course || item;
-    if (course?.id && !byId.has(course.id)) byId.set(course.id, course);
-  });
-  return [...byId.values()];
-}

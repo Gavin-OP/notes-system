@@ -536,7 +536,8 @@ function UserProfilePage() {
   const [chainNotesTourAfterProfile, setChainNotesTourAfterProfile] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [previewNotice, setPreviewNotice] = useState("");
-  const [activeDashboard, setActiveDashboard] = useState("overview");
+  const [activeDashboard, setActiveDashboard] = useState("goals");
+  const [goalDiscoveryType, setGoalDiscoveryType] = useState("");
   const [learningRecordsTab, setLearningRecordsTab] = useState("study");
   const [selectedCareerRole, setSelectedCareerRole] = useState("");
   const [achievementsViewAllOpen, setAchievementsViewAllOpen] = useState(false);
@@ -552,15 +553,24 @@ function UserProfilePage() {
   const avatarInitial = getAvatarInitial(userInfo);
 
   useEffect(() => {
-    if (location.state?.dashboard === "career") {
-      setActiveDashboard("career");
-    } else if (["overview", "goals", "learning", "courses"].includes(location.state?.dashboard)) {
-      setActiveDashboard(location.state.dashboard);
+    const search = new URLSearchParams(location.search);
+    const requestedSection = search.get("section");
+    const requestedGoalType = search.get("goalType");
+    if (["overview", "goals", "learning", "courses"].includes(requestedSection)) {
+      setActiveDashboard(requestedSection === "overview" ? "goals" : requestedSection);
     }
-  }, [location.state]);
+    if (requestedGoalType) setGoalDiscoveryType(requestedGoalType);
+    if (location.state?.dashboard === "career") {
+      setActiveDashboard("goals");
+      setGoalDiscoveryType("career");
+    } else if (["overview", "goals", "learning", "courses"].includes(location.state?.dashboard)) {
+      setActiveDashboard(location.state.dashboard === "overview" ? "goals" : location.state.dashboard);
+    }
+  }, [location.search, location.state]);
 
   const scrollToCareerDashboard = useCallback(() => {
-    setActiveDashboard("career");
+    setActiveDashboard("goals");
+    setGoalDiscoveryType("career");
     window.setTimeout(() => {
       profileCareerRef.current?.scrollIntoView({
         behavior: "smooth",
@@ -1232,7 +1242,8 @@ function UserProfilePage() {
       setProfileInfo(nextProfile || profileInfo);
       setCareerBackground(nextBackground || {});
       setCareerRecommendations(recommendationsPayload?.recommendations || []);
-      setActiveDashboard("career");
+      setActiveDashboard("goals");
+      setGoalDiscoveryType("career");
       setProfileEditOpen(false);
       message.success(t("profile.edit.success"));
     } catch (error) {
@@ -1416,6 +1427,7 @@ function UserProfilePage() {
       prepareProfileTourStep(stepIndex, {
         setActiveDashboard,
         setLearningRecordsTab,
+        setGoalDiscoveryType,
       }),
     [],
   );
@@ -1456,15 +1468,6 @@ function UserProfilePage() {
       <button
         type="button"
         role="tab"
-        aria-selected={activeDashboard === "overview"}
-        className={`user-profile-page__folder-tab ${activeDashboard === "overview" ? "is-active" : ""}`}
-        onClick={() => setActiveDashboard("overview")}
-      >
-        {t("profile.tabs.overview", "Overview")}
-      </button>
-      <button
-        type="button"
-        role="tab"
         aria-selected={activeDashboard === "goals"}
         className={`user-profile-page__folder-tab ${activeDashboard === "goals" ? "is-active" : ""}`}
         onClick={() => setActiveDashboard("goals")}
@@ -1488,15 +1491,6 @@ function UserProfilePage() {
         onClick={() => setActiveDashboard("courses")}
       >
         {t("profile.tabs.courses", "My Courses")}
-      </button>
-      <button
-        type="button"
-        role="tab"
-        aria-selected={activeDashboard === "career"}
-        className={`user-profile-page__folder-tab ${activeDashboard === "career" ? "is-active" : ""}`}
-        onClick={() => setActiveDashboard("career")}
-      >
-        {t("profile.tabs.career")}
       </button>
     </div>
   );
@@ -1906,20 +1900,13 @@ function UserProfilePage() {
           </Card>
         ) : null}
 
-        {activeDashboard === "overview" ? (
-          <Card title={dashboardTabs} className="user-profile-page__section user-profile-page__dashboard-card">
-            <LearningPlatformWorkspace
-              mode="overview"
-              onOpenGoalDiscovery={() => navigate("/goals")}
-            />
-          </Card>
-        ) : null}
-
         {activeDashboard === "goals" ? (
           <Card title={dashboardTabs} className="user-profile-page__section user-profile-page__dashboard-card">
             <LearningPlatformWorkspace
               mode="goals"
-              onOpenGoalDiscovery={() => navigate("/goals")}
+              preferredGoalType={goalDiscoveryType}
+              onGoalTypeChange={setGoalDiscoveryType}
+              careerTaxonomy={careerTaxonomy}
             />
           </Card>
         ) : null}
@@ -1928,7 +1915,7 @@ function UserProfilePage() {
           <Card title={dashboardTabs} className="user-profile-page__section user-profile-page__dashboard-card">
             <LearningPlatformWorkspace
               mode="courses"
-              onOpenGoalDiscovery={() => navigate("/goals")}
+              onOpenGoalDiscovery={() => setActiveDashboard("goals")}
             />
           </Card>
         ) : null}
@@ -2182,9 +2169,9 @@ function UserProfilePage() {
         </div>
         ) : null}
 
-        {activeDashboard === "career" ? (
+        {activeDashboard === "goals" && goalDiscoveryType === "career" ? (
         <div ref={profileCareerRef}>
-          <Card title={dashboardTabs} className="user-profile-page__section user-profile-page__dashboard-card">
+          <Card className="user-profile-page__section user-profile-page__dashboard-card">
             <Card type="inner" title={t("profile.career.background")} className="user-profile-page__section">
               <Space direction="vertical" className="user-profile-page__block" size={12}>
                 <div>

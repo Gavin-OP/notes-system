@@ -23,6 +23,13 @@
   font-weight: 600 !important;
 }
 
+.subject-overview__archetypes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ns-space-2);
+  margin: calc(var(--ns-space-2) * -1) 0 var(--ns-space-3);
+}
+
 .subject-overview__summary {
   max-width: 720px;
   margin-bottom: 0 !important;

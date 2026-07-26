@@ -16,6 +16,14 @@ function AnalysisSetupStep({ sourceAsset, domains, analyzing, onBack, onSubmit }
     ?.replace(/\.[^.]+$/, "")
     .replace(/[-_]+/g, " ")
     .replace(/\b\w/g, (letter) => letter.toUpperCase()) || "";
+  const applyDomainRecommendation = (domainSlug) => {
+    const domain = domains.find((item) => item.slug === domainSlug);
+    if (!domain) return;
+    form.setFieldsValue({
+      primary_archetype: domain.primary_archetype || "conceptual",
+      secondary_archetypes: domain.secondary_archetypes || [],
+    });
+  };
 
   return (
     <section className="course-studio__step-panel" aria-labelledby="course-studio-analyze-title">
@@ -25,8 +33,8 @@ function AnalysisSetupStep({ sourceAsset, domains, analyzing, onBack, onSubmit }
           <Text className="course-studio__eyebrow">Analysis brief</Text>
           <Title level={3} id="course-studio-analyze-title">Set the course perspective</Title>
           <Paragraph>
-            Choose the stable Domain and how this specific course is mainly learned. Your instructions
-            are stored with the proposal for later course generation.
+            Choose the stable Domain, then review the Learning Archetype recommended during semantic
+            classification. These decisions are made before outline generation and stored with the proposal.
           </Paragraph>
         </div>
       </div>
@@ -63,6 +71,7 @@ function AnalysisSetupStep({ sourceAsset, domains, analyzing, onBack, onSubmit }
                 optionFilterProp="label"
                 placeholder="Choose a Domain"
                 disabled={analyzing}
+                onChange={applyDomainRecommendation}
                 options={domains.map((domain) => ({
                   value: domain.slug,
                   label: `${domain.title} · ${domain.concept_count} concepts`,
@@ -80,7 +89,12 @@ function AnalysisSetupStep({ sourceAsset, domains, analyzing, onBack, onSubmit }
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>
-            <Form.Item label="Primary Learning Archetype" name="primary_archetype" rules={[{ required: true }]}>
+            <Form.Item
+              label="Primary Learning Archetype"
+              name="primary_archetype"
+              rules={[{ required: true }]}
+              extra="Recommended from the Domain and source analysis; review it before generating the outline."
+            >
               <Select options={ARCHETYPES} disabled={analyzing} />
             </Form.Item>
           </Col>

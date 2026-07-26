@@ -44,22 +44,8 @@ export function listPodcasts() {
   return request("/api/v1/podcasts");
 }
 
-export function createPodcast(payload) {
-  return request("/api/v1/podcasts", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-}
-
 export function getPodcast(episodeId) {
   return request(`/api/v1/podcasts/${encodeURIComponent(episodeId)}`);
-}
-
-export function renderPodcast(episodeId, payload) {
-  return request(`/api/v1/podcasts/${encodeURIComponent(episodeId)}/render`, {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
 }
 
 export function updatePodcastPlayback(episodeId, payload) {

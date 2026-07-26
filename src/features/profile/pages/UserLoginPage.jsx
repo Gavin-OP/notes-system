@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Alert, Button, Card, Divider, Form, Input, Space, Tabs, Tag, Typography, message } from "antd";
+import { Alert, Button, Card, Form, Input, Space, Tabs, Tag, Typography, message } from "antd";
 import { ArrowRightOutlined, BookOutlined, CheckCircleOutlined, LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import { getCurrentUser, loginUser, registerUser, UserApiError } from "../api/user";
 
 import "./UserLoginPage.css";
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text } = Typography;
 
 function getLoginErrorMessage(error, fallback) {
   if (error instanceof UserApiError && error.status === 401) {
@@ -202,10 +202,6 @@ function UserLoginPage() {
           />
           {errorText ? <Alert type="error" showIcon message={errorText} className="user-auth-page__error" /> : null}
 
-          <Divider />
-          <Paragraph type="secondary" className="user-auth-page__footer">
-            Testing locally? Use `cindy@example.com / demo12345` if the backend seeded demo users.
-          </Paragraph>
         </Card>
       </div>
     </div>

@@ -9,7 +9,6 @@ import {
 } from "@ant-design/icons";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
-import { getCareerTaxonomy } from "../../../features/careers/api/careers";
 import { buildSearchResultUrl, searchNotes } from "../../../features/search/api/search";
 import SemanticChip from "../../../shared/ui/SemanticChip";
 import {
@@ -83,7 +82,6 @@ function renderHighlights(parts, fallbackText) {
 
 function typeVariant(type) {
   if (type === "subject") return "primary";
-  if (type === "career") return "wisdom";
   return "slate";
 }
 
@@ -122,49 +120,15 @@ function HomePage() {
   const rawNotesIndex = useSelector((state) => state.notesIndex.data);
   const notesIndex = useMemo(() => rawNotesIndex || [], [rawNotesIndex]);
   const [query, setQuery] = useState("");
-  const [careers, setCareers] = useState([]);
   const [notePayload, setNotePayload] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
   const searchCacheRef = useRef(new Map());
 
-  useEffect(() => {
-    let mounted = true;
-    async function loadCareers() {
-      try {
-        const payload = await getCareerTaxonomy();
-        if (!mounted) return;
-        const profiles = Array.isArray(payload?.profiles) ? payload.profiles : [];
-        setCareers(
-          profiles.map((profile) => ({
-            type: "career",
-            key: profile.job_id || profile.jobId || profile.title,
-            title: profile.title || "Career role",
-            meta: "Career",
-            url: `/careers/${encodeURIComponent(profile.job_id || profile.jobId || profile.title || "")}`,
-            searchText: [
-              profile.title,
-              profile.description,
-              ...(profile.hard_skills || profile.hardSkills || []),
-              ...(profile.tools || []),
-              "career role job",
-            ].join(" ").toLowerCase(),
-          })),
-        );
-      } catch {
-        setCareers([]);
-      }
-    }
-    loadCareers();
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   const localSearchItems = useMemo(() => {
     const subjects = collectSubjects(notesIndex);
     const notes = flattenMenuItems(buildMenuItems(notesIndex));
-    return [...subjects, ...careers, ...notes];
-  }, [careers, notesIndex]);
+    return [...subjects, ...notes];
+  }, [notesIndex]);
 
   const learningEntryUrl = useMemo(
     () => getDefaultLearningEntryUrl(notesIndex),
@@ -296,7 +260,7 @@ function HomePage() {
                 className="home-page__search-input"
                 prefix={<SearchOutlined />}
                 value={query}
-                placeholder={t("home.searchPlaceholder", "Search subjects, notes, careers...")}
+                placeholder={t("home.searchPlaceholder", "Search subjects and notes...")}
                 onChange={(event) => setQuery(event.target.value)}
                 onPressEnter={submitSearch}
                 allowClear

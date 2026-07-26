@@ -46,6 +46,7 @@ import {
 import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncompleteMyNote, updateMyGuideState, UserApiError } from "../../profile/api/user";
 import useTranslatedContent from "../../../i18n/useTranslatedContent";
 import useTranslation from "../../../i18n/useTranslation";
+import { listPodcasts } from "../../podcasts/api/podcasts";
 
 import LearningPageMetaBar from "../../../shared/layouts/LearningPageMetaBar";
 import "./NoteLayout.css";
@@ -101,6 +102,13 @@ function normalizeSearchText(value) {
     .toLowerCase()
     .replace(/[-_/]+/g, " ")
     .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normalizePodcastSource(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
     .trim();
 }
 
@@ -314,6 +322,7 @@ const NoteLayout = () => {
   const [narrationAudioUrls, setNarrationAudioUrls] = useState([]);
   const [currentNarrationChunkIndex, setCurrentNarrationChunkIndex] = useState(0);
   const [isNarrationPlaying, setIsNarrationPlaying] = useState(false);
+  const [officialPodcasts, setOfficialPodcasts] = useState([]);
   const narrationAudioRef = useRef(null);
   const narrationAudioUrlsRef = useRef([]);
   const narrationChunkIndexRef = useRef(0);
@@ -517,12 +526,44 @@ const NoteLayout = () => {
   const isCurrentNoteCompleted = !isOverviewPage && currentNoteUrlNormalized
     ? completedNoteUrls.has(currentNoteUrlNormalized)
     : false;
+  const officialPodcast = useMemo(() => {
+    if (isOverviewPage) return null;
+    const noteTitle = normalizePodcastSource(noteName);
+    const topicSlug = normalizePodcastSource(workspaceMeta?.topicSlug);
+    if (!noteTitle && !topicSlug) return null;
+    return officialPodcasts.find((episode) => (
+      (episode.spoken_outline || []).some((chapter) => (
+        (chapter.source_notes || []).some((source) => {
+          const lessonTitle = normalizePodcastSource(source.lesson_title);
+          const lessonId = normalizePodcastSource(source.lesson_id);
+          return Boolean(
+            (noteTitle && lessonTitle === noteTitle)
+            || (topicSlug && (lessonId === topicSlug || lessonTitle === topicSlug)),
+          );
+        })
+      ))
+    )) || null;
+  }, [isOverviewPage, noteName, officialPodcasts, workspaceMeta?.topicSlug]);
 
   const menuLeafItems = useMemo(() => flattenMenuLeafItems(plainMenuItems), [plainMenuItems]);
   const selectedReferenceItems = useMemo(() => {
     const selected = new Set(selectedReferencePaths);
     return menuLeafItems.filter((item) => selected.has(item.path));
   }, [menuLeafItems, selectedReferencePaths]);
+
+  useEffect(() => {
+    let mounted = true;
+    listPodcasts()
+      .then((episodes) => {
+        if (mounted) setOfficialPodcasts(Array.isArray(episodes) ? episodes : []);
+      })
+      .catch(() => {
+        if (mounted) setOfficialPodcasts([]);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -1498,6 +1539,10 @@ const NoteLayout = () => {
                 narrationState={narrationState}
                 isNarrationPlaying={isNarrationPlaying}
                 onToggleNarration={handleToggleNarration}
+                officialPodcast={officialPodcast}
+                onOpenPodcast={() => navigate(`/podcasts/${officialPodcast.id}`, {
+                  state: { returnTo: `${location.pathname}${location.search}${location.hash}` },
+                })}
                 workspaceBarRef={workspaceBarRef}
                 exploreGuideRef={exploreGuideRef}
                 immersiveMode={immersiveMode}
