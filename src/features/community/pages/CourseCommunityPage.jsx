@@ -20,7 +20,7 @@ import {
   HeartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import CourseMetadata from "../../goals/components/CourseMetadata";
@@ -45,7 +45,10 @@ function CourseCard({ item, onOpen }) {
       className="course-community__course-card"
       onClick={() => onOpen(course.id)}
     >
-      <span className="course-community__card-title">{course.title}</span>
+      <span className="course-community__card-title">
+        {course.title}
+        <SemanticChip variant="sage">Community course</SemanticChip>
+      </span>
       <CourseMetadata course={course} compact />
       <span className="course-community__card-description">
         {course.description || course.target_learner || "A structured community course."}
@@ -60,6 +63,8 @@ function CourseCard({ item, onOpen }) {
 
 export default function CourseCommunityPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const domainSlug = new URLSearchParams(location.search).get("domain") || "";
   const { message } = App.useApp();
   const [authorForm] = Form.useForm();
   const [loading, setLoading] = useState(true);
@@ -74,7 +79,7 @@ export default function CourseCommunityPage() {
     setErrorText("");
     try {
       const [communityPayload, libraryPayload, profilePayload] = await Promise.all([
-        listCommunityCourses(),
+        listCommunityCourses({ domainSlug }),
         listCourseLibrary(),
         getMyAuthorProfile(),
       ]);
@@ -90,7 +95,7 @@ export default function CourseCommunityPage() {
     } finally {
       setLoading(false);
     }
-  }, [authorForm]);
+  }, [authorForm, domainSlug]);
 
   useEffect(() => {
     load();
@@ -143,11 +148,7 @@ export default function CourseCommunityPage() {
                   ))}
                 </div>
               ) : (
-                <Empty description="No moderated community courses are public yet.">
-                  <Button type="primary" onClick={() => navigate("/course-studio")}>
-                    Create the first perspective
-                  </Button>
-                </Empty>
+                <Empty description="No community courses are public yet." />
               ),
             },
             {

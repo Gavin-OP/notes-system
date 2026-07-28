@@ -272,3 +272,19 @@
   background: var(--ns-color-success-hover);
   border-color: var(--ns-color-success-hover);
 }
+.note-page__back-to-map {
+  min-height: 44px;
+  margin: 0 0 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ns-color-primary);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.note-page__back-to-map:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 4px;
+}

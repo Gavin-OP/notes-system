@@ -16,11 +16,8 @@ function SiteFooter({ t, navigate }) {
       <button type="button" onClick={() => navigate("/disclaimer")}>
         {t("home.footer.disclaimer", "Disclaimer")}
       </button>
-      <button type="button" onClick={() => navigate("/careers")}>
-        {t("home.footer.careers", "Career Database")}
-      </button>
-      <button type="button" onClick={() => navigate("/subjects")}>
-        {t("home.footer.subjects", "Subject Database")}
+      <button type="button" onClick={() => navigate("/database")}>
+        {t("home.footer.database", "Explore Our Database")}
       </button>
       <a href="mailto:hello@notes-system.local">{t("home.footer.contact", "Contact us")}</a>
     </footer>

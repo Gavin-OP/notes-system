@@ -130,6 +130,44 @@
   padding: var(--ns-space-5) var(--ns-space-6);
 }
 
+.course-studio__progress-card .ant-steps-item {
+  min-height: 64px;
+}
+
+.course-studio__progress-card .ant-tag {
+  margin: 0;
+  color: var(--ns-color-text-secondary);
+}
+
+.course-studio__stage-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ns-space-4);
+  margin-top: var(--ns-space-5);
+  padding-top: var(--ns-space-4);
+  border-top: 1px solid var(--ns-color-border-secondary);
+}
+
+.course-studio__save-state {
+  display: flex;
+  align-items: center;
+  gap: var(--ns-space-3);
+}
+
+@media (max-width: 640px) {
+  .course-studio__stage-status {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .course-studio__save-state {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
 .course-studio__step-panel {
   padding: clamp(var(--ns-space-5), 4vw, 44px);
 }

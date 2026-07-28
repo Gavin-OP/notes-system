@@ -146,7 +146,9 @@
   /* Motion */
   --ns-duration-fast: 150ms;
   --ns-duration-normal: 200ms;
+  --ns-duration-slow: 320ms;
   --ns-ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ns-ease-press: cubic-bezier(0.2, 0.8, 0.2, 1);
 
   /* Shadows */
   --ns-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
@@ -163,9 +165,12 @@
   --ns-z-sticky: 99;
   --ns-z-drawer: 100;
   --ns-z-popover: 2000;
+
+  color-scheme: light;
 }
 
 [data-theme="dark"] {
+  color-scheme: dark;
   --ns-color-primary: var(--ant-color-primary, #6ba8d9);
   --ns-color-primary-hover: var(--ant-color-primary-hover, #85b8e3);
   --ns-color-primary-active: var(--ant-color-primary-active, #5b93c9);
@@ -345,6 +350,8 @@
   font-size: 14px;
   line-height: 1.2;
   cursor: pointer;
+  min-height: 40px;
+  touch-action: manipulation;
   transition:
     background-color var(--ns-duration-fast) var(--ns-ease-out),
     border-color var(--ns-duration-fast) var(--ns-ease-out);
@@ -358,6 +365,14 @@
 .ns-btn-primary:disabled {
   cursor: not-allowed;
   opacity: 0.7;
+}
+
+.ns-btn-primary:focus-visible,
+.ns-btn-secondary:focus-visible,
+.ns-btn-ghost:focus-visible,
+.ns-choice-card:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
 }
 
 /* Secondary / ghost controls */

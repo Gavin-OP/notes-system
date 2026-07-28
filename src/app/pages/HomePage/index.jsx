@@ -147,11 +147,11 @@ function HomePage() {
       };
     }
     return {
-      url: "/subjects",
-      label: t("home.chooseSubject", "Choose a subject"),
+      url: "/user/profile?section=goals",
+      label: t("home.chooseSubject", "Start with a goal"),
       hint: t(
         "home.chooseSubjectHint",
-        "Start with the subject map before opening your first note",
+        "Choose Career or Interest and build a complete learning set",
       ),
     };
   }, [currentUser.isAuthenticated, currentUser.profile, learningEntryUrl, t]);
@@ -354,9 +354,9 @@ function HomePage() {
               <button
                 type="button"
                 className="home-page__secondary-learning"
-                onClick={() => navigate(learningEntryUrl)}
+                onClick={() => navigate("/database")}
               >
-                {t("home.quickOpenFirstNote", "Quick open first note")}
+                {t("home.quickOpenFirstNote", "Explore Our Database")}
               </button>
             </div>
             <p className="home-page__entry-hint">{primaryEntry.hint}</p>

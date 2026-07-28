@@ -169,6 +169,9 @@ function SubjectOverviewContent({ subjectId }) {
       : `${conceptPreview.totalConcepts} concepts`;
 
   const pageLoading = notesIndexLoading || graphLoading || syllabusLoading;
+  const scrollToCourses = () => {
+    document.getElementById("subject-courses")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const hasOutcomes = Array.isArray(resolvedSyllabus?.outcomes) && resolvedSyllabus.outcomes.length > 0;
   const hasPrerequisites =
@@ -211,11 +214,11 @@ function SubjectOverviewContent({ subjectId }) {
                 type="primary"
                 icon={<BookOutlined />}
                 disabled={!recommendedEntry}
-                onClick={() => recommendedEntry && navigate(recommendedEntry.url)}
+                onClick={scrollToCourses}
               >
                 {completedCount > 0
-                  ? t("common.continue", "Continue")
-                  : t("subjectOverview.startLearning", "Start learning")}
+                  ? t("subjectOverview.chooseCourse", "Choose a course")
+                  : t("subjectOverview.chooseCourse", "Choose a course")}
               </Button>
               <Button
                 type="default"
@@ -259,6 +262,38 @@ function SubjectOverviewContent({ subjectId }) {
                 {moduleCountLabel}
               </Text>
               <Text type="secondary">{mappedConceptsLabel}</Text>
+            </div>
+          </section>
+
+          <section id="subject-courses" className="subject-overview__courses" aria-labelledby="subject-courses-heading">
+            <div className="subject-overview__section-head">
+              <div>
+                <Title level={4} id="subject-courses-heading" className="subject-overview__section-title">
+                  Available courses
+                </Title>
+                <Text type="secondary">Choose a complete course package for this subject.</Text>
+              </div>
+              <Button type="link" onClick={() => navigate(`/courses/community?domain=${encodeURIComponent(subjectId)}`)}>
+                Explore other courses
+              </Button>
+            </div>
+            <div className="subject-overview__course-card">
+              <div>
+                <div className="subject-overview__course-title-row">
+                  <Title level={5}>{subjectTitle} Foundations</Title>
+                  <SemanticChip variant="primary">Official</SemanticChip>
+                </div>
+                <Text type="secondary">
+                  {subjectNotes.length} notes · canonical learning order · concept map included
+                </Text>
+              </div>
+              <Button
+                type="primary"
+                disabled={!recommendedEntry}
+                onClick={() => recommendedEntry && navigate(recommendedEntry.url)}
+              >
+                {completedCount > 0 ? t("common.continue", "Continue") : t("subjectOverview.startLearning", "Start learning")}
+              </Button>
             </div>
           </section>
 

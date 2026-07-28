@@ -25,7 +25,9 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--ns-color-border-secondary);
-  background: var(--ns-color-bg-container);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 92%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
   position: sticky;
   top: 0;
   z-index: var(--ns-z-sticky);
@@ -405,6 +407,7 @@
 }
 
 @media (prefers-reduced-transparency: reduce) {
+  .app-page-shell__topbar,
   .app-page-shell--hero .app-page-shell__topbar,
   .app-page-shell__footer {
     background: var(--ns-color-bg-container);

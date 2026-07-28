@@ -87,7 +87,7 @@ export function updateGoal(goalId, payload) {
   });
 }
 
-export function archiveGoal(goalId) {
+export function deleteGoal(goalId) {
   return request(`/api/v1/goals/${encodeURIComponent(goalId)}`, {
     method: "DELETE",
   });
@@ -205,8 +205,13 @@ export function listCanonicalSuggestions(courseId) {
   return request(`/api/v1/courses/${encodeURIComponent(courseId)}/canonical-suggestions`);
 }
 
-export function getPersonalLearningPath() {
-  return request("/api/v1/assistant/learning-path");
+export function getPersonalLearningPath(pathId = "primary") {
+  const query = pathId && pathId !== "primary" ? `?path_id=${encodeURIComponent(pathId)}` : "";
+  return request(`/api/v1/assistant/learning-path${query}`);
+}
+
+export function listPersonalLearningPaths() {
+  return request("/api/v1/assistant/learning-paths");
 }
 
 export function generateGoalCourseLearningPath(payload) {

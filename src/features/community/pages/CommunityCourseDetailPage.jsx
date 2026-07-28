@@ -112,7 +112,10 @@ export default function CommunityCourseDetailPage() {
         <>
           <section className="community-course-detail__hero">
             <div>
-              <Title level={1}>{course.title}</Title>
+              <div className="community-course-detail__title-row">
+                <Title level={1}>{course.title}</Title>
+                <SemanticChip variant="sage">Community course</SemanticChip>
+              </div>
               <CourseMetadata course={course} />
               <Paragraph>{course.description || course.target_learner}</Paragraph>
               <Button type="link" icon={<UserOutlined />} onClick={openAuthor}>

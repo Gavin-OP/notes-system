@@ -103,6 +103,10 @@
 }
 
 .course-community__card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ns-space-2);
   font-size: 21px;
   font-weight: var(--ns-font-weight-semibold);
   line-height: 1.3;
@@ -342,4 +346,14 @@
   .community-course-detail__stats {
     grid-template-columns: 1fr;
   }
+}
+.community-course-detail__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ns-space-3);
+  flex-wrap: wrap;
+}
+
+.community-course-detail__title-row h1.ant-typography {
+  margin-bottom: 0;
 }

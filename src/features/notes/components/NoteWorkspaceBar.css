@@ -189,6 +189,16 @@
     background-color var(--ns-duration-fast) var(--ns-ease-out);
 }
 
+button.note-workspace-bar__version-trigger {
+  font-family: inherit;
+  background: transparent;
+}
+
+.note-workspace-bar__audio-trigger[aria-expanded="true"] {
+  color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg-hover);
+}
+
 .note-workspace-bar__version-trigger::-webkit-details-marker {
   display: none;
 }
@@ -349,4 +359,16 @@
     border-color: var(--ns-color-text);
     background: var(--ns-color-bg-elevated);
   }
+}
+.note-workspace-bar__audio-option {
+  display: flex;
+  min-width: 190px;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.note-workspace-bar__audio-option small {
+  color: var(--ns-color-text-secondary);
+  font-size: 12px;
+  font-weight: 400;
 }

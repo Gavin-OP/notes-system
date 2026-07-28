@@ -8,7 +8,7 @@
  * - concept:  concept.id
  */
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ReactFlow, {
   Background,
   Controls,
@@ -139,6 +139,7 @@ function applyMindmapLabelBundle(graphData, translatedBundleContent) {
  */
 const MindmapView = ({ subjectId }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [loading, setLoading] = useState(true);
@@ -151,7 +152,9 @@ const MindmapView = ({ subjectId }) => {
   const [needsRelayout, setNeedsRelayout] = useState(false);
   
   // Mindmap view type state
-  const [viewType, setViewType] = useState(MINDMAP_TYPES.HIERARCHICAL);
+  const [viewType, setViewType] = useState(
+    location.state?.mindmapViewType || MINDMAP_TYPES.HIERARCHICAL,
+  );
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [conceptModalOpen, setConceptModalOpen] = useState(false);
   const graphLabelBundle = useMemo(() => buildMindmapLabelBundle(graphData), [graphData]);
@@ -180,6 +183,12 @@ const MindmapView = ({ subjectId }) => {
   useEffect(() => {
     migrateConceptReviewCaches();
   }, []);
+
+  useEffect(() => {
+    if (!location.state?.mindmapConcept) return;
+    setSelectedConcept(normalizeConceptPayload(location.state.mindmapConcept));
+    setConceptModalOpen(true);
+  }, [location.state]);
 
   // Load graph data
   useEffect(() => {
@@ -306,11 +315,18 @@ const MindmapView = ({ subjectId }) => {
   const handleGoToNotes = useCallback(
     (concept) => {
       if (concept?.noteUrl) {
-        navigate(concept.noteUrl);
+        navigate(concept.noteUrl, {
+          state: {
+            fromMindmap: true,
+            mindmapReturnTo: `/subject/${subjectId}/mindmap`,
+            mindmapViewType: viewType,
+            mindmapConcept: concept,
+          },
+        });
       }
       setConceptModalOpen(false);
     },
-    [navigate],
+    [navigate, subjectId, viewType],
   );
 
   const handleCloseConceptModal = useCallback(() => {
@@ -318,12 +334,12 @@ const MindmapView = ({ subjectId }) => {
   }, []);
 
   const handleOpenFirstNote = useCallback(() => {
-    if (firstConceptNote?.noteUrl) navigate(firstConceptNote.noteUrl);
-  }, [firstConceptNote?.noteUrl, navigate]);
+    if (firstConceptNote?.noteUrl) navigate(firstConceptNote.noteUrl, { state: { fromMindmap: true, mindmapReturnTo: `/subject/${subjectId}/mindmap`, mindmapViewType: viewType } });
+  }, [firstConceptNote?.noteUrl, navigate, subjectId, viewType]);
 
   const handleOpenSelectedConcept = useCallback(() => {
-    if (selectedConceptNoteUrl) navigate(selectedConceptNoteUrl);
-  }, [navigate, selectedConceptNoteUrl]);
+    if (selectedConceptNoteUrl) navigate(selectedConceptNoteUrl, { state: { fromMindmap: true, mindmapReturnTo: `/subject/${subjectId}/mindmap`, mindmapViewType: viewType, mindmapConcept: selectedConcept } });
+  }, [navigate, selectedConcept, selectedConceptNoteUrl, subjectId, viewType]);
 
   // Handle node click - open concept action modal (only for concept nodes)
   const onNodeClick = useCallback(

@@ -153,12 +153,13 @@ Do not copy:
 ### Recommended Top-Level Navigation
 
 - Home.
-- Subjects.
+- Subject Database.
+- Career Database.
 - Search.
-- Progress.
-- Saved.
+- Profile.
 
 Admin and content operations should be separate from the learner-facing app.
+Goal Discovery and Course Studio are Profile-owned tools. Course Community is a later-stage discovery surface and should not be promoted as a first-session destination.
 
 ### Learner-Facing Hierarchy
 
@@ -174,21 +175,21 @@ The UI should consistently show where the learner is in this hierarchy.
 
 ### Home
 
-Purpose: choose a subject and resume learning.
+Purpose: explain the product and help a first-time learner enter the canonical Subject or Career Database.
 
 Layout:
 
+- Compact product explanation.
 - Top search bar.
-- Subject catalog.
-- Continue learning section.
-- Recommended starting paths.
-- Progress summary.
+- Subject Database entry.
+- Career Database entry.
+- Disclaimer and contact links.
 
 Design notes:
 
-- Avoid a marketing hero as the primary screen.
-- If there is a brand message, keep it compact and functional.
-- The first viewport should help users start or resume learning.
+- Keep the explanation direct and functional rather than campaign-like.
+- Do not expose Goal Discovery, Course Studio, Course Community, or Podcast generation as homepage-level actions.
+- Returning-user continuation may be a secondary shortcut, but must not turn Home into another Profile dashboard.
 
 ### Subject Page
 
@@ -202,11 +203,13 @@ Layout:
 - Topic groups by module.
 - Graph preview.
 - Key concepts.
+- Available courses with Official or Community course source identity.
 - Estimated total time and difficulty distribution.
 
 Design notes:
 
 - This should feel like a curriculum map.
+- Lead with the canonical field overview, then ask the learner to choose a complete Course package.
 - Do not bury prerequisites in small metadata.
 - Use difficulty and estimated time sparingly, as orientation signals.
 
@@ -599,6 +602,16 @@ Check each major screen with:
 The user should always feel:
 
 "I understand where I am, why this matters, and what to learn next."
+
+## Database and Goal Discovery IA
+
+- Use one homepage action, **Explore Our Database**, for all public catalogs.
+- Preserve deep links while redirecting the legacy `/subjects` route to `/database?view=subjects`.
+- Keep Subject, Career, and Course Package as sibling database tabs.
+- Keep recommended course-package cards compact; details belong on the package page.
+- Interest follows the same section rhythm as Career: personal direction first, recommendation second.
+- Destructive goal actions say **Delete**, explain that deletion cannot be undone, and use a danger confirmation.
+- Audio and Note Version use the same compact dropdown-trigger treatment in the note workspace.
 
 
 ## Brand Color Direction

@@ -184,3 +184,42 @@
     align-items: flex-start;
   }
 }
+.subject-overview__courses {
+  scroll-margin-top: 88px;
+  padding: var(--ns-space-5);
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-lg);
+  background: var(--ns-color-bg-container);
+}
+
+.subject-overview__courses .subject-overview__section-head {
+  align-items: flex-start;
+}
+
+.subject-overview__course-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ns-space-5);
+  margin-top: var(--ns-space-4);
+  padding-top: var(--ns-space-4);
+  border-top: 1px solid var(--ns-color-border-secondary);
+}
+
+.subject-overview__course-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ns-space-2);
+  margin-bottom: var(--ns-space-1);
+}
+
+.subject-overview__course-title-row h5.ant-typography {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .subject-overview__course-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

@@ -41,8 +41,6 @@ import {
   getKnowledgeAreaChipVariant,
   getMatchScoreChipVariant,
   getMatchScoreStrokeColor,
-  getProgressStateChipVariant,
-  getProgressStateStrokeColor,
   getSkillChipVariant,
   getSubjectChipVariant,
   getToolChipVariant,
@@ -1374,7 +1372,7 @@ function UserProfilePage() {
     const nextCareerInterests = [...normalized.careerInterests, selectedCareerRecommendation.title];
     setCareerGoalSaving(true);
     try {
-      await createGoal({
+      const createdGoal = await createGoal({
         title: selectedCareerRecommendation.title,
         goal_type: "career",
         description:
@@ -1386,6 +1384,9 @@ function UserProfilePage() {
         preferred_archetype: "practice_based",
         metadata: {
           source: "career_recommendation",
+          domain_slug: selectedCareerSubjects[0]?.subjectSlug || "",
+          domain_title: selectedCareerSubjects[0]?.title || "",
+          subject_slugs: selectedCareerSubjects.map((item) => item.subjectSlug).filter(Boolean),
           job_id:
             selectedCareerRecommendation.job_id ||
             selectedCareerRecommendation.jobId ||
@@ -1403,6 +1404,8 @@ function UserProfilePage() {
       setCareerBackground(nextBackground || {});
       setCareerRecommendations(recommendationsPayload?.recommendations || []);
       message.success(`${selectedCareerRecommendation.title} added as a career goal.`);
+      setActiveDashboard("goals");
+      navigate(`/user/profile?section=goals&resumeGoal=${encodeURIComponent(createdGoal.id)}`);
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Failed to add career goal.");
     } finally {
@@ -1906,7 +1909,7 @@ function UserProfilePage() {
               mode="goals"
               preferredGoalType={goalDiscoveryType}
               onGoalTypeChange={setGoalDiscoveryType}
-              careerTaxonomy={careerTaxonomy}
+              backgroundAtlas={accumulationDashboard}
             />
           </Card>
         ) : null}
@@ -1935,30 +1938,12 @@ function UserProfilePage() {
                       <Col xs={24} lg={12}>
                         <Card
                           type="inner"
-                          title={t("profile.learning.progress")}
-                          extra={<Button type="link">{t("profile.learning.viewAll")}</Button>}
+                          title="Learning Sets"
                         >
-                          {learningTracks.length > 0 ? (
-                            <Space direction="vertical" className="user-profile-page__block" size={16}>
-                              {learningTracks.map((track) => (
-                                <div key={track.id}>
-                                  <div className="user-profile-page__track-head">
-                                    <Text strong>{track.title}</Text>
-                                    <SemanticChip variant={getProgressStateChipVariant(track.status)}>
-                                      {track.status}
-                                    </SemanticChip>
-                                  </div>
-                                  <Progress
-                                    percent={track.progress}
-                                    strokeColor={getProgressStateStrokeColor(track.status, track.progress)}
-                                  />
-                                  <Text type="secondary">{t("profile.learning.currentTopic")} {track.current}</Text>
-                                </div>
-                              ))}
-                            </Space>
-                          ) : (
-                            <Empty description={t("profile.learning.noProgress")} />
-                          )}
+                          <LearningPlatformWorkspace
+                            mode="learning"
+                            onOpenGoalDiscovery={() => setActiveDashboard("goals")}
+                          />
                         </Card>
                       </Col>
                       <Col xs={24} lg={12}>

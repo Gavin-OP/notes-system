@@ -82,9 +82,9 @@ The product is designed for learners entering a field from the outside. Content 
 
 The system starts from subject outlines, prerequisites, concept libraries, and graphs. Notes are part of a larger map, not standalone pages.
 
-### 3. Learning Meets Career Planning
+### 3. Learning Meets Goals
 
-The product should help learners understand why a topic matters, where it appears in professional work, and how it supports future study or career movement.
+The product should help learners understand why a topic matters and how it supports a chosen career, project, or personal interest. Career remains a specialized goal flow rather than the default purpose of learning.
 
 ### 4. AI Lowers the Education Barrier
 
@@ -127,16 +127,17 @@ These signals imply the product should evolve from a markdown note viewer into a
 
 ### Home
 
-Purpose: help learners choose what field to enter and understand the product's value quickly.
+Purpose: explain the product clearly and route learners into the two canonical databases without exposing advanced personal tools too early.
 
 Expected elements:
 
-- Subject catalog.
-- Recommended starting points.
-- Recently viewed subjects or notes.
-- Progress summary.
-- Search entry.
-- Clear path into the first learning session.
+- Concise product explanation.
+- Subject Database and Career Database entry points.
+- Search across subjects and notes.
+- Disclaimer and contact information.
+- One clear starting action for new users.
+
+Personal progress, Goal Discovery, Course Studio, and Course Community belong after sign-in or inside Profile rather than competing on the homepage.
 
 ### Subject Page
 
@@ -151,6 +152,9 @@ Expected elements:
 - Estimated learning time.
 - Concept graph entry point.
 - Progress across the subject.
+- Available Course packages after the canonical field overview.
+
+The learner-facing hierarchy is `Subject → Course → Module → Note`. A Subject is the stable knowledge identity; a Course is an official or community-authored teaching perspective; a Note is one learning unit inside that Course.
 
 ### Note Page
 
@@ -189,6 +193,7 @@ Expected elements:
 - Concept mastery or review counts.
 - Recently viewed items.
 - Suggestions based on prerequisites and user progress.
+- Multiple saved Learning Sets, each pairing one Goal with a complete Course package, Learning Path, resources, and progress.
 
 ### Admin and Content Operations
 
@@ -210,7 +215,7 @@ Expected elements:
 2. When I read a topic, I want to know what it depends on and what it unlocks.
 3. When I have limited time, I want a guided path that tells me what matters first.
 4. When I encounter unfamiliar concepts, I want definitions and relationships without losing my place.
-5. When I learn for career change or professional exploration, I want the material to connect to practical roles and use cases.
+5. When I learn for a career, project, or personal interest, I want the path and course recommendations to reflect that outcome.
 6. When I return later, I want to continue from where I left off.
 7. When content is AI-generated, I want confidence that it was structured, checked, and reviewed.
 
@@ -351,3 +356,12 @@ Preferred copy style:
 
 For students and professionals entering a field from the outside, Notes System is a structured learning platform that turns a discipline into a navigable map of topics, concepts, notes, and learning paths. Unlike generic note apps, video playlists, or one-off AI answers, Notes System helps learners understand the shape of a field and move through it systematically.
 
+## Current Discovery Model
+
+- The homepage has one catalog entry: **Explore Our Database**.
+- The database has three views: Subject Database, Career Database, and Course Package Database.
+- Goal Discovery currently supports Career and Interest. Project is intentionally deferred.
+- Interest selection uses the same visual hierarchy as Career and proceeds from **My Interest** to **Recommended Course Package**.
+- A recommended package card shows only its title, Domain, Learning Archetype, and source identity.
+- Every package has a dedicated page limited to Domain, Learning Archetypes, source, author, included courses, and recommended learning path.
+- Deleting a goal is permanent after explicit confirmation; goals are not archived.

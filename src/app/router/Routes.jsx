@@ -14,6 +14,7 @@ const SubjectEntry = lazy(() => import("../../features/notes/pages/NotePage/Subj
 const SubjectMindmap = lazy(() => import("../../features/notes/pages/NotePage/SubjectEntry/SubjectMindmap"));
 const SubjectOverviewPage = lazy(() => import("../../features/subjects/pages/SubjectOverview/SubjectOverviewPage"));
 const SubjectDatabasePage = lazy(() => import("../../features/subjects/pages/SubjectDatabasePage"));
+const CoursePackageDetailPage = lazy(() => import("../../features/courses/pages/CoursePackageDetailPage"));
 const DisclaimerPage = lazy(() => import("../../shared/pages/DisclaimerPage"));
 const NotFoundPage = lazy(() => import("../../shared/pages/NotFoundPage"));
 const UserLoginPage = lazy(() => import("../../features/profile/pages/UserLoginPage"));
@@ -200,7 +201,12 @@ function RoutesWithTracking() {
         <Route path="careers/:jobId" element={<CareerJobDetailPage />} />
 
         {/* Databases and policy pages */}
-        <Route path="subjects" element={<SubjectDatabasePage />} />
+        <Route path="database" element={<SubjectDatabasePage />} />
+        <Route path="subjects" element={<Navigate to="/database?view=subjects" replace />} />
+        <Route path="course-packages/official/:domainSlug" element={<CoursePackageDetailPage />} />
+        <Route element={<UserRouteGuard />}>
+          <Route path="course-packages/:courseId" element={<CoursePackageDetailPage />} />
+        </Route>
         <Route path="disclaimer" element={<DisclaimerPage />} />
 
         {/* Search */}

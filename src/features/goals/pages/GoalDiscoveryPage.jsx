@@ -7,7 +7,6 @@ import {
   ExperimentOutlined,
   FlagOutlined,
   HighlightOutlined,
-  ProjectOutlined,
   RocketOutlined,
   TrophyOutlined,
 } from "@ant-design/icons";
@@ -24,7 +23,6 @@ const { Paragraph, Text } = Typography;
 const GOAL_ICONS = {
   career: RocketOutlined,
   certification: TrophyOutlined,
-  project: ProjectOutlined,
   adventure: CompassOutlined,
   creative: HighlightOutlined,
   performance: FlagOutlined,
@@ -60,7 +58,7 @@ function GoalDiscoveryPage() {
             const Icon = GOAL_ICONS[item.type] || AimOutlined;
             const selected = item.type === selectedType;
             return (
-              <Col key={item.type} xs={24} sm={12} lg={6}>
+              <Col key={item.type} xs={24} sm={12}>
                 <Card
                   role="button"
                   tabIndex={0}

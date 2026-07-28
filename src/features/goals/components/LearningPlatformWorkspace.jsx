@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Alert,
   App,
@@ -12,6 +12,7 @@ import {
   InputNumber,
   Modal,
   Popconfirm,
+  Progress,
   Row,
   Select,
   Space,
@@ -24,23 +25,24 @@ import {
   BookOutlined,
   DeleteOutlined,
   PlusOutlined,
-  ProjectOutlined,
   ReloadOutlined,
   RocketOutlined,
 } from "@ant-design/icons";
 
 import SemanticChip from "../../../shared/ui/SemanticChip";
 import {
-  archiveGoal,
+  deleteGoal,
   createGoal,
   generateGoalCourseLearningPath,
   getPersonalLearningPath,
+  listPersonalLearningPaths,
   listCourses,
   listGoals,
 } from "../api/learningPlatform";
 import { GOAL_TYPE_CONFIG, getGoalTypeConfig } from "../lib/goalMetadata";
 import CourseMetadata from "./CourseMetadata";
 import { listCourseStudioDomains } from "../../courseStudio/api/courseStudio";
+import { listAnalysisRuns } from "../../courseStudio/api/courseStudio";
 
 import "../pages/GoalDiscoveryPage.css";
 
@@ -48,7 +50,6 @@ const { Paragraph, Text, Title } = Typography;
 
 const GOAL_ICONS = {
   career: RocketOutlined,
-  project: ProjectOutlined,
   interest: AimOutlined,
 };
 
@@ -84,9 +85,10 @@ function LearningPlatformWorkspace({
   preferredGoalType = "",
   onOpenGoalDiscovery,
   onGoalTypeChange,
-  careerTaxonomy = [],
+  backgroundAtlas = {},
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { message } = App.useApp();
   const [goalForm] = Form.useForm();
   const [loading, setLoading] = useState(true);
@@ -95,27 +97,32 @@ function LearningPlatformWorkspace({
   const [courses, setCourses] = useState([]);
   const [domains, setDomains] = useState([]);
   const [authoredCourseIds, setAuthoredCourseIds] = useState([]);
+  const [courseStudioDrafts, setCourseStudioDrafts] = useState([]);
   const [learningPath, setLearningPath] = useState(normalizePath({}));
+  const [learningSets, setLearningSets] = useState([]);
   const [selectedGoalId, setSelectedGoalId] = useState("");
   const [selectedCourseId, setSelectedCourseId] = useState("");
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [goalSaving, setGoalSaving] = useState(false);
   const [pathGenerating, setPathGenerating] = useState(false);
+  const [previewGoalId, setPreviewGoalId] = useState("");
   const [discoveryType, setDiscoveryType] = useState(preferredGoalType);
   const [selectedDiscoveryDomain, setSelectedDiscoveryDomain] = useState("");
-  const [selectedProjectSkills, setSelectedProjectSkills] = useState([]);
+  const [discoveryStep, setDiscoveryStep] = useState(0);
   const [discoverySaving, setDiscoverySaving] = useState(false);
 
   const loadWorkspace = useCallback(async () => {
     setLoading(true);
     setErrorText("");
     try {
-      const [goalPayload, publicCourses, authoredCourses, pathPayload, domainPayload] = await Promise.all([
+      const [goalPayload, publicCourses, authoredCourses, pathPayload, pathListPayload, domainPayload, studioRuns] = await Promise.all([
         listGoals(),
         listCourses(),
         listCourses({ mine: true }),
         getPersonalLearningPath().catch(() => ({})),
+        listPersonalLearningPaths().catch(() => []),
         listCourseStudioDomains(),
+        listAnalysisRuns().catch(() => []),
       ]);
       const nextGoals = Array.isArray(goalPayload) ? goalPayload : [];
       const nextCourses = uniqueById([
@@ -126,9 +133,13 @@ function LearningPlatformWorkspace({
       setCourses(nextCourses);
       setDomains(Array.isArray(domainPayload) ? domainPayload : []);
       setAuthoredCourseIds((Array.isArray(authoredCourses) ? authoredCourses : []).map((item) => item.id));
+      setCourseStudioDrafts((Array.isArray(studioRuns) ? studioRuns : []).filter((run) => run.outline_proposal?.status !== "finalized"));
       setLearningPath(normalizePath(pathPayload));
+      setLearningSets((Array.isArray(pathListPayload) ? pathListPayload : []).map(normalizePath));
       setSelectedGoalId((current) => (
-        nextGoals.some((item) => item.id === current)
+        nextGoals.some((item) => item.id === new URLSearchParams(location.search).get("resumeGoal"))
+          ? new URLSearchParams(location.search).get("resumeGoal")
+          : nextGoals.some((item) => item.id === current)
           ? current
           : nextGoals.find((item) => item.status === "active")?.id || nextGoals[0]?.id || ""
       ));
@@ -137,12 +148,13 @@ function LearningPlatformWorkspace({
           ? current
           : nextCourses[0]?.id || ""
       ));
+      if (new URLSearchParams(location.search).get("resumeGoal")) setDiscoveryStep(2);
     } catch (error) {
       setErrorText(error instanceof Error ? error.message : "Could not load goals and courses.");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [location.search]);
 
   useEffect(() => {
     loadWorkspace();
@@ -157,7 +169,7 @@ function LearningPlatformWorkspace({
   const selectDiscoveryType = (goalType) => {
     setDiscoveryType(goalType);
     setSelectedDiscoveryDomain("");
-    setSelectedProjectSkills([]);
+    setDiscoveryStep(goalType ? 1 : 0);
     onGoalTypeChange?.(goalType);
   };
 
@@ -165,35 +177,10 @@ function LearningPlatformWorkspace({
     () => domains.find((domain) => domain.slug === selectedDiscoveryDomain) || null,
     [domains, selectedDiscoveryDomain],
   );
-  const projectSkillOptions = useMemo(() => {
-    if (!discoveryDomain) return [];
-    const domainTerms = [discoveryDomain.slug, discoveryDomain.title]
-      .flatMap((value) => String(value || "").toLowerCase().split(/[^a-z0-9]+/))
-      .filter((value) => value.length > 2);
-    const matchingProfiles = careerTaxonomy.filter((profile) => {
-      const searchable = [
-        profile.title,
-        profile.job_title,
-        profile.jobTitle,
-        ...(profile.knowledge_areas || profile.knowledgeAreas || []),
-      ].join(" ").toLowerCase();
-      return domainTerms.some((term) => searchable.includes(term));
-    });
-    return [...new Set(matchingProfiles.flatMap((profile) => [
-      ...(profile.hard_skills || profile.hardSkills || []),
-      ...(profile.tools || []),
-    ]).map((value) => String(value).trim()).filter(Boolean))]
-      .sort((a, b) => a.localeCompare(b))
-      .map((value) => ({ value, label: value }));
-  }, [careerTaxonomy, discoveryDomain]);
 
   const selectedGoal = useMemo(
     () => goals.find((item) => item.id === selectedGoalId) || null,
     [goals, selectedGoalId],
-  );
-  const selectedCourse = useMemo(
-    () => courses.find((item) => item.id === selectedCourseId) || null,
-    [courses, selectedCourseId],
   );
   const activeGoals = useMemo(
     () => goals.filter((item) => item.status !== "archived"),
@@ -202,6 +189,29 @@ function LearningPlatformWorkspace({
   const authoredCourses = useMemo(
     () => courses.filter((item) => authoredCourseIds.includes(item.id)),
     [authoredCourseIds, courses],
+  );
+  const recommendedCourses = useMemo(() => {
+    if (!selectedGoal) return [];
+    const domainSlug = selectedGoal.metadata?.domain_slug || selectedGoal.metadata?.domainSlug || "";
+    if (!domainSlug) return [];
+    const domain = domains.find((item) => item.slug === domainSlug);
+    const official = domain ? {
+      id: `official:${domain.slug}`,
+      slug: `${domain.slug}-foundations`,
+      title: domain.title,
+      domain_slug: domain.slug,
+      domain_title: domain.title,
+      primary_archetype: domain.primary_archetype,
+      secondary_archetypes: domain.secondary_archetypes || [],
+      current_version_id: `canonical:${domain.slug}`,
+      is_official: true,
+      status: "published",
+    } : null;
+    return official ? [official] : [];
+  }, [domains, selectedGoal]);
+  const selectedCourse = useMemo(
+    () => recommendedCourses.find((item) => item.id === selectedCourseId) || null,
+    [recommendedCourses, selectedCourseId],
   );
   const currentPathNodes = learningPath?.draft?.nodes || [];
 
@@ -230,6 +240,7 @@ function LearningPlatformWorkspace({
       });
       setGoals((current) => [created, ...current]);
       setSelectedGoalId(created.id);
+      setSelectedCourseId(`official:${discoveryDomain.slug}`);
       setGoalModalOpen(false);
       message.success("Goal created.");
     } catch (error) {
@@ -240,37 +251,27 @@ function LearningPlatformWorkspace({
   };
 
   const handleCreateDiscoveryGoal = async () => {
-    if (!discoveryDomain || !["project", "interest"].includes(discoveryType)) return;
+    if (!discoveryDomain || discoveryType !== "interest") return;
     setDiscoverySaving(true);
     try {
-      const isProject = discoveryType === "project";
       const created = await createGoal({
-        title: isProject
-          ? `Complete a ${discoveryDomain.title} project`
-          : `Explore ${discoveryDomain.title}`,
+        title: `Explore ${discoveryDomain.title}`,
         goal_type: discoveryType,
-        description: isProject
-          ? `Build a project in ${discoveryDomain.title} using the selected skills.`
-          : `Develop a structured understanding of ${discoveryDomain.title}.`,
-        desired_outcome: isProject
-          ? `Complete a practical ${discoveryDomain.title} project that demonstrates ${selectedProjectSkills.join(", ")}.`
-          : `Explore the core concepts and learning paths available in ${discoveryDomain.title}.`,
-        success_criteria: isProject
-          ? selectedProjectSkills.map((skill) => `Demonstrate ${skill} in the project`)
-          : [`Complete an introductory course in ${discoveryDomain.title}`],
-        preferred_archetype: isProject ? "practice_based" : "conceptual",
+        description: `Develop a structured understanding of ${discoveryDomain.title}.`,
+        desired_outcome: `Explore the core concepts and learning paths available in ${discoveryDomain.title}.`,
+        success_criteria: [`Complete an introductory course in ${discoveryDomain.title}`],
+        preferred_archetype: "conceptual",
         metadata: {
           source: "goal_discovery",
           domain_slug: discoveryDomain.slug,
           domain_title: discoveryDomain.title,
-          skills: isProject ? selectedProjectSkills : [],
         },
       });
       setGoals((current) => [created, ...current]);
       setSelectedGoalId(created.id);
       setSelectedDiscoveryDomain("");
-      setSelectedProjectSkills([]);
-      message.success(`${isProject ? "Project" : "Interest"} goal created.`);
+      setDiscoveryStep(2);
+      message.success("Interest goal created.");
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Could not create this goal.");
     } finally {
@@ -278,14 +279,14 @@ function LearningPlatformWorkspace({
     }
   };
 
-  const handleArchiveGoal = async (goalId) => {
+  const handleDeleteGoal = async (goalId) => {
     try {
-      await archiveGoal(goalId);
+      await deleteGoal(goalId);
       setGoals((current) => current.filter((item) => item.id !== goalId));
       if (selectedGoalId === goalId) setSelectedGoalId("");
-      message.success("Goal archived.");
+      message.success("Goal deleted.");
     } catch (error) {
-      message.error(error instanceof Error ? error.message : "Could not archive the goal.");
+      message.error(error instanceof Error ? error.message : "Could not delete the goal.");
     }
   };
 
@@ -294,12 +295,13 @@ function LearningPlatformWorkspace({
     setPathGenerating(true);
     try {
       const response = await generateGoalCourseLearningPath({
+        path_id: `goal:${selectedGoal.id}`,
         goal_type: selectedGoal.goal_type,
         goal_id: selectedGoal.id,
         goal_title: selectedGoal.title,
         goal_ref_id: selectedGoal.id,
-        selected_course_ids: [selectedCourse.id],
-        selected_course_version_ids: selectedCourse.current_version_id
+        selected_course_ids: selectedCourse.is_official ? [] : [selectedCourse.id],
+        selected_course_version_ids: !selectedCourse.is_official && selectedCourse.current_version_id
           ? [selectedCourse.current_version_id]
           : [],
         subject_slugs: [selectedCourse.domain_slug],
@@ -308,6 +310,11 @@ function LearningPlatformWorkspace({
         commit: true,
       });
       setLearningPath(normalizePath(response));
+      setPreviewGoalId(selectedGoal.id);
+      setLearningSets((current) => [
+        normalizePath(response),
+        ...current.filter((item) => item?.draft?.path_id !== response?.draft?.path_id),
+      ]);
       message.success("Learning path generated from your goal and selected course.");
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Could not generate the learning path.");
@@ -348,7 +355,13 @@ function LearningPlatformWorkspace({
               type="button"
               className="goal-workspace__selection-main"
               aria-pressed={selected}
-              onClick={() => setSelectedGoalId(goal.id)}
+              onClick={() => {
+                setSelectedGoalId(goal.id);
+                const domainSlug = goal.metadata?.domain_slug || goal.metadata?.domainSlug || "";
+                setSelectedCourseId(domainSlug ? `official:${domainSlug}` : "");
+                setPreviewGoalId("");
+                setDiscoveryStep(2);
+              }}
             >
               <span className="goal-workspace__selection-copy">
                 <span className="goal-workspace__selection-title">{goal.title}</span>
@@ -359,16 +372,17 @@ function LearningPlatformWorkspace({
               <SemanticChip variant={config.variant}>{config.label}</SemanticChip>
             </button>
             <Popconfirm
-              title="Archive this goal?"
-              description="It will leave your active workspace but remain in your history."
-              okText="Archive"
-              onConfirm={() => handleArchiveGoal(goal.id)}
+              title="Delete this goal?"
+              description="This cannot be undone."
+              okText="Delete"
+              okButtonProps={{ danger: true }}
+              onConfirm={() => handleDeleteGoal(goal.id)}
             >
               <Button
                 type="text"
                 danger
                 icon={<DeleteOutlined />}
-                aria-label={`Archive ${goal.title}`}
+                aria-label={`Delete ${goal.title}`}
               />
             </Popconfirm>
           </div>
@@ -376,7 +390,7 @@ function LearningPlatformWorkspace({
       }) : (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description="Choose Career, Project, or Interest below to create your first goal."
+          description="Choose Career or Interest below to create your first goal."
         />
       )}
     </div>
@@ -384,7 +398,7 @@ function LearningPlatformWorkspace({
 
   const courseList = (
     <div className="goal-workspace__course-grid" role="list" aria-label="Courses">
-      {courses.length ? courses.map((course) => {
+      {recommendedCourses.length ? recommendedCourses.map((course) => {
         const selected = course.id === selectedCourseId;
         return (
           <button
@@ -396,20 +410,17 @@ function LearningPlatformWorkspace({
           >
             <span className="goal-workspace__course-title-row">
               <span className="goal-workspace__course-title">{course.title}</span>
-              <SemanticChip variant={course.status === "published" ? "sage" : "slate"}>
-                {course.status}
+              <SemanticChip variant={course.is_official ? "primary" : authoredCourseIds.includes(course.id) && course.status !== "published" ? "slate" : "sage"}>
+                {course.is_official ? "Official" : authoredCourseIds.includes(course.id) && course.status !== "published" ? "Private course" : "Community course"}
               </SemanticChip>
             </span>
-            <CourseMetadata course={course} goal={selected ? selectedGoal : null} compact />
-            <span className="goal-workspace__course-description">
-              {course.description || course.target_learner || "A structured course over canonical knowledge."}
-            </span>
+            <CourseMetadata course={course} compact />
           </button>
         );
       }) : (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description="No course versions are available yet. Course Studio will let authors create them."
+          description="No complete course package is available for this goal yet."
         />
       )}
     </div>
@@ -473,6 +484,13 @@ function LearningPlatformWorkspace({
         <div className="goal-workspace__section-head">
           <Title level={4}>Goal Discovery</Title>
         </div>
+        <div className="goal-workspace__discovery-progress" aria-label="Goal setup progress">
+          {["Goal", "Direction", "Course package"].map((label, index) => (
+            <span key={label} className={discoveryStep >= index ? "is-active" : ""}>
+              <b>{index + 1}</b>{label}
+            </span>
+          ))}
+        </div>
         <div className="goal-workspace__goal-types" role="group" aria-label="Goal types">
           {GOAL_TYPE_CONFIG.map((item) => {
             const Icon = GOAL_ICONS[item.type] || AimOutlined;
@@ -494,72 +512,120 @@ function LearningPlatformWorkspace({
             );
           })}
         </div>
-        {["project", "interest"].includes(discoveryType) ? (
-          <Card className="goal-workspace__discovery-builder">
-            <div className="goal-workspace__discovery-builder-head">
-              <div>
-                <Text className="goal-workspace__eyebrow">
-                  {discoveryType === "project" ? "Project direction" : "Interest direction"}
-                </Text>
-                <Title level={4}>
-                  {discoveryType === "project"
-                    ? "Choose a field and the skills your project should demonstrate"
-                    : "Choose the field you want to explore"}
-                </Title>
+        {discoveryType === "interest" ? (
+          <div className="goal-workspace__interest-workspace">
+            <Card type="inner" title="My Background Atlas" className="goal-workspace__profile-section">
+              <div className="goal-workspace__atlas-grid">
+                {["knowledge", "skills", "tools"].map((key) => (
+                  <div key={key}>
+                    <Text strong>{key[0].toUpperCase() + key.slice(1)}</Text>
+                    <div className="goal-workspace__atlas-values">
+                      {(backgroundAtlas[key] || []).length
+                        ? (backgroundAtlas[key] || []).slice(0, 12).map((item) => <SemanticChip key={`${key}-${item}`} variant="slate">{item}</SemanticChip>)
+                        : <Text type="secondary">Nothing added yet</Text>}
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
-            <div className="goal-workspace__discovery-fields">
-              <label>
-                <span>Field</span>
-                <Select
-                  showSearch
-                  optionFilterProp="label"
-                  size="large"
-                  value={selectedDiscoveryDomain || undefined}
-                  placeholder="Choose from current subjects"
-                  options={domains.map((domain) => ({ value: domain.slug, label: domain.title }))}
-                  onChange={(value) => {
-                    setSelectedDiscoveryDomain(value);
-                    setSelectedProjectSkills([]);
-                  }}
-                />
-              </label>
-              {discoveryType === "project" && discoveryDomain ? (
+            </Card>
+            <Card type="inner" title="My Interest Goal" className="goal-workspace__profile-section">
+              <div className="goal-workspace__discovery-fields">
                 <label>
-                  <span>Skills to demonstrate</span>
+                  <span>Field</span>
                   <Select
-                    mode="multiple"
+                    showSearch
+                    optionFilterProp="label"
                     size="large"
-                    value={selectedProjectSkills}
-                    placeholder="Choose skills from related careers"
-                    options={projectSkillOptions}
-                    onChange={setSelectedProjectSkills}
-                    notFoundContent="No related career skills are available for this field yet."
+                    value={selectedDiscoveryDomain || undefined}
+                    placeholder="Choose from current subjects"
+                    options={domains.map((domain) => ({ value: domain.slug, label: domain.title }))}
+                    onChange={setSelectedDiscoveryDomain}
                   />
-                  <small>Skills come from the current Career Database; free-form entries are not added.</small>
                 </label>
-              ) : null}
-            </div>
-            {discoveryType === "project" && discoveryDomain && projectSkillOptions.length === 0 ? (
-              <Alert
-                type="info"
-                showIcon
-                title="No mapped career skills yet"
-                description="This field remains selectable for Interest goals, but Project goals wait until Career Database skills are mapped."
-              />
+              </div>
+              <div className="goal-workspace__discovery-actions">
+                <Button type="primary" loading={discoverySaving} disabled={!discoveryDomain} onClick={handleCreateDiscoveryGoal}>
+                  Find course package
+                </Button>
+              </div>
+            </Card>
+            {discoveryStep >= 2 && selectedGoal ? (
+              <Card type="inner" title="Interest Matches" className="goal-workspace__profile-section">
+                  {selectedCourse ? (
+                    <div className="goal-workspace__package-detail">
+                      <div>
+                        <Text className="goal-workspace__eyebrow">Official Course Package</Text>
+                        <Title level={4}>{selectedCourse.title}</Title>
+                        <CourseMetadata course={selectedCourse} compact />
+                      </div>
+                      <div className="goal-workspace__path-actions">
+                        <Button size="large" onClick={() => navigate(`/course-packages/official/${selectedCourse.domain_slug}`)}>
+                          View package
+                        </Button>
+                        <Button type="primary" size="large" loading={pathGenerating} onClick={handleGeneratePath}>
+                          Save learning set
+                        </Button>
+                      </div>
+                    </div>
+                  ) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No official course package is available for this interest yet." />}
+                  {previewGoalId === selectedGoal.id ? <LearningPathPreview path={learningPath} navigate={navigate} /> : null}
+              </Card>
             ) : null}
-            <div className="goal-workspace__discovery-actions">
-              <Button
-                type="primary"
-                loading={discoverySaving}
-                disabled={!discoveryDomain || (discoveryType === "project" && selectedProjectSkills.length === 0)}
-                onClick={handleCreateDiscoveryGoal}
-              >
-                Add to My Goals
-              </Button>
-            </div>
-          </Card>
+          </div>
         ) : null}
+      </div>
+    );
+  }
+
+  if (mode === "learning") {
+    return (
+      <div className="goal-workspace">
+        <div className="goal-workspace__section-head">
+          <Title level={4}>Saved Learning Sets</Title>
+        </div>
+        {learningSets.length ? (
+          <div className="goal-workspace__learning-sets">
+            {learningSets.map((set) => {
+              const draft = set.draft || {};
+              const active = draft.nodes?.find((node) => node.status === "active") || draft.nodes?.[0];
+              const completed = (draft.nodes || []).filter((node) => node.status === "completed").length;
+              const percent = draft.nodes?.length ? Math.round((completed / draft.nodes.length) * 100) : 0;
+              return (
+                <Card key={draft.path_id} className="goal-workspace__learning-set">
+                  <div>
+                    <Text strong>{draft.goal_title || "Learning set"}</Text>
+                    <Text type="secondary">{completed} of {draft.nodes?.length || 0} steps complete</Text>
+                    <Progress percent={percent} size="small" showInfo={false} />
+                  </div>
+                  <Button
+                    type="primary"
+                    disabled={!active?.note_url}
+                    onClick={() => active?.note_url && navigate(active.note_url, { state: { learningPathId: draft.path_id } })}
+                  >
+                    Open set
+                  </Button>
+                </Card>
+              );
+            })}
+          </div>
+        ) : (
+          <Empty
+            description={activeGoals.length ? "Choose a course for this goal." : "Choose what you want to achieve."}
+          >
+            <Button
+              type="primary"
+              onClick={() => {
+                if (activeGoals[0]?.id) {
+                  navigate(`/user/profile?section=goals&resumeGoal=${encodeURIComponent(activeGoals[0].id)}`);
+                } else {
+                  onOpenGoalDiscovery?.();
+                }
+              }}
+            >
+              Open Goal Discovery
+            </Button>
+          </Empty>
+        )}
       </div>
     );
   }
@@ -575,7 +641,6 @@ function LearningPlatformWorkspace({
             </Paragraph>
           </div>
           <Space wrap>
-            <Button onClick={() => navigate("/courses/community")}>Explore Course Community</Button>
             <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate("/course-studio")}>
               Create or import a course
             </Button>
@@ -588,7 +653,7 @@ function LearningPlatformWorkspace({
                 <span className="goal-workspace__course-title-row">
                   <span className="goal-workspace__course-title">{course.title}</span>
                   <SemanticChip variant={course.status === "published" ? "sage" : "slate"}>
-                    {course.status}
+                    {course.status === "published" ? "Community course" : "Private course"}
                   </SemanticChip>
                 </span>
                 <CourseMetadata course={course} compact />
@@ -607,7 +672,22 @@ function LearningPlatformWorkspace({
             ))}
           </div>
         ) : null}
-        {authoredCourses.length === 0 ? (
+        {courseStudioDrafts.length ? (
+          <div className="goal-workspace__learning-sets">
+            {courseStudioDrafts.slice(0, 3).map((run) => (
+              <Card key={run.id} className="goal-workspace__learning-set">
+                <div>
+                  <Text strong>{run.outline_proposal?.proposed_title || "Course setup"}</Text>
+                  <Text type="secondary">Review · saved draft</Text>
+                </div>
+                <Button onClick={() => navigate(`/course-studio?run=${encodeURIComponent(run.id)}`)}>
+                  Continue setup
+                </Button>
+              </Card>
+            ))}
+          </div>
+        ) : null}
+        {authoredCourses.length === 0 && courseStudioDrafts.length === 0 ? (
           <Alert
             type="info"
             showIcon

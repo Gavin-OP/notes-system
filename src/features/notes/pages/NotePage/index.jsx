@@ -436,6 +436,20 @@ function NotePage() {
         ) : null}
         {noteLoadState === "ready" && noteContent ? (
           <>
+            {location.state?.fromMindmap ? (
+              <button
+                type="button"
+                className="note-page__back-to-map"
+                onClick={() => navigate(location.state.mindmapReturnTo, {
+                  state: {
+                    mindmapViewType: location.state.mindmapViewType,
+                    mindmapConcept: location.state.mindmapConcept,
+                  },
+                })}
+              >
+                Back to concept map
+              </button>
+            ) : null}
             <MarkdownRenderer
               content={displayNoteContent}
               theme={theme}

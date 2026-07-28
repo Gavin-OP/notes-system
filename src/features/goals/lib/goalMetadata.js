@@ -7,13 +7,6 @@ export const GOAL_TYPE_CONFIG = [
     variant: "wisdom",
   },
   {
-    type: "project",
-    label: "Project",
-    description: "Build skills by completing something concrete and useful.",
-    example: "Build a personal website",
-    variant: "teal",
-  },
-  {
     type: "interest",
     label: "Interest",
     description: "Explore a field because you want to understand it more deeply.",

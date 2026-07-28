@@ -112,15 +112,23 @@ function NoteWorkspaceBar({
               {
                 key: "narration",
                 icon: isNarrationPlaying ? <PauseCircleOutlined /> : <AudioOutlined />,
-                label: narrationLabel,
+                label: (
+                  <span className="note-workspace-bar__audio-option">
+                    <strong>{narrationLabel}</strong>
+                    <small>Listen to this note</small>
+                  </span>
+                ),
                 disabled: narrationDisabled,
               },
               {
                 key: "podcast",
                 icon: <CustomerServiceOutlined />,
-                label: officialPodcast
-                  ? t("note.podcast.open", "Open the official podcast for this note")
-                  : t("note.podcast.unavailable", "No official podcast is available for this note yet"),
+                label: (
+                  <span className="note-workspace-bar__audio-option">
+                    <strong>{t("note.podcast.title", "Official Podcast")}</strong>
+                    <small>{officialPodcast ? "Course discussion including this note" : "Not available for this note"}</small>
+                  </span>
+                ),
                 disabled: !officialPodcast,
               },
             ],
@@ -132,13 +140,13 @@ function NoteWorkspaceBar({
         >
           <button
             type="button"
-            className="note-workspace-bar__icon-btn"
+            className="note-workspace-bar__version-trigger note-workspace-bar__audio-trigger"
             aria-label={t("note.audio.choose", "Choose narration or podcast")}
             aria-haspopup="menu"
           >
             {narrationState === "loading" ? <LoadingOutlined /> : <AudioOutlined />}
             {!isMobile ? <span>{t("note.toolbar.audio", "Audio")}</span> : null}
-            <DownOutlined aria-hidden="true" />
+            <DownOutlined className="note-workspace-bar__version-chevron" aria-hidden="true" />
           </button>
         </Dropdown>
       </div>

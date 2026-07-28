@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { App, Alert, Button, Card, Result, Skeleton, Steps, Typography } from "antd";
+import { App, Alert, Button, Card, Result, Skeleton, Steps, Tag, Typography } from "antd";
 import {
   BranchesOutlined,
   CloudUploadOutlined,
@@ -7,7 +7,7 @@ import {
   HistoryOutlined,
   RocketOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import {
@@ -31,6 +31,7 @@ const { Paragraph, Text, Title } = Typography;
 
 function CourseStudioPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { message } = App.useApp();
   const [step, setStep] = useState(0);
   const [file, setFile] = useState(null);
@@ -55,8 +56,18 @@ function CourseStudioPage() {
     Promise.all([listCourseStudioDomains(), listAnalysisRuns()])
       .then(([domainPayload, runPayload]) => {
         if (!mounted) return;
+        const runs = Array.isArray(runPayload) ? runPayload : [];
         setDomains(Array.isArray(domainPayload) ? domainPayload : []);
-        setRecentRuns(Array.isArray(runPayload) ? runPayload : []);
+        setRecentRuns(runs);
+        const requestedRunId = new URLSearchParams(location.search).get("run");
+        const requestedRun = runs.find((run) => run.id === requestedRunId && run.outline_proposal);
+        if (requestedRun) {
+          setAnalysisRun(requestedRun);
+          setStep(4);
+          listProposalAuditEvents(requestedRun.outline_proposal.id)
+            .then((events) => mounted && setAuditEvents(Array.isArray(events) ? events : []))
+            .catch(() => {});
+        }
       })
       .catch((error) => {
         if (mounted) setErrorText(error instanceof Error ? error.message : "Could not load Course Studio.");
@@ -67,7 +78,7 @@ function CourseStudioPage() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [location.search]);
 
   const replaceProposal = (proposal) => {
     setAnalysisRun((current) => (
@@ -132,7 +143,7 @@ function CourseStudioPage() {
       setRecentRuns((current) => [run, ...current.filter((item) => item.id !== run.id)]);
       setRevisionFeedback(null);
       setCreatedCourse(null);
-      setStep(2);
+      setStep(4);
       await refreshAuditEvents(run.outline_proposal?.id);
       message.success("Outline proposal created.");
     } catch (error) {
@@ -158,7 +169,7 @@ function CourseStudioPage() {
     setAnalysisRun(run);
     setCreatedCourse(null);
     setRevisionFeedback(null);
-    setStep(2);
+    setStep(4);
     setErrorText("");
     refreshAuditEvents(run.outline_proposal.id);
   };
@@ -232,7 +243,7 @@ function CourseStudioPage() {
       replaceProposal(response.proposal);
       setCreatedCourse(response);
       await refreshAuditEvents(proposalId);
-      setStep(3);
+      setStep(5);
       message.success("Draft course and immutable version 1 created.");
       return true;
     } catch (error) {
@@ -271,45 +282,39 @@ function CourseStudioPage() {
         </div>
       </div>
 
-      <Card className="course-studio__workflow-card" title="The workflow behind every Notes System course">
-        <Paragraph type="secondary">
-          Course Studio uses the same pipeline as our internal course production. AI proposes structure and
-          concept links; a human reviews the result before an immutable course version is created.
-        </Paragraph>
-        <ol className="course-studio__workflow-list">
-          {[
-            ["Ingest", "Parse the source while preserving consent and provenance."],
-            ["Classify", "Identify the Domain and recommend Conceptual, Practice-based, or Creative learning."],
-            ["Organize", "Turn the material into modules, notes, objectives, and practice."],
-            ["Connect", "Map concepts to the stable canonical knowledge graph and surface gaps."],
-            ["Review", "Let the author edit, accept or reject mappings, and request revisions."],
-            ["Version", "Create a private course and an immutable first version."],
-          ].map(([title, description], index) => (
-            <li key={title}>
-              <span>{index + 1}</span>
-              <div><Text strong>{title}</Text><Text type="secondary">{description}</Text></div>
-            </li>
-          ))}
-        </ol>
-        <Alert
-          type="info"
-          showIcon
-          title="Course perspectives never rewrite canonical knowledge"
-          description="User prompts may change the course outline and teaching approach. Canonical definitions, mind maps, and network relationships remain admin-managed."
-        />
-      </Card>
-
       <Card className="course-studio__progress-card">
         <Steps
           current={step}
           responsive
+          onChange={(next) => {
+            const available = next === 0 || (next === 1 && sourceAsset) || (next === 4 && analysisRun?.outline_proposal) || (next === 5 && createdCourse);
+            if (available) setStep(next);
+          }}
           items={[
-            { title: "Upload", content: "Private source", icon: <CloudUploadOutlined /> },
-            { title: "Analyze", content: "Set perspective", icon: <BranchesOutlined /> },
-            { title: "Review", content: "Revise & approve", icon: <FileDoneOutlined /> },
-            { title: "Course", content: "Create version 1", icon: <RocketOutlined /> },
+            { title: "Ingest", description: "Your source", icon: <CloudUploadOutlined /> },
+            { title: "Classify", description: "Your decision", icon: <BranchesOutlined /> },
+            { title: "Organize", description: <Tag>Auto</Tag> },
+            { title: "Connect", description: <Tag>Auto</Tag> },
+            { title: "Review", description: "Your decision", icon: <FileDoneOutlined /> },
+            { title: "Version", description: "Saved course", icon: <RocketOutlined /> },
           ]}
         />
+        <div className="course-studio__stage-status" aria-live="polite">
+          <Text strong>
+            {step === 0 && "Now: upload the source you want to structure."}
+            {step === 1 && "Done: your source is stored privately. Now: confirm its learning direction."}
+            {step === 4 && "Done: the course was organized and connected. Now: review the proposal."}
+            {step === 5 && "Done: an immutable course version has been saved."}
+          </Text>
+          <span className="course-studio__save-state">
+            <Text type="secondary">
+              {saving || deciding || revising || finalizing ? "Saving…" : analysisRun?.outline_proposal ? "Saved" : "Changes are saved after each completed stage."}
+            </Text>
+            {analysisRun?.outline_proposal ? (
+              <Button onClick={() => navigate("/user/profile?section=courses")}>Save & exit</Button>
+            ) : null}
+          </span>
+        </div>
       </Card>
 
       {errorText ? (
@@ -339,11 +344,11 @@ function CourseStudioPage() {
           sourceAsset={sourceAsset}
           domains={domains}
           analyzing={analyzing}
-          onBack={resetStudio}
+          onBack={() => setStep(0)}
           onSubmit={handleAnalyze}
         />
       ) : null}
-      {!loading && step === 2 && analysisRun?.outline_proposal ? (
+      {!loading && step === 4 && analysisRun?.outline_proposal ? (
         <ProposalReview
           proposal={analysisRun.outline_proposal}
           usage={analysisRun.usage_metadata}
@@ -361,7 +366,7 @@ function CourseStudioPage() {
           onOpenCourses={() => navigate("/user/profile", { state: { dashboard: "courses" } })}
         />
       ) : null}
-      {!loading && step === 3 && createdCourse ? (
+      {!loading && step === 5 && createdCourse ? (
         <Card className="course-studio__created-card">
           <Result
             status="success"

@@ -10,6 +10,17 @@ body {
   line-height: var(--ns-line-height-normal);
   color: var(--ns-color-text);
   background: var(--ns-color-bg-layout);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+[role="button"],
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
 }
 
 /* ── Typography helpers ── */
@@ -144,6 +155,25 @@ body {
 .ant-btn {
   font-weight: var(--ns-font-weight-semibold);
   border-radius: var(--ns-radius-sm);
+  transition:
+    color var(--ns-duration-fast) var(--ns-ease-out),
+    background-color var(--ns-duration-fast) var(--ns-ease-out),
+    border-color var(--ns-duration-fast) var(--ns-ease-out),
+    box-shadow var(--ns-duration-fast) var(--ns-ease-out),
+    transform var(--ns-duration-fast) var(--ns-ease-press);
+}
+
+.ant-btn:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+.ant-btn:focus-visible,
+.ant-input:focus-visible,
+.ant-input-affix-wrapper:focus-within,
+.ant-select-focused .ant-select-selector,
+[role="button"]:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
 }
 
 .ant-btn-lg {
@@ -162,6 +192,10 @@ body {
   border-radius: var(--ns-radius-lg);
   border-color: var(--ns-color-border-secondary);
   box-shadow: var(--ns-shadow-sm);
+}
+
+.ant-card-type-inner {
+  box-shadow: none;
 }
 
 .ant-card .ant-card-head {
@@ -228,8 +262,38 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .ant-btn:not(:disabled):active {
+    transform: none;
+  }
+
   .ns-loading-state__spinner {
     animation: none;
     border-top-color: var(--ns-color-primary);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .ant-modal-mask,
+  .ant-drawer-mask {
+    backdrop-filter: none !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .ant-card,
+  .ant-btn,
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-select-selector {
+    border-color: var(--ns-color-text-secondary) !important;
   }
 }
