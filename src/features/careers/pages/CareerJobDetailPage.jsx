@@ -151,6 +151,7 @@ function CareerJobDetailPage() {
         goal_type: "career",
         goal_id: profile.jobId,
         goal_title: profile.roleLabel || profile.title,
+        learning_set_name: `Towards ${profile.roleLabel || profile.title} (Entry Level)`,
         subject_slugs: relatedSubjects.map((subject) => subject.subjectSlug).filter(Boolean),
         save_as_draft: true,
         commit: true,

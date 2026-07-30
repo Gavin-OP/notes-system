@@ -981,6 +981,11 @@ const NoteLayout = () => {
     }
   };
 
+  const handleEnoughForNow = () => {
+    message.success("Your place is saved. Continue whenever you are ready.");
+    navigate("/user/profile?section=learning");
+  };
+
   const handleCreateQuoteFromSelection = async (selection) => {
     const selectedText = String(selection?.selectedText || "").trim();
     if (!selectedText || !currentNoteUrlNormalized) return null;
@@ -1550,6 +1555,7 @@ const NoteLayout = () => {
                 isCurrentNoteCompleted={isCurrentNoteCompleted}
                 completePending={completeNotePending}
                 onToggleCompletion={isOverviewPage ? undefined : handleToggleCurrentNoteCompletion}
+                onEnoughForNow={isOverviewPage ? undefined : handleEnoughForNow}
                 workspaceMeta={workspaceMeta}
                 onExploreMindmap={handleExploreMindmap}
                 isMobile={isMobile}

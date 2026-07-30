@@ -113,3 +113,33 @@ export function extractSubjectsFromNotesIndex(notesIndex = []) {
   });
   return subjects.sort((a, b) => a.title.localeCompare(b.title));
 }
+
+export function buildDomainBadges(subjects = [], completedNotes = []) {
+  const subjectBySlug = new Map(subjects.map((subject) => [String(subject.slug).toLowerCase(), subject]));
+  const exploredSlugs = new Set();
+
+  completedNotes.forEach((note) => {
+    const noteUrl = String(note.noteUrl || note.note_url || "").split(/[?#]/)[0];
+    const urlMatch = noteUrl.match(/^\/note\/([^/]+)/);
+    const subjectSlug = String(note.subject || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    const slug = String(urlMatch?.[1] || subjectSlug).toLowerCase();
+    if (slug && !EXCLUDED_SUBJECT_SLUGS.has(slug)) exploredSlugs.add(slug);
+  });
+
+  return [...exploredSlugs].map((slug) => {
+    const subject = subjectBySlug.get(slug);
+    return {
+      id: `domain_explored:${slug}`,
+      category: "domain",
+      title: subject?.title || slug.replace(/[-_]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()),
+      description: "Domain explored",
+      value: null,
+      courseCount: 1,
+      isUnlocked: true,
+    };
+  }).sort((a, b) => a.title.localeCompare(b.title));
+}

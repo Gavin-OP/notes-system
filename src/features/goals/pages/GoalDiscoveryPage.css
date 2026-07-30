@@ -680,6 +680,16 @@
   gap: 4px;
 }
 
+.goal-workspace__naming-fields,
+.goal-workspace__naming-fields label {
+  width: 100%;
+}
+
+.goal-workspace__naming-fields label {
+  display: grid;
+  gap: 8px;
+}
+
 @media (max-width: 640px) {
   .goal-workspace__atlas-grid {
     grid-template-columns: 1fr;

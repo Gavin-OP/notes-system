@@ -30,6 +30,7 @@ function NoteWorkspaceBar({
   isCurrentNoteCompleted = false,
   completePending = false,
   onToggleCompletion,
+  onEnoughForNow,
   workspaceMeta = null,
   onExploreMindmap,
   isMobile = false,
@@ -70,6 +71,19 @@ function NoteWorkspaceBar({
             >
               {isCurrentNoteCompleted ? <CheckCircleOutlined /> : <CheckOutlined />}
               <span>{completionLabel}</span>
+            </button>
+          </Tooltip>
+        ) : null}
+
+        {typeof onEnoughForNow === "function" ? (
+          <Tooltip title={t("note.toolbar.enoughForNowHint", "Pause here without marking this note complete")}>
+            <button
+              type="button"
+              className="note-workspace-bar__icon-btn note-workspace-bar__enough"
+              onClick={onEnoughForNow}
+            >
+              <PauseCircleOutlined />
+              <span>{t("note.toolbar.enoughForNow", "Enough for now")}</span>
             </button>
           </Tooltip>
         ) : null}

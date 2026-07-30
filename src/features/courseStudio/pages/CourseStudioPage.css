@@ -4,59 +4,6 @@
   gap: var(--ns-space-5);
 }
 
-.course-studio__intro {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
-  gap: var(--ns-space-6);
-  align-items: end;
-  padding: var(--ns-space-6);
-  border: 1px solid var(--ns-color-border-secondary);
-  border-radius: var(--ns-radius-lg);
-  background:
-    linear-gradient(135deg, var(--ns-color-primary-bg), transparent 68%),
-    var(--ns-color-bg-container);
-}
-
-.course-studio__intro h2.ant-typography {
-  max-width: 760px;
-  margin: var(--ns-space-2) 0 var(--ns-space-3);
-  color: var(--ns-color-text);
-  font-size: clamp(27px, 3vw, 42px);
-  line-height: 1.15;
-}
-
-.course-studio__intro p.ant-typography {
-  max-width: 720px;
-  margin: 0;
-  line-height: var(--ns-line-height-relaxed);
-}
-
-.course-studio__eyebrow {
-  display: block;
-  color: var(--ns-color-primary);
-  font-size: var(--ns-font-size-sm);
-  font-weight: var(--ns-font-weight-semibold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.course-studio__boundary {
-  display: flex;
-  gap: var(--ns-space-3);
-  align-items: flex-start;
-  padding: var(--ns-space-4);
-  border: 1px solid var(--ns-color-primary-border);
-  border-radius: var(--ns-radius-md);
-  background: color-mix(in srgb, var(--ns-color-bg-container) 82%, var(--ns-color-primary-bg));
-}
-
-.course-studio__boundary > .anticon {
-  margin-top: 2px;
-  color: var(--ns-color-primary);
-  font-size: 22px;
-}
-
-.course-studio__boundary > div,
 .course-studio__consent-copy {
   display: flex;
   flex-direction: column;
@@ -545,10 +492,6 @@
 }
 
 @media (max-width: 900px) {
-  .course-studio__intro {
-    grid-template-columns: 1fr;
-  }
-
   .course-studio__consent-list,
   .course-studio__recent-grid,
   .course-studio__workflow-list {
@@ -561,7 +504,6 @@
 }
 
 @media (max-width: 600px) {
-  .course-studio__intro,
   .course-studio__step-panel,
   .course-studio__review-hero {
     padding: var(--ns-space-4);

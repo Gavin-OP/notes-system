@@ -54,6 +54,11 @@
   }
 }
 
+.note-workspace-bar__enough {
+  color: var(--ns-color-text-secondary);
+  border-color: var(--ns-color-border-secondary);
+}
+
 .note-workspace-bar__study {
   display: flex;
   flex-wrap: nowrap;

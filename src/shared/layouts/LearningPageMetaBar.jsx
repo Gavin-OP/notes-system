@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button, Tooltip } from "antd";
-import { HomeOutlined, SearchOutlined } from "@ant-design/icons";
+import { HomeOutlined, SearchOutlined, ShopOutlined } from "@ant-design/icons";
 
 import AppFeatureTour from "../../features/profile/components/guide/AppFeatureTour";
 import SearchModal from "../../features/search/components/SearchModal";
@@ -42,6 +42,15 @@ function LearningPageMetaBar({
           icon={<HomeOutlined />}
           onClick={() => navigate("/")}
           aria-label={t("common.backToHome", "Back to Home")}
+        />
+      </Tooltip>
+      <Tooltip title="Explore Course Community">
+        <Button
+          shape="circle"
+          className="app-page-shell__tool-btn"
+          icon={<ShopOutlined />}
+          onClick={() => navigate("/courses/community")}
+          aria-label="Explore Course Community"
         />
       </Tooltip>
       {Array.isArray(notesGuideSteps) && notesGuideSteps.length > 0 ? (

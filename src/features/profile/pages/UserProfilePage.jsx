@@ -69,7 +69,7 @@ import CareerOnboardingModal from "../../careers/components/CareerOnboardingModa
 import CareerRecommendationsCard from "../../careers/components/CareerRecommendationsCard";
 import CareerSkillGapPanel from "../../careers/components/CareerSkillGapPanel";
 import AchievementsPanel, { normalizeAchievements } from "../components/achievements/AchievementsPanel";
-import { extractSubjectsFromNotesIndex } from "../components/achievements/achievementCatalog";
+import { buildDomainBadges, extractSubjectsFromNotesIndex } from "../components/achievements/achievementCatalog";
 import { isConcreteNoteRoute, normalizeNoteRoute } from "../../navigation/lib/notesIndexUtils";
 import AppFeatureTour, { PENDING_NOTES_TOUR_KEY } from "../components/guide/AppFeatureTour";
 import { CAREER_LEVEL_OPTIONS, formatCareerRoleLabel, formatTaxonomyLabel } from "../../careers/lib/careerDisplayUtils";
@@ -701,6 +701,10 @@ function UserProfilePage() {
     () => extractSubjectsFromNotesIndex(notesIndex),
     [notesIndex],
   );
+  const domainBadges = useMemo(
+    () => buildDomainBadges(achievementSubjects, completedNotes),
+    [achievementSubjects, completedNotes],
+  );
   const profileOverview = profileInfo.overview || {};
 
   useEffect(() => {
@@ -987,7 +991,7 @@ function UserProfilePage() {
       {
         key: "career-profile",
         title: "Personalize career goals",
-        description: "Answer a few optional questions to unlock role matches and skill gaps.",
+        description: "Answer a few optional questions to unlock role matches and next skills.",
         done: careerReady,
         actionLabel: careerReady ? "Review career" : "Personalize",
         onAction: () => {
@@ -1958,6 +1962,7 @@ function UserProfilePage() {
                         >
                           <AchievementsPanel
                             achievements={achievements}
+                            domainBadges={domainBadges}
                             overview={profileOverview}
                             subjects={achievementSubjects}
                             viewAllOpen={achievementsViewAllOpen}

@@ -21,6 +21,7 @@ import {
 } from "antd";
 import {
   AimOutlined,
+  AppstoreOutlined,
   ArrowRightOutlined,
   BookOutlined,
   DeleteOutlined,
@@ -110,6 +111,9 @@ function LearningPlatformWorkspace({
   const [selectedDiscoveryDomain, setSelectedDiscoveryDomain] = useState("");
   const [discoveryStep, setDiscoveryStep] = useState(0);
   const [discoverySaving, setDiscoverySaving] = useState(false);
+  const [setNamingOpen, setSetNamingOpen] = useState(false);
+  const [setName, setSetName] = useState("");
+  const [setNote, setSetNote] = useState("");
 
   const loadWorkspace = useCallback(async () => {
     setLoading(true);
@@ -213,6 +217,14 @@ function LearningPlatformWorkspace({
     () => recommendedCourses.find((item) => item.id === selectedCourseId) || null,
     [recommendedCourses, selectedCourseId],
   );
+
+  useEffect(() => {
+    if (selectedGoal?.goal_type !== "interest") return;
+    const officialPackage = recommendedCourses[0];
+    if (!officialPackage?.is_official) return;
+    setSelectedCourseId((current) => current === officialPackage.id ? current : officialPackage.id);
+  }, [recommendedCourses, selectedGoal?.goal_type]);
+
   const currentPathNodes = learningPath?.draft?.nodes || [];
 
   const openGoalModal = (goalType = "") => {
@@ -269,6 +281,7 @@ function LearningPlatformWorkspace({
       });
       setGoals((current) => [created, ...current]);
       setSelectedGoalId(created.id);
+      setSelectedCourseId(`official:${discoveryDomain.slug}`);
       setSelectedDiscoveryDomain("");
       setDiscoveryStep(2);
       message.success("Interest goal created.");
@@ -290,8 +303,10 @@ function LearningPlatformWorkspace({
     }
   };
 
-  const handleGeneratePath = async () => {
+  const handleGeneratePath = async (naming = {}) => {
     if (!selectedGoal || !selectedCourse) return;
+    const learningSetName = typeof naming?.learningSetName === "string" ? naming.learningSetName : "";
+    const learningSetNote = typeof naming?.learningSetNote === "string" ? naming.learningSetNote : "";
     setPathGenerating(true);
     try {
       const response = await generateGoalCourseLearningPath({
@@ -299,6 +314,8 @@ function LearningPlatformWorkspace({
         goal_type: selectedGoal.goal_type,
         goal_id: selectedGoal.id,
         goal_title: selectedGoal.title,
+        learning_set_name: learningSetName.trim() || selectedCourse.title,
+        learning_set_note: learningSetNote.trim(),
         goal_ref_id: selectedGoal.id,
         selected_course_ids: selectedCourse.is_official ? [] : [selectedCourse.id],
         selected_course_version_ids: !selectedCourse.is_official && selectedCourse.current_version_id
@@ -316,6 +333,9 @@ function LearningPlatformWorkspace({
         ...current.filter((item) => item?.draft?.path_id !== response?.draft?.path_id),
       ]);
       message.success("Learning path generated from your goal and selected course.");
+      setSetNamingOpen(false);
+      setSetName("");
+      setSetNote("");
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Could not generate the learning path.");
     } finally {
@@ -476,6 +496,7 @@ function LearningPlatformWorkspace({
 
   if (mode === "goals") {
     return (
+      <>
       <div className="goal-workspace">
         <div className="goal-workspace__section-head goal-workspace__section-head--saved">
           <Title level={4}>My Goals</Title>
@@ -562,7 +583,16 @@ function LearningPlatformWorkspace({
                         <Button size="large" onClick={() => navigate(`/course-packages/official/${selectedCourse.domain_slug}`)}>
                           View package
                         </Button>
-                        <Button type="primary" size="large" loading={pathGenerating} onClick={handleGeneratePath}>
+                        <Button
+                          type="primary"
+                          size="large"
+                          loading={pathGenerating}
+                          onClick={() => {
+                            setSetName(selectedCourse.title);
+                            setSetNote("");
+                            setSetNamingOpen(true);
+                          }}
+                        >
                           Save learning set
                         </Button>
                       </div>
@@ -574,6 +604,17 @@ function LearningPlatformWorkspace({
           </div>
         ) : null}
       </div>
+      <SetNamingModal
+        open={setNamingOpen}
+        name={setName}
+        note={setNote}
+        saving={pathGenerating}
+        onNameChange={setSetName}
+        onNoteChange={setSetNote}
+        onCancel={() => setSetNamingOpen(false)}
+        onSave={() => handleGeneratePath({ learningSetName: setName, learningSetNote: setNote })}
+      />
+      </>
     );
   }
 
@@ -593,7 +634,8 @@ function LearningPlatformWorkspace({
               return (
                 <Card key={draft.path_id} className="goal-workspace__learning-set">
                   <div>
-                    <Text strong>{draft.goal_title || "Learning set"}</Text>
+                    <Text strong>{draft.learning_set_name || draft.goal_title || "Learning set"}</Text>
+                    {draft.learning_set_note ? <Text type="secondary">{draft.learning_set_note}</Text> : null}
                     <Text type="secondary">{completed} of {draft.nodes?.length || 0} steps complete</Text>
                     <Progress percent={percent} size="small" showInfo={false} />
                   </div>
@@ -641,6 +683,9 @@ function LearningPlatformWorkspace({
             </Paragraph>
           </div>
           <Space wrap>
+            <Button icon={<AppstoreOutlined />} onClick={() => navigate("/courses/community")}>
+              Explore Course Community
+            </Button>
             <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate("/course-studio")}>
               Create or import a course
             </Button>
@@ -733,7 +778,11 @@ function LearningPlatformWorkspace({
                 icon={<ArrowRightOutlined />}
                 loading={pathGenerating}
                 disabled={!selectedGoal || !selectedCourse || !selectedCourse.current_version_id}
-                onClick={handleGeneratePath}
+                onClick={() => {
+                  setSetName(selectedCourse?.title || selectedGoal?.title || "Learning set");
+                  setSetNote("");
+                  setSetNamingOpen(true);
+                }}
               >
                 Generate path
               </Button>
@@ -762,7 +811,43 @@ function LearningPlatformWorkspace({
         onCancel={() => setGoalModalOpen(false)}
         onSubmit={handleCreateGoal}
       />
+      <SetNamingModal
+        open={setNamingOpen}
+        name={setName}
+        note={setNote}
+        saving={pathGenerating}
+        onNameChange={setSetName}
+        onNoteChange={setSetNote}
+        onCancel={() => setSetNamingOpen(false)}
+        onSave={() => handleGeneratePath({ learningSetName: setName, learningSetNote: setNote })}
+      />
     </div>
+  );
+}
+
+function SetNamingModal({ open, name, note, saving, onNameChange, onNoteChange, onCancel, onSave }) {
+  return (
+    <Modal
+      title="Save learning set"
+      open={open}
+      onCancel={onCancel}
+      okText="Save set"
+      confirmLoading={saving}
+      okButtonProps={{ disabled: !name.trim() }}
+      onOk={onSave}
+      destroyOnHidden
+    >
+      <Space direction="vertical" size={16} className="goal-workspace__naming-fields">
+        <label>
+          <Text strong>Name</Text>
+          <Input value={name} maxLength={255} onChange={(event) => onNameChange(event.target.value)} />
+        </label>
+        <label>
+          <Text strong>Note <Text type="secondary">(optional)</Text></Text>
+          <Input.TextArea value={note} maxLength={1000} rows={3} onChange={(event) => onNoteChange(event.target.value)} />
+        </label>
+      </Space>
+    </Modal>
   );
 }
 

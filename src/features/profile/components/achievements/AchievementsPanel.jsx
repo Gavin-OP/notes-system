@@ -45,6 +45,7 @@ export function normalizeAchievements(profile = {}) {
 
 function AchievementsPanel({
   achievements = [],
+  domainBadges = [],
   overview = {},
   subjects = [],
   viewAllOpen = false,
@@ -68,6 +69,10 @@ function AchievementsPanel({
       ),
     [allTrophies],
   );
+  const visibleTrophies = useMemo(
+    () => [...domainBadges, ...unlockedRegularTrophies],
+    [domainBadges, unlockedRegularTrophies],
+  );
 
   return (
     <div className="achievements-panel">
@@ -75,11 +80,16 @@ function AchievementsPanel({
         <TrophyBadge title={bestStreakTrophy.title} value={bestStreakTrophy.value} />
       </div>
 
-      {unlockedRegularTrophies.length > 0 ? (
+      {visibleTrophies.length > 0 ? (
         <Row gutter={[12, 12]} align="stretch">
-          {unlockedRegularTrophies.map((item) => (
+          {visibleTrophies.map((item) => (
             <Col key={item.id} xs={12} sm={8} md={6}>
-              <TrophyBadge title={item.title} value={item.value} locked={!item.isUnlocked} />
+              <TrophyBadge
+                title={item.title}
+                value={item.value}
+                locked={!item.isUnlocked}
+                footer={item.category === "domain" ? `${item.courseCount} course` : ""}
+              />
             </Col>
           ))}
         </Row>
@@ -88,7 +98,7 @@ function AchievementsPanel({
       <AchievementsViewAllModal
         open={viewAllOpen}
         onClose={onViewAllClose}
-        trophies={allTrophies}
+        trophies={[...domainBadges, ...allTrophies]}
       />
     </div>
   );

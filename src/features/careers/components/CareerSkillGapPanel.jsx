@@ -80,7 +80,7 @@ function detailText(label, items = []) {
 function CareerSkillGapPanel({ recommendations = [], relatedSubjects = [] }) {
   const gaps = buildGapGroups(recommendations, relatedSubjects);
   if (!gaps.length) {
-    return <Empty description="No skill gaps yet." />;
+    return <Empty description="No next skills yet." />;
   }
 
   return (

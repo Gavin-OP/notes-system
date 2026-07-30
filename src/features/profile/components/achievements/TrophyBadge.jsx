@@ -21,6 +21,7 @@ function TrophyBadge({
   locked = false,
   showMeta = false,
   staticBadge = false,
+  footer = "",
 }) {
   const badgeValue = formatBadgeValue(value);
 
@@ -28,7 +29,7 @@ function TrophyBadge({
     <article
       className={`trophy-badge ${locked ? "trophy-badge--locked" : ""} ${
         staticBadge ? "trophy-badge--static" : ""
-      }`}
+      } ${footer ? "trophy-badge--with-footer" : ""}`}
     >
       <div className="trophy-badge__icon-shell" aria-hidden="true">
         <TrophyOutlined className="trophy-badge__icon" />
@@ -49,6 +50,7 @@ function TrophyBadge({
           </Text>
         ) : null}
       </div>
+      {footer ? <Text type="secondary" className="trophy-badge__footer">{footer}</Text> : null}
     </article>
   );
 }

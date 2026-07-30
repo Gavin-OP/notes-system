@@ -6,9 +6,9 @@
   text-align: center;
   gap: var(--ns-space-2);
   width: 100%;
-  height: 118px;
-  min-height: 118px;
-  max-height: 118px;
+  height: 136px;
+  min-height: 136px;
+  max-height: 136px;
   padding: var(--ns-space-3) var(--ns-space-2) var(--ns-space-2);
   border-radius: var(--ns-radius-lg);
   border: 1px solid var(--ns-chip-wisdom-border);
@@ -85,10 +85,15 @@
 }
 
 .trophy-badge__description,
-.trophy-badge__date {
+.trophy-badge__date,
+.trophy-badge__footer {
   display: block;
   font-size: var(--ns-font-size-xs);
   line-height: 1.3;
+}
+
+.trophy-badge__footer {
+  flex: 0 0 auto;
 }
 
 .trophy-badge--locked {

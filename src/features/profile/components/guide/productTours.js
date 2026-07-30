@@ -56,7 +56,7 @@ export function createProfileGuideSteps(refs, t = (key, fallback) => fallback ||
       title: t("guide.profile.4.title", "Aim at a role, if you want"),
       description: t(
         "guide.profile.4.description",
-        "Set career goals, compare matches, and turn skill gaps into a concrete learning path. Skip this entirely if you are here just to study.",
+        "Set career goals, compare matches, and turn next skills into a concrete learning path. Skip this entirely if you are here just to study.",
       ),
       target: () => profileCareerRef?.current,
       placement: "top",

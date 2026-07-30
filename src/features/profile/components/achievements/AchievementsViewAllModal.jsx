@@ -31,6 +31,7 @@ function AchievementsViewAllModal({ open, onClose, trophies = [] }) {
               value={item.value}
               locked={!item.isUnlocked}
               staticBadge
+              footer={item.category === "domain" ? `${item.courseCount} course` : ""}
             />
           </div>
         ))}

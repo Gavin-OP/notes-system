@@ -264,24 +264,6 @@ function CourseStudioPage() {
       contentWidth="wide"
       contentClassName="course-studio"
     >
-      <div className="course-studio__intro">
-        <div>
-          <Text className="course-studio__eyebrow">Course Studio</Text>
-          <Title level={2}>Your notes, organized into a course perspective.</Title>
-          <Paragraph>
-            Source material stays private by default. You choose the Domain and Learning Archetype;
-            learners choose their Goal when they build a path.
-          </Paragraph>
-        </div>
-        <div className="course-studio__boundary">
-          <BranchesOutlined />
-          <div>
-            <Text strong>Stable core, flexible courses</Text>
-            <Text type="secondary">Proposals can reference canonical concepts, never rewrite them.</Text>
-          </div>
-        </div>
-      </div>
-
       <Card className="course-studio__progress-card">
         <Steps
           current={step}
