@@ -1,0 +1,28 @@
+{
+  "subject": "python",
+  "package_id": "package:official:python",
+  "note_ids": [
+    "note:python:getting-started-with-python",
+    "note:python:python-data-types-operators",
+    "note:python:control-flow-python",
+    "note:python:python-data-structures",
+    "note:python:functions-in-python",
+    "note:python:modules-packages",
+    "note:python:file-exception-handling",
+    "note:python:object-oriented-programming-python",
+    "note:python:advanced-python-concepts",
+    "note:python:intro-scientific-computing"
+  ],
+  "topic_count": 10,
+  "integrations": {
+    "learning_set": true,
+    "goal": true,
+    "badge": true,
+    "mindmap": true,
+    "audio": "deferred",
+    "database": true,
+    "chatbot": true
+  },
+  "errors": [],
+  "status": "ready_with_deferred_audio"
+}

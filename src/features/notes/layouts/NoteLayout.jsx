@@ -954,6 +954,8 @@ const NoteLayout = () => {
         message.success("Removed completion mark for this note.");
       } else {
         await completeMyNote({
+          noteId: currentMeta?.id || "",
+          packageId: currentMeta?.packageId || "",
           noteUrl: currentUrl,
           noteTitle: noteName,
           subject: currentMeta?.subjectName || "",
@@ -1236,6 +1238,9 @@ const NoteLayout = () => {
   const assistantContextPayload = useMemo(
     () => ({
       currentNote: {
+        note_id: currentMeta?.id || "",
+        package_id: currentMeta?.packageId || "",
+        domain_slug: currentMeta?.domainSlug || "",
         title: noteName,
         url: currentMeta?.url || "",
         content: currentNoteContent || "",
@@ -1246,7 +1251,7 @@ const NoteLayout = () => {
         content: item.path === currentMeta?.url ? currentNoteContent || "" : undefined,
       })),
     }),
-    [currentMeta?.url, currentNoteContent, noteName, selectedReferenceItems],
+    [currentMeta?.domainSlug, currentMeta?.id, currentMeta?.packageId, currentMeta?.url, currentNoteContent, noteName, selectedReferenceItems],
   );
 
   const handleGenerateQuiz = async () => {

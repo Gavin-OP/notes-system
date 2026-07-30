@@ -164,6 +164,8 @@ export function completeMyNote(payload) {
   return userApiRequest("/api/v1/users/me/notes/complete", {
     method: "POST",
     body: JSON.stringify({
+      note_id: payload?.noteId ?? "",
+      package_id: payload?.packageId ?? "",
       note_url: payload?.noteUrl ?? "",
       note_title: payload?.noteTitle ?? "",
       subject: payload?.subject ?? "",

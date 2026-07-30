@@ -1,0 +1,32 @@
+{
+  "subject": "statistics",
+  "package_id": "package:official:statistics",
+  "note_ids": [
+    "note:statistics:rules-of-thumb",
+    "note:statistics:basic-definition",
+    "note:statistics:basic-statistics",
+    "note:statistics:distribution",
+    "note:statistics:probability-theorem",
+    "note:statistics:hypothesis-testing",
+    "note:statistics:linear-regression",
+    "note:statistics:markov-chain",
+    "note:statistics:time-series",
+    "note:statistics:sampling-methods",
+    "note:statistics:linear-algebra",
+    "note:statistics:basic-mathematics-tools",
+    "note:statistics:simulation",
+    "note:statistics:bayesian-learning"
+  ],
+  "topic_count": 14,
+  "integrations": {
+    "learning_set": true,
+    "goal": true,
+    "badge": true,
+    "mindmap": true,
+    "audio": "deferred",
+    "database": true,
+    "chatbot": true
+  },
+  "errors": [],
+  "status": "ready_with_deferred_audio"
+}

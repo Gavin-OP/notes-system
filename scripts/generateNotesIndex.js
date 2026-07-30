@@ -82,6 +82,7 @@ function processNoteMeta(fullPath, notesDir, parentSlugs, urlSet) {
   const fileName = path.basename(fullPath);
   let fileMeta = {};
   let content = "";
+  let generatedMeta = {};
 
   if (fileName.endsWith(".md")) {
     content = fs.readFileSync(fullPath, "utf8");
@@ -89,6 +90,14 @@ function processNoteMeta(fullPath, notesDir, parentSlugs, urlSet) {
       fileMeta = matter(content).data || {};
     } catch (e) {
       logError(`Failed to parse front matter in ${fullPath}: ${e}`);
+    }
+  }
+  const sidecarPath = fullPath.replace(/\.md$/i, ".json");
+  if (fs.existsSync(sidecarPath)) {
+    try {
+      generatedMeta = JSON.parse(fs.readFileSync(sidecarPath, "utf8")) || {};
+    } catch (e) {
+      logError(`Failed to parse generated note metadata in ${sidecarPath}: ${e}`);
     }
   }
 
@@ -111,6 +120,13 @@ function processNoteMeta(fullPath, notesDir, parentSlugs, urlSet) {
   urlSet.add(url);
 
   return {
+    id: generatedMeta.note_id || `note:${parentSlugs.join(":")}:${slug.replace(/\.md$/i, "")}`,
+    packageId: generatedMeta.package_id || `package:official:${parentSlugs[0] || "unknown"}`,
+    authorId: generatedMeta.author_id || "official",
+    domainSlug: generatedMeta.domain_slug || parentSlugs[0] || "",
+    primaryArchetype: generatedMeta.primary_archetype || "conceptual",
+    secondaryArchetypes: generatedMeta.secondary_archetypes || [],
+    capabilities: generatedMeta.capabilities || {},
     type: "file",
     name: fileName,
     directory: relDir,

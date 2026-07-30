@@ -1,0 +1,27 @@
+{
+  "subject": "finance",
+  "package_id": "package:official:finance",
+  "note_ids": [
+    "note:finance:rules-of-thumb",
+    "note:finance:basic-definition",
+    "note:finance:fixed-income",
+    "note:finance:equity-market",
+    "note:finance:derivatives",
+    "note:finance:portfolio-management",
+    "note:finance:behavioral-finance",
+    "note:finance:time-value",
+    "note:finance:risk-and-insurance"
+  ],
+  "topic_count": 9,
+  "integrations": {
+    "learning_set": true,
+    "goal": true,
+    "badge": true,
+    "mindmap": true,
+    "audio": "deferred",
+    "database": true,
+    "chatbot": true
+  },
+  "errors": [],
+  "status": "ready_with_deferred_audio"
+}

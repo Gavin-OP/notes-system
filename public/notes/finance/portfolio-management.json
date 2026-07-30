@@ -50,5 +50,20 @@
         }
       ]
     }
+  },
+  "note_id": "note:finance:portfolio-management",
+  "package_id": "package:official:finance",
+  "author_id": "official",
+  "domain_slug": "finance",
+  "primary_archetype": "conceptual",
+  "secondary_archetypes": [],
+  "capabilities": {
+    "learning_set": true,
+    "goal_matching": true,
+    "domain_badge": true,
+    "mindmap": true,
+    "narration": true,
+    "subject_database": true,
+    "chatbot": true
   }
 }

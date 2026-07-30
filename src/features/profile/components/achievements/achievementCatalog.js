@@ -116,7 +116,7 @@ export function extractSubjectsFromNotesIndex(notesIndex = []) {
 
 export function buildDomainBadges(subjects = [], completedNotes = []) {
   const subjectBySlug = new Map(subjects.map((subject) => [String(subject.slug).toLowerCase(), subject]));
-  const exploredSlugs = new Set();
+  const completedIdsBySlug = new Map();
 
   completedNotes.forEach((note) => {
     const noteUrl = String(note.noteUrl || note.note_url || "").split(/[?#]/)[0];
@@ -127,10 +127,13 @@ export function buildDomainBadges(subjects = [], completedNotes = []) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
     const slug = String(urlMatch?.[1] || subjectSlug).toLowerCase();
-    if (slug && !EXCLUDED_SUBJECT_SLUGS.has(slug)) exploredSlugs.add(slug);
+    if (slug && !EXCLUDED_SUBJECT_SLUGS.has(slug)) {
+      if (!completedIdsBySlug.has(slug)) completedIdsBySlug.set(slug, new Set());
+      completedIdsBySlug.get(slug).add(String(note.id || noteUrl));
+    }
   });
 
-  return [...exploredSlugs].map((slug) => {
+  return [...completedIdsBySlug].map(([slug, completedIds]) => {
     const subject = subjectBySlug.get(slug);
     return {
       id: `domain_explored:${slug}`,
@@ -138,7 +141,7 @@ export function buildDomainBadges(subjects = [], completedNotes = []) {
       title: subject?.title || slug.replace(/[-_]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()),
       description: "Domain explored",
       value: null,
-      courseCount: 1,
+      courseCount: completedIds.size,
       isUnlocked: true,
     };
   }).sort((a, b) => a.title.localeCompare(b.title));

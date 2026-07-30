@@ -36,5 +36,22 @@
         }
       ]
     }
+  },
+  "note_id": "note:python:functions-in-python",
+  "package_id": "package:official:python",
+  "author_id": "official",
+  "domain_slug": "python",
+  "primary_archetype": "practice_based",
+  "secondary_archetypes": [
+    "conceptual"
+  ],
+  "capabilities": {
+    "learning_set": true,
+    "goal_matching": true,
+    "domain_badge": true,
+    "mindmap": true,
+    "narration": true,
+    "subject_database": true,
+    "chatbot": true
   }
 }

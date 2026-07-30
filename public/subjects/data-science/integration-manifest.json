@@ -1,0 +1,31 @@
+{
+  "subject": "data-science",
+  "package_id": "package:official:data-science",
+  "note_ids": [
+    "note:data-science:introduction-to-data-science",
+    "note:data-science:data-fundamentals-and-types",
+    "note:data-science:programming-for-data-science-python",
+    "note:data-science:data-acquisition-and-storage",
+    "note:data-science:data-cleaning-preprocessing",
+    "note:data-science:exploratory-data-analysis",
+    "note:data-science:statistical-foundations",
+    "note:data-science:introduction-to-machine-learning",
+    "note:data-science:supervised-learning-regression",
+    "note:data-science:supervised-learning-classification",
+    "note:data-science:unsupervised-learning-clustering",
+    "note:data-science:advanced-data-visualization",
+    "note:data-science:model-evaluation-deployment"
+  ],
+  "topic_count": 13,
+  "integrations": {
+    "learning_set": true,
+    "goal": true,
+    "badge": true,
+    "mindmap": true,
+    "audio": "deferred",
+    "database": true,
+    "chatbot": true
+  },
+  "errors": [],
+  "status": "ready_with_deferred_audio"
+}
