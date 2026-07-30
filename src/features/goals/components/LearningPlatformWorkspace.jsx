@@ -33,6 +33,7 @@ import {
 import SemanticChip from "../../../shared/ui/SemanticChip";
 import {
   deleteGoal,
+  deletePersonalLearningPath,
   createGoal,
   generateGoalCourseLearningPath,
   getPersonalLearningPath,
@@ -75,6 +76,15 @@ function normalizePath(payload) {
       edges: Array.isArray(draft?.edges) ? draft.edges : [],
     },
   };
+}
+
+function learningSetDisplayName(draft = {}) {
+  const savedName = String(draft.learning_set_name || draft.goal_title || "").trim();
+  if (savedName && savedName.toLowerCase() !== "learning set") return savedName;
+  const subjectTitle = draft.nodes?.find((node) => node?.metadata?.subject_title)?.metadata?.subject_title;
+  if (subjectTitle) return `${subjectTitle} Learning Set`;
+  const firstTitle = draft.nodes?.find((node) => node?.title)?.title;
+  return firstTitle ? `${firstTitle} Path` : "Untitled path";
 }
 
 function goalTypeOptions() {
@@ -300,6 +310,16 @@ function LearningPlatformWorkspace({
       message.success("Goal deleted.");
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Could not delete the goal.");
+    }
+  };
+
+  const handleDeleteLearningSet = async (pathId) => {
+    try {
+      await deletePersonalLearningPath(pathId);
+      setLearningSets((current) => current.filter((item) => item?.draft?.path_id !== pathId));
+      message.success("Learning set deleted.");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Could not delete the learning set.");
     }
   };
 
@@ -634,18 +654,31 @@ function LearningPlatformWorkspace({
               return (
                 <Card key={draft.path_id} className="goal-workspace__learning-set">
                   <div>
-                    <Text strong>{draft.learning_set_name || draft.goal_title || "Learning set"}</Text>
+                    <Text strong>{learningSetDisplayName(draft)}</Text>
                     {draft.learning_set_note ? <Text type="secondary">{draft.learning_set_note}</Text> : null}
                     <Text type="secondary">{completed} of {draft.nodes?.length || 0} steps complete</Text>
                     <Progress percent={percent} size="small" showInfo={false} />
                   </div>
-                  <Button
-                    type="primary"
-                    disabled={!active?.note_url}
-                    onClick={() => active?.note_url && navigate(active.note_url, { state: { learningPathId: draft.path_id } })}
-                  >
-                    Open set
-                  </Button>
+                  <Space wrap className="goal-workspace__learning-set-actions">
+                    <Popconfirm
+                      title="Delete this learning set?"
+                      description="Its saved path and progress view will be removed."
+                      okText="Delete"
+                      okButtonProps={{ danger: true }}
+                      onConfirm={() => handleDeleteLearningSet(draft.path_id)}
+                    >
+                      <Button danger icon={<DeleteOutlined />} aria-label={`Delete ${learningSetDisplayName(draft)}`}>
+                        Delete
+                      </Button>
+                    </Popconfirm>
+                    <Button
+                      type="primary"
+                      disabled={!active?.note_url}
+                      onClick={() => active?.note_url && navigate(active.note_url, { state: { learningPathId: draft.path_id } })}
+                    >
+                      Open set
+                    </Button>
+                  </Space>
                 </Card>
               );
             })}

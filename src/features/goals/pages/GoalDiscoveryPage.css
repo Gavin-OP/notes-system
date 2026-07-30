@@ -680,6 +680,10 @@
   gap: 4px;
 }
 
+.goal-workspace__learning-set .ant-card-body > .goal-workspace__learning-set-actions {
+  flex-direction: row;
+}
+
 .goal-workspace__naming-fields,
 .goal-workspace__naming-fields label {
   width: 100%;

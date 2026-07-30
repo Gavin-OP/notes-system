@@ -214,6 +214,12 @@ export function listPersonalLearningPaths() {
   return request("/api/v1/assistant/learning-paths");
 }
 
+export function deletePersonalLearningPath(pathId) {
+  return request(`/api/v1/assistant/learning-paths/${encodeURIComponent(pathId)}`, {
+    method: "DELETE",
+  });
+}
+
 export function generateGoalCourseLearningPath(payload) {
   return request("/api/v1/assistant/learning-path/generate", {
     method: "POST",
