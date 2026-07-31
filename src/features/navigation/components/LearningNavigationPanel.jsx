@@ -810,7 +810,7 @@ const LearningNavigationPanel = ({
             onClick={() => setEditLibraryTab("subject")}
           >
             <ApartmentOutlined />
-            <span>{t("learningPath.editBySubject", "By subject")}</span>
+            <span>{t("learningPath.editBySubject", "By knowledge domain")}</span>
           </button>
           <button
             type="button"
@@ -836,14 +836,14 @@ const LearningNavigationPanel = ({
 
         <p className="learning-nav__editor-hint">
           {editLibraryTab === "subject"
-            ? t("learningPath.editBySubjectHint", "Drag or click a subject to add all of its courses.")
+            ? t("learningPath.editBySubjectHint", "Drag or click a knowledge domain to add its notes.")
             : editLibraryTab === "course"
               ? t("learningPath.editByCourseHint", "Pick individual courses and drag them into your path.")
               : t("learningPath.editByCareerHint", "Choose a career role to import its recommended path.")}
         </p>
 
         {editLibraryTab === "subject" ? (
-          <div className="learning-nav__library" aria-label={t("learningPath.editBySubject", "By subject")}>
+          <div className="learning-nav__library" aria-label={t("learningPath.editBySubject", "By knowledge domain")}>
             {subjectLibrary.map((subject) => (
               <button
                 key={subject.key}

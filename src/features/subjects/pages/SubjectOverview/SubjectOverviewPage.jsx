@@ -18,7 +18,7 @@ function SubjectOverviewPage() {
 
   return (
     <AppPageShell
-      backLabel={t("subjectOverview.backToDatabase", "Back to Subject Database")}
+      backLabel={t("subjectOverview.backToDatabase", "Back to Knowledge Database")}
       onBack={() => navigate("/subjects")}
       showSiteFooter
       contentWidth="wide"

@@ -2,11 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Input, List, Space, Spin, Typography } from "antd";
-import {
-  ArrowRightOutlined,
-  BookOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { ArrowRightOutlined, BookOutlined, SearchOutlined } from "@ant-design/icons";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import { buildSearchResultUrl, searchNotes } from "../../../features/search/api/search";
@@ -59,9 +55,9 @@ function collectSubjects(items = []) {
         type: "subject",
         key: subjectId,
         title,
-        meta: "Subject",
+        meta: "Knowledge Domain",
         url: `/subject/${subjectId}`,
-        searchText: [title, subjectId, "subject course discipline"].join(" ").toLowerCase(),
+        searchText: [title, subjectId, "knowledge domain field"].join(" ").toLowerCase(),
       };
     })
     .filter(Boolean);
@@ -134,27 +130,10 @@ function HomePage() {
     () => getDefaultLearningEntryUrl(notesIndex),
     [notesIndex],
   );
-  const primaryEntry = useMemo(() => {
-    if (currentUser.isAuthenticated) {
-      const continueUrl = resolveProfileLearningUrl(currentUser.profile, learningEntryUrl);
-      return {
-        url: continueUrl,
-        label: t("home.continueLearning", "Continue learning"),
-        hint: t(
-          "home.continueLearningHint",
-          "Resume from the last note in your learning workspace",
-        ),
-      };
-    }
-    return {
-      url: "/user/profile?section=goals",
-      label: t("home.chooseSubject", "Start with a goal"),
-      hint: t(
-        "home.chooseSubjectHint",
-        "Choose Career or Interest and build a complete learning set",
-      ),
-    };
-  }, [currentUser.isAuthenticated, currentUser.profile, learningEntryUrl, t]);
+  const continueLearningUrl = useMemo(
+    () => resolveProfileLearningUrl(currentUser.profile, learningEntryUrl),
+    [currentUser.profile, learningEntryUrl],
+  );
 
   const localMatches = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -242,15 +221,15 @@ function HomePage() {
 
           <div className="home-page__hero-copy">
             <Text className="home-page__eyebrow">
-              {t("home.eyebrow", "Structured learning for life after school")}
+              {t("home.eyebrow", "Knowledge shaped by many perspectives")}
             </Text>
             <h1 className="home-page__headline">
-              {t("home.headline", "Learn with a map made for you.")}
+              {t("home.headline", "Explore knowledge. Build your path. Share your perspective.")}
             </h1>
             <p className="home-page__subhead">
               {t(
                 "home.subhead",
-                "Notes System turns unfamiliar fields into clear routes: landmarks, prerequisites, paths, and next steps that adapt as your understanding grows.",
+                "Notes System connects knowledge domains, course perspectives, and personal learning paths—so anyone can learn and contribute how they understand.",
               )}
             </p>
 
@@ -260,7 +239,7 @@ function HomePage() {
                 className="home-page__search-input"
                 prefix={<SearchOutlined />}
                 value={query}
-                placeholder={t("home.searchPlaceholder", "Search subjects and notes...")}
+                placeholder={t("home.searchPlaceholder", "Search knowledge domains and notes...")}
                 onChange={(event) => setQuery(event.target.value)}
                 onPressEnter={submitSearch}
                 allowClear
@@ -345,47 +324,24 @@ function HomePage() {
               <button
                 type="button"
                 className="home-page__enter-learning"
-                onClick={() => navigate(primaryEntry.url)}
-              >
-                <BookOutlined aria-hidden="true" />
-                <span>{primaryEntry.label}</span>
-                <ArrowRightOutlined className="home-page__enter-learning-arrow" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="home-page__secondary-learning"
                 onClick={() => navigate("/database")}
               >
-                {t("home.quickOpenFirstNote", "Explore Our Database")}
+                <BookOutlined aria-hidden="true" />
+                <span>Explore the Knowledge Database</span>
+                <ArrowRightOutlined className="home-page__enter-learning-arrow" aria-hidden="true" />
               </button>
+              {currentUser.isAuthenticated ? (
+                <button
+                  type="button"
+                  className="home-page__secondary-learning"
+                  onClick={() => navigate(continueLearningUrl)}
+                >
+                  {t("home.continueLearning", "Continue learning")}
+                </button>
+              ) : null}
             </div>
-            <p className="home-page__entry-hint">{primaryEntry.hint}</p>
           </div>
         </div>
-
-        <ol className="home-page__learning-loop" aria-label={t("home.guideStripLabel", "Learning guide features")}>
-          <li>
-            <span className="home-page__step-index">01</span>
-            <span>
-              <strong>{t("home.steps.goal.title", "Goal")}</strong>
-              <small>{t("home.steps.goal.detail", "Define the direction")}</small>
-            </span>
-          </li>
-          <li>
-            <span className="home-page__step-index">02</span>
-            <span>
-              <strong>{t("home.steps.tree.title", "Tree")}</strong>
-              <small>{t("home.steps.tree.detail", "Map concepts and prerequisites")}</small>
-            </span>
-          </li>
-          <li>
-            <span className="home-page__step-index">03</span>
-            <span>
-              <strong>{t("home.steps.study.title", "Path")}</strong>
-              <small>{t("home.steps.study.detail", "Learn, test, and adjust")}</small>
-            </span>
-          </li>
-        </ol>
       </section>
     </AppPageShell>
   );

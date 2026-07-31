@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, message, Typography } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowsAltOutlined,
   CloseOutlined,
@@ -13,6 +14,7 @@ import { decideAssistantAction, requestProductAssistant } from "../api/assistant
 import { translateContent } from "../../../shared/api/translations";
 import useTranslation from "../../../i18n/useTranslation";
 import AssistantWorkspace from "./AssistantWorkspace";
+import useCurrentUserSummary from "../../profile/hooks/useCurrentUserSummary";
 import { GlobalAssistantContext } from "./GlobalAssistantContext";
 import "./GlobalAssistantProvider.css";
 
@@ -111,7 +113,10 @@ function alignPositionForState(
 }
 
 export default function GlobalAssistantProvider({ children }) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { language } = useTranslation();
+  const currentUser = useCurrentUserSummary();
   const currentMeta = useSelector((state) => state.currentNote.meta);
   const currentNoteContent = useSelector((state) => state.currentNote.content);
   const [assistantOpen, setAssistantOpen] = useState(false);
@@ -144,6 +149,12 @@ export default function GlobalAssistantProvider({ children }) {
   );
 
   const openAssistant = useCallback(({ prompt = "" } = {}) => {
+    if (!currentUser.isAuthenticated) {
+      navigate("/user/login", {
+        state: { from: `${location.pathname}${location.search}${location.hash}` },
+      });
+      return;
+    }
     setPosition((prev) =>
       alignPositionForState(prev, {
         isOpen: true,
@@ -154,7 +165,7 @@ export default function GlobalAssistantProvider({ children }) {
     );
     setAssistantOpen(true);
     if (prompt) setQaInput(prompt);
-  }, [assistantExpanded]);
+  }, [assistantExpanded, currentUser.isAuthenticated, location.hash, location.pathname, location.search, navigate]);
 
   const closeAssistant = useCallback(() => {
     setPosition((prev) =>
@@ -211,6 +222,12 @@ export default function GlobalAssistantProvider({ children }) {
   };
 
   const handleSendQa = async () => {
+    if (!currentUser.isAuthenticated) {
+      navigate("/user/login", {
+        state: { from: `${location.pathname}${location.search}${location.hash}` },
+      });
+      return;
+    }
     const trimmedQuestion = qaInput.trim();
     if (!trimmedQuestion || qaPending) return;
 

@@ -536,6 +536,7 @@ function UserProfilePage() {
   const [previewNotice, setPreviewNotice] = useState("");
   const [activeDashboard, setActiveDashboard] = useState("goals");
   const [goalDiscoveryType, setGoalDiscoveryType] = useState("");
+  const [goalDiscoveryDomain, setGoalDiscoveryDomain] = useState("");
   const [learningRecordsTab, setLearningRecordsTab] = useState("study");
   const [selectedCareerRole, setSelectedCareerRole] = useState("");
   const [achievementsViewAllOpen, setAchievementsViewAllOpen] = useState(false);
@@ -554,10 +555,12 @@ function UserProfilePage() {
     const search = new URLSearchParams(location.search);
     const requestedSection = search.get("section");
     const requestedGoalType = search.get("goalType");
+    const requestedDomain = search.get("domain");
     if (["overview", "goals", "learning", "courses"].includes(requestedSection)) {
       setActiveDashboard(requestedSection === "overview" ? "goals" : requestedSection);
     }
     if (requestedGoalType) setGoalDiscoveryType(requestedGoalType);
+    if (requestedDomain) setGoalDiscoveryDomain(requestedDomain);
     if (location.state?.dashboard === "career") {
       setActiveDashboard("goals");
       setGoalDiscoveryType("career");
@@ -565,17 +568,6 @@ function UserProfilePage() {
       setActiveDashboard(location.state.dashboard === "overview" ? "goals" : location.state.dashboard);
     }
   }, [location.search, location.state]);
-
-  const scrollToCareerDashboard = useCallback(() => {
-    setActiveDashboard("goals");
-    setGoalDiscoveryType("career");
-    window.setTimeout(() => {
-      profileCareerRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }, 80);
-  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -962,59 +954,40 @@ function UserProfilePage() {
   }, [careerBackground, fallbackProgress, learningTracks, profileInfo]);
 
   const onboardingChecklist = useMemo(() => {
-    const careerReady = profileEditBackground.onboardingCompleted;
     return [
       {
-        key: "first-note",
-        title: "Open your next note",
-        description: "Start from the note we think is most useful right now.",
-        done: recentNotes.length > 0 || completedNotes.length > 0,
-        actionLabel: "Open note",
-        onAction: () => navigate(continueLearningUrl),
+        key: "domains",
+        title: "Explore a Knowledge Domain",
+        description: "See how notes and concepts connect across a field.",
+        actionLabel: "Open database",
+        onAction: () => navigate("/database"),
       },
       {
-        key: "save-highlight",
-        title: "Save one useful highlight",
-        description: "Select text in a note and keep it in your personal study notes.",
-        done: personalNoteQuotes.length > 0,
-        actionLabel: "Try in note",
-        onAction: () => navigate(continueLearningUrl),
+        key: "packages",
+        title: "Browse Course Packages",
+        description: "Compare complete learning perspectives from different authors.",
+        actionLabel: "Browse packages",
+        onAction: () => navigate("/courses/community"),
       },
       {
-        key: "complete-note",
-        title: "Mark a note complete",
-        description: "Turn reading into visible progress and achievements.",
-        done: completedNotes.length > 0,
-        actionLabel: "Continue",
-        onAction: () => navigate(continueLearningUrl),
+        key: "learning-set",
+        title: "Build a Learning Set",
+        description: "Save a package as your own path, with its own order and progress.",
+        actionLabel: "Choose a direction",
+        onAction: () => setActiveDashboard("goals"),
       },
       {
-        key: "career-profile",
-        title: "Personalize career goals",
-        description: "Answer a few optional questions to unlock role matches and next skills.",
-        done: careerReady,
-        actionLabel: careerReady ? "Review career" : "Personalize",
-        onAction: () => {
-          if (careerReady) {
-            scrollToCareerDashboard();
-            return;
-          }
-          setCareerOnboardingOpen(true);
-        },
+        key: "notes",
+        title: "Learn from a Note",
+        description: "Read, ask questions, save highlights, or pause when you have enough for now.",
+        actionLabel: "Open a note",
+        onAction: () => navigate(continueLearningUrl),
       },
     ];
   }, [
-    completedNotes.length,
     continueLearningUrl,
     navigate,
-    personalNoteQuotes.length,
-    profileEditBackground.onboardingCompleted,
-    recentNotes.length,
-    scrollToCareerDashboard,
   ]);
-  const checklistDoneCount = onboardingChecklist.filter((item) => item.done).length;
-  const checklistProgress = Math.round((checklistDoneCount / onboardingChecklist.length) * 100);
-  const checklistComplete = checklistDoneCount === onboardingChecklist.length;
   const checklistDismissed = Boolean(
     (profileInfo.guide_state || profileInfo.guideState || {})?.guides?.learning_quests?.completed,
   );
@@ -1039,10 +1012,11 @@ function UserProfilePage() {
       completedCount: completedNotes.length,
       highlightCount: personalNoteQuotes.length,
       activeDays,
+      domainCount: domainBadges.filter((badge) => badge.unlocked).length,
       focusArea,
       recentNotes: decoratedCompletedNotes.slice(0, 5),
       highlights: personalNoteQuotes.slice(0, 3),
-      careerGoal: careerGoals[0] || "Not selected yet",
+      currentGoal: careerGoals[0] || "Open exploration",
       matchedSkills: selectedCareerSkills.slice(0, 5).join(", ") || focusArea,
       nextStep:
         topCareer?.next_step ||
@@ -1056,6 +1030,7 @@ function UserProfilePage() {
     completedNotes.length,
     contributionMatrix.weeks,
     decoratedCompletedNotes,
+    domainBadges,
     learningTracks,
     personalNoteQuotes,
     recommendedFirstNote,
@@ -1154,6 +1129,14 @@ function UserProfilePage() {
       completed_notes: completedNotes,
       saved_highlights: personalNoteQuotes,
       learning_tracks: learningTracks,
+      learning_sets:
+        profileInfo.learning_sets || profileInfo.learningSets || learningTracks,
+      knowledge_domain_badges: domainBadges,
+      content_identity: {
+        note_id_field: "note_id",
+        package_id_field: "package_id",
+        order_fields: ["recommended_order", "custom_order"],
+      },
       career_background: careerBackground,
       career_recommendations: careerRecommendations,
       progress_snapshot: fallbackProgress,
@@ -1174,6 +1157,7 @@ function UserProfilePage() {
     careerBackground,
     careerRecommendations,
     completedNotes,
+    domainBadges,
     fallbackProgress,
     learningTracks,
     personalNoteQuotes,
@@ -1676,7 +1660,7 @@ function UserProfilePage() {
             <div className="learning-report-poster__metrics">
               <div><strong>{learningReport.completedCount}</strong><span>Completed notes</span></div>
               <div><strong>{learningReport.highlightCount}</strong><span>Saved highlights</span></div>
-              <div><strong>{learningReport.activeDays}</strong><span>Active days</span></div>
+              <div><strong>{learningReport.domainCount}</strong><span>Knowledge domains explored</span></div>
               <div><strong>{learningReport.focusArea}</strong><span>Current focus area</span></div>
             </div>
           </section>
@@ -1756,11 +1740,11 @@ function UserProfilePage() {
           <section className="learning-report-poster__section">
             <div className="learning-report-poster__section-title">
               <span>5</span>
-              <h2>Career / Goal Alignment</h2>
+              <h2>Goals & Direction</h2>
             </div>
             <div className="learning-report-poster__career">
-              <div><strong>Current career goal</strong><span>{learningReport.careerGoal}</span></div>
-              <div><strong>Top matched skills or subjects</strong><span>{learningReport.matchedSkills}</span></div>
+              <div><strong>Current goal</strong><span>{learningReport.currentGoal}</span></div>
+              <div><strong>Connected skills or domains</strong><span>{learningReport.matchedSkills}</span></div>
               <div><strong>Next recommended step</strong><span>{learningReport.nextStep}</span></div>
             </div>
           </section>
@@ -1855,55 +1839,35 @@ function UserProfilePage() {
           <Card className="user-profile-page__checklist-card">
             <div className="user-profile-page__checklist-head">
               <div>
-                <Text className="user-profile-page__checklist-eyebrow">Learning quests</Text>
+                <Text className="user-profile-page__checklist-eyebrow">Getting oriented</Text>
                 <Title level={4} className="user-profile-page__checklist-title">
-                  Learn the workspace one step at a time
+                  Four ideas that make Notes System easier to use
                 </Title>
                 <Paragraph type="secondary" className="user-profile-page__checklist-copy">
-                  Complete small quests to discover notes, highlights, completion tracking, and career guidance.
+                  Explore in any order. Nothing here is a requirement.
                 </Paragraph>
               </div>
-              <div className="user-profile-page__checklist-score" aria-label={`${checklistProgress}% complete`}>
-                <span>{checklistDoneCount}/{onboardingChecklist.length}</span>
-                <small>done</small>
-              </div>
+              <Button type="text" onClick={handleDismissLearningQuests}>Hide</Button>
             </div>
-            <Progress
-              percent={checklistProgress}
-              showInfo={false}
-              strokeColor="var(--ns-color-primary)"
-              className="user-profile-page__checklist-progress"
-            />
             <div className="user-profile-page__checklist-grid">
               {onboardingChecklist.map((item, index) => (
                 <div
                   key={item.key}
-                  className={`user-profile-page__quest ${item.done ? "is-done" : ""}`}
+                  className="user-profile-page__quest"
                 >
                   <span className="user-profile-page__quest-index" aria-hidden="true">
-                    {item.done ? <CheckCircleOutlined /> : index + 1}
+                    {index + 1}
                   </span>
                   <div className="user-profile-page__quest-body">
                     <Text strong>{item.title}</Text>
                     <Text type="secondary">{item.description}</Text>
                   </div>
-                  <Button size="small" type={item.done ? "default" : "primary"} onClick={item.onAction}>
-                    {item.done ? "Review" : item.actionLabel}
+                  <Button size="small" onClick={item.onAction}>
+                    {item.actionLabel}
                   </Button>
                 </div>
               ))}
             </div>
-            {checklistComplete ? (
-              <div className="user-profile-page__checklist-complete">
-                <div>
-                  <Text strong>All learning quests complete.</Text>
-                  <Text type="secondary">You know the core workspace now. Hide this checklist whenever you are ready.</Text>
-                </div>
-                <Button type="primary" onClick={handleDismissLearningQuests}>
-                  All done
-                </Button>
-              </div>
-            ) : null}
           </Card>
         ) : null}
 
@@ -1912,6 +1876,7 @@ function UserProfilePage() {
             <LearningPlatformWorkspace
               mode="goals"
               preferredGoalType={goalDiscoveryType}
+              preferredDomain={goalDiscoveryDomain}
               onGoalTypeChange={setGoalDiscoveryType}
               backgroundAtlas={accumulationDashboard}
             />

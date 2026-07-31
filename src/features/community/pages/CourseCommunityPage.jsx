@@ -1,61 +1,60 @@
-import { useCallback, useEffect, useState } from "react";
-import {
-  Alert,
-  App,
-  Button,
-  Card,
-  Empty,
-  Form,
-  Input,
-  Skeleton,
-  Space,
-  Statistic,
-  Tabs,
-  Typography,
-} from "antd";
-import {
-  BookOutlined,
-  CompassOutlined,
-  EditOutlined,
-  HeartOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Alert, Button, Card, Empty, Input, Segmented, Skeleton, Space, Typography } from "antd";
+import { HeartOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import CourseMetadata from "../../goals/components/CourseMetadata";
 import SemanticChip from "../../../shared/ui/SemanticChip";
-import {
-  getMyAuthorProfile,
-  listCommunityCourses,
-  listCourseLibrary,
-  updateMyAuthorProfile,
-} from "../../goals/api/learningPlatform";
+import useCurrentUserSummary from "../../profile/hooks/useCurrentUserSummary";
+import { getDomainArchetypes } from "../../subjects/lib/domainArchetypes";
+import { getSubjectDisplayTitle } from "../../subjects/lib/subjectOverviewUtils";
+import { isNavigableSubjectSlug } from "../../navigation/lib/notesIndexUtils";
+import { listCommunityCourses, listCourseLibrary } from "../../goals/api/learningPlatform";
 
 import "./CourseCommunityPage.css";
 
-const { Paragraph, Text, Title } = Typography;
+const { Paragraph, Text } = Typography;
+
+function collectOfficialPackages(items = []) {
+  return items
+    .filter((item) => item?.type === "folder")
+    .map((item) => {
+      const match = String(item.url || "").match(/^\/note\/([^/]+)$/);
+      const domainSlug = match?.[1] || "";
+      if (!domainSlug || !isNavigableSubjectSlug(domainSlug)) return null;
+      const domainTitle = getSubjectDisplayTitle(item, {}, domainSlug);
+      return {
+        id: `official:${domainSlug}`,
+        title: `${domainTitle} Foundations`,
+        domain_slug: domainSlug,
+        domain_title: domainTitle,
+        primary_archetype: getDomainArchetypes(domainSlug)[0] || "conceptual",
+        secondary_archetypes: getDomainArchetypes(domainSlug).slice(1),
+        description: `A complete official course package for exploring ${domainTitle}.`,
+        is_official: true,
+      };
+    })
+    .filter(Boolean);
+}
 
 function CourseCard({ item, onOpen }) {
   const course = item.course || item;
-  const isLibraryItem = typeof item.saved === "boolean";
+  const official = Boolean(course.is_official);
   return (
-    <button
-      type="button"
-      className="course-community__course-card"
-      onClick={() => onOpen(course.id)}
-    >
+    <button type="button" className="course-community__course-card" onClick={() => onOpen(course)}>
       <span className="course-community__card-title">
         {course.title}
-        <SemanticChip variant="sage">Community course</SemanticChip>
+        <SemanticChip variant={official ? "primary" : "sage"}>
+          {official ? "Official" : "Community course"}
+        </SemanticChip>
       </span>
       <CourseMetadata course={course} compact />
-      <span className="course-community__card-description">
-        {course.description || course.target_learner || "A structured community course."}
-      </span>
+      <span className="course-community__card-description">{course.description}</span>
       <span className="course-community__card-footer">
-        <span><UserOutlined /> {item.author?.display_name || "Course author"}</span>
-        <span><HeartOutlined /> {item.save_count || 0}{isLibraryItem && item.saved ? " · Saved" : ""}</span>
+        <span><UserOutlined /> {official ? "Notes System" : item.author?.display_name || "Course author"}</span>
+        {!official ? <span><HeartOutlined /> {item.save_count || 0}</span> : null}
       </span>
     </button>
   );
@@ -64,174 +63,83 @@ function CourseCard({ item, onOpen }) {
 export default function CourseCommunityPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const domainSlug = new URLSearchParams(location.search).get("domain") || "";
-  const { message } = App.useApp();
-  const [authorForm] = Form.useForm();
+  const currentUser = useCurrentUserSummary();
+  const notesIndex = useSelector((state) => state.notesIndex.data || []);
+  const requestedDomain = new URLSearchParams(location.search).get("domain") || "";
   const [loading, setLoading] = useState(true);
-  const [savingProfile, setSavingProfile] = useState(false);
   const [errorText, setErrorText] = useState("");
-  const [courses, setCourses] = useState([]);
+  const [communityCourses, setCommunityCourses] = useState([]);
   const [library, setLibrary] = useState([]);
-  const [profile, setProfile] = useState(null);
+  const [query, setQuery] = useState("");
+  const [source, setSource] = useState("All");
+  const officialPackages = useMemo(() => collectOfficialPackages(notesIndex), [notesIndex]);
 
   const load = useCallback(async () => {
     setLoading(true);
     setErrorText("");
     try {
-      const [communityPayload, libraryPayload, profilePayload] = await Promise.all([
-        listCommunityCourses({ domainSlug }),
-        listCourseLibrary(),
-        getMyAuthorProfile(),
-      ]);
-      setCourses(Array.isArray(communityPayload) ? communityPayload : []);
-      setLibrary(Array.isArray(libraryPayload) ? libraryPayload : []);
-      setProfile(profilePayload);
-      authorForm.setFieldsValue({
-        ...profilePayload,
-        expertise: (profilePayload?.expertise || []).join(", "),
-      });
+      const courses = await listCommunityCourses({ domainSlug: requestedDomain });
+      setCommunityCourses(Array.isArray(courses) ? courses : []);
+      if (currentUser.isAuthenticated) {
+        const saved = await listCourseLibrary();
+        setLibrary(Array.isArray(saved) ? saved : []);
+      } else {
+        setLibrary([]);
+      }
     } catch (error) {
-      setErrorText(error instanceof Error ? error.message : "Could not load the course community.");
+      setErrorText(error instanceof Error ? error.message : "Could not load course packages.");
     } finally {
       setLoading(false);
     }
-  }, [authorForm, domainSlug]);
+  }, [currentUser.isAuthenticated, requestedDomain]);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  useEffect(() => { load(); }, [load]);
 
-  const saveProfile = async (values) => {
-    setSavingProfile(true);
-    try {
-      const updated = await updateMyAuthorProfile({
-        ...values,
-        expertise: String(values.expertise || "")
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean),
-        links: profile?.links || [],
-        is_public: true,
-      });
-      setProfile(updated);
-      message.success("Author profile updated.");
-    } catch (error) {
-      message.error(error instanceof Error ? error.message : "Could not update your author profile.");
-    } finally {
-      setSavingProfile(false);
-    }
+  const packages = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    const official = officialPackages
+      .filter((course) => !requestedDomain || course.domain_slug === requestedDomain)
+      .map((course) => ({ course }));
+    const merged = source === "Official" ? official : source === "Community" ? communityCourses : [...official, ...communityCourses];
+    if (!normalized) return merged;
+    return merged.filter((item) => {
+      const course = item.course || item;
+      return [course.title, course.description, course.domain_title, course.domain_slug].join(" ").toLowerCase().includes(normalized);
+    });
+  }, [communityCourses, officialPackages, query, requestedDomain, source]);
+
+  const openCourse = (course) => {
+    navigate(course.is_official
+      ? `/course-packages/official/${course.domain_slug}`
+      : `/course-packages/${course.id}`);
   };
-
-  const openCourse = (courseId) => navigate(`/courses/community/${courseId}`);
 
   return (
     <AppPageShell
       title="Course Community"
-      subtitle="Learn through different author perspectives over the same stable canonical knowledge."
+      subtitle="Browse complete course packages shaped by official and community perspectives."
       showSiteFooter
       contentWidth="wide"
       contentClassName="course-community"
     >
-      {errorText ? <Alert type="error" showIcon title="Community unavailable" description={errorText} /> : null}
-
-      {loading ? <Card><Skeleton active paragraph={{ rows: 10 }} /></Card> : (
-        <Tabs
-          size="large"
-          items={[
-            {
-              key: "discover",
-              label: <span><CompassOutlined /> Discover</span>,
-              children: courses.length ? (
-                <div className="course-community__grid">
-                  {courses.map((item) => (
-                    <CourseCard key={item.course.id} item={item} onOpen={openCourse} />
-                  ))}
-                </div>
-              ) : (
-                <Empty description="No community courses are public yet." />
-              ),
-            },
-            {
-              key: "library",
-              label: <span><BookOutlined /> My Library</span>,
-              children: library.length ? (
-                <div className="course-community__grid">
-                  {library.map((item) => (
-                    <CourseCard key={item.course.id} item={item} onOpen={openCourse} />
-                  ))}
-                </div>
-              ) : (
-                <Empty description="Save a community course to add it here." />
-              ),
-            },
-            {
-              key: "author",
-              label: <span><EditOutlined /> Author Profile</span>,
-              children: (
-                <div className="course-community__author-layout">
-                  <Card className="course-community__author-preview">
-                    <div className="course-community__avatar"><UserOutlined /></div>
-                    <Title level={3}>{profile?.display_name}</Title>
-                    <Text type="secondary">@{profile?.handle}</Text>
-                    <Paragraph>{profile?.headline || "Add a concise author headline."}</Paragraph>
-                    <Space wrap>
-                      {(profile?.expertise || []).map((item) => (
-                        <SemanticChip key={item} variant="teal">{item}</SemanticChip>
-                      ))}
-                    </Space>
-                    <div className="course-community__author-stats">
-                      <Statistic
-                        title="Community courses"
-                        value={courses.filter(
-                          (item) => item.course.author_user_id === profile?.owner_user_id,
-                        ).length}
-                      />
-                    </div>
-                  </Card>
-                  <Card title="Public author identity">
-                    <Form
-                      form={authorForm}
-                      layout="vertical"
-                      requiredMark={false}
-                      onFinish={saveProfile}
-                    >
-                      <Form.Item label="Display name" name="display_name" rules={[{ required: true }]}>
-                        <Input maxLength={120} />
-                      </Form.Item>
-                      <Form.Item
-                        label="Handle"
-                        name="handle"
-                        rules={[
-                          { required: true },
-                          { pattern: /^[a-z0-9]+(?:-[a-z0-9]+)*$/, message: "Use lowercase letters, numbers, and hyphens." },
-                        ]}
-                      >
-                        <Input maxLength={64} addonBefore="@" />
-                      </Form.Item>
-                      <Form.Item label="Headline" name="headline">
-                        <Input maxLength={255} />
-                      </Form.Item>
-                      <Form.Item label="Bio" name="bio">
-                        <Input.TextArea rows={5} maxLength={10_000} showCount />
-                      </Form.Item>
-                      <Form.Item
-                        label="Expertise"
-                        name="expertise"
-                        extra="Comma-separated topics shown on your public profile."
-                      >
-                        <Input maxLength={1_000} />
-                      </Form.Item>
-                      <Button type="primary" htmlType="submit" loading={savingProfile}>
-                        Save author profile
-                      </Button>
-                    </Form>
-                  </Card>
-                </div>
-              ),
-            },
-          ]}
-        />
-      )}
+      <div className="app-page-shell__toolbar">
+        <Input allowClear size="large" prefix={<SearchOutlined />} placeholder="Search course packages" value={query} onChange={(event) => setQuery(event.target.value)} />
+        <Segmented value={source} onChange={setSource} options={["All", "Official", "Community"]} aria-label="Course package source" />
+      </div>
+      {errorText ? <Alert type="error" showIcon title="Community unavailable" description={errorText} action={<Button onClick={load}>Retry</Button>} /> : null}
+      {loading ? <Card><Skeleton active paragraph={{ rows: 8 }} /></Card> : null}
+      {!loading && packages.length ? (
+        <div className="course-community__grid">
+          {packages.map((item) => <CourseCard key={(item.course || item).id} item={item} onOpen={openCourse} />)}
+        </div>
+      ) : null}
+      {!loading && !packages.length ? <Empty description="No course packages match this view." /> : null}
+      {currentUser.isAuthenticated && library.length ? (
+        <Space orientation="vertical" size={8} className="course-community__saved-summary">
+          <Text strong>Saved</Text>
+          <Paragraph type="secondary">Your saved packages are available from My Learning.</Paragraph>
+        </Space>
+      ) : null}
     </AppPageShell>
   );
 }

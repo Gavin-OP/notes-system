@@ -317,7 +317,7 @@ function CareerJobDetailPage() {
           </Col>
         </Row>
 
-        <Card title="Related Subjects" className="career-job-detail-page__section">
+        <Card title="Related Knowledge Domains" className="career-job-detail-page__section">
           {relatedSubjects.length ? (
             <Row gutter={[12, 12]}>
               {relatedSubjects.map((subject) => (
@@ -352,7 +352,7 @@ function CareerJobDetailPage() {
               ))}
             </Row>
           ) : (
-            <Empty description="No related subjects linked yet." />
+            <Empty description="No related knowledge domains linked yet." />
           )}
         </Card>
       </div>

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Button, Card, Col, Empty, Input, Row, Space, Spin, Tabs, Typography } from "antd";
-import { ApartmentOutlined, ArrowRightOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Card, Col, Empty, Input, Row, Space, Spin, Typography } from "antd";
+import { ApartmentOutlined, ArrowRightOutlined, SearchOutlined, ShopOutlined } from "@ant-design/icons";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import SemanticChip from "../../../shared/ui/SemanticChip";
@@ -11,7 +11,6 @@ import { isNavigableSubjectSlug } from "../../navigation/lib/notesIndexUtils";
 import { getSubjectDisplayTitle } from "../lib/subjectOverviewUtils";
 import { getDomainArchetypes } from "../lib/domainArchetypes";
 import useTranslation from "../../../i18n/useTranslation";
-import { getCareerTaxonomy } from "../../careers/api/careers";
 
 const { Paragraph, Text } = Typography;
 
@@ -41,17 +40,12 @@ function collectSubjectFolders(items = []) {
 
 function SubjectDatabasePage() {
   const navigate = useNavigate();
-  const location = useLocation();
   const { t } = useTranslation();
   const rawNotesIndex = useSelector((state) => state.notesIndex.data);
   const notesIndex = useMemo(() => rawNotesIndex || [], [rawNotesIndex]);
   const notesIndexStatus = useSelector((state) => state.notesIndex.status);
   const [query, setQuery] = useState("");
   const [graphMetaBySubject, setGraphMetaBySubject] = useState({});
-  const [careers, setCareers] = useState([]);
-  const [careersLoading, setCareersLoading] = useState(true);
-  const requestedView = new URLSearchParams(location.search).get("view");
-  const activeView = ["subjects", "careers", "packages"].includes(requestedView) ? requestedView : "subjects";
 
   const subjects = useMemo(() => collectSubjectFolders(notesIndex), [notesIndex]);
 
@@ -74,15 +68,6 @@ function SubjectDatabasePage() {
     };
   }, [subjects]);
 
-  useEffect(() => {
-    let mounted = true;
-    getCareerTaxonomy()
-      .then((payload) => mounted && setCareers(Array.isArray(payload?.profiles) ? payload.profiles : []))
-      .catch(() => mounted && setCareers([]))
-      .finally(() => mounted && setCareersLoading(false));
-    return () => { mounted = false; };
-  }, []);
-
   const subjectCards = useMemo(
     () =>
       subjects
@@ -95,7 +80,7 @@ function SubjectDatabasePage() {
             graphMeta.summary ||
             t(
               "subject.database.cardFallback",
-              "Open the overview to see the structure, concepts, and starting point for this subject.",
+              "Explore the notes and concepts connected to this knowledge domain.",
             );
           return {
             ...subject,
@@ -125,20 +110,16 @@ function SubjectDatabasePage() {
     <AppPageShell
       backLabel={t("common.backToHome", "Back to Home")}
       onBack={() => navigate("/")}
-      title="Explore Our Database"
+      title="Knowledge Database"
+      subtitle="Explore knowledge by domain, concept, or note."
       showSiteFooter
     >
-      <Tabs
-        activeKey={activeView}
-        onChange={(key) => navigate(`/database?view=${key}`, { replace: true })}
-        items={[
-          {
-            key: "subjects",
-            label: "Subject Database",
-            children: <>
-              <div className="app-page-shell__toolbar"><Input allowClear size="large" prefix={<SearchOutlined />} placeholder="Search subjects" value={query} onChange={(event) => setQuery(event.target.value)} /></div>
+      <div className="app-page-shell__toolbar">
+        <Input allowClear size="large" prefix={<SearchOutlined />} placeholder="Search knowledge domains" value={query} onChange={(event) => setQuery(event.target.value)} />
+        <Button icon={<ShopOutlined />} onClick={() => navigate("/courses/community")}>Browse course packages</Button>
+      </div>
               {loading ? <div className="app-page-shell__state"><Spin /></div> : null}
-              {!loading && filteredSubjects.length === 0 ? <Empty description="No subjects match your search." /> : null}
+              {!loading && filteredSubjects.length === 0 ? <Empty description="No knowledge domains match your search." /> : null}
               {!loading && filteredSubjects.length > 0 ? <Row gutter={[16, 16]}>
           {filteredSubjects.map((subject) => (
             <Col key={subject.subjectId} xs={24} md={12} xl={8}>
@@ -155,7 +136,7 @@ function SubjectDatabasePage() {
                   }
                 }}
               >
-                <Space direction="vertical" size={10} className="app-catalog-card__body">
+                <Space orientation="vertical" size={10} className="app-catalog-card__body">
                   <div className="app-catalog-card__head">
                     <Text strong className="app-catalog-card__title">
                       {subject.title}
@@ -187,56 +168,27 @@ function SubjectDatabasePage() {
                   <Button
                     type="text"
                     icon={<ArrowRightOutlined />}
-                    iconPosition="end"
+                    iconPlacement="end"
                     className="app-catalog-card__cta-btn"
                     tabIndex={-1}
                     onClick={(event) => event.stopPropagation()}
                   >
-                    {t("subject.database.openOverview", "Open overview")}
+                    {t("subject.database.openOverview", "Explore domain")}
                   </Button>
                 </Space>
               </Card>
             </Col>
           ))}
               </Row> : null}
-            </>,
-          },
-          {
-            key: "careers",
-            label: "Career Database",
-            children: careersLoading ? <div className="app-page-shell__state"><Spin /></div> : careers.length ? (
-              <Row gutter={[16, 16]}>{careers.map((career) => (
-                <Col key={career.job_id || career.jobId || career.title} xs={24} md={12} xl={8}>
-                  <Card hoverable className="app-catalog-card" onClick={() => navigate(`/careers/${encodeURIComponent(career.job_id || career.jobId)}`)}>
-                    <Space direction="vertical" size={10} className="app-catalog-card__body">
-                      <Text strong className="app-catalog-card__title">{career.title}</Text>
-                      <Paragraph type="secondary" ellipsis={{ rows: 3 }}>{career.description}</Paragraph>
-                      <Button type="text" icon={<ArrowRightOutlined />} iconPosition="end" tabIndex={-1}>Open role</Button>
-                    </Space>
-                  </Card>
-                </Col>
-              ))}</Row>
-            ) : <Empty description="No careers are available yet." />,
-          },
-          {
-            key: "packages",
-            label: "Course Package Database",
-            children: loading ? <div className="app-page-shell__state"><Spin /></div> : (
-              <Row gutter={[16, 16]}>{subjectCards.map((subject) => (
-                <Col key={subject.subjectId} xs={24} md={12} xl={8}>
-                  <Card hoverable className="app-catalog-card" onClick={() => navigate(`/course-packages/official/${subject.subjectId}`)}>
-                    <Space direction="vertical" size={10} className="app-catalog-card__body">
-                      <div className="app-catalog-card__head"><Text strong className="app-catalog-card__title">{subject.title} Foundations</Text><SemanticChip variant="primary">Official</SemanticChip></div>
-                      <Space wrap size={[6, 6]}><SemanticChip variant="primary">Domain · {subject.title}</SemanticChip>{getDomainArchetypes(subject.subjectId).map((item) => <SemanticChip key={item} variant="teal">Learning · {item}</SemanticChip>)}</Space>
-                      <Button type="text" icon={<ArrowRightOutlined />} iconPosition="end" tabIndex={-1}>View package</Button>
-                    </Space>
-                  </Card>
-                </Col>
-              ))}</Row>
-            ),
-          },
-        ]}
-      />
+      <Card size="small" className="app-page-shell__secondary-entry">
+        <Space wrap>
+          <div>
+            <Text strong>Explore another way</Text>
+            <Paragraph type="secondary">See how knowledge connects to roles and working life.</Paragraph>
+          </div>
+          <Button type="link" icon={<ArrowRightOutlined />} iconPlacement="end" onClick={() => navigate("/careers")}>Explore careers</Button>
+        </Space>
+      </Card>
     </AppPageShell>
   );
 }

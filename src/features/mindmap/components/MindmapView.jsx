@@ -193,7 +193,7 @@ const MindmapView = ({ subjectId }) => {
   // Load graph data
   useEffect(() => {
     if (!subjectId) {
-      setError("No subject specified");
+      setError("No knowledge domain specified");
       setLoading(false);
       return;
     }
@@ -376,7 +376,7 @@ const MindmapView = ({ subjectId }) => {
             Retry
           </button>
           <button type="button" onClick={() => navigate(`/subject/${subjectId}`)}>
-            Back to subject
+            Back to domain overview
           </button>
         </div>
       </div>

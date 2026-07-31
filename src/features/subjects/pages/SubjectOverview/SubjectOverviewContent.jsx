@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Button, Empty, Progress, Spin, Typography } from "antd";
+import { Button, Empty, Spin, Typography } from "antd";
 import { ApartmentOutlined, BookOutlined } from "@ant-design/icons";
 
 import SemanticChip from "../../../../shared/ui/SemanticChip";
@@ -14,8 +14,7 @@ import {
   getSubjectDisplayTitle,
   loadSubjectSyllabus,
 } from "../../lib/subjectOverviewUtils";
-import { getMyProfile } from "../../../profile/api/user";
-import { getFirstSubjectTopicUrl, normalizeNoteRoute } from "../../../navigation/lib/notesIndexUtils";
+import { normalizeNoteRoute } from "../../../navigation/lib/notesIndexUtils";
 import useTranslation from "../../../../i18n/useTranslation";
 import { getDomainArchetypes } from "../../lib/domainArchetypes";
 
@@ -39,16 +38,6 @@ function collectSubjectNotes(node) {
   return notes.filter((note) => note.url && !note.url.includes("/disclaimer"));
 }
 
-function SyllabusBlock({ label, children }) {
-  if (!children) return null;
-  return (
-    <div className="subject-overview__syllabus-block">
-      <Text className="subject-overview__panel-label">{label}</Text>
-      {children}
-    </div>
-  );
-}
-
 function SubjectOverviewContent({ subjectId }) {
   const navigate = useNavigate();
   const { language, t } = useTranslation();
@@ -63,7 +52,6 @@ function SubjectOverviewContent({ subjectId }) {
   const [graphLoading, setGraphLoading] = useState(true);
   const [syllabus, setSyllabus] = useState(null);
   const [syllabusLoading, setSyllabusLoading] = useState(true);
-  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     let mounted = true;
@@ -97,20 +85,6 @@ function SubjectOverviewContent({ subjectId }) {
     };
   }, [subjectId]);
 
-  useEffect(() => {
-    let mounted = true;
-    getMyProfile()
-      .then((data) => {
-        if (mounted) setProfile(data || null);
-      })
-      .catch(() => {
-        if (mounted) setProfile(null);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   const subjectFolder = useMemo(
     () => findSubjectFolderInIndex(notesIndex, subjectId),
     [notesIndex, subjectId],
@@ -119,23 +93,6 @@ function SubjectOverviewContent({ subjectId }) {
   const graphMeta = useMemo(() => graphData?.meta || {}, [graphData]);
   const subjectTitle = getSubjectDisplayTitle(subjectFolder, graphMeta, subjectId);
   const subjectNotes = useMemo(() => collectSubjectNotes(subjectFolder), [subjectFolder]);
-  const completedNoteUrls = useMemo(() => {
-    const rawValues = [
-      ...(profile?.course_progress?.completed_note_urls || []),
-      ...(profile?.courseProgress?.completedNoteUrls || []),
-      ...(profile?.completed_note_urls || []),
-      ...(profile?.completedNoteUrls || []),
-    ];
-    return new Set(rawValues.map((value) => normalizeNoteRoute(value)).filter(Boolean));
-  }, [profile]);
-  const completedCount = subjectNotes.filter((note) => completedNoteUrls.has(note.url)).length;
-  const progressPercent = subjectNotes.length > 0 ? Math.round((completedCount / subjectNotes.length) * 100) : 0;
-  const firstTopicUrl = getFirstSubjectTopicUrl(notesIndex, subjectId);
-  const recommendedEntry =
-    subjectNotes.find((note) => !completedNoteUrls.has(note.url)) ||
-    subjectNotes.find((note) => note.url === normalizeNoteRoute(firstTopicUrl)) ||
-    subjectNotes[0] ||
-    null;
 
   const resolvedSyllabus = useMemo(() => {
     if (syllabus) return syllabus;
@@ -151,37 +108,12 @@ function SubjectOverviewContent({ subjectId }) {
     return buildConceptPreviewByCategory(graphData);
   }, [graphData, resolvedSyllabus]);
 
-  const notesCompletedLabel =
-    language === "cn"
-      ? `已完成 ${completedCount} / ${subjectNotes.length || 0} 篇笔记`
-      : `${completedCount} of ${subjectNotes.length || 0} notes completed`;
-  const moduleCountLabel =
-    language === "cn"
-      ? `${conceptPreview.groups.length || subjectNotes.length || 0} 个模块`
-      : `${conceptPreview.groups.length || subjectNotes.length || 0} modules`;
-  const mappedConceptsLabel =
-    language === "cn"
-      ? `${conceptPreview.totalConcepts || 0} 个已映射概念`
-      : `${conceptPreview.totalConcepts || 0} mapped concepts across this discipline.`;
   const conceptCountLabel =
     language === "cn"
       ? `${conceptPreview.totalConcepts} 个概念`
       : `${conceptPreview.totalConcepts} concepts`;
 
   const pageLoading = notesIndexLoading || graphLoading || syllabusLoading;
-  const scrollToCourses = () => {
-    document.getElementById("subject-courses")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const hasOutcomes = Array.isArray(resolvedSyllabus?.outcomes) && resolvedSyllabus.outcomes.length > 0;
-  const hasPrerequisites =
-    Array.isArray(resolvedSyllabus?.prerequisites) && resolvedSyllabus.prerequisites.length > 0;
-  const hasAudience =
-    Array.isArray(resolvedSyllabus?.whoItsFor) && resolvedSyllabus.whoItsFor.length > 0;
-  const hasLevel = Boolean(String(resolvedSyllabus?.level || "").trim());
-  const hasWhyLearn = Boolean(String(resolvedSyllabus?.whyLearn || "").trim());
-  const hasSyllabusContent =
-    hasOutcomes || hasPrerequisites || hasAudience || hasLevel || hasWhyLearn;
 
   return (
     <div className="subject-overview">
@@ -213,12 +145,9 @@ function SubjectOverviewContent({ subjectId }) {
               <Button
                 type="primary"
                 icon={<BookOutlined />}
-                disabled={!recommendedEntry}
-                onClick={scrollToCourses}
+                onClick={() => navigate(`/course-packages/official/${subjectId}`)}
               >
-                {completedCount > 0
-                  ? t("subjectOverview.chooseCourse", "Choose a course")
-                  : t("subjectOverview.chooseCourse", "Choose a course")}
+                View official package
               </Button>
               <Button
                 type="default"
@@ -230,51 +159,16 @@ function SubjectOverviewContent({ subjectId }) {
             </div>
           </header>
 
-          <section className="subject-overview__snapshot" aria-label="Subject progress and entry point">
-            <div className="subject-overview__metric">
-              <Text className="subject-overview__panel-label">
-                {t("subjectOverview.progress", "Progress")}
-              </Text>
-              <Progress percent={progressPercent} size="small" showInfo={false} />
-              <Text type="secondary">
-                {notesCompletedLabel}
-              </Text>
-            </div>
-            <div className="subject-overview__metric">
-              <Text className="subject-overview__panel-label">
-                {t("subjectOverview.recommendedEntry", "Recommended entry")}
-              </Text>
-              <Text strong>
-                {recommendedEntry?.title ||
-                  t("subjectOverview.entryComingSoon", "Entry note coming soon")}
-              </Text>
-              <Text type="secondary">
-                {recommendedEntry
-                  ? t("subjectOverview.entryReason", "A stable starting point for this subject.")
-                  : t("subjectOverview.preparing", "This subject is still being prepared.")}
-              </Text>
-            </div>
-            <div className="subject-overview__metric">
-              <Text className="subject-overview__panel-label">
-                {t("subjectOverview.fieldStructure", "Field structure")}
-              </Text>
-              <Text strong>
-                {moduleCountLabel}
-              </Text>
-              <Text type="secondary">{mappedConceptsLabel}</Text>
-            </div>
-          </section>
-
           <section id="subject-courses" className="subject-overview__courses" aria-labelledby="subject-courses-heading">
             <div className="subject-overview__section-head">
               <div>
                 <Title level={4} id="subject-courses-heading" className="subject-overview__section-title">
-                  Available courses
+                  Official Course Package
                 </Title>
-                <Text type="secondary">Choose a complete course package for this subject.</Text>
+                <Text type="secondary">A complete learning perspective created by Notes System.</Text>
               </div>
               <Button type="link" onClick={() => navigate(`/courses/community?domain=${encodeURIComponent(subjectId)}`)}>
-                Explore other courses
+                Other perspectives
               </Button>
             </div>
             <div className="subject-overview__course-card">
@@ -284,89 +178,26 @@ function SubjectOverviewContent({ subjectId }) {
                   <SemanticChip variant="primary">Official</SemanticChip>
                 </div>
                 <Text type="secondary">
-                  {subjectNotes.length} notes · canonical learning order · concept map included
+                  {subjectNotes.length} notes · recommended order · concept map included
                 </Text>
               </div>
               <Button
                 type="primary"
-                disabled={!recommendedEntry}
-                onClick={() => recommendedEntry && navigate(recommendedEntry.url)}
+                onClick={() => navigate(`/course-packages/official/${subjectId}`)}
               >
-                {completedCount > 0 ? t("common.continue", "Continue") : t("subjectOverview.startLearning", "Start learning")}
+                View package
               </Button>
             </div>
           </section>
 
           <div className="subject-overview__layout">
             <section
-              className="subject-overview__syllabus"
-              aria-labelledby="subject-syllabus-heading"
-            >
-              <Title level={4} id="subject-syllabus-heading" className="subject-overview__section-title">
-                {t("subjectOverview.about", "About this subject")}
-              </Title>
-
-              {hasSyllabusContent ? (
-                <div className="subject-overview__syllabus-body">
-                  <SyllabusBlock label={t("subjectOverview.master", "What you'll master")}>
-                    {hasOutcomes ? (
-                      <ul className="subject-overview__list">
-                        {resolvedSyllabus.outcomes.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </SyllabusBlock>
-
-                  <SyllabusBlock label={t("subjectOverview.level", "Level you'll reach")}>
-                    {hasLevel ? (
-                      <Paragraph className="subject-overview__prose">{resolvedSyllabus.level}</Paragraph>
-                    ) : null}
-                  </SyllabusBlock>
-
-                  <SyllabusBlock label={t("subjectOverview.prerequisites", "Prerequisites")}>
-                    {hasPrerequisites ? (
-                      <ul className="subject-overview__list">
-                        {resolvedSyllabus.prerequisites.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </SyllabusBlock>
-
-                  <SyllabusBlock label={t("subjectOverview.whyLearn", "Why learn this")}>
-                    {hasWhyLearn ? (
-                      <Paragraph className="subject-overview__prose">{resolvedSyllabus.whyLearn}</Paragraph>
-                    ) : null}
-                  </SyllabusBlock>
-
-                  <SyllabusBlock label={t("subjectOverview.audience", "Who it's for")}>
-                    {hasAudience ? (
-                      <ul className="subject-overview__list">
-                        {resolvedSyllabus.whoItsFor.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </SyllabusBlock>
-                </div>
-              ) : (
-                <Paragraph type="secondary" className="subject-overview__prose">
-                  {t(
-                    "subjectOverview.syllabusPreparing",
-                    "Syllabus details for this subject are being prepared.",
-                  )}
-                </Paragraph>
-              )}
-            </section>
-
-            <section
               className="subject-overview__concepts"
               aria-labelledby="subject-concepts-heading"
             >
               <div className="subject-overview__section-head">
                 <Title level={4} id="subject-concepts-heading" className="subject-overview__section-title">
-                  {t("subjectOverview.concepts", "Concepts in this subject")}
+                  {t("subjectOverview.concepts", "Concept Overview")}
                 </Title>
                 {conceptPreview.totalConcepts > 0 ? (
                   <Text type="secondary">

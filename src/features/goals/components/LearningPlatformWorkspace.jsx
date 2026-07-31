@@ -94,9 +94,9 @@ function goalTypeOptions() {
 function LearningPlatformWorkspace({
   mode = "builder",
   preferredGoalType = "",
+  preferredDomain = "",
   onOpenGoalDiscovery,
   onGoalTypeChange,
-  backgroundAtlas = {},
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -116,7 +116,6 @@ function LearningPlatformWorkspace({
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [goalSaving, setGoalSaving] = useState(false);
   const [pathGenerating, setPathGenerating] = useState(false);
-  const [previewGoalId, setPreviewGoalId] = useState("");
   const [discoveryType, setDiscoveryType] = useState(preferredGoalType);
   const [selectedDiscoveryDomain, setSelectedDiscoveryDomain] = useState("");
   const [discoveryStep, setDiscoveryStep] = useState(0);
@@ -124,6 +123,10 @@ function LearningPlatformWorkspace({
   const [setNamingOpen, setSetNamingOpen] = useState(false);
   const [setName, setSetName] = useState("");
   const [setNote, setSetNote] = useState("");
+
+  useEffect(() => {
+    if (preferredDomain) setSelectedDiscoveryDomain(preferredDomain);
+  }, [preferredDomain]);
 
   const loadWorkspace = useCallback(async () => {
     setLoading(true);
@@ -347,7 +350,6 @@ function LearningPlatformWorkspace({
         commit: true,
       });
       setLearningPath(normalizePath(response));
-      setPreviewGoalId(selectedGoal.id);
       setLearningSets((current) => [
         normalizePath(response),
         ...current.filter((item) => item?.draft?.path_id !== response?.draft?.path_id),
@@ -399,7 +401,6 @@ function LearningPlatformWorkspace({
                 setSelectedGoalId(goal.id);
                 const domainSlug = goal.metadata?.domain_slug || goal.metadata?.domainSlug || "";
                 setSelectedCourseId(domainSlug ? `official:${domainSlug}` : "");
-                setPreviewGoalId("");
                 setDiscoveryStep(2);
               }}
             >
@@ -555,30 +556,16 @@ function LearningPlatformWorkspace({
         </div>
         {discoveryType === "interest" ? (
           <div className="goal-workspace__interest-workspace">
-            <Card type="inner" title="My Background Atlas" className="goal-workspace__profile-section">
-              <div className="goal-workspace__atlas-grid">
-                {["knowledge", "skills", "tools"].map((key) => (
-                  <div key={key}>
-                    <Text strong>{key[0].toUpperCase() + key.slice(1)}</Text>
-                    <div className="goal-workspace__atlas-values">
-                      {(backgroundAtlas[key] || []).length
-                        ? (backgroundAtlas[key] || []).slice(0, 12).map((item) => <SemanticChip key={`${key}-${item}`} variant="slate">{item}</SemanticChip>)
-                        : <Text type="secondary">Nothing added yet</Text>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-            <Card type="inner" title="My Interest Goal" className="goal-workspace__profile-section">
+            <Card type="inner" title="My Interest" className="goal-workspace__profile-section">
               <div className="goal-workspace__discovery-fields">
                 <label>
-                  <span>Field</span>
+                  <span>Knowledge Domain</span>
                   <Select
                     showSearch
                     optionFilterProp="label"
                     size="large"
                     value={selectedDiscoveryDomain || undefined}
-                    placeholder="Choose from current subjects"
+                    placeholder="Choose a knowledge domain"
                     options={domains.map((domain) => ({ value: domain.slug, label: domain.title }))}
                     onChange={setSelectedDiscoveryDomain}
                   />
@@ -599,26 +586,11 @@ function LearningPlatformWorkspace({
                         <Title level={4}>{selectedCourse.title}</Title>
                         <CourseMetadata course={selectedCourse} compact />
                       </div>
-                      <div className="goal-workspace__path-actions">
-                        <Button size="large" onClick={() => navigate(`/course-packages/official/${selectedCourse.domain_slug}`)}>
-                          View package
-                        </Button>
-                        <Button
-                          type="primary"
-                          size="large"
-                          loading={pathGenerating}
-                          onClick={() => {
-                            setSetName(selectedCourse.title);
-                            setSetNote("");
-                            setSetNamingOpen(true);
-                          }}
-                        >
-                          Save learning set
-                        </Button>
-                      </div>
+                      <Button type="primary" size="large" onClick={() => navigate(`/course-packages/official/${selectedCourse.domain_slug}`)}>
+                        Review course package
+                      </Button>
                     </div>
                   ) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No official course package is available for this interest yet." />}
-                  {previewGoalId === selectedGoal.id ? <LearningPathPreview path={learningPath} navigate={navigate} /> : null}
               </Card>
             ) : null}
           </div>
@@ -642,17 +614,22 @@ function LearningPlatformWorkspace({
     return (
       <div className="goal-workspace">
         <div className="goal-workspace__section-head">
-          <Title level={4}>Saved Learning Sets</Title>
+          <Title level={4}>Current Learning Set</Title>
+          <Button icon={<AppstoreOutlined />} onClick={() => navigate("/courses/community")}>Course Community</Button>
         </div>
         {learningSets.length ? (
           <div className="goal-workspace__learning-sets">
-            {learningSets.map((set) => {
+            {learningSets.map((set, index) => {
               const draft = set.draft || {};
               const active = draft.nodes?.find((node) => node.status === "active") || draft.nodes?.[0];
               const completed = (draft.nodes || []).filter((node) => node.status === "completed").length;
               const percent = draft.nodes?.length ? Math.round((completed / draft.nodes.length) * 100) : 0;
               return (
-                <Card key={draft.path_id} className="goal-workspace__learning-set">
+                <div key={draft.path_id} className="goal-workspace__learning-set-entry">
+                {index === 1 ? <Title level={5}>Other Learning Sets</Title> : null}
+                <Card
+                  className={`goal-workspace__learning-set ${index === 0 ? "goal-workspace__learning-set--current" : ""}`}
+                >
                   <div>
                     <Text strong>{learningSetDisplayName(draft)}</Text>
                     {draft.learning_set_note ? <Text type="secondary">{draft.learning_set_note}</Text> : null}
@@ -667,19 +644,18 @@ function LearningPlatformWorkspace({
                       okButtonProps={{ danger: true }}
                       onConfirm={() => handleDeleteLearningSet(draft.path_id)}
                     >
-                      <Button danger icon={<DeleteOutlined />} aria-label={`Delete ${learningSetDisplayName(draft)}`}>
-                        Delete
-                      </Button>
+                      <Button type="text" danger icon={<DeleteOutlined />} aria-label={`Delete ${learningSetDisplayName(draft)}`} />
                     </Popconfirm>
                     <Button
-                      type="primary"
+                      type={index === 0 ? "primary" : "default"}
                       disabled={!active?.note_url}
                       onClick={() => active?.note_url && navigate(active.note_url, { state: { learningPathId: draft.path_id } })}
                     >
-                      Open set
+                      {index === 0 ? "Continue learning" : "Open"}
                     </Button>
                   </Space>
                 </Card>
+                </div>
               );
             })}
           </div>
@@ -709,12 +685,7 @@ function LearningPlatformWorkspace({
     return (
       <div className="goal-workspace">
         <div className="goal-workspace__section-head">
-          <div>
-            <Title level={4}>My Courses</Title>
-            <Paragraph type="secondary">
-              Courses keep their own outline while sharing admin-managed canonical concepts.
-            </Paragraph>
-          </div>
+          <Title level={4}>My Courses</Title>
           <Space wrap>
             <Button icon={<AppstoreOutlined />} onClick={() => navigate("/courses/community")}>
               Explore Course Community

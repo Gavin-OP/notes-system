@@ -711,3 +711,12 @@
     flex-direction: column;
   }
 }
+.goal-workspace__learning-set-entry {
+  display: grid;
+  gap: 10px;
+}
+
+.goal-workspace__learning-set--current {
+  border-color: color-mix(in srgb, var(--ns-color-primary) 38%, var(--ns-color-border));
+  background: color-mix(in srgb, var(--ns-color-primary) 4%, var(--ns-color-surface));
+}

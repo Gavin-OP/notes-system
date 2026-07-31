@@ -23,7 +23,6 @@ const ExploreCareersPage = lazy(() => import("../../features/careers/pages/Explo
 const CareerJobDetailPage = lazy(() => import("../../features/careers/pages/CareerJobDetailPage"));
 const CourseStudioPage = lazy(() => import("../../features/courseStudio/pages/CourseStudioPage"));
 const CourseCommunityPage = lazy(() => import("../../features/community/pages/CourseCommunityPage"));
-const CommunityCourseDetailPage = lazy(() => import("../../features/community/pages/CommunityCourseDetailPage"));
 const CourseAuthoringPage = lazy(() => import("../../features/community/pages/CourseAuthoringPage"));
 const PodcastLibraryPage = lazy(() => import("../../features/podcasts/pages/PodcastLibraryPage"));
 const PodcastEpisodePage = lazy(() => import("../../features/podcasts/pages/PodcastEpisodePage"));
@@ -188,8 +187,6 @@ function RoutesWithTracking() {
           <Route path="user/profile" element={<UserProfilePage />} />
           <Route path="goals" element={<Navigate to="/user/profile?section=goals" replace />} />
           <Route path="course-studio" element={<CourseStudioPage />} />
-          <Route path="courses/community" element={<CourseCommunityPage />} />
-          <Route path="courses/community/:courseId" element={<CommunityCourseDetailPage />} />
           <Route path="course-authoring/:courseId" element={<CourseAuthoringPage />} />
           <Route path="podcasts" element={<PodcastLibraryPage />} />
           <Route path="podcasts/:episodeId" element={<PodcastEpisodePage />} />
@@ -200,13 +197,15 @@ function RoutesWithTracking() {
         <Route path="careers" element={<ExploreCareersPage />} />
         <Route path="careers/:jobId" element={<CareerJobDetailPage />} />
 
+        {/* Public course exploration; saving and authoring remain authenticated actions. */}
+        <Route path="courses/community" element={<CourseCommunityPage />} />
+        <Route path="courses/community/:courseId" element={<CoursePackageDetailPage />} />
+
         {/* Databases and policy pages */}
         <Route path="database" element={<SubjectDatabasePage />} />
-        <Route path="subjects" element={<Navigate to="/database?view=subjects" replace />} />
+        <Route path="subjects" element={<Navigate to="/database" replace />} />
         <Route path="course-packages/official/:domainSlug" element={<CoursePackageDetailPage />} />
-        <Route element={<UserRouteGuard />}>
-          <Route path="course-packages/:courseId" element={<CoursePackageDetailPage />} />
-        </Route>
+        <Route path="course-packages/:courseId" element={<CoursePackageDetailPage />} />
         <Route path="disclaimer" element={<DisclaimerPage />} />
 
         {/* Search */}

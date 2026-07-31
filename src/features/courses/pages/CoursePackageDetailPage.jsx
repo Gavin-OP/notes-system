@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Alert, Card, Empty, List, Spin, Typography } from "antd";
+import { Alert, App, Button, Card, Empty, Spin, Typography } from "antd";
 
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import SemanticChip from "../../../shared/ui/SemanticChip";
-import { getCourse, listCourseVersions } from "../../goals/api/learningPlatform";
+import { generateGoalCourseLearningPath, getCommunityCourse } from "../../goals/api/learningPlatform";
 import { getDomainArchetypes } from "../../subjects/lib/domainArchetypes";
+import useCurrentUserSummary from "../../profile/hooks/useCurrentUserSummary";
 import "./CoursePackageDetailPage.css";
 
 const { Text, Title } = Typography;
@@ -27,21 +28,26 @@ function collectNotes(items, domainSlug) {
 
 function CoursePackageDetailPage() {
   const navigate = useNavigate();
+  const { message } = App.useApp();
+  const currentUser = useCurrentUserSummary();
   const { domainSlug = "", courseId = "" } = useParams();
   const notesIndex = useSelector((state) => state.notesIndex.data || []);
   const [course, setCourse] = useState(null);
-  const [versions, setVersions] = useState([]);
+  const [currentVersion, setCurrentVersion] = useState(null);
+  const [authorName, setAuthorName] = useState("");
+  const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(Boolean(courseId));
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (!courseId) return undefined;
     let mounted = true;
-    Promise.all([getCourse(courseId), listCourseVersions(courseId)])
-      .then(([nextCourse, nextVersions]) => {
+    getCommunityCourse(courseId)
+      .then((payload) => {
         if (!mounted) return;
-        setCourse(nextCourse);
-        setVersions(Array.isArray(nextVersions) ? nextVersions : []);
+        setCourse(payload?.course || null);
+        setCurrentVersion(payload?.current_version || null);
+        setAuthorName(payload?.author?.display_name || "Course author");
       })
       .catch((nextError) => mounted && setError(nextError instanceof Error ? nextError.message : "Could not load this course package."))
       .finally(() => mounted && setLoading(false));
@@ -50,7 +56,6 @@ function CoursePackageDetailPage() {
 
   const slug = domainSlug || course?.domain_slug || "";
   const officialNotes = useMemo(() => collectNotes(notesIndex, slug), [notesIndex, slug]);
-  const currentVersion = versions.find((version) => version.id === course?.current_version_id) || versions[0];
   const communityNotes = useMemo(() => {
     const modules = currentVersion?.outline_json?.modules || currentVersion?.outline?.modules || [];
     return modules.flatMap((module) => (module.lessons || module.notes || []).map((note) => ({
@@ -64,10 +69,38 @@ function CoursePackageDetailPage() {
     ? [course?.primary_archetype, ...(course?.secondary_archetypes || [])].filter(Boolean).map(humanize)
     : getDomainArchetypes(slug);
   const source = courseId ? (course?.status === "published" ? "Community course" : "Private course") : "Official";
-  const author = courseId ? (course?.author_name || course?.author_display_name || "Course author") : "Notes System";
+  const author = courseId ? authorName : "Notes System";
+
+  const saveAsLearningSet = async () => {
+    const destination = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (!currentUser.isAuthenticated) {
+      navigate("/user/login", { state: { from: destination } });
+      return;
+    }
+    setSaving(true);
+    try {
+      await generateGoalCourseLearningPath({
+        learning_set_name: title,
+        goal_type: "interest",
+        goal_title: `Explore ${title}`,
+        selected_course_ids: courseId ? [courseId] : [],
+        selected_course_version_ids: courseId && currentVersion?.id ? [currentVersion.id] : [],
+        subject_slugs: slug ? [slug] : [],
+        max_nodes: 48,
+        save_as_draft: true,
+        commit: true,
+      });
+      message.success("Learning Set saved.");
+      navigate("/user/profile?section=learning");
+    } catch (saveError) {
+      message.error(saveError instanceof Error ? saveError.message : "Could not save this Learning Set.");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
-    <AppPageShell backLabel="Back to Database" onBack={() => navigate("/database?view=packages")} title={title} contentClassName="course-package-page" showSiteFooter>
+    <AppPageShell backLabel="Back to Course Community" onBack={() => navigate("/courses/community")} title={title} contentClassName="course-package-page" showSiteFooter>
       {loading ? <div className="app-page-shell__state"><Spin /></div> : null}
       {!loading && error ? <Alert type="error" showIcon message={error} /> : null}
       {!loading && !error ? (
@@ -80,13 +113,22 @@ function CoursePackageDetailPage() {
             </div>
             <div><Text type="secondary">Author</Text><Text strong>{author}</Text></div>
           </Card>
-          <Card title="Included Courses" className="course-package-page__section">
-            {notes.length ? <List dataSource={notes} renderItem={(note) => <List.Item>{note.title}</List.Item>} /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No course notes are available yet." />}
-          </Card>
-          <Card title="Recommended Learning Path" className="course-package-page__section">
+          <Card
+            title="Recommended order"
+            className="course-package-page__section"
+            extra={
+              <Button
+                type="primary"
+                loading={saving}
+                onClick={saveAsLearningSet}
+              >
+                {currentUser.isAuthenticated ? "Save as Learning Set" : "Sign in to save"}
+              </Button>
+            }
+          >
             {notes.length ? <ol className="course-package-page__path">{notes.map((note, index) => (
               <li key={`${note.url}-${index}`}><span>{index + 1}</span>{note.url ? <button type="button" onClick={() => navigate(note.url)}>{note.title}</button> : <Title level={5}>{note.title}</Title>}</li>
-            ))}</ol> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No learning path is available yet." />}
+            ))}</ol> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No notes are available yet." />}
           </Card>
         </>
       ) : null}

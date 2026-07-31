@@ -131,7 +131,7 @@ export function createNoteGuideSteps(refs, t = (key, fallback) => fallback || ke
       title: t("guide.note.3.title", "Explore connections"),
       description: t(
         "guide.note.3.description",
-        "Open Mindmap from the workspace bar when a linear list is not enough—see how concepts relate across the subject.",
+        "Open Mindmap from the workspace bar when a linear list is not enough—see how concepts relate across the knowledge domain.",
       ),
       target: () =>
         exploreGuideRef?.current ||

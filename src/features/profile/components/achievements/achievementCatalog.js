@@ -31,7 +31,7 @@ export function buildAchievementCatalog(subjects = []) {
     catalog.push({
       id: `subjects_completed_${milestone}`,
       category: "subjects_milestone",
-      title: `Completed ${milestone} Subjects`,
+      title: `Explored ${milestone} Knowledge Domains`,
       description: "",
       value: milestone,
     });
@@ -51,7 +51,7 @@ export function buildAchievementCatalog(subjects = []) {
     catalog.push({
       id: `subject_completed:${subject.slug}`,
       category: "subject",
-      title: `Completed ${subject.title}`,
+      title: `Explored ${subject.title}`,
       description: "",
       value: subject.title,
     });

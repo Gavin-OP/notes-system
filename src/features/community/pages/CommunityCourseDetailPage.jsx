@@ -22,6 +22,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import AppPageShell from "../../../shared/layouts/AppPageShell";
 import CourseMetadata from "../../goals/components/CourseMetadata";
 import SemanticChip from "../../../shared/ui/SemanticChip";
+import useCurrentUserSummary from "../../profile/hooks/useCurrentUserSummary";
 import { getAuthorProfile, getCommunityCourse, updateCourseLibrary } from "../../goals/api/learningPlatform";
 
 import "./CourseCommunityPage.css";
@@ -33,6 +34,7 @@ export default function CommunityCourseDetailPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { message } = App.useApp();
+  const currentUser = useCurrentUserSummary();
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState("");
   const [errorText, setErrorText] = useState("");
@@ -68,6 +70,10 @@ export default function CommunityCourseDetailPage() {
   }, [data, location.hash]);
 
   const updateLibrary = async (action, enabled) => {
+    if (!currentUser.isAuthenticated) {
+      navigate("/user/login", { state: { from: `${location.pathname}${location.search}${location.hash}` } });
+      return;
+    }
     setActing(action);
     try {
       const viewer = await updateCourseLibrary(courseId, action, enabled);
@@ -126,11 +132,12 @@ export default function CommunityCourseDetailPage() {
 
           <div className="community-course-detail__actions">
             <Button
+              type="primary"
               icon={<HeartOutlined />}
               loading={acting === "save"}
               onClick={() => updateLibrary("save", !data.viewer.saved)}
             >
-              {data.viewer.saved ? "Remove saved" : "Save"}
+              {data.viewer.saved ? "Saved" : currentUser.isAuthenticated ? "Save course package" : "Sign in to save"}
             </Button>
             {data.viewer.is_author ? (
               <Button icon={<EditOutlined />} onClick={() => navigate(`/course-authoring/${course.id}`)}>

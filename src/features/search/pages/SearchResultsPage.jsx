@@ -144,7 +144,7 @@ function SearchResultsPage() {
         />
         <Select
           allowClear
-          placeholder="All subjects"
+          placeholder="All knowledge domains"
           value={subject || undefined}
           options={subjectOptions}
           onChange={(value) => updateSubject(value || "")}
