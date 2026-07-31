@@ -320,6 +320,7 @@ function LearningPlatformWorkspace({
     try {
       await deletePersonalLearningPath(pathId);
       setLearningSets((current) => current.filter((item) => item?.draft?.path_id !== pathId));
+      window.dispatchEvent(new Event("learning-sets-updated"));
       message.success("Learning set deleted.");
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Could not delete the learning set.");
@@ -354,6 +355,7 @@ function LearningPlatformWorkspace({
         normalizePath(response),
         ...current.filter((item) => item?.draft?.path_id !== response?.draft?.path_id),
       ]);
+      window.dispatchEvent(new Event("learning-sets-updated"));
       message.success("Learning path generated from your goal and selected course.");
       setSetNamingOpen(false);
       setSetName("");
@@ -649,7 +651,11 @@ function LearningPlatformWorkspace({
                     <Button
                       type={index === 0 ? "primary" : "default"}
                       disabled={!active?.note_url}
-                      onClick={() => active?.note_url && navigate(active.note_url, { state: { learningPathId: draft.path_id } })}
+                      onClick={() => {
+                        if (!active?.note_url) return;
+                        window.sessionStorage.setItem("notes-system.active-learning-set", draft.path_id);
+                        navigate(active.note_url, { state: { learningPathId: draft.path_id } });
+                      }}
                     >
                       {index === 0 ? "Continue learning" : "Open"}
                     </Button>

@@ -32,6 +32,7 @@ export default defineConfig(({ mode }) => {
           manualChunks(id) {
             if (!id.includes("node_modules")) return undefined;
             if (id.includes("/mermaid/")) return "mermaid";
+            if (id.includes("/echarts/") || id.includes("/zrender/")) return "charts";
             if (
               id.includes("/react-force-graph") ||
               id.includes("/3d-force-graph") ||
@@ -40,6 +41,19 @@ export default defineConfig(({ mode }) => {
               id.includes("/d3-force-3d")
             ) {
               return "graph-3d";
+            }
+            if (id.includes("/antd/") || id.includes("/@ant-design/") || id.includes("/rc-")) {
+              return "ui-vendor";
+            }
+            if (
+              id.includes("/react/") ||
+              id.includes("/react-dom/") ||
+              id.includes("/react-router/") ||
+              id.includes("/react-router-dom/") ||
+              id.includes("/@reduxjs/") ||
+              id.includes("/react-redux/")
+            ) {
+              return "react-vendor";
             }
             return undefined;
           },

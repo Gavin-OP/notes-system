@@ -77,7 +77,7 @@ import useTranslatedContent from "../../../i18n/useTranslatedContent";
 import useTranslation from "../../../i18n/useTranslation";
 import { generateLearningPath } from "../../assistant/api/assistant";
 import LearningPlatformWorkspace from "../../goals/components/LearningPlatformWorkspace";
-import { createGoal } from "../../goals/api/learningPlatform";
+import { createGoal, listPersonalLearningPaths } from "../../goals/api/learningPlatform";
 import {
   createProfileGuideSteps,
   prepareProfileTourStep,
@@ -511,6 +511,7 @@ function UserProfilePage() {
   const [errorText, setErrorText] = useState("");
   const [userInfo, setUserInfo] = useState(null);
   const [profileInfo, setProfileInfo] = useState({});
+  const [profileLearningSets, setProfileLearningSets] = useState([]);
   const [personalNoteQuotes, setPersonalNoteQuotes] = useState([]);
   const [deletingNoteQuoteId, setDeletingNoteQuoteId] = useState("");
   const [fallbackProgress, setFallbackProgress] = useState(null);
@@ -583,6 +584,12 @@ function UserProfilePage() {
           throw new Error("Unable to resolve current user.");
         }
         const profilePayload = await getMyProfile();
+        let learningSetsPayload = [];
+        try {
+          learningSetsPayload = await listPersonalLearningPaths();
+        } catch {
+          learningSetsPayload = [];
+        }
         let noteQuotesPayload = [];
         try {
           noteQuotesPayload = await getMyNoteQuotes();
@@ -598,6 +605,7 @@ function UserProfilePage() {
         if (!mounted) return;
         setUserInfo(normalizedUser);
         setProfileInfo(normalizeProfile(profilePayload));
+        setProfileLearningSets(Array.isArray(learningSetsPayload) ? learningSetsPayload : []);
         setPersonalNoteQuotes(Array.isArray(noteQuotesPayload) ? noteQuotesPayload : []);
         setFallbackProgress(fallback);
       } catch (error) {
@@ -612,6 +620,7 @@ function UserProfilePage() {
           setErrorText("");
           setUserInfo(PREVIEW_USER);
           setProfileInfo(PREVIEW_PROFILE);
+          setProfileLearningSets([]);
           setPersonalNoteQuotes([]);
           setFallbackProgress(null);
           return;
@@ -666,6 +675,24 @@ function UserProfilePage() {
     loadCareerData();
     return () => {
       mounted = false;
+    };
+  }, [previewMode, userInfo?.id]);
+
+  useEffect(() => {
+    if (!userInfo?.id || previewMode) return undefined;
+    let mounted = true;
+    const refreshLearningSets = async () => {
+      try {
+        const payload = await listPersonalLearningPaths();
+        if (mounted) setProfileLearningSets(Array.isArray(payload) ? payload : []);
+      } catch {
+        // The profile remains usable when this secondary report source is unavailable.
+      }
+    };
+    window.addEventListener("learning-sets-updated", refreshLearningSets);
+    return () => {
+      mounted = false;
+      window.removeEventListener("learning-sets-updated", refreshLearningSets);
     };
   }, [previewMode, userInfo?.id]);
 
@@ -998,6 +1025,7 @@ function UserProfilePage() {
     );
     const topCareer = visibleCareerRecommendations[0];
     const focusArea =
+      profileLearningSets[0]?.draft?.learning_set_name ||
       learningTracks[0]?.title ||
       decoratedCompletedNotes[0]?.displaySubject ||
       careerGoals[0] ||
@@ -1032,6 +1060,7 @@ function UserProfilePage() {
     decoratedCompletedNotes,
     domainBadges,
     learningTracks,
+    profileLearningSets,
     personalNoteQuotes,
     recommendedFirstNote,
     selectedCareerSkills,
@@ -1130,7 +1159,7 @@ function UserProfilePage() {
       saved_highlights: personalNoteQuotes,
       learning_tracks: learningTracks,
       learning_sets:
-        profileInfo.learning_sets || profileInfo.learningSets || learningTracks,
+        profileLearningSets,
       knowledge_domain_badges: domainBadges,
       content_identity: {
         note_id_field: "note_id",
@@ -1160,6 +1189,7 @@ function UserProfilePage() {
     domainBadges,
     fallbackProgress,
     learningTracks,
+    profileLearningSets,
     personalNoteQuotes,
     profileInfo,
     userInfo,

@@ -202,8 +202,9 @@ export function getCanonicalCurriculumGraph() {
   return assistantRequest("/api/v1/assistant/curriculum/canonical-graph");
 }
 
-export function getLearningPath() {
-  return assistantRequest("/api/v1/assistant/learning-path");
+export function getLearningPath(pathId = "primary") {
+  const query = pathId && pathId !== "primary" ? `?path_id=${encodeURIComponent(pathId)}` : "";
+  return assistantRequest(`/api/v1/assistant/learning-path${query}`);
 }
 
 export function generateLearningPath(payload) {

@@ -272,6 +272,14 @@ const NoteLayout = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const learningPathId = useMemo(() => {
+    const selected = String(location.state?.learningPathId || "").trim();
+    if (selected) {
+      window.sessionStorage.setItem("notes-system.active-learning-set", selected);
+      return selected;
+    }
+    return window.sessionStorage.getItem("notes-system.active-learning-set") || "primary";
+  }, [location.state?.learningPathId]);
   const { t } = useTranslation();
   const { openAssistant } = useGlobalAssistant();
 
@@ -585,18 +593,18 @@ const NoteLayout = () => {
 
   const loadLearningPath = useCallback(async () => {
     try {
-      const payload = await getLearningPath();
+      const payload = await getLearningPath(learningPathId);
       setLearningPathDraft(payload?.draft || null);
     } catch {
       setLearningPathDraft(null);
     }
-  }, []);
+  }, [learningPathId]);
 
   useEffect(() => {
     let mounted = true;
     async function run() {
       try {
-        const payload = await getLearningPath();
+        const payload = await getLearningPath(learningPathId);
         if (!mounted) return;
         setLearningPathDraft(payload?.draft || null);
       } catch {
@@ -613,7 +621,7 @@ const NoteLayout = () => {
       mounted = false;
       window.removeEventListener("learning-path-updated", onPathUpdated);
     };
-  }, [loadLearningPath]);
+  }, [learningPathId, loadLearningPath]);
 
   useEffect(() => {
     let mounted = true;
@@ -636,7 +644,10 @@ const NoteLayout = () => {
     try {
       const response = await saveLearningPathDraft(nextDraft);
       setLearningPathDraft(response?.draft || nextDraft);
-      await commitLearningPath({ message: commitMessage || successMessage || "Updated learning path" });
+      await commitLearningPath({
+        path_id: nextDraft.path_id || learningPathId,
+        message: commitMessage || successMessage || "Updated learning path",
+      });
       if (successMessage) message.success(successMessage);
       return true;
     } catch (error) {
@@ -645,7 +656,7 @@ const NoteLayout = () => {
       loadLearningPath();
       return false;
     }
-  }, [loadLearningPath]);
+  }, [learningPathId, loadLearningPath]);
 
   const applyPathNodeOrder = useCallback(
     (nodes, orderMode = "custom") => {
