@@ -30,6 +30,7 @@ const MindmapToolbar = ({
   selectedConceptNoteUrl,
   onOpenFirstNote,
   onOpenSelectedConcept,
+  showViewSwitcher = true,
 }) => {
   const navigate = useNavigate();
 
@@ -106,7 +107,7 @@ const MindmapToolbar = ({
             </button>
           ) : null}
         </div>
-        <div className="mindmap-toolbar__view-switcher">
+        {showViewSwitcher ? <div className="mindmap-toolbar__view-switcher">
           <span className="mindmap-toolbar__view-label">View Type:</span>
           <div className="mindmap-toolbar__view-options">
             {viewOptions.map((option) => (
@@ -127,7 +128,7 @@ const MindmapToolbar = ({
               </button>
             ))}
           </div>
-        </div>
+        </div> : null}
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ import {
 } from "@ant-design/icons";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Alert, Button, Checkbox, Input, Radio, Space, Tag, Typography } from "antd";
+import { Alert, Button, Input, Radio, Space, Tag, Typography } from "antd";
 
 import useTranslation from "../../../i18n/useTranslation";
 import "./AssistantWorkspace.css";
@@ -68,9 +68,7 @@ function AssistantWorkspace({
   quizAnswers = {},
   quizEvaluations = {},
   quizEvaluationPendingMap = {},
-  onQuizGoalChange,
   onQuizLevelChange,
-  onQuizQuestionTypesChange,
   onQuizAnswerChange,
   onQuizGenerate,
   onQuizEvaluateQuestion,
@@ -88,7 +86,7 @@ function AssistantWorkspace({
     () => ({
       qa: "Q&A",
       notes: t("learningSupport.tabs.notes"),
-      quiz: t("learningSupport.tabs.quiz"),
+      quiz: "Mock interview",
     }),
     [t],
   );
@@ -347,47 +345,26 @@ function AssistantWorkspace({
       {activeTool === "quiz" && (
         <div className="assistant-workspace__body">
           <Text type="secondary">
-            Generate quizzes from current note context with objective and difficulty.
+            Practice interview questions grounded in the current topic, then get structured feedback on your answer.
           </Text>
           {quizError ? <Alert type="error" showIcon message={quizError} /> : null}
           <Input
             value={quizPrompt}
             onChange={(event) => onQuizPromptChange?.(event.target.value)}
-            placeholder="Custom instruction (optional)"
+            placeholder="Optional: target role, company, or interview focus"
+            aria-label="Mock interview focus"
           />
           <div className="assistant-workspace__quiz-block">
-            <Text strong>1) Objective</Text>
-            <Radio.Group
-              className="assistant-workspace__quiz-options"
-              value={quizGoal}
-              onChange={(event) => onQuizGoalChange?.(event.target.value)}
-            >
-              <Radio.Button value="check">Check</Radio.Button>
-              <Radio.Button value="review">Review</Radio.Button>
-            </Radio.Group>
-          </div>
-          <div className="assistant-workspace__quiz-block">
-            <Text strong>2) Difficulty</Text>
+            <Text strong>Interview depth</Text>
             <Radio.Group
               className="assistant-workspace__quiz-options"
               value={quizLevel}
               onChange={(event) => onQuizLevelChange?.(event.target.value)}
             >
-              <Radio.Button value="easy">Easy</Radio.Button>
-              <Radio.Button value="medium">Medium</Radio.Button>
-              <Radio.Button value="hard">Hard</Radio.Button>
+              <Radio.Button value="easy">Warm-up</Radio.Button>
+              <Radio.Button value="medium">Standard</Radio.Button>
+              <Radio.Button value="hard">Deep dive</Radio.Button>
             </Radio.Group>
-          </div>
-          <div className="assistant-workspace__quiz-block">
-            <Text strong>3) Question types</Text>
-            <Checkbox.Group
-              value={quizQuestionTypes}
-              onChange={(values) => onQuizQuestionTypesChange?.(values)}
-              options={[
-                { label: "Multiple choice", value: "mcq" },
-                { label: "Short answer", value: "short_answer" },
-              ]}
-            />
           </div>
           <Space>
             <Button
@@ -396,14 +373,14 @@ function AssistantWorkspace({
               loading={quizPending}
               onClick={() => onQuizGenerate?.()}
             >
-              Generate
+              Start mock interview
             </Button>
             <Button
               disabled={!quizGoal || !quizLevel || quizQuestionTypes.length === 0}
               loading={quizPending}
               onClick={() => onQuizGenerate?.()}
             >
-              Regenerate
+              New questions
             </Button>
           </Space>
           <div className="assistant-workspace__quiz-list">
@@ -440,7 +417,7 @@ function AssistantWorkspace({
                       loading={Boolean(quizEvaluationPendingMap[question.id])}
                       onClick={() => onQuizEvaluateQuestion?.(question)}
                     >
-                      Check answer
+                      Get feedback
                     </Button>
                   </div>
                 ) : (
@@ -448,7 +425,7 @@ function AssistantWorkspace({
                     <Input.TextArea
                       rows={3}
                       value={quizAnswers[question.id] || ""}
-                      placeholder="Write your answer..."
+                      placeholder="Answer as if you were speaking to an interviewer..."
                       onChange={(event) => onQuizAnswerChange?.(question.id, event.target.value)}
                     />
                     <Button
@@ -457,19 +434,21 @@ function AssistantWorkspace({
                       loading={Boolean(quizEvaluationPendingMap[question.id])}
                       onClick={() => onQuizEvaluateQuestion?.(question)}
                     >
-                      Check answer
+                      Get feedback
                     </Button>
                   </div>
                 )}
                 {quizEvaluations[question.id] ? (
                   <div className="assistant-workspace__quiz-eval">
-                    <Text strong>{quizEvaluations[question.id].is_correct ? "Correct" : "Needs work"}</Text>
-                    <Text>Score: {quizEvaluations[question.id].score ?? "-"}</Text>
+                    <Text strong>
+                      {(quizEvaluations[question.id].score ?? 0) >= 0.7 ? "Interview-ready response" : "Keep refining"}
+                    </Text>
+                    <Text>Readiness score: {quizEvaluations[question.id].score ?? "-"}</Text>
                     {quizEvaluations[question.id].feedback ? (
                       <Text>Feedback: {quizEvaluations[question.id].feedback}</Text>
                     ) : null}
                     {quizEvaluations[question.id].suggested_answer ? (
-                      <Text>Suggested: {quizEvaluations[question.id].suggested_answer}</Text>
+                      <Text>Stronger answer: {quizEvaluations[question.id].suggested_answer}</Text>
                     ) : null}
                   </div>
                 ) : null}

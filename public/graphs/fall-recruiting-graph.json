@@ -1,0 +1,35 @@
+{
+  "meta": {"subjectId":"fall-recruiting","subjectName":"秋招准备","version":"1.0.0","directed":true,"focusSubject":"fall-recruiting","networkScope":"subject","view":"network"},
+  "categories": [{"id":"subject-fall-recruiting","name":"秋招准备","displayName":"秋招准备","color":"#1677ff","subject":"fall-recruiting"}],
+  "networkClusters": [{"id":"subject-fall-recruiting","label":"秋招准备","subject":"fall-recruiting","color":"#1677ff","nodeIds":["target-role","timeline","jd-mapping","star","channels","role-fit","application","email","question-map","spoken-star","offer","skill-gap"]}],
+  "nodes": [
+    {"id":"target-role","displayTitle":"目标岗位","subject":"fall-recruiting","noteTitle":"秋招定位与行动计划","noteUrl":"/note/fall-recruiting/autumn-recruitment-roadmap.md#concept-target-role","categoryId":"subject-fall-recruiting","importance":"high"},
+    {"id":"timeline","displayTitle":"招聘时间线","subject":"fall-recruiting","noteTitle":"秋招定位与行动计划","noteUrl":"/note/fall-recruiting/autumn-recruitment-roadmap.md#concept-recruitment-timeline","categoryId":"subject-fall-recruiting","importance":"high"},
+    {"id":"jd-mapping","displayTitle":"岗位要求映射","subject":"fall-recruiting","noteTitle":"简历打磨与经历表达","noteUrl":"/note/fall-recruiting/resume-story.md#concept-job-description-mapping","categoryId":"subject-fall-recruiting","importance":"high"},
+    {"id":"star","displayTitle":"STAR 证据","subject":"fall-recruiting","noteTitle":"简历打磨与经历表达","noteUrl":"/note/fall-recruiting/resume-story.md#concept-star-evidence","categoryId":"subject-fall-recruiting","importance":"high"},
+    {"id":"channels","displayTitle":"岗位渠道","subject":"fall-recruiting","noteTitle":"寻找与筛选合适岗位","noteUrl":"/note/fall-recruiting/job-search-and-screening.md#concept-search-channels","categoryId":"subject-fall-recruiting","importance":"medium"},
+    {"id":"role-fit","displayTitle":"岗位匹配度","subject":"fall-recruiting","noteTitle":"寻找与筛选合适岗位","noteUrl":"/note/fall-recruiting/job-search-and-screening.md#concept-role-fit","categoryId":"subject-fall-recruiting","importance":"high"},
+    {"id":"application","displayTitle":"网申质量","subject":"fall-recruiting","noteTitle":"网申与邮件沟通","noteUrl":"/note/fall-recruiting/application-communication.md#concept-application-quality","categoryId":"subject-fall-recruiting","importance":"medium"},
+    {"id":"email","displayTitle":"专业邮件","subject":"fall-recruiting","noteTitle":"网申与邮件沟通","noteUrl":"/note/fall-recruiting/application-communication.md#concept-professional-email","categoryId":"subject-fall-recruiting","importance":"medium"},
+    {"id":"question-map","displayTitle":"面试问题地图","subject":"fall-recruiting","noteTitle":"面试准备与复盘","noteUrl":"/note/fall-recruiting/interview-preparation.md#concept-interview-question-map","categoryId":"subject-fall-recruiting","importance":"high"},
+    {"id":"spoken-star","displayTitle":"口头 STAR","subject":"fall-recruiting","noteTitle":"面试准备与复盘","noteUrl":"/note/fall-recruiting/interview-preparation.md#concept-spoken-star","categoryId":"subject-fall-recruiting","importance":"high"},
+    {"id":"offer","displayTitle":"Offer 比较","subject":"fall-recruiting","noteTitle":"Offer 判断与求职复盘","noteUrl":"/note/fall-recruiting/offer-review.md#concept-offer-comparison","categoryId":"subject-fall-recruiting","importance":"medium"},
+    {"id":"skill-gap","displayTitle":"技能缺口复盘","subject":"fall-recruiting","noteTitle":"Offer 判断与求职复盘","noteUrl":"/note/fall-recruiting/offer-review.md#concept-skill-gap-review","categoryId":"subject-fall-recruiting","importance":"high"}
+  ],
+  "edges": [
+    {"source":"target-role","target":"timeline","type":"prerequisite","strength":1,"bidirectional":false},
+    {"source":"target-role","target":"jd-mapping","type":"prerequisite","strength":1,"bidirectional":false},
+    {"source":"jd-mapping","target":"star","type":"related_to","strength":0.9},
+    {"source":"target-role","target":"channels","type":"prerequisite","strength":0.8,"bidirectional":false},
+    {"source":"channels","target":"role-fit","type":"related_to","strength":0.9},
+    {"source":"jd-mapping","target":"role-fit","type":"related_to","strength":0.8},
+    {"source":"star","target":"application","type":"prerequisite","strength":0.8,"bidirectional":false},
+    {"source":"application","target":"email","type":"related_to","strength":0.7},
+    {"source":"star","target":"question-map","type":"prerequisite","strength":1,"bidirectional":false},
+    {"source":"question-map","target":"spoken-star","type":"related_to","strength":1},
+    {"source":"email","target":"question-map","type":"prerequisite","strength":0.6,"bidirectional":false},
+    {"source":"spoken-star","target":"offer","type":"prerequisite","strength":0.7,"bidirectional":false},
+    {"source":"offer","target":"skill-gap","type":"related_to","strength":0.9},
+    {"source":"skill-gap","target":"target-role","type":"extends","strength":0.7,"bidirectional":false}
+  ]
+}

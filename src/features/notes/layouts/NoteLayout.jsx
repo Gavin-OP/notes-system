@@ -49,6 +49,7 @@ import useTranslation from "../../../i18n/useTranslation";
 import { listPodcasts } from "../../podcasts/api/podcasts";
 
 import LearningPageMetaBar from "../../../shared/layouts/LearningPageMetaBar";
+import { FULL_PRODUCT_ENABLED, PILOT_SUBJECT_SLUG } from "../../../config/productMode";
 import "./NoteLayout.css";
 import "../components/LearningSupportPanel.css";
 
@@ -171,6 +172,41 @@ function normalizeCompletedNoteUrlsFromProfile(profilePayload) {
     .filter(Boolean);
 }
 
+function buildPilotLearningPathDraft(notesIndex) {
+  const folders = Array.isArray(notesIndex) ? notesIndex : [];
+  const pilotFolder = folders.find((item) => (
+    item?.slug === PILOT_SUBJECT_SLUG || item?.directory === PILOT_SUBJECT_SLUG
+  ));
+  const children = Array.isArray(pilotFolder?.children) ? pilotFolder.children : [];
+  const notes = children
+    .filter((item) => item?.type === "file" && item?.display !== false && item?.url)
+    .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+  const nodes = notes.map((item, index) => ({
+    node_id: item.id || `note:${PILOT_SUBJECT_SLUG}:${item.slug || index + 1}`,
+    title: item.title || item.name || `Step ${index + 1}`,
+    subject: PILOT_SUBJECT_SLUG,
+    note_url: item.url,
+    status: index === 0 ? "active" : "planned",
+    metadata: { pilot_official_path: true, order: index + 1, subject_title: "秋招准备" },
+  }));
+  return {
+    path_id: "primary",
+    learning_set_name: "秋招准备 Path",
+    learning_set_note: "从定位、简历和岗位搜索，到沟通、面试与 Offer 复盘。",
+    goal_type: "custom",
+    goal_title: "准备下一轮校园招聘",
+    metadata: { order_mode: "canonical", pilot_official_path: true },
+    nodes,
+    edges: nodes.slice(1).map((node, index) => ({
+      edge_id: `pilot:${nodes[index].node_id}:${node.node_id}`,
+      source: nodes[index].node_id,
+      target: node.node_id,
+      relation: "precedes",
+      metadata: { pilot_official_path: true },
+    })),
+  };
+}
+
 function collectMenuLabelPayload(items, list = []) {
   items.forEach((item) => {
     if (item?.key && typeof item.label === "string") {
@@ -286,7 +322,13 @@ const NoteLayout = () => {
   // redux state
   const isMobile = useSelector((state) => state.preference.isMobile);
   const rawNotesIndex = useSelector((state) => state.notesIndex.data);
-  const notesIndex = useMemo(() => rawNotesIndex || [], [rawNotesIndex]);
+  const notesIndex = useMemo(() => {
+    const allNotes = Array.isArray(rawNotesIndex) ? rawNotesIndex : [];
+    if (FULL_PRODUCT_ENABLED) return allNotes;
+    return allNotes.filter((item) => (
+      item?.slug === PILOT_SUBJECT_SLUG || item?.directory === PILOT_SUBJECT_SLUG
+    ));
+  }, [rawNotesIndex]);
   const currentMeta = useSelector((state) => state.currentNote.meta);
   const outline = useSelector((state) => state.currentNote.outline);
   const currentNoteContent = useSelector((state) => state.currentNote.content);
@@ -306,9 +348,9 @@ const NoteLayout = () => {
   const [selectedReferencePaths, setSelectedReferencePaths] = useState([]);
   const [scratchHtml, setScratchHtml] = useState("");
   const [scratchSavedHint, setScratchSavedHint] = useState("");
-  const [quizObjective, setQuizObjective] = useState("check");
+  const [quizObjective, setQuizObjective] = useState("mock_interview");
   const [quizDifficulty, setQuizDifficulty] = useState("medium");
-  const [quizQuestionTypes, setQuizQuestionTypes] = useState(["mcq"]);
+  const [quizQuestionTypes, setQuizQuestionTypes] = useState(["short_answer"]);
   const [quizInstruction, setQuizInstruction] = useState("");
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [quizAnswers, setQuizAnswers] = useState({});
@@ -560,6 +602,10 @@ const NoteLayout = () => {
   }, [menuLeafItems, selectedReferencePaths]);
 
   useEffect(() => {
+    if (!FULL_PRODUCT_ENABLED) {
+      setOfficialPodcasts([]);
+      return undefined;
+    }
     let mounted = true;
     listPodcasts()
       .then((episodes) => {
@@ -596,9 +642,9 @@ const NoteLayout = () => {
       const payload = await getLearningPath(learningPathId);
       setLearningPathDraft(payload?.draft || null);
     } catch {
-      setLearningPathDraft(null);
+      setLearningPathDraft(FULL_PRODUCT_ENABLED ? null : buildPilotLearningPathDraft(rawNotesIndex));
     }
-  }, [learningPathId]);
+  }, [learningPathId, rawNotesIndex]);
 
   useEffect(() => {
     let mounted = true;
@@ -609,7 +655,7 @@ const NoteLayout = () => {
         setLearningPathDraft(payload?.draft || null);
       } catch {
         if (!mounted) return;
-        setLearningPathDraft(null);
+        setLearningPathDraft(FULL_PRODUCT_ENABLED ? null : buildPilotLearningPathDraft(rawNotesIndex));
       }
     }
     run();
@@ -621,7 +667,7 @@ const NoteLayout = () => {
       mounted = false;
       window.removeEventListener("learning-path-updated", onPathUpdated);
     };
-  }, [learningPathId, loadLearningPath]);
+  }, [learningPathId, loadLearningPath, rawNotesIndex]);
 
   useEffect(() => {
     let mounted = true;
@@ -996,7 +1042,7 @@ const NoteLayout = () => {
 
   const handleEnoughForNow = () => {
     message.success("Your place is saved. Continue whenever you are ready.");
-    navigate("/user/profile?section=learning");
+    navigate(FULL_PRODUCT_ENABLED ? "/user/profile?section=learning" : "/");
   };
 
   const handleCreateQuoteFromSelection = async (selection) => {
@@ -1056,7 +1102,7 @@ const NoteLayout = () => {
   const handleGenerateQuizFromSelection = (selection) => {
     const selectedText = String(selection?.selectedText || "").trim();
     if (!selectedText) return;
-    setQuizInstruction(`Generate a short quiz based on this selected passage from ${noteName}:\n\n"${selectedText}"`);
+    setQuizInstruction(`Use this selected passage from ${noteName} to conduct a focused mock interview:\n\n"${selectedText}"`);
     setAssistantTool("quiz");
     setAssistantDockTab("quiz");
     if (immersiveMode || isMobile) {
@@ -1275,6 +1321,8 @@ const NoteLayout = () => {
         difficulty: quizDifficulty,
         questionTypes: quizQuestionTypes,
         customInstruction: quizInstruction || "",
+        questionCount: 3,
+        studyMode: "interview",
         ...assistantContextPayload,
       };
       const response = await requestAssistantQuiz(payload);
@@ -1460,14 +1508,14 @@ const NoteLayout = () => {
                 <div className="note-layout__sider-header">
                   <span className="note-layout__sider-title">{t("learningPath.title")}</span>
                   <div className="note-layout__sider-header-actions">
-                    <LearningPathControls
+                    {FULL_PRODUCT_ENABLED ? <LearningPathControls
                       hasPersonalizedPath={hasPersonalizedPath}
                       hasEditableDraft={hasEditableDraft}
                       pathEditMode={pathEditMode}
                       learningPathPending={learningPathPending}
                       onPrimaryAction={handlePathPrimaryAction}
                       onClearPath={handleClearPath}
-                    />
+                    /> : null}
                     <button
                       type="button"
                       className="note-layout__sider-collapse-btn"
@@ -1484,14 +1532,14 @@ const NoteLayout = () => {
                 </div>
               ) : (
                 <div className="note-layout__sider-mobile-controls">
-                  <LearningPathControls
+                  {FULL_PRODUCT_ENABLED ? <LearningPathControls
                     hasPersonalizedPath={hasPersonalizedPath}
                     hasEditableDraft={hasEditableDraft}
                     pathEditMode={pathEditMode}
                     learningPathPending={learningPathPending}
                     onPrimaryAction={handlePathPrimaryAction}
                     onClearPath={handleClearPath}
-                  />
+                  /> : null}
                 </div>
               )}
               <LearningNavigationPanel
@@ -1575,6 +1623,7 @@ const NoteLayout = () => {
                 workspaceMeta={workspaceMeta}
                 onExploreMindmap={handleExploreMindmap}
                 isMobile={isMobile}
+                showAudioTools={FULL_PRODUCT_ENABLED}
               />
               <Outlet
                 context={{

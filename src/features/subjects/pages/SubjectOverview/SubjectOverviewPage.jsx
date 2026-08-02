@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import AppPageShell from "../../../../shared/layouts/AppPageShell";
 import useTranslation from "../../../../i18n/useTranslation";
 import SubjectOverviewContent from "./SubjectOverviewContent";
+import { FULL_PRODUCT_ENABLED } from "../../../../config/productMode";
 
 import "./SubjectOverviewPage.css";
 
@@ -18,9 +19,9 @@ function SubjectOverviewPage() {
 
   return (
     <AppPageShell
-      backLabel={t("subjectOverview.backToDatabase", "Back to Knowledge Database")}
-      onBack={() => navigate("/subjects")}
-      showSiteFooter
+      backLabel={FULL_PRODUCT_ENABLED ? t("subjectOverview.backToDatabase", "Back to Knowledge Database") : "返回秋招学习"}
+      onBack={() => navigate(FULL_PRODUCT_ENABLED ? "/subjects" : "/")}
+      showSiteFooter={FULL_PRODUCT_ENABLED}
       contentWidth="wide"
     >
       <SubjectOverviewContent subjectId={subjectId} />

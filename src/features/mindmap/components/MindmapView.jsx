@@ -35,6 +35,7 @@ import { normalizeConceptPayload, migrateConceptReviewCaches } from "../lib/conc
 import useTranslatedContent from "../../../i18n/useTranslatedContent";
 import "./nodes/nodes.css";
 import "./MindmapView.css";
+import { FULL_PRODUCT_ENABLED } from "../../../config/productMode";
 
 // Register custom node types
 const nodeTypes = {
@@ -153,7 +154,9 @@ const MindmapView = ({ subjectId }) => {
   
   // Mindmap view type state
   const [viewType, setViewType] = useState(
-    location.state?.mindmapViewType || MINDMAP_TYPES.HIERARCHICAL,
+    FULL_PRODUCT_ENABLED
+      ? location.state?.mindmapViewType || MINDMAP_TYPES.HIERARCHICAL
+      : MINDMAP_TYPES.NETWORK,
   );
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [conceptModalOpen, setConceptModalOpen] = useState(false);
@@ -302,7 +305,7 @@ const MindmapView = ({ subjectId }) => {
 
   // Handle mindmap view type change
   const handleViewTypeChange = useCallback((newType) => {
-    setViewType(newType);
+    setViewType(FULL_PRODUCT_ENABLED ? newType : MINDMAP_TYPES.NETWORK);
   }, []);
   
   const handleConceptClick = useCallback((rawConcept = {}) => {
@@ -484,6 +487,7 @@ const MindmapView = ({ subjectId }) => {
         selectedConceptNoteUrl={selectedConceptNoteUrl}
         onOpenFirstNote={handleOpenFirstNote}
         onOpenSelectedConcept={handleOpenSelectedConcept}
+        showViewSwitcher={FULL_PRODUCT_ENABLED}
       />
       
       {/* Render the selected mindmap view */}

@@ -6,6 +6,7 @@ import GlobalAssistantProvider from "../../features/assistant/components/GlobalA
 import HomePage from "../pages/HomePage";
 import { isLocalhost } from "../../shared/lib/analyticsUtils";
 import { getCurrentUser, UserApiError } from "../../features/profile/api/user";
+import { FULL_PRODUCT_ENABLED, PILOT_START_PATH, PILOT_SUBJECT_SLUG } from "../../config/productMode";
 import "../../features/admin/styles/admin.css";
 
 const NoteLayout = lazy(() => import("../../features/notes/layouts/NoteLayout"));
@@ -52,6 +53,24 @@ function RouteLoading() {
 function LegacySubjectOverviewRedirect() {
   const { subjectId = "" } = useParams();
   return <Navigate to={`/subject/${subjectId}`} replace />;
+}
+
+function ActiveSubjectEntry() {
+  const { subjectId = "" } = useParams();
+  if (!FULL_PRODUCT_ENABLED && subjectId !== PILOT_SUBJECT_SLUG) {
+    return <Navigate to={PILOT_START_PATH} replace />;
+  }
+  return <SubjectEntry />;
+}
+
+function ActiveNoteLayout() {
+  const location = useLocation();
+  const pilotRoot = `/note/${PILOT_SUBJECT_SLUG}`;
+  const pilotPrefix = `/note/${PILOT_SUBJECT_SLUG}/`;
+  if (!FULL_PRODUCT_ENABLED && location.pathname !== pilotRoot && !location.pathname.startsWith(pilotPrefix)) {
+    return <Navigate to={PILOT_START_PATH} replace />;
+  }
+  return <NoteLayout />;
 }
 
 function UserRouteGuard() {
@@ -147,7 +166,7 @@ function RoutesWithTracking() {
       <ScrollToTop />
       <Suspense fallback={<RouteLoading />}>
       <Routes>
-        <Route index element={<HomePage />} />
+        <Route index element={FULL_PRODUCT_ENABLED ? <HomePage /> : <Navigate to={PILOT_START_PATH} replace />} />
 
         {/* Legacy redirects for old URLs */}
         <Route path="data-science/mindmap" element={<Navigate to="../subject/data-science/mindmap" replace />} />
@@ -155,18 +174,18 @@ function RoutesWithTracking() {
 
         {/* Subject-specific routes (mindmap) */}
         {/* Dynamic routing: /subject/:subjectId/mindmap */}
-        <Route path="subject/:subjectId" element={<SubjectEntry />}>
+        <Route path="subject/:subjectId" element={<ActiveSubjectEntry />}>
           <Route index element={<SubjectOverviewPage />} />
           <Route path="mindmap" element={<SubjectMindmap />} />
         </Route>
 
         {/* Note content routes */}
         <Route path="note/:subjectId/overview" element={<LegacySubjectOverviewRedirect />} />
-        <Route path="note/*" element={<NoteLayout />}>
+        <Route path="note/*" element={<ActiveNoteLayout />}>
           <Route path="*" element={<NotePage />} />
         </Route>
 
-        {/* Admin routes */}
+        {/* Admin routes remain available to the internal team, but are not linked in pilot UI. */}
         <Route path="admin" element={<AdminAuthRoot />}>
           <Route path="login" element={<AdminLoginPage />} />
           <Route element={<AdminRouteGuard />}>
@@ -183,41 +202,43 @@ function RoutesWithTracking() {
 
         {/* User routes (UI only) */}
         <Route path="user/login" element={<UserLoginPage />} />
-        <Route element={<UserRouteGuard />}>
-          <Route path="user/profile" element={<UserProfilePage />} />
-          <Route path="goals" element={<Navigate to="/user/profile?section=goals" replace />} />
-          <Route path="course-studio" element={<CourseStudioPage />} />
-          <Route path="course-authoring/:courseId" element={<CourseAuthoringPage />} />
-          <Route path="podcasts" element={<PodcastLibraryPage />} />
-          <Route path="podcasts/:episodeId" element={<PodcastEpisodePage />} />
-        </Route>
+        {FULL_PRODUCT_ENABLED ? (
+          <Route element={<UserRouteGuard />}>
+            <Route path="user/profile" element={<UserProfilePage />} />
+            <Route path="goals" element={<Navigate to="/user/profile?section=goals" replace />} />
+            <Route path="course-studio" element={<CourseStudioPage />} />
+            <Route path="course-authoring/:courseId" element={<CourseAuthoringPage />} />
+            <Route path="podcasts" element={<PodcastLibraryPage />} />
+            <Route path="podcasts/:episodeId" element={<PodcastEpisodePage />} />
+          </Route>
+        ) : null}
         <Route path="user" element={<Navigate to="/user/login" replace />} />
 
-        {/* Careers */}
-        <Route path="careers" element={<ExploreCareersPage />} />
-        <Route path="careers/:jobId" element={<CareerJobDetailPage />} />
+        {/* Expanded product routes stay compiled and can be restored with VITE_ENABLE_FULL_PRODUCT=true. */}
+        {FULL_PRODUCT_ENABLED ? <Route path="careers" element={<ExploreCareersPage />} /> : null}
+        {FULL_PRODUCT_ENABLED ? <Route path="careers/:jobId" element={<CareerJobDetailPage />} /> : null}
 
         {/* Public course exploration; saving and authoring remain authenticated actions. */}
-        <Route path="courses/community" element={<CourseCommunityPage />} />
-        <Route path="courses/community/:courseId" element={<CoursePackageDetailPage />} />
+        {FULL_PRODUCT_ENABLED ? <Route path="courses/community" element={<CourseCommunityPage />} /> : null}
+        {FULL_PRODUCT_ENABLED ? <Route path="courses/community/:courseId" element={<CoursePackageDetailPage />} /> : null}
 
         {/* Databases and policy pages */}
-        <Route path="database" element={<SubjectDatabasePage />} />
-        <Route path="subjects" element={<Navigate to="/database" replace />} />
-        <Route path="course-packages/official/:domainSlug" element={<CoursePackageDetailPage />} />
-        <Route path="course-packages/:courseId" element={<CoursePackageDetailPage />} />
+        {FULL_PRODUCT_ENABLED ? <Route path="database" element={<SubjectDatabasePage />} /> : null}
+        {FULL_PRODUCT_ENABLED ? <Route path="subjects" element={<Navigate to="/database" replace />} /> : null}
+        {FULL_PRODUCT_ENABLED ? <Route path="course-packages/official/:domainSlug" element={<CoursePackageDetailPage />} /> : null}
+        {FULL_PRODUCT_ENABLED ? <Route path="course-packages/:courseId" element={<CoursePackageDetailPage />} /> : null}
         <Route path="disclaimer" element={<DisclaimerPage />} />
 
         {/* Search */}
         <Route path="search" element={<SearchResultsPage />} />
 
         {/* MVP micro-course demo */}
-        <Route path="micro-course/data-science-intro" element={<MicroCourseDemoPage />} />
-        <Route path="micro-course/data-cleaning-preprocessing" element={<DataCleaningMicroCoursePage />} />
+        {FULL_PRODUCT_ENABLED ? <Route path="micro-course/data-science-intro" element={<MicroCourseDemoPage />} /> : null}
+        {FULL_PRODUCT_ENABLED ? <Route path="micro-course/data-cleaning-preprocessing" element={<DataCleaningMicroCoursePage />} /> : null}
 
         {/* Home and fallback */}
-        <Route path="home" element={<HomePage />} />
-        <Route path="*" element={<NotFoundPage />} />
+        {FULL_PRODUCT_ENABLED ? <Route path="home" element={<HomePage />} /> : null}
+        <Route path="*" element={FULL_PRODUCT_ENABLED ? <NotFoundPage /> : <Navigate to={PILOT_START_PATH} replace />} />
       </Routes>
     </Suspense>
     </>

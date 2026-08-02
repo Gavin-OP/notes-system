@@ -8,6 +8,7 @@ import AppFeatureTour from "../../features/profile/components/guide/AppFeatureTo
 import SearchModal from "../../features/search/components/SearchModal";
 import useTranslation from "../../i18n/useTranslation";
 import AppMetaTopBar from "./AppMetaTopBar";
+import { FULL_PRODUCT_ENABLED } from "../../config/productMode";
 
 function LearningPageMetaBar({
   startSlot = null,
@@ -35,7 +36,7 @@ function LearningPageMetaBar({
           aria-label={t("note.toolbar.searchNotes")}
         />
       </Tooltip>
-      <Tooltip title={t("common.backToHome", "Back to Home")}>
+      {FULL_PRODUCT_ENABLED ? <Tooltip title={t("common.backToHome", "Back to Home")}>
         <Button
           shape="circle"
           className="app-page-shell__tool-btn"
@@ -43,8 +44,8 @@ function LearningPageMetaBar({
           onClick={() => navigate("/")}
           aria-label={t("common.backToHome", "Back to Home")}
         />
-      </Tooltip>
-      <Tooltip title="Explore Course Community">
+      </Tooltip> : null}
+      {FULL_PRODUCT_ENABLED ? <Tooltip title="Explore Course Community">
         <Button
           shape="circle"
           className="app-page-shell__tool-btn"
@@ -52,8 +53,8 @@ function LearningPageMetaBar({
           onClick={() => navigate("/courses/community")}
           aria-label="Explore Course Community"
         />
-      </Tooltip>
-      {Array.isArray(notesGuideSteps) && notesGuideSteps.length > 0 ? (
+      </Tooltip> : null}
+      {FULL_PRODUCT_ENABLED && Array.isArray(notesGuideSteps) && notesGuideSteps.length > 0 ? (
         <AppFeatureTour
           guideKey="notes_page"
           steps={notesGuideSteps}

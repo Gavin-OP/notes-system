@@ -304,7 +304,7 @@ export const translations = {
     "learningSupport.tabs.outline": "Outline",
     "learningSupport.tabs.qa": "Q&A",
     "learningSupport.tabs.notes": "Notes",
-    "learningSupport.tabs.quiz": "Quiz",
+    "learningSupport.tabs.quiz": "Mock interview",
 
     "guide.profile.0.title": "Pick up where you left off",
     "guide.profile.0.description":
@@ -629,7 +629,7 @@ export const translations = {
     "learningSupport.tabs.outline": "大纲",
     "learningSupport.tabs.qa": "问答",
     "learningSupport.tabs.notes": "笔记",
-    "learningSupport.tabs.quiz": "测验",
+    "learningSupport.tabs.quiz": "模拟面试",
 
     "guide.profile.0.title": "从上次的位置继续",
     "guide.profile.0.description": "继续学习会带你回到当前笔记。进度、保存的摘录和职业规划都集中在资料页。",

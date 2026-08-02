@@ -34,6 +34,7 @@ function NoteWorkspaceBar({
   workspaceMeta = null,
   onExploreMindmap,
   isMobile = false,
+  showAudioTools = true,
 }) {
   const { t } = useTranslation();
 
@@ -118,7 +119,7 @@ function NoteWorkspaceBar({
           </button>
         </Tooltip>
 
-        <Dropdown
+        {showAudioTools ? <Dropdown
           trigger={["click"]}
           placement="bottomRight"
           menu={{
@@ -162,7 +163,7 @@ function NoteWorkspaceBar({
             {!isMobile ? <span>{t("note.toolbar.audio", "Audio")}</span> : null}
             <DownOutlined className="note-workspace-bar__version-chevron" aria-hidden="true" />
           </button>
-        </Dropdown>
+        </Dropdown> : null}
       </div>
 
       {hasVersions ? (
@@ -204,9 +205,11 @@ function NoteWorkspaceBar({
         </details>
       ) : null}
 
-      <span className="note-workspace-bar__sr-only" aria-live="polite">
-        {narrationLabel}
-      </span>
+      {showAudioTools ? (
+        <span className="note-workspace-bar__sr-only" aria-live="polite">
+          {narrationLabel}
+        </span>
+      ) : null}
     </div>
   );
 }
