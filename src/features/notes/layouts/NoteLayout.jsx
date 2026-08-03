@@ -312,6 +312,10 @@ const NoteLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const learningPathId = useMemo(() => {
+    if (!FULL_PRODUCT_ENABLED) {
+      window.sessionStorage.setItem("notes-system.active-learning-set", "primary");
+      return "primary";
+    }
     const selected = String(location.state?.learningPathId || "").trim();
     if (selected) {
       window.sessionStorage.setItem("notes-system.active-learning-set", selected);
