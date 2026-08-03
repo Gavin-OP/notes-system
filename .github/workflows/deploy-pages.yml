@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [prototype/genai-workflow-mvp]
+    branches: [experiment/fall-recruiting-mvp]
   workflow_dispatch:
 
 permissions:
