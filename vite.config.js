@@ -33,15 +33,6 @@ export default defineConfig(({ mode }) => {
             if (!id.includes("node_modules")) return undefined;
             if (id.includes("/mermaid/")) return "mermaid";
             if (id.includes("/echarts/") || id.includes("/zrender/")) return "charts";
-            if (
-              id.includes("/react-force-graph") ||
-              id.includes("/3d-force-graph") ||
-              id.includes("/three/") ||
-              id.includes("/three-spritetext") ||
-              id.includes("/d3-force-3d")
-            ) {
-              return "graph-3d";
-            }
             if (id.includes("/antd/") || id.includes("/@ant-design/") || id.includes("/rc-")) {
               return "ui-vendor";
             }
