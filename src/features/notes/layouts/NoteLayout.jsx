@@ -188,6 +188,24 @@ function buildPilotLearningPathDraft() {
   });
 }
 
+function isPilotLearningPathDraft(draft) {
+  if (!draft || typeof draft !== "object") return false;
+  if (draft?.metadata?.pilot_official_path || draft?.metadata?.pilot_path_schema_version) {
+    return true;
+  }
+  const nodes = Array.isArray(draft.nodes) ? draft.nodes : [];
+  return nodes.some((node) => {
+    const subject = String(node?.subject || node?.metadata?.subject || "");
+    const noteUrl = String(node?.note_url || node?.noteUrl || "");
+    return subject === PILOT_SUBJECT_SLUG || noteUrl.includes(`/note/${PILOT_SUBJECT_SLUG}/`);
+  });
+}
+
+function normalizeLearningPathForProductMode(draft) {
+  if (FULL_PRODUCT_ENABLED) return draft || null;
+  return isPilotLearningPathDraft(draft) ? draft : buildPilotLearningPathDraft();
+}
+
 function collectMenuLabelPayload(items, list = []) {
   items.forEach((item) => {
     if (item?.key && typeof item.label === "string") {
@@ -622,11 +640,11 @@ const NoteLayout = () => {
   const loadLearningPath = useCallback(async () => {
     try {
       const payload = await getLearningPath(learningPathId);
-      setLearningPathDraft(payload?.draft || null);
+      setLearningPathDraft(normalizeLearningPathForProductMode(payload?.draft));
     } catch {
-      setLearningPathDraft(FULL_PRODUCT_ENABLED ? null : buildPilotLearningPathDraft(rawNotesIndex));
+      setLearningPathDraft(normalizeLearningPathForProductMode(null));
     }
-  }, [learningPathId, rawNotesIndex]);
+  }, [learningPathId]);
 
   useEffect(() => {
     let mounted = true;
@@ -634,10 +652,10 @@ const NoteLayout = () => {
       try {
         const payload = await getLearningPath(learningPathId);
         if (!mounted) return;
-        setLearningPathDraft(payload?.draft || null);
+        setLearningPathDraft(normalizeLearningPathForProductMode(payload?.draft));
       } catch {
         if (!mounted) return;
-        setLearningPathDraft(FULL_PRODUCT_ENABLED ? null : buildPilotLearningPathDraft(rawNotesIndex));
+        setLearningPathDraft(normalizeLearningPathForProductMode(null));
       }
     }
     run();
@@ -649,7 +667,7 @@ const NoteLayout = () => {
       mounted = false;
       window.removeEventListener("learning-path-updated", onPathUpdated);
     };
-  }, [learningPathId, loadLearningPath, rawNotesIndex]);
+  }, [learningPathId, loadLearningPath]);
 
   useEffect(() => {
     let mounted = true;

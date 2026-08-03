@@ -1,5 +1,5 @@
 /**
- * NetworkMindmapView - Obsidian-style dark network graph styles
+ * NetworkMindmapView - restrained, content-first network graph styles
  */
 
 .network-mindmap-view {
@@ -7,14 +7,17 @@
   height: 100%;
   min-height: 500px;
   position: relative;
-  background: #1a1a1e;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--ns-color-primary) 7%, transparent), transparent 46%),
+    var(--ns-color-bg-layout, #f5f6f8);
 }
 
 .network-mindmap-view--empty {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #888;
+  color: var(--ns-color-text-tertiary, #667085);
   font-size: 14px;
 }
 
@@ -25,10 +28,12 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  background: rgba(0, 0, 0, 0.7);
-  color: #aaa;
+  background: color-mix(in srgb, var(--ns-color-bg-container, #ffffff) 92%, transparent);
+  color: var(--ns-color-text-secondary, #475467);
   padding: 8px 16px;
-  border-radius: 20px;
+  border: 1px solid var(--ns-color-border-secondary, #e4e7ec);
+  border-radius: 999px;
+  box-shadow: var(--ns-shadow-sm, 0 2px 8px rgba(16, 24, 40, 0.08));
   font-size: 13px;
   pointer-events: none;
   animation: pulse 1.5s ease-in-out infinite;
@@ -40,35 +45,65 @@
   left: 16px;
   z-index: 12;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
-  max-width: 75%;
+  max-width: calc(100% - 310px);
 }
 
 .network-mindmap-view__cluster-btn {
-  border: 1px solid color-mix(in srgb, var(--cluster-color) 70%, #ffffff 20%);
-  background: color-mix(in srgb, var(--cluster-color) 22%, #0b1220 78%);
-  color: #eaf2ff;
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  border: 1px solid var(--ns-color-border-secondary, #e4e7ec);
+  background: color-mix(in srgb, var(--ns-color-bg-container, #ffffff) 94%, transparent);
+  color: var(--ns-color-text-secondary, #475467);
+  font-size: 13px;
   font-weight: 600;
   line-height: 1.2;
   padding: 8px 12px;
   border-radius: 999px;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-  opacity: 0.86;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ns-color-text) 6%, transparent);
+}
+
+.network-mindmap-view__cluster-btn::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--cluster-color);
 }
 
 .network-mindmap-view__cluster-btn:hover {
   transform: translateY(-1px);
-  opacity: 1;
+  border-color: color-mix(in srgb, var(--cluster-color) 48%, var(--ns-color-border-secondary));
+  color: var(--ns-color-text, #1d2939);
 }
 
 .network-mindmap-view__cluster-btn--active {
-  opacity: 1;
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--cluster-color) 82%, #ffffff 18%),
-    0 6px 18px rgba(0, 0, 0, 0.28);
+  border-color: color-mix(in srgb, var(--cluster-color) 68%, var(--ns-color-border-secondary));
+  background: color-mix(in srgb, var(--cluster-color) 11%, var(--ns-color-bg-container, #ffffff));
+  color: var(--ns-color-text, #1d2939);
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--cluster-color) 16%, transparent);
+}
+
+.network-mindmap-view__cluster-btn:focus-visible {
+  outline: var(--ns-focus-ring, 2px solid #1677ff);
+  outline-offset: 2px;
+}
+
+.network-mindmap-view__hint {
+  position: absolute;
+  top: 22px;
+  right: 18px;
+  z-index: 11;
+  color: var(--ns-color-text-tertiary, #667085);
+  font-size: 12px;
+  line-height: 1.4;
+  pointer-events: none;
 }
 
 @keyframes pulse {
@@ -80,32 +115,33 @@
   }
 }
 
-/* React Flow container overrides for dark theme */
 .network-mindmap-view .react-flow {
-  background: #1a1a1e;
+  background: transparent;
 }
 
 .network-mindmap-view .react-flow__background {
-  background: #1a1a1e;
+  background: transparent;
+  opacity: 0.55;
 }
 
 /* Controls styling */
 .network-mindmap-view .react-flow__controls {
-  background: rgba(40, 40, 45, 0.9);
-  border: 1px solid #333;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--ns-color-bg-container, #ffffff) 94%, transparent);
+  border: 1px solid var(--ns-color-border-secondary, #e4e7ec);
+  border-radius: 10px;
+  box-shadow: var(--ns-shadow-sm, 0 4px 12px rgba(16, 24, 40, 0.08));
 }
 
 .network-mindmap-view .react-flow__controls-button {
   background: transparent;
-  border-bottom: 1px solid #333;
-  color: #aaa;
+  border-bottom: 1px solid var(--ns-color-border-secondary, #e4e7ec);
+  color: var(--ns-color-text-secondary, #475467);
 }
 
 .network-mindmap-view .react-flow__controls-button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: var(--ns-color-fill-secondary, #f2f4f7);
+  color: var(--ns-color-primary, #1677ff);
 }
 
 .network-mindmap-view .react-flow__controls-button:last-child {
@@ -118,8 +154,8 @@
 
 /* Edge styling */
 .network-mindmap-view .react-flow__edge-path {
-  stroke: #7a8a9a;
-  stroke-opacity: 0.65;
+  stroke: var(--ns-color-text-tertiary, #98a2b3);
+  stroke-opacity: 0.58;
 }
 
 /* Selection box */
@@ -159,3 +195,22 @@
   white-space: nowrap;
 }
 
+@media (max-width: 760px) {
+  .network-mindmap-view__cluster-legend {
+    max-width: calc(100% - 28px);
+  }
+
+  .network-mindmap-view__hint {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .network-mindmap-view__loading {
+    animation: none;
+  }
+
+  .network-mindmap-view__cluster-btn {
+    transition: none;
+  }
+}

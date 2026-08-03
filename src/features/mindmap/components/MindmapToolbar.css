@@ -38,7 +38,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  min-height: 36px;
+  min-height: 40px;
   padding: 6px 10px;
   background: transparent;
   border: 0;
@@ -90,7 +90,7 @@
 
 .mindmap-toolbar__action-btn,
 .mindmap-toolbar__view-btn {
-  min-height: 36px;
+  min-height: 40px;
   border: 1px solid var(--ns-color-border-secondary);
   border-radius: var(--ns-radius-sm);
   background: transparent;

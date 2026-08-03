@@ -12,6 +12,7 @@ import {
   ArrowLeftOutlined,
 } from "@ant-design/icons";
 import { MINDMAP_TYPES } from "./MindmapTypes";
+import { FULL_PRODUCT_ENABLED } from "../../../config/productMode";
 import "./MindmapToolbar.css";
 
 /**
@@ -33,6 +34,7 @@ const MindmapToolbar = ({
   showViewSwitcher = true,
 }) => {
   const navigate = useNavigate();
+  const isPilotMode = !FULL_PRODUCT_ENABLED;
 
   const handleBack = () => {
     navigate(getSubjectOverviewUrl(subjectId));
@@ -75,26 +77,28 @@ const MindmapToolbar = ({
           type="button"
           className="mindmap-toolbar__back-btn"
           onClick={handleBack}
-          title="Back"
+          title={isPilotMode ? "返回课程" : "Back"}
         >
           <ArrowLeftOutlined />
-          <span>Back</span>
+          <span>{isPilotMode ? "返回课程" : "Back"}</span>
         </button>
         {subjectName && (
           <div className="mindmap-toolbar__title">
-            <h2>{subjectName} - Knowledge Graph</h2>
+            <h2>{isPilotMode ? `${subjectName} · 知识地图` : `${subjectName} - Knowledge Graph`}</h2>
           </div>
         )}
       </div>
 
       <div className="mindmap-toolbar__right">
         <div className="mindmap-toolbar__hub-actions">
-          <button type="button" className="mindmap-toolbar__action-btn" onClick={handleBack}>
-            Subject overview
-          </button>
+          {!isPilotMode ? (
+            <button type="button" className="mindmap-toolbar__action-btn" onClick={handleBack}>
+              Subject overview
+            </button>
+          ) : null}
           {firstConceptNote?.noteUrl ? (
             <button type="button" className="mindmap-toolbar__action-btn" onClick={onOpenFirstNote}>
-              Start first note
+              {isPilotMode ? "开始学习" : "Start first note"}
             </button>
           ) : null}
           {selectedConceptNoteUrl ? (
@@ -103,7 +107,7 @@ const MindmapToolbar = ({
               className="mindmap-toolbar__action-btn mindmap-toolbar__action-btn--primary"
               onClick={onOpenSelectedConcept}
             >
-              Open selected concept
+              {isPilotMode ? "打开对应内容" : "Open selected concept"}
             </button>
           ) : null}
         </div>

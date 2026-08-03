@@ -64,7 +64,11 @@ const NetworkNode = ({ data, selected }) => {
   const levelClass = level === "sub" ? "network-node--level-sub" : "network-node--level-core";
   const displayColor =
     level === "sub" ? adjustHexColor(color, 0.22) : adjustHexColor(color, -0.06);
-  const nodeDiameter = Math.max(size * 1.65, 60, safeLabel.length * 2.5);
+  const nodeWidth = Math.min(
+    level === "sub" ? 172 : 188,
+    Math.max(level === "sub" ? 112 : 124, safeLabel.length * 9 + 44),
+  );
+  const nodeHeight = level === "sub" ? 52 : 60;
 
   return (
     <div
@@ -72,7 +76,8 @@ const NetworkNode = ({ data, selected }) => {
       style={{
         "--node-color": displayColor,
         "--node-size": `${size}px`,
-        "--node-diameter": `${nodeDiameter}px`,
+        "--node-width": `${nodeWidth}px`,
+        "--node-height": `${nodeHeight}px`,
       }}
     >
       {/* Handles for edges - all directions for force-directed layout */}
@@ -85,7 +90,7 @@ const NetworkNode = ({ data, selected }) => {
       <Handle type="source" position={Position.Left} id="left" className="network-node__handle" />
       <Handle type="source" position={Position.Right} id="right" className="network-node__handle" />
       
-      {/* Node circle */}
+      {/* Compact concept card */}
       <div className="network-node__circle">
         <div className="network-node__label">{label}</div>
       </div>
@@ -94,4 +99,3 @@ const NetworkNode = ({ data, selected }) => {
 };
 
 export default memo(NetworkNode);
-

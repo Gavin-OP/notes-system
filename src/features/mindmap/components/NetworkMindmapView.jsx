@@ -314,12 +314,12 @@ const NetworkMindmapView = ({ graphData, subjectId, onConceptClick }) => {
         if (focusIds.length > 0) {
           fitView({
             nodes: focusIds.map((id) => ({ id })),
-            padding: 0.35,
-            maxZoom: 1.3,
+            padding: 0.14,
+            maxZoom: 1.5,
             duration: 500,
           });
         } else {
-          fitView({ padding: 0.2 });
+          fitView({ padding: 0.14, maxZoom: 1.5 });
         }
       }, 100);
     };
@@ -466,7 +466,7 @@ const NetworkMindmapView = ({ graphData, subjectId, onConceptClick }) => {
       }, 900);
       fitView({
         nodes: (cluster.nodeIds ?? []).map((id) => ({ id })),
-        padding: 0.35,
+        padding: 0.2,
         maxZoom: 1.45,
         duration: 450,
       });
@@ -621,6 +621,7 @@ const NetworkMindmapView = ({ graphData, subjectId, onConceptClick }) => {
                 className={`network-mindmap-view__cluster-btn ${isActive ? "network-mindmap-view__cluster-btn--active" : ""}`}
                 style={{ "--cluster-color": cluster.color }}
                 onClick={() => focusCluster(cluster)}
+                aria-pressed={isActive}
               >
                 {cluster.label ?? cluster.subject ?? cluster.id}
               </button>
@@ -628,6 +629,7 @@ const NetworkMindmapView = ({ graphData, subjectId, onConceptClick }) => {
           })}
         </div>
       )}
+      <div className="network-mindmap-view__hint">拖动节点 · 滚轮缩放 · 点击查看内容</div>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -642,7 +644,7 @@ const NetworkMindmapView = ({ graphData, subjectId, onConceptClick }) => {
         nodeTypes={nodeTypes}
         fitView
         fitViewOptions={{
-          padding: 0.2,
+          padding: 0.14,
           maxZoom: 1.5,
         }}
         minZoom={0.2}
@@ -654,7 +656,7 @@ const NetworkMindmapView = ({ graphData, subjectId, onConceptClick }) => {
         zoomOnScroll={true}
         proOptions={{ hideAttribution: true }}
       >
-        <Background color="#333" gap={30} size={1} variant="dots" />
+        <Background color="var(--ns-color-border-secondary, #d9dee5)" gap={28} size={1} variant="dots" />
         <Controls showInteractive={false} position="bottom-right" />
       </ReactFlow>
     </div>
@@ -669,4 +671,3 @@ const NetworkMindmapViewWrapper = (props) => (
 );
 
 export default NetworkMindmapViewWrapper;
-

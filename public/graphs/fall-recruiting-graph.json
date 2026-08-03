@@ -1,7 +1,18 @@
 {
-  "meta": {"subjectId":"fall-recruiting","subjectName":"秋招准备","version":"1.0.0","directed":true,"focusSubject":"fall-recruiting","networkScope":"subject","view":"network"},
-  "categories": [{"id":"subject-fall-recruiting","name":"秋招准备","displayName":"秋招准备","color":"#1677ff","subject":"fall-recruiting"}],
-  "networkClusters": [{"id":"subject-fall-recruiting","label":"秋招准备","subject":"fall-recruiting","color":"#1677ff","nodeIds":["target-role","timeline","jd-mapping","star","channels","role-fit","application","email","question-map","spoken-star","offer","skill-gap"]}],
+  "meta": {"subjectId":"fall-recruiting","subjectName":"秋招准备","version":"1.1.0","directed":true,"focusSubject":"fall-recruiting","networkScope":"subject","view":"network"},
+  "viewConfigs": {"network":{"focusNodeIds":["target-role","timeline","jd-mapping","star","channels","role-fit","application","email","question-map","spoken-star","offer","skill-gap","linkedin","portfolio","coffee-chat","alumni-networking","ai-job-search","work-authorization","sql","leetcode","finance-certificates","cantonese"]}},
+  "categories": [
+    {"id":"subject-fall-recruiting","name":"求职主线","displayName":"求职主线","color":"#526D82","subject":"fall-recruiting"},
+    {"id":"profile-branches","name":"简历与 Profile","displayName":"简历与 Profile","color":"#66806A","subject":"profile-branches"},
+    {"id":"search-branches","name":"岗位探索","displayName":"岗位探索","color":"#B07A4A","subject":"search-branches"},
+    {"id":"skill-branches","name":"技能补充","displayName":"技能补充","color":"#76658E","subject":"skill-branches"}
+  ],
+  "networkClusters": [
+    {"id":"subject-fall-recruiting","label":"求职主线","subject":"fall-recruiting","color":"#526D82","nodeIds":["target-role","timeline","jd-mapping","star","channels","role-fit","application","email","question-map","spoken-star","offer","skill-gap","work-authorization"]},
+    {"id":"profile-branches","label":"简历与 Profile","subject":"profile-branches","color":"#66806A","nodeIds":["linkedin","portfolio"]},
+    {"id":"search-branches","label":"岗位探索","subject":"search-branches","color":"#B07A4A","nodeIds":["coffee-chat","alumni-networking","ai-job-search"]},
+    {"id":"skill-branches","label":"技能补充","subject":"skill-branches","color":"#76658E","nodeIds":["sql","leetcode","finance-certificates","cantonese"]}
+  ],
   "nodes": [
     {"id":"target-role","displayTitle":"目标岗位","subject":"fall-recruiting","noteTitle":"秋招定位与行动计划","noteUrl":"/note/fall-recruiting/autumn-recruitment-roadmap.md#concept-target-role","categoryId":"subject-fall-recruiting","importance":"high"},
     {"id":"timeline","displayTitle":"招聘时间线","subject":"fall-recruiting","noteTitle":"秋招定位与行动计划","noteUrl":"/note/fall-recruiting/autumn-recruitment-roadmap.md#concept-recruitment-timeline","categoryId":"subject-fall-recruiting","importance":"high"},
@@ -14,7 +25,17 @@
     {"id":"question-map","displayTitle":"面试问题地图","subject":"fall-recruiting","noteTitle":"面试准备与复盘","noteUrl":"/note/fall-recruiting/interview-preparation.md#concept-interview-question-map","categoryId":"subject-fall-recruiting","importance":"high"},
     {"id":"spoken-star","displayTitle":"口头 STAR","subject":"fall-recruiting","noteTitle":"面试准备与复盘","noteUrl":"/note/fall-recruiting/interview-preparation.md#concept-spoken-star","categoryId":"subject-fall-recruiting","importance":"high"},
     {"id":"offer","displayTitle":"Offer 比较","subject":"fall-recruiting","noteTitle":"Offer 判断与求职复盘","noteUrl":"/note/fall-recruiting/offer-review.md#concept-offer-comparison","categoryId":"subject-fall-recruiting","importance":"medium"},
-    {"id":"skill-gap","displayTitle":"技能缺口复盘","subject":"fall-recruiting","noteTitle":"Offer 判断与求职复盘","noteUrl":"/note/fall-recruiting/offer-review.md#concept-skill-gap-review","categoryId":"subject-fall-recruiting","importance":"high"}
+    {"id":"skill-gap","displayTitle":"技能缺口复盘","subject":"fall-recruiting","noteTitle":"Offer 判断与求职复盘","noteUrl":"/note/fall-recruiting/offer-review.md#concept-skill-gap-review","categoryId":"subject-fall-recruiting","importance":"high"},
+    {"id":"linkedin","displayTitle":"LinkedIn","subject":"fall-recruiting","noteTitle":"简历打磨与经历表达","noteUrl":"/note/fall-recruiting/resume-story.md#concept-linkedin","categoryId":"profile-branches","clusterId":"profile-branches","conceptLevel":"sub","importance":"medium"},
+    {"id":"portfolio","displayTitle":"项目集 / 个人主页","subject":"fall-recruiting","noteTitle":"简历打磨与经历表达","noteUrl":"/note/fall-recruiting/resume-story.md#concept-portfolio","categoryId":"profile-branches","clusterId":"profile-branches","conceptLevel":"sub","importance":"medium"},
+    {"id":"coffee-chat","displayTitle":"Coffee Chat","subject":"fall-recruiting","noteTitle":"寻找与筛选合适岗位","noteUrl":"/note/fall-recruiting/job-search-and-screening.md#concept-coffee-chat","categoryId":"search-branches","clusterId":"search-branches","conceptLevel":"sub","importance":"medium"},
+    {"id":"alumni-networking","displayTitle":"校友 / 往届生交流","subject":"fall-recruiting","noteTitle":"寻找与筛选合适岗位","noteUrl":"/note/fall-recruiting/job-search-and-screening.md#concept-alumni-networking","categoryId":"search-branches","clusterId":"search-branches","conceptLevel":"sub","importance":"medium"},
+    {"id":"ai-job-search","displayTitle":"AI 辅助找岗位","subject":"fall-recruiting","noteTitle":"寻找与筛选合适岗位","noteUrl":"/note/fall-recruiting/job-search-and-screening.md#concept-ai-job-search","categoryId":"search-branches","clusterId":"search-branches","conceptLevel":"sub","importance":"medium"},
+    {"id":"work-authorization","displayTitle":"工作资格 / 签证","subject":"fall-recruiting","noteTitle":"秋招定位与行动计划","noteUrl":"/note/fall-recruiting/autumn-recruitment-roadmap.md#concept-work-eligibility","categoryId":"subject-fall-recruiting","clusterId":"subject-fall-recruiting","conceptLevel":"sub","importance":"medium"},
+    {"id":"sql","displayTitle":"SQL","subject":"fall-recruiting","noteTitle":"Offer 判断与求职复盘","noteUrl":"/note/fall-recruiting/offer-review.md#concept-technical-skill-gap","categoryId":"skill-branches","clusterId":"skill-branches","conceptLevel":"sub","importance":"medium"},
+    {"id":"leetcode","displayTitle":"LeetCode","subject":"fall-recruiting","noteTitle":"Offer 判断与求职复盘","noteUrl":"/note/fall-recruiting/offer-review.md#concept-technical-skill-gap","categoryId":"skill-branches","clusterId":"skill-branches","conceptLevel":"sub","importance":"medium"},
+    {"id":"finance-certificates","displayTitle":"金融知识 / 证书","subject":"fall-recruiting","noteTitle":"Offer 判断与求职复盘","noteUrl":"/note/fall-recruiting/offer-review.md#concept-finance-skill-gap","categoryId":"skill-branches","clusterId":"skill-branches","conceptLevel":"sub","importance":"medium"},
+    {"id":"cantonese","displayTitle":"粤语","subject":"fall-recruiting","noteTitle":"秋招定位与行动计划","noteUrl":"/note/fall-recruiting/autumn-recruitment-roadmap.md#concept-cantonese-learning","categoryId":"skill-branches","clusterId":"skill-branches","conceptLevel":"sub","importance":"medium"}
   ],
   "edges": [
     {"source":"target-role","target":"timeline","type":"prerequisite","strength":1,"bidirectional":false},
@@ -30,6 +51,22 @@
     {"source":"email","target":"question-map","type":"prerequisite","strength":0.6,"bidirectional":false},
     {"source":"spoken-star","target":"offer","type":"prerequisite","strength":0.7,"bidirectional":false},
     {"source":"offer","target":"skill-gap","type":"related_to","strength":0.9},
-    {"source":"skill-gap","target":"target-role","type":"extends","strength":0.7,"bidirectional":false}
+    {"source":"skill-gap","target":"target-role","type":"extends","strength":0.7,"bidirectional":false},
+    {"source":"jd-mapping","target":"linkedin","type":"extends","strength":0.7,"bidirectional":false},
+    {"source":"jd-mapping","target":"portfolio","type":"extends","strength":0.7,"bidirectional":false},
+    {"source":"linkedin","target":"channels","type":"related_to","strength":0.6},
+    {"source":"portfolio","target":"channels","type":"related_to","strength":0.6},
+    {"source":"channels","target":"coffee-chat","type":"extends","strength":0.7,"bidirectional":false},
+    {"source":"channels","target":"alumni-networking","type":"extends","strength":0.7,"bidirectional":false},
+    {"source":"channels","target":"ai-job-search","type":"extends","strength":0.7,"bidirectional":false},
+    {"source":"coffee-chat","target":"application","type":"related_to","strength":0.55},
+    {"source":"alumni-networking","target":"application","type":"related_to","strength":0.55},
+    {"source":"ai-job-search","target":"application","type":"related_to","strength":0.55},
+    {"source":"target-role","target":"work-authorization","type":"related_to","strength":0.65},
+    {"source":"work-authorization","target":"application","type":"prerequisite","strength":0.6,"bidirectional":false},
+    {"source":"skill-gap","target":"sql","type":"extends","strength":0.8,"bidirectional":false},
+    {"source":"skill-gap","target":"leetcode","type":"extends","strength":0.8,"bidirectional":false},
+    {"source":"skill-gap","target":"finance-certificates","type":"extends","strength":0.8,"bidirectional":false},
+    {"source":"skill-gap","target":"cantonese","type":"extends","strength":0.8,"bidirectional":false}
   ]
 }

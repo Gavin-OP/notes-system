@@ -20,19 +20,19 @@ export const DEFAULT_NETWORK_LAYOUT_CONFIG = {
   // Force simulation parameters
   simulation: {
     // Link force - controls edge length
-    linkDistance: 120,
+    linkDistance: 108,
     linkStrength: 0.4,
     
     // Charge force - node repulsion (negative = repel)
-    chargeStrength: -400,
-    chargeDistanceMax: 500,
+    chargeStrength: -320,
+    chargeDistanceMax: 480,
     
     // Center force - pulls nodes toward center
     centerStrength: 0.05,
     
     // Collision force - prevents overlap
-    collisionRadius: 40,
-    collisionStrength: 0.8,
+    collisionRadius: 64,
+    collisionStrength: 0.9,
     
     // Simulation parameters
     alphaDecay: 0.02,
@@ -49,8 +49,8 @@ export const DEFAULT_NETWORK_LAYOUT_CONFIG = {
   
   // Edge styling
   edge: {
-    strokeWidth: 3.2,
-    strokeOpacity: 0.78,
+    strokeWidth: 2.2,
+    strokeOpacity: 0.62,
     highlightOpacity: 0.96,
     dimmedOpacity: 0.22,
   },
@@ -162,4 +162,3 @@ export function getConnectedEdgeIds(nodeId, edges) {
   
   return connectedEdges;
 }
-
