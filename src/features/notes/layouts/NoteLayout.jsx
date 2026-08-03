@@ -20,7 +20,13 @@ import {
 
 import LearningNavigationPanel from "../../navigation/components/LearningNavigationPanel";
 import LearningPathControls from "../../navigation/components/LearningPathControls";
+import PilotPathSetupModal from "../../navigation/components/PilotPathSetupModal";
 import { sortPathNodesCanonically } from "../../navigation/lib/learningPathUtils";
+import {
+  buildDefaultPilotDraft,
+  buildInterviewProfileContext,
+  buildPersonalizedPilotDraft,
+} from "../../navigation/lib/pilotPath";
 import BottomOutlineProgress from "../components/BottomOutlineProgress";
 import NoteWorkspaceBar from "../components/NoteWorkspaceBar";
 import OutlineSider from "../../navigation/components/OutlineSider";
@@ -172,39 +178,14 @@ function normalizeCompletedNoteUrlsFromProfile(profilePayload) {
     .filter(Boolean);
 }
 
-function buildPilotLearningPathDraft(notesIndex) {
-  const folders = Array.isArray(notesIndex) ? notesIndex : [];
-  const pilotFolder = folders.find((item) => (
-    item?.slug === PILOT_SUBJECT_SLUG || item?.directory === PILOT_SUBJECT_SLUG
-  ));
-  const children = Array.isArray(pilotFolder?.children) ? pilotFolder.children : [];
-  const notes = children
-    .filter((item) => item?.type === "file" && item?.display !== false && item?.url)
-    .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
-  const nodes = notes.map((item, index) => ({
-    node_id: item.id || `note:${PILOT_SUBJECT_SLUG}:${item.slug || index + 1}`,
-    title: item.title || item.name || `Step ${index + 1}`,
-    subject: PILOT_SUBJECT_SLUG,
-    note_url: item.url,
-    status: index === 0 ? "active" : "planned",
-    metadata: { pilot_official_path: true, order: index + 1, subject_title: "秋招准备" },
-  }));
-  return {
+function buildPilotLearningPathDraft() {
+  return buildDefaultPilotDraft({
     path_id: "primary",
     learning_set_name: "秋招准备 Path",
     learning_set_note: "从定位、简历和岗位搜索，到沟通、面试与 Offer 复盘。",
     goal_type: "custom",
     goal_title: "准备下一轮校园招聘",
-    metadata: { order_mode: "canonical", pilot_official_path: true },
-    nodes,
-    edges: nodes.slice(1).map((node, index) => ({
-      edge_id: `pilot:${nodes[index].node_id}:${node.node_id}`,
-      source: nodes[index].node_id,
-      target: node.node_id,
-      relation: "precedes",
-      metadata: { pilot_official_path: true },
-    })),
-  };
+  });
 }
 
 function collectMenuLabelPayload(items, list = []) {
@@ -361,6 +342,7 @@ const NoteLayout = () => {
   const [completedNoteUrls, setCompletedNoteUrls] = useState(new Set());
   const [learningPathDraft, setLearningPathDraft] = useState(null);
   const [learningPathPending, setLearningPathPending] = useState(false);
+  const [pilotPathSetupOpen, setPilotPathSetupOpen] = useState(false);
   const [pathEditMode, setPathEditMode] = useState(false);
   const [learningSiderWidth, setLearningSiderWidth] = useState(350);
   const [canonicalGraph, setCanonicalGraph] = useState(null);
@@ -703,6 +685,22 @@ const NoteLayout = () => {
       return false;
     }
   }, [learningPathId, loadLearningPath]);
+
+  const handleSavePilotPathProfile = useCallback(async (profile) => {
+    if (!learningPathDraft || learningPathPending) return;
+    setLearningPathPending(true);
+    try {
+      const nextDraft = buildPersonalizedPilotDraft(learningPathDraft, profile);
+      const saved = await persistLearningPathDraft(
+        nextDraft,
+        "你的秋招 Path 与 Timeline 已更新。",
+        "Personalized fall recruiting path",
+      );
+      if (saved) setPilotPathSetupOpen(false);
+    } finally {
+      setLearningPathPending(false);
+    }
+  }, [learningPathDraft, learningPathPending, persistLearningPathDraft]);
 
   const applyPathNodeOrder = useCallback(
     (nodes, orderMode = "custom") => {
@@ -1311,6 +1309,11 @@ const NoteLayout = () => {
     [currentMeta?.domainSlug, currentMeta?.id, currentMeta?.packageId, currentMeta?.url, currentNoteContent, noteName, selectedReferenceItems],
   );
 
+  const pilotInterviewContext = useMemo(
+    () => buildInterviewProfileContext(learningPathDraft?.metadata?.personalization || {}),
+    [learningPathDraft?.metadata?.personalization],
+  );
+
   const handleGenerateQuiz = async () => {
     if (!quizObjective || !quizDifficulty || quizPending || quizQuestionTypes.length === 0) return;
     setQuizError("");
@@ -1320,7 +1323,7 @@ const NoteLayout = () => {
         objective: quizObjective,
         difficulty: quizDifficulty,
         questionTypes: quizQuestionTypes,
-        customInstruction: quizInstruction || "",
+        customInstruction: [pilotInterviewContext, quizInstruction].filter(Boolean).join("\n"),
         questionCount: 3,
         studyMode: "interview",
         ...assistantContextPayload,
@@ -1544,7 +1547,7 @@ const NoteLayout = () => {
               )}
               <LearningNavigationPanel
                 items={localizedPlainMenuItems}
-                currentNoteUrl={currentNoteUrlNormalized}
+                currentNoteUrl={`${currentNoteUrlNormalized}${location.hash || ""}`}
                 completedNoteUrls={completedNoteUrls}
                 learningPathDraft={learningPathDraft}
                 learningPathPending={learningPathPending}
@@ -1558,6 +1561,8 @@ const NoteLayout = () => {
                 canonicalGraph={canonicalGraph}
                 isMobile={isMobile}
                 showNearbyPanel={!isMobile && learningSiderWidth >= LEARNING_SIDER_NEARBY_MIN_WIDTH}
+                pilotMode={!FULL_PRODUCT_ENABLED}
+                onConfigurePath={() => setPilotPathSetupOpen(true)}
                 onSelect={(path) => {
                   handleNoteSelect(path);
                   if (isMobile) setCollapsed(true);
@@ -1764,6 +1769,15 @@ const NoteLayout = () => {
       >
         {renderAssistantWorkspace(true)}
       </Modal>
+      {!FULL_PRODUCT_ENABLED ? (
+        <PilotPathSetupModal
+          open={pilotPathSetupOpen}
+          initialProfile={learningPathDraft?.metadata?.personalization || {}}
+          pending={learningPathPending}
+          onCancel={() => setPilotPathSetupOpen(false)}
+          onSubmit={handleSavePilotPathProfile}
+        />
+      ) : null}
     </Layout>
   );
 };

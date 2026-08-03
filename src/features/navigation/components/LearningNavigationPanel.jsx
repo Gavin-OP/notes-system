@@ -5,6 +5,7 @@ import {
   DragOutlined,
   IdcardOutlined,
   ReadOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 
 import { getCareerTaxonomy } from "../../careers/api/careers";
@@ -19,6 +20,17 @@ import "./LearningNavigationPanel.css";
 
 function normalizeKey(key) {
   return String(key || "").replace(/\/+$/, "");
+}
+
+function noteDocumentKey(key) {
+  return normalizeKey(key).split("#")[0];
+}
+
+function isStepCompleted(step, completedNoteUrls) {
+  const stepKey = normalizeKey(step?.key);
+  return completedNoteUrls.has(stepKey)
+    || completedNoteUrls.has(noteDocumentKey(stepKey))
+    || step?.pathStatus === "completed";
 }
 
 function countLeafSteps(items = []) {
@@ -69,7 +81,16 @@ function collectLearningPathSteps(learningPathDraft) {
       module: node.metadata?.subject_title || node.subject || "",
       pathStatus: node.status || "planned",
       pathRelation: node.metadata?.path_relation || node.metadata?.pathRelation || "linear",
+      recommendedNow: Boolean(node.metadata?.recommended_now || node.metadata?.recommendedNow),
+      estimatedOrder: node.metadata?.estimated_order ?? node.metadata?.estimatedOrder,
     }));
+}
+
+function formatTimelineDate(value) {
+  if (!value) return "";
+  const parsed = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return new Intl.DateTimeFormat("zh-CN", { month: "numeric", day: "numeric" }).format(parsed);
 }
 
 function pathKeyToNodeId(path) {
@@ -175,7 +196,8 @@ function buildLearningPathGraph(steps = [], canonicalGraph = null, options = {})
     const estimatedOrder = useCustomOrder
       ? entry.index + 1
       : Number(
-          graphNode?.metadata?.estimated_order ??
+          entry.step.estimatedOrder ??
+            graphNode?.metadata?.estimated_order ??
             graphNode?.metadata?.estimatedOrder ??
             graphNode?.estimated_order ??
             graphNode?.estimatedOrder ??
@@ -279,6 +301,8 @@ const LearningNavigationPanel = ({
   onSelect,
   isMobile = false,
   showNearbyPanel = false,
+  pilotMode = false,
+  onConfigurePath,
 }) => {
   const { t } = useTranslation();
   const [editLibraryTab, setEditLibraryTab] = useState("subject");
@@ -304,6 +328,10 @@ const LearningNavigationPanel = ({
   const hasPersonalizedPath = personalizedSteps.length > 0;
   const hasEditableDraft = learningPathDraft != null;
   const hasPathWorkspace = hasPersonalizedPath || (hasEditableDraft && pathEditMode);
+  const pathPersonalization = learningPathDraft?.metadata?.personalization || {};
+  const pathTimeline = Array.isArray(learningPathDraft?.metadata?.timeline)
+    ? learningPathDraft.metadata.timeline
+    : [];
   const subjectSections = useMemo(
     () =>
       (items || [])
@@ -350,7 +378,7 @@ const LearningNavigationPanel = ({
     }
     if (pathKeySet.has(normalizedCurrent)) return normalizedCurrent;
     const firstIncomplete = personalizedSteps.find(
-      (step) => !completedNoteUrls.has(normalizeKey(step.key)) && step.pathStatus !== "completed",
+      (step) => !isStepCompleted(step, completedNoteUrls),
     );
     return normalizeKey((firstIncomplete || personalizedSteps[0])?.key || "");
   }, [nearbyAnchorUrl, pathKeySet, normalizedCurrent, personalizedSteps, completedNoteUrls]);
@@ -528,7 +556,7 @@ const LearningNavigationPanel = ({
     const allowRemove = Boolean(options.allowRemove && typeof onRemovePathNode === "function");
     const allowEdit = Boolean(options.allowEdit);
     const firstIncompleteIndex = steps.findIndex(
-      (step) => !completedNoteUrls.has(normalizeKey(step.key)) && step.pathStatus !== "completed",
+      (step) => !isStepCompleted(step, completedNoteUrls),
     );
     const handleDropOnStep = (targetKey) => {
       reorderPersonalizedSteps(draggedKey, targetKey);
@@ -538,7 +566,7 @@ const LearningNavigationPanel = ({
         {steps.map((step, index) => {
           const stepKey = normalizeKey(step.key);
           const isCurrent = stepKey === normalizedCurrent;
-          const isDone = completedNoteUrls.has(stepKey) || step.pathStatus === "completed";
+          const isDone = isStepCompleted(step, completedNoteUrls);
           const isNext = !isCurrent && !isDone && index === firstIncompleteIndex;
           const status = isCurrent ? "current" : isDone ? "done" : isNext ? "next" : "todo";
           return (
@@ -615,7 +643,7 @@ const LearningNavigationPanel = ({
     const allowRemove = Boolean(options.allowRemove && typeof onRemovePathNode === "function");
     const allowReorder = Boolean(options.allowReorder && typeof onReorderPathNodes === "function");
     const firstIncompleteIndex = personalizedSteps.findIndex(
-      (step) => !completedNoteUrls.has(normalizeKey(step.key)) && step.pathStatus !== "completed",
+      (step) => !isStepCompleted(step, completedNoteUrls),
     );
     const firstIncompleteKey = firstIncompleteIndex >= 0 ? normalizeKey(personalizedSteps[firstIncompleteIndex].key) : "";
     const nodeById = new Map(graph.nodes.map((node) => [node.id, node]));
@@ -640,7 +668,7 @@ const LearningNavigationPanel = ({
     const resolveStepStatus = (step) => {
       const stepKey = normalizeKey(step.key);
       const isCurrent = stepKey === normalizedCurrent;
-      const isDone = completedNoteUrls.has(stepKey) || step.pathStatus === "completed";
+      const isDone = isStepCompleted(step, completedNoteUrls);
       const isNext = !isCurrent && !isDone && stepKey === firstIncompleteKey;
       if (isCurrent) return "current";
       if (isDone) return "done";
@@ -685,7 +713,7 @@ const LearningNavigationPanel = ({
                 draggedKey && normalizeKey(draggedKey) === normalizeKey(step.key)
                   ? "learning-nav__graph-node-wrap--dragging"
                   : ""
-              }`}
+              } ${step.recommendedNow ? "learning-nav__graph-node-wrap--recommended" : ""}`}
               style={{ left: node.x, top: node.y }}
               draggable={allowReorder}
               onDragStart={(event) => {
@@ -1035,6 +1063,46 @@ const LearningNavigationPanel = ({
           }}
           onDrop={handlePathDrop}
         >
+          {pilotMode ? (
+            <div className="learning-nav__pilot-summary">
+              <div className="learning-nav__pilot-summary-heading">
+                <div>
+                  <span className="learning-nav__pilot-eyebrow">你的 Timeline</span>
+                  <strong>
+                    {pathPersonalization.region ? `${pathPersonalization.region}秋招` : "下一轮秋招"}
+                  </strong>
+                </div>
+                {typeof onConfigurePath === "function" ? (
+                  <button
+                    type="button"
+                    className="learning-nav__pilot-configure"
+                    onClick={onConfigurePath}
+                  >
+                    <SettingOutlined aria-hidden="true" />
+                    <span>{pathPersonalization.setup_complete ? "调整" : "设置"}</span>
+                  </button>
+                ) : null}
+              </div>
+              {pathTimeline.length ? (
+                <ol className="learning-nav__timeline">
+                  {pathTimeline.map((phase) => (
+                    <li
+                      key={phase.id || phase.label}
+                      className={phase.status === "current" ? "learning-nav__timeline-item--current" : ""}
+                    >
+                      <span className="learning-nav__timeline-dot" aria-hidden="true" />
+                      <span className="learning-nav__timeline-date">
+                        {formatTimelineDate(phase.start_date)}–{formatTimelineDate(phase.end_date)}
+                      </span>
+                      <span className="learning-nav__timeline-label">{phase.label}</span>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="learning-nav__timeline-empty">设置目标与当前阶段后生成。</p>
+              )}
+            </div>
+          ) : null}
           <div className="learning-nav__workspace">
             <div className="learning-nav__path-column">
               {hasPersonalizedPath ? (
