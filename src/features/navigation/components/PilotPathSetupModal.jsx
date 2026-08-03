@@ -27,11 +27,13 @@ function normalizeInitialProfile(initialProfile = {}) {
   };
 }
 
-function ChoiceCard({ label, selected, disabled, onClick }) {
+function ChoiceCard({ label, selected, muted = false, disabled, onClick }) {
   return (
     <button
       type="button"
-      className={`pilot-path-choice${selected ? " pilot-path-choice--selected" : ""}`}
+      className={`pilot-path-choice${muted ? " pilot-path-choice--muted" : ""}${
+        selected ? " pilot-path-choice--selected" : ""
+      }`}
       aria-pressed={selected}
       disabled={disabled}
       onClick={onClick}
@@ -83,6 +85,7 @@ function MultiChoiceGrid({ options, value, emptyLabel, disabled, onChange }) {
       <ChoiceCard
         label={emptyLabel}
         selected={value.length === 0}
+        muted
         disabled={disabled}
         onClick={() => onChange([])}
       />

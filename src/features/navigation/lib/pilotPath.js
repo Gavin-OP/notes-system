@@ -12,11 +12,12 @@ export const PILOT_STAGE_OPTIONS = [
 export const PROFILE_BRANCH_OPTIONS = [
   { value: "linkedin", label: "LinkedIn" },
   { value: "cover_letter", label: "Cover Letter" },
-  { value: "portfolio", label: "项目集 / 个人主页" },
+  { value: "portfolio", label: "项目集" },
+  { value: "personal_site", label: "个人主页" },
 ];
 
 export const SEARCH_BRANCH_OPTIONS = [
-  { value: "networking", label: "Coffee Chat / 校友交流" },
+  { value: "networking", label: "Coffee Chat / Networking" },
   { value: "ai_job_search", label: "用 AI 辅助找岗位" },
 ];
 
@@ -120,16 +121,16 @@ function buildPilotNodes(profile = {}) {
     nodes.push(pathNode("cover-letter", "Cover Letter", "cover-letter", 5, "", { path_relation: "branch" }));
   }
   if (profileBranches.has("portfolio")) {
-    nodes.push(pathNode("portfolio", "项目集 / 个人主页", "portfolio-personal-site", 5, "", { path_relation: "branch" }));
+    nodes.push(pathNode("portfolio", "项目集", "portfolio", 5, "", { path_relation: "branch" }));
+  }
+  if (profileBranches.has("personal_site")) {
+    nodes.push(pathNode("personal-site", "个人主页", "personal-site", 5, "", { path_relation: "branch" }));
   }
 
   nodes.push(pathNode("job-search", "寻找和筛选岗位", "job-search-and-screening", 6));
 
   if (searchBranches.has("networking")) {
-    nodes.push(
-      pathNode("coffee-chat", "Coffee Chat", "coffee-chat", 7, "", { path_relation: "branch" }),
-      pathNode("alumni", "校友 / 往届生交流", "alumni-networking", 7, "", { path_relation: "branch" }),
-    );
+    nodes.push(pathNode("networking", "Coffee Chat / Networking", "coffee-chat", 7, "", { path_relation: "branch" }));
   }
   if (searchBranches.has("ai_job_search")) {
     nodes.push(pathNode("ai-job-search", "用 AI 辅助找岗位", "ai-job-search", 7, "", { path_relation: "branch" }));

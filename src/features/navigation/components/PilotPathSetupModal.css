@@ -139,6 +139,31 @@
   box-shadow: inset 0 0 0 1px var(--ns-color-primary);
 }
 
+.pilot-path-choice--muted {
+  border-color: var(--ns-color-border-secondary);
+  background: var(--ns-color-fill-quaternary, #f7f7f7);
+  color: var(--ns-color-text-secondary);
+  font-weight: 500;
+}
+
+.pilot-path-choice--muted:hover:not(:disabled) {
+  border-color: var(--ns-color-border);
+  background: var(--ns-color-fill-secondary, #f0f0f0);
+  color: var(--ns-color-text);
+}
+
+.pilot-path-choice--muted.pilot-path-choice--selected {
+  border-color: var(--ns-color-text-tertiary);
+  background: var(--ns-color-fill-secondary, #f0f0f0);
+  color: var(--ns-color-text-secondary);
+  box-shadow: inset 0 0 0 1px var(--ns-color-text-tertiary);
+}
+
+.pilot-path-choice--muted.pilot-path-choice--selected .pilot-path-choice__indicator {
+  border-color: var(--ns-color-text-tertiary);
+  background: var(--ns-color-text-tertiary);
+}
+
 .pilot-path-choice:disabled {
   cursor: not-allowed;
   opacity: 0.58;
