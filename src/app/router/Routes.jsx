@@ -175,7 +175,10 @@ function RoutesWithTracking() {
         {/* Subject-specific routes (mindmap) */}
         {/* Dynamic routing: /subject/:subjectId/mindmap */}
         <Route path="subject/:subjectId" element={<ActiveSubjectEntry />}>
-          <Route index element={<SubjectOverviewPage />} />
+          <Route
+            index
+            element={FULL_PRODUCT_ENABLED ? <SubjectOverviewPage /> : <Navigate to={PILOT_START_PATH} replace />}
+          />
           <Route path="mindmap" element={<SubjectMindmap />} />
         </Route>
 

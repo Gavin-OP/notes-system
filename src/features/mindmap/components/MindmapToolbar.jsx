@@ -12,7 +12,7 @@ import {
   ArrowLeftOutlined,
 } from "@ant-design/icons";
 import { MINDMAP_TYPES } from "./MindmapTypes";
-import { FULL_PRODUCT_ENABLED } from "../../../config/productMode";
+import { FULL_PRODUCT_ENABLED, PILOT_START_PATH } from "../../../config/productMode";
 import "./MindmapToolbar.css";
 
 /**
@@ -37,7 +37,7 @@ const MindmapToolbar = ({
   const isPilotMode = !FULL_PRODUCT_ENABLED;
 
   const handleBack = () => {
-    navigate(getSubjectOverviewUrl(subjectId));
+    navigate(isPilotMode ? PILOT_START_PATH : getSubjectOverviewUrl(subjectId));
   };
 
   const viewOptions = [

@@ -825,7 +825,7 @@ const LearningNavigationPanel = ({
   };
 
   const renderEditLibrary = () => {
-    if (!pathEditMode) return null;
+    if (!pathEditMode || pilotMode) return null;
 
     return (
       <div className="learning-nav__editor">

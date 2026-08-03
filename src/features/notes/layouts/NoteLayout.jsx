@@ -203,7 +203,11 @@ function isPilotLearningPathDraft(draft) {
 
 function normalizeLearningPathForProductMode(draft) {
   if (FULL_PRODUCT_ENABLED) return draft || null;
-  return isPilotLearningPathDraft(draft) ? draft : buildPilotLearningPathDraft();
+  if (!isPilotLearningPathDraft(draft)) return buildPilotLearningPathDraft();
+  const personalization = draft?.metadata?.personalization || {};
+  return personalization.setup_complete
+    ? buildPersonalizedPilotDraft(draft, personalization)
+    : buildDefaultPilotDraft(draft);
 }
 
 function collectMenuLabelPayload(items, list = []) {
@@ -689,7 +693,7 @@ const NoteLayout = () => {
     setLearningPathDraft(nextDraft);
     try {
       const response = await saveLearningPathDraft(nextDraft);
-      setLearningPathDraft(response?.draft || nextDraft);
+      setLearningPathDraft(normalizeLearningPathForProductMode(response?.draft || nextDraft));
       await commitLearningPath({
         path_id: nextDraft.path_id || learningPathId,
         message: commitMessage || successMessage || "Updated learning path",
@@ -1529,14 +1533,14 @@ const NoteLayout = () => {
                 <div className="note-layout__sider-header">
                   <span className="note-layout__sider-title">{t("learningPath.title")}</span>
                   <div className="note-layout__sider-header-actions">
-                    {FULL_PRODUCT_ENABLED ? <LearningPathControls
+                    <LearningPathControls
                       hasPersonalizedPath={hasPersonalizedPath}
                       hasEditableDraft={hasEditableDraft}
                       pathEditMode={pathEditMode}
                       learningPathPending={learningPathPending}
                       onPrimaryAction={handlePathPrimaryAction}
-                      onClearPath={handleClearPath}
-                    /> : null}
+                      onClearPath={FULL_PRODUCT_ENABLED ? handleClearPath : undefined}
+                    />
                     <button
                       type="button"
                       className="note-layout__sider-collapse-btn"
@@ -1553,14 +1557,14 @@ const NoteLayout = () => {
                 </div>
               ) : (
                 <div className="note-layout__sider-mobile-controls">
-                  {FULL_PRODUCT_ENABLED ? <LearningPathControls
+                  <LearningPathControls
                     hasPersonalizedPath={hasPersonalizedPath}
                     hasEditableDraft={hasEditableDraft}
                     pathEditMode={pathEditMode}
                     learningPathPending={learningPathPending}
                     onPrimaryAction={handlePathPrimaryAction}
-                    onClearPath={handleClearPath}
-                  /> : null}
+                    onClearPath={FULL_PRODUCT_ENABLED ? handleClearPath : undefined}
+                  />
                 </div>
               )}
               <LearningNavigationPanel
