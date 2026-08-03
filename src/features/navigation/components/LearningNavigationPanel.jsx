@@ -407,6 +407,9 @@ const LearningNavigationPanel = ({
   }, [expandedKeys, hasPathWorkspace, initialExpandedKey]);
 
   useEffect(() => {
+    if (pilotMode) {
+      return undefined;
+    }
     let mounted = true;
     async function loadCareers() {
       try {
@@ -422,7 +425,7 @@ const LearningNavigationPanel = ({
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [pilotMode]);
 
   const toggleSection = (sectionKey) => {
     setExpandedKeys((prev) => {

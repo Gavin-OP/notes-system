@@ -3,7 +3,7 @@ import { GlobalOutlined, MoonOutlined, SunOutlined, UserOutlined } from "@ant-de
 
 import { setLanguage, setTheme } from "../../app/store/preferenceSlice";
 import useCurrentUserSummary from "../../features/profile/hooks/useCurrentUserSummary";
-import { FULL_PRODUCT_ENABLED } from "../../config/productMode";
+import { FULL_PRODUCT_ENABLED, PILOT_BACKEND_ENABLED } from "../../config/productMode";
 
 import "./AppPageShell.css";
 
@@ -17,7 +17,7 @@ function AppMetaTopBar({
   toolSlot = null,
   topBarRef = null,
 }) {
-  const { displayName, isAuthenticated } = useCurrentUserSummary();
+  const { displayName, isAuthenticated } = useCurrentUserSummary({ disabled: !PILOT_BACKEND_ENABLED });
   const languageItems = [
     {
       key: "en",
@@ -62,7 +62,7 @@ function AppMetaTopBar({
             {language === "cn" ? t("language.chinese") : t("language.english")}
           </Button>
         </Dropdown>
-        {FULL_PRODUCT_ENABLED || !isAuthenticated ? (
+        {FULL_PRODUCT_ENABLED ? (
           <Button
             className={`app-page-shell__auth-btn ${isAuthenticated ? "app-page-shell__auth-btn--user" : ""}`}
             icon={<UserOutlined />}
@@ -71,11 +71,7 @@ function AppMetaTopBar({
           >
             {isAuthenticated ? displayName || t("profile.title", "Profile") : t("auth.signIn", "Sign in")}
           </Button>
-        ) : (
-          <span className="app-page-shell__signed-in-user" aria-label={`Signed in as ${displayName || "learner"}`}>
-            <UserOutlined /> {displayName || "Learner"}
-          </span>
-        )}
+        ) : null}
       </Space>
     </header>
   );

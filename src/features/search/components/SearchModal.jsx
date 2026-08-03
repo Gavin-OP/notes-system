@@ -5,6 +5,7 @@ import { SearchOutlined } from "@ant-design/icons";
 
 import { buildSearchResultUrl, searchNotes } from "../api/search";
 import SemanticChip from "../../../shared/ui/SemanticChip";
+import { PILOT_BACKEND_ENABLED } from "../../../config/productMode";
 
 import "./SearchModal.css";
 
@@ -52,6 +53,12 @@ function SearchModal({ open, onClose, localOptions = [] }) {
 
   useEffect(() => {
     if (!open) return;
+    if (!PILOT_BACKEND_ENABLED) {
+      setPayload(null);
+      setLoading(false);
+      setError("");
+      return;
+    }
     if (query.trim().length < 3) {
       setPayload(null);
       setLoading(false);
@@ -156,7 +163,7 @@ function SearchModal({ open, onClose, localOptions = [] }) {
           </div>
         ) : null}
 
-        {query.trim().length >= 3 ? (
+        {PILOT_BACKEND_ENABLED && query.trim().length >= 3 ? (
           <div className="search-modal__section">
             <Space className="search-modal__section-title">
               <Text type="secondary">Full-text results</Text>
@@ -194,9 +201,11 @@ function SearchModal({ open, onClose, localOptions = [] }) {
 
       <div className="search-modal__footer">
         <Button onClick={onClose}>Close</Button>
-        <Button type="primary" onClick={handleViewAll} disabled={!query.trim()}>
-          View all results
-        </Button>
+        {PILOT_BACKEND_ENABLED ? (
+          <Button type="primary" onClick={handleViewAll} disabled={!query.trim()}>
+            View all results
+          </Button>
+        ) : null}
       </div>
     </Modal>
   );

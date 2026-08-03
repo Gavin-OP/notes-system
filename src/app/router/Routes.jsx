@@ -7,6 +7,7 @@ import HomePage from "../pages/HomePage";
 import { isLocalhost } from "../../shared/lib/analyticsUtils";
 import { getCurrentUser, UserApiError } from "../../features/profile/api/user";
 import { FULL_PRODUCT_ENABLED, PILOT_START_PATH, PILOT_SUBJECT_SLUG } from "../../config/productMode";
+import { loadPilotLastNotePath } from "../../features/navigation/lib/pilotPathStorage";
 import "../../features/admin/styles/admin.css";
 
 const NoteLayout = lazy(() => import("../../features/notes/layouts/NoteLayout"));
@@ -53,6 +54,10 @@ function RouteLoading() {
 function LegacySubjectOverviewRedirect() {
   const { subjectId = "" } = useParams();
   return <Navigate to={`/subject/${subjectId}`} replace />;
+}
+
+function PilotStartRedirect() {
+  return <Navigate to={loadPilotLastNotePath()} replace />;
 }
 
 function ActiveSubjectEntry() {
@@ -166,7 +171,7 @@ function RoutesWithTracking() {
       <ScrollToTop />
       <Suspense fallback={<RouteLoading />}>
       <Routes>
-        <Route index element={FULL_PRODUCT_ENABLED ? <HomePage /> : <Navigate to={PILOT_START_PATH} replace />} />
+        <Route index element={FULL_PRODUCT_ENABLED ? <HomePage /> : <PilotStartRedirect />} />
 
         {/* Legacy redirects for old URLs */}
         <Route path="data-science/mindmap" element={<Navigate to="../subject/data-science/mindmap" replace />} />
@@ -233,7 +238,7 @@ function RoutesWithTracking() {
         <Route path="disclaimer" element={<DisclaimerPage />} />
 
         {/* Search */}
-        <Route path="search" element={<SearchResultsPage />} />
+        {FULL_PRODUCT_ENABLED ? <Route path="search" element={<SearchResultsPage />} /> : null}
 
         {/* MVP micro-course demo */}
         {FULL_PRODUCT_ENABLED ? <Route path="micro-course/data-science-intro" element={<MicroCourseDemoPage />} /> : null}

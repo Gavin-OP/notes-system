@@ -21,6 +21,7 @@ import {
   restoreNoteAnnotations,
 } from "../../api/noteVersions";
 import useTranslatedContent from "../../../../i18n/useTranslatedContent";
+import { NOTE_VERSION_SWITCHER_ENABLED, PILOT_BACKEND_ENABLED } from "../../../../config/productMode";
 import "./NotePage.css";
 
 function removeYamlFrontMatter(text) {
@@ -123,6 +124,7 @@ function NotePage() {
     sourceType: "markdown_note",
     sourceId: notePathWithoutHash || "note",
     contentVersion: selectedVersionId || "current",
+    disabled: !PILOT_BACKEND_ENABLED,
   });
   const displayNoteContent = translatedNote.content || noteContent;
 
@@ -151,7 +153,7 @@ function NotePage() {
   );
 
   const handleRestoreAnnotations = useCallback(async () => {
-    if (!subjectSlug || !topicSlug) return;
+    if (!NOTE_VERSION_SWITCHER_ENABLED || !subjectSlug || !topicSlug) return;
     setRestorePending(true);
     try {
       const payload = await restoreNoteAnnotations(subjectSlug, topicSlug, selectedVersionId);
@@ -296,6 +298,13 @@ function NotePage() {
   }, [notesIndex, noteSlugTrimmed, dispatch, selectedVersionId, subjectSlug, topicSlug, versionApiAvailable, noteReloadToken]);
 
   useEffect(() => {
+    if (!NOTE_VERSION_SWITCHER_ENABLED) {
+      setNoteVersions([]);
+      setSelectedVersionId("current");
+      setVersionApiAvailable(false);
+      setRestoreCandidates([]);
+      return undefined;
+    }
     let mounted = true;
     async function loadVersions() {
       setNoteVersions([]);

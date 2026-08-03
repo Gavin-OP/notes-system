@@ -1,5 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { normalizeUrl, replaceSubjectFolderWithGraphNotes } from "../../features/navigation/lib/notesIndexUtils";
+import { FULL_PRODUCT_ENABLED, PILOT_BACKEND_ENABLED, PILOT_SUBJECT_SLUG } from "../../config/productMode";
+
+function filterNotesIndexBySubject(items, subjectId) {
+  if (!Array.isArray(items)) return [];
+  const subjectRoot = `/note/${subjectId}`;
+  return items
+    .map((item) => {
+      if (!item || typeof item !== "object") return null;
+      const itemUrl = normalizeUrl(item.url || "");
+      if (itemUrl === subjectRoot || itemUrl.startsWith(`${subjectRoot}/`)) return item;
+      if (!Array.isArray(item.children)) return null;
+      const children = filterNotesIndexBySubject(item.children, subjectId);
+      return children.length ? { ...item, children } : null;
+    })
+    .filter(Boolean);
+}
 
 function applySubjectOverrides(baseNotesIndex, subjectOverrides) {
   if (!Array.isArray(baseNotesIndex)) return [];
@@ -159,10 +175,12 @@ async function fetchSubjectGraphData(subjectId) {
     }
   };
 
-  for (const apiPath of apiPaths) {
-    const apiData = await tryFetchJson(apiPath);
-    if (apiData) {
-      return apiData;
+  if (PILOT_BACKEND_ENABLED) {
+    for (const apiPath of apiPaths) {
+      const apiData = await tryFetchJson(apiPath);
+      if (apiData) {
+        return apiData;
+      }
     }
   }
 
@@ -198,7 +216,10 @@ async function fetchNotesIndexJson() {
 export const fetchNotesIndex = createAsyncThunk(
   "notesIndex/fetchNotesIndex",
   async () => {
-    const baseNotesIndex = await fetchNotesIndexJson();
+    const rawNotesIndex = await fetchNotesIndexJson();
+    const baseNotesIndex = FULL_PRODUCT_ENABLED
+      ? rawNotesIndex
+      : filterNotesIndexBySubject(rawNotesIndex, PILOT_SUBJECT_SLUG);
 
     const subjectIds = Array.from(collectSubjectIdsFromNotesIndex(baseNotesIndex)).sort();
     const subjectNotesOverrides = {};

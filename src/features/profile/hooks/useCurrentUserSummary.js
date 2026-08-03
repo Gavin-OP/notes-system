@@ -13,11 +13,14 @@ function pickDisplayName(profile) {
   );
 }
 
-export default function useCurrentUserSummary() {
+export default function useCurrentUserSummary({ disabled = false } = {}) {
   const [profile, setProfile] = useState(null);
-  const [status, setStatus] = useState("loading");
+  const [status, setStatus] = useState(disabled ? "anonymous" : "loading");
 
   useEffect(() => {
+    if (disabled) {
+      return undefined;
+    }
     let mounted = true;
     async function loadProfile() {
       try {
@@ -35,14 +38,14 @@ export default function useCurrentUserSummary() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [disabled]);
 
   const displayName = useMemo(() => pickDisplayName(profile), [profile]);
 
   return {
     displayName,
-    isAuthenticated: status === "authenticated",
+    isAuthenticated: !disabled && status === "authenticated",
     profile,
-    status,
+    status: disabled ? "anonymous" : status,
   };
 }

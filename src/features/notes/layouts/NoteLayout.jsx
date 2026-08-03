@@ -27,6 +27,11 @@ import {
   buildInterviewProfileContext,
   buildPersonalizedPilotDraft,
 } from "../../navigation/lib/pilotPath";
+import {
+  loadPilotPathDraft,
+  savePilotLastNotePath,
+  savePilotPathDraft as savePilotPathDraftLocally,
+} from "../../navigation/lib/pilotPathStorage";
 import BottomOutlineProgress from "../components/BottomOutlineProgress";
 import NoteWorkspaceBar from "../components/NoteWorkspaceBar";
 import OutlineSider from "../../navigation/components/OutlineSider";
@@ -61,6 +66,7 @@ import {
   IMMERSIVE_MODE_ENABLED,
   LEARNING_SUPPORT_ENABLED,
   NOTE_VERSION_SWITCHER_ENABLED,
+  PILOT_BACKEND_ENABLED,
   PILOT_SUBJECT_SLUG,
 } from "../../../config/productMode";
 import "./NoteLayout.css";
@@ -71,6 +77,7 @@ const { Sider, Content } = Layout;
 const LEARNING_SIDER_MIN_WIDTH = 350;
 const LEARNING_SIDER_MAX_WIDTH = 960;
 const LEARNING_SIDER_NEARBY_MIN_WIDTH = 520;
+const PILOT_LOCAL_ONLY = !FULL_PRODUCT_ENABLED && !PILOT_BACKEND_ENABLED;
 
 const LEARNING_SUPPORT_TABS = [
   { id: "outline", labelKey: "learningSupport.tabs.outline" },
@@ -435,15 +442,17 @@ const NoteLayout = () => {
     if (!pendingNotesTour) return;
 
     async function startPendingNotesTour() {
-      try {
-        await updateMyGuideState({
-          guideKey: "notes_page",
-          seen: true,
-          completed: false,
-          currentStep: 0,
-        });
-      } catch {
-        // The question-mark button can still start the local tour if this fails.
+      if (!PILOT_LOCAL_ONLY) {
+        try {
+          await updateMyGuideState({
+            guideKey: "notes_page",
+            seen: true,
+            completed: false,
+            currentStep: 0,
+          });
+        } catch {
+          // The question-mark button can still start the local tour if this fails.
+        }
       }
       if (!cancelled) {
         window.requestAnimationFrame(() => {
@@ -504,7 +513,7 @@ const NoteLayout = () => {
   const translatedMenuLabelPayload = useTranslatedContent(menuLabelPayload, {
     sourceType: "menu_label_list",
     sourceId: "notes-sidebar-menu",
-    disabled: !plainMenuItems.length,
+    disabled: PILOT_LOCAL_ONLY || !plainMenuItems.length,
   });
   const translatedMenuLabelMap = useMemo(
     () => parseTranslatedMenuLabelMap(translatedMenuLabelPayload.content),
@@ -587,6 +596,10 @@ const NoteLayout = () => {
     () => normalizeMenuKey(currentMeta?.url || ""),
     [currentMeta?.url],
   );
+  useEffect(() => {
+    if (!PILOT_LOCAL_ONLY) return;
+    savePilotLastNotePath(`${location.pathname}${location.search}${location.hash}`);
+  }, [location.hash, location.pathname, location.search]);
   const isOverviewPage = isSubjectOverviewPath(currentNoteUrlNormalized);
   const isCurrentNoteCompleted = !isOverviewPage && currentNoteUrlNormalized
     ? completedNoteUrls.has(currentNoteUrlNormalized)
@@ -635,6 +648,10 @@ const NoteLayout = () => {
   }, []);
 
   useEffect(() => {
+    if (PILOT_LOCAL_ONLY) {
+      setCompletedNoteUrls(new Set());
+      return undefined;
+    }
     let mounted = true;
     async function loadCompletedNotes() {
       try {
@@ -653,6 +670,10 @@ const NoteLayout = () => {
   }, []);
 
   const loadLearningPath = useCallback(async () => {
+    if (PILOT_LOCAL_ONLY) {
+      setLearningPathDraft(normalizeLearningPathForProductMode(loadPilotPathDraft()));
+      return;
+    }
     try {
       const payload = await getLearningPath(learningPathId);
       setLearningPathDraft(normalizeLearningPathForProductMode(payload?.draft));
@@ -662,6 +683,14 @@ const NoteLayout = () => {
   }, [learningPathId]);
 
   useEffect(() => {
+    if (PILOT_LOCAL_ONLY) {
+      setLearningPathDraft(normalizeLearningPathForProductMode(loadPilotPathDraft()));
+      const onPathUpdated = () => {
+        setLearningPathDraft(normalizeLearningPathForProductMode(loadPilotPathDraft()));
+      };
+      window.addEventListener("learning-path-updated", onPathUpdated);
+      return () => window.removeEventListener("learning-path-updated", onPathUpdated);
+    }
     let mounted = true;
     async function run() {
       try {
@@ -685,6 +714,10 @@ const NoteLayout = () => {
   }, [learningPathId, loadLearningPath]);
 
   useEffect(() => {
+    if (PILOT_LOCAL_ONLY) {
+      setCanonicalGraph(null);
+      return undefined;
+    }
     let mounted = true;
     async function loadCanonicalGraph() {
       try {
@@ -702,6 +735,18 @@ const NoteLayout = () => {
 
   const persistLearningPathDraft = useCallback(async (nextDraft, successMessage, commitMessage) => {
     setLearningPathDraft(nextDraft);
+    if (PILOT_LOCAL_ONLY) {
+      const normalizedDraft = normalizeLearningPathForProductMode(nextDraft);
+      if (!savePilotPathDraftLocally(normalizedDraft)) {
+        message.error("浏览器无法保存 Path，请检查是否处于无痕模式或已禁用网站存储。");
+        setLearningPathDraft(normalizeLearningPathForProductMode(loadPilotPathDraft()));
+        return false;
+      }
+      setLearningPathDraft(normalizedDraft);
+      window.dispatchEvent(new CustomEvent("learning-path-updated"));
+      if (successMessage) message.success(successMessage);
+      return true;
+    }
     try {
       const response = await saveLearningPathDraft(nextDraft);
       setLearningPathDraft(normalizeLearningPathForProductMode(response?.draft || nextDraft));
@@ -1004,6 +1049,10 @@ const NoteLayout = () => {
   }, [learningPathDraft, learningPathPending, persistLearningPathDraft, t]);
 
   useEffect(() => {
+    if (PILOT_LOCAL_ONLY) {
+      setNoteQuotes([]);
+      return undefined;
+    }
     let mounted = true;
     async function loadNoteQuotes() {
       if (!currentNoteUrlNormalized || isSubjectOverviewPath(currentNoteUrlNormalized)) {
@@ -1585,7 +1634,7 @@ const NoteLayout = () => {
                 learningPathDraft={learningPathDraft}
                 learningPathPending={learningPathPending}
                 onAddPathNode={handleAddPathNode}
-                onAddCareerToPath={handleAddCareerToPath}
+                onAddCareerToPath={PILOT_LOCAL_ONLY ? undefined : handleAddCareerToPath}
                 onReorderPathNodes={handleReorderPathNodes}
                 onRemovePathNode={handleRemovePathNode}
                 onRestoreRecommendedOrder={handleRestoreRecommendedOrder}
@@ -1660,8 +1709,8 @@ const NoteLayout = () => {
                 onToggleImmersiveMode={() => setImmersiveMode((value) => !value)}
                 isCurrentNoteCompleted={isCurrentNoteCompleted}
                 completePending={completeNotePending}
-                onToggleCompletion={isOverviewPage ? undefined : handleToggleCurrentNoteCompletion}
-                onEnoughForNow={isOverviewPage ? undefined : handleEnoughForNow}
+                onToggleCompletion={PILOT_LOCAL_ONLY || isOverviewPage ? undefined : handleToggleCurrentNoteCompletion}
+                onEnoughForNow={PILOT_LOCAL_ONLY || isOverviewPage ? undefined : handleEnoughForNow}
                 workspaceMeta={workspaceMeta}
                 onExploreMindmap={handleExploreMindmap}
                 isMobile={isMobile}
@@ -1673,9 +1722,9 @@ const NoteLayout = () => {
                 context={{
                   isCurrentNoteCompleted,
                   completeCurrentNotePending: completeNotePending,
-                  onToggleCurrentNoteCompletion: handleToggleCurrentNoteCompletion,
+                  onToggleCurrentNoteCompletion: PILOT_LOCAL_ONLY ? undefined : handleToggleCurrentNoteCompletion,
                   noteQuotes,
-                  onCreateQuoteFromSelection: handleCreateQuoteFromSelection,
+                  onCreateQuoteFromSelection: PILOT_LOCAL_ONLY ? undefined : handleCreateQuoteFromSelection,
                   onAskWithSelectedText: GLOBAL_ASSISTANT_ENABLED ? handleAskWithSelectedText : undefined,
                   onGenerateQuizFromSelection: LEARNING_SUPPORT_ENABLED
                     ? handleGenerateQuizFromSelection

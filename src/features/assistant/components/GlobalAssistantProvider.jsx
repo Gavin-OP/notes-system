@@ -16,7 +16,7 @@ import useTranslation from "../../../i18n/useTranslation";
 import AssistantWorkspace from "./AssistantWorkspace";
 import useCurrentUserSummary from "../../profile/hooks/useCurrentUserSummary";
 import { GlobalAssistantContext } from "./GlobalAssistantContext";
-import { GLOBAL_ASSISTANT_ENABLED } from "../../../config/productMode";
+import { GLOBAL_ASSISTANT_ENABLED, PILOT_BACKEND_ENABLED } from "../../../config/productMode";
 import "./GlobalAssistantProvider.css";
 
 const { Text } = Typography;
@@ -117,7 +117,7 @@ export default function GlobalAssistantProvider({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { language } = useTranslation();
-  const currentUser = useCurrentUserSummary();
+  const currentUser = useCurrentUserSummary({ disabled: !PILOT_BACKEND_ENABLED });
   const currentMeta = useSelector((state) => state.currentNote.meta);
   const currentNoteContent = useSelector((state) => state.currentNote.content);
   const [assistantOpen, setAssistantOpen] = useState(false);
