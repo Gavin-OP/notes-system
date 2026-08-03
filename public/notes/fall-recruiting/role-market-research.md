@@ -15,6 +15,10 @@ tags: [秋招, 岗位研究, 市场研究]
 
 如果一项工具只出现一次，不必马上报名一门新课；如果同一能力在多数 JD 中出现，就要检查自己是否有证据。
 
+```note-interactive
+{"type":"evidence-matrix","id":"fall-recruiting-jd-evidence","items":[{"id":"responsibility","label":"核心工作内容","hint":"是否做过相似问题或任务"},{"id":"technical","label":"硬技能与工具","hint":"能否拿出作品、项目或测试结果"},{"id":"communication","label":"沟通与协作","hint":"是否有具体对象、难点和结果"},{"id":"industry","label":"行业与业务理解","hint":"能否解释公司如何创造价值"},{"id":"language","label":"语言要求","hint":"是否能完成真实工作与面试沟通"}]}
+```
+
 ## 研究公司语境
 
 阅读公司官网的业务、产品、客户、Values 和近期公开信息。重点回答：

@@ -1,0 +1,312 @@
+.note-interaction {
+  margin: 24px 0;
+  padding: 22px;
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-lg);
+  background: var(--ns-color-bg-container);
+  box-shadow: var(--ns-shadow-sm);
+  color: var(--ns-color-text);
+}
+
+.note-interaction__header {
+  margin-bottom: 18px;
+}
+
+.note-interaction__header > span {
+  display: inline-block;
+  margin-bottom: 6px;
+  color: var(--ns-color-primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.note-interaction__header h3 {
+  margin: 0 !important;
+  color: var(--ns-color-text);
+  font-size: 19px;
+  line-height: 1.4;
+}
+
+.note-interaction__header p {
+  margin: 6px 0 0;
+  color: var(--ns-color-text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.note-certificate-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.note-certificate {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-fill-quaternary, #fafafa);
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.note-certificate.is-selected {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg, #f4f8ff);
+  box-shadow: inset 0 0 0 1px var(--ns-color-primary);
+}
+
+.note-certificate > header {
+  display: flex;
+  min-height: 48px;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.note-certificate > header strong {
+  font-size: 17px;
+}
+
+.note-certificate > header span {
+  color: var(--ns-color-text-tertiary);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.note-certificate dl {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+
+.note-certificate dt {
+  color: var(--ns-color-text-tertiary);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.note-certificate dd {
+  margin: 2px 0 0;
+  color: var(--ns-color-text-secondary);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.note-certificate button,
+.note-segmented button,
+.note-evidence-row button {
+  min-height: 44px;
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-sm);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text-secondary);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.note-certificate button:hover,
+.note-segmented button:hover,
+.note-evidence-row button:hover {
+  border-color: var(--ns-color-primary);
+  color: var(--ns-color-primary);
+}
+
+.note-certificate button:focus-visible,
+.note-segmented button:focus-visible,
+.note-evidence-row button:focus-visible,
+.note-certificate a:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
+}
+
+.note-certificate button[aria-pressed="true"],
+.note-segmented button.is-selected,
+.note-evidence-row button.is-selected {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary);
+  color: var(--ns-color-text-on-primary, #fff);
+}
+
+.note-certificate button svg {
+  margin-right: 6px;
+}
+
+.note-certificate a {
+  color: var(--ns-color-primary);
+  font-size: 11px;
+  text-align: center;
+  text-underline-offset: 3px;
+}
+
+.note-interaction__result,
+.note-interaction__summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-fill-quaternary, #f7f7f7);
+  color: var(--ns-color-text-secondary);
+  font-size: 12px;
+}
+
+.note-interaction__result strong {
+  flex: 0 0 auto;
+  color: var(--ns-color-text);
+}
+
+.note-segmented {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.note-resume-preview {
+  padding: 18px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-fill-quaternary, #fafafa);
+}
+
+.note-resume-preview > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.note-resume-preview > div span {
+  color: var(--ns-color-text-tertiary);
+  font-size: 11px;
+}
+
+.note-resume-preview > div strong {
+  font-size: 16px;
+}
+
+.note-resume-preview ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note-resume-preview li {
+  padding: 10px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-sm);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text-secondary);
+  font-size: 12px;
+  text-align: center;
+}
+
+.note-resume-preview p {
+  margin: 0;
+  color: var(--ns-color-text-secondary);
+  font-size: 12px;
+}
+
+.note-evidence-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.note-evidence-row {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) minmax(300px, 1.5fr);
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+}
+
+.note-evidence-row > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.note-evidence-row > div:first-child strong {
+  font-size: 13px;
+}
+
+.note-evidence-row > div:first-child span {
+  color: var(--ns-color-text-tertiary);
+  font-size: 11px;
+}
+
+.note-evidence-row > div:last-child {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.note-interaction__summary {
+  justify-content: space-around;
+}
+
+.note-interaction__summary span {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.note-interaction__summary strong {
+  color: var(--ns-color-text);
+  font-size: 17px;
+}
+
+@media (max-width: 760px) {
+  .note-interaction {
+    padding: 18px;
+  }
+
+  .note-certificate-grid,
+  .note-segmented,
+  .note-resume-preview ul {
+    grid-template-columns: 1fr;
+  }
+
+  .note-evidence-row {
+    grid-template-columns: 1fr;
+  }
+
+  .note-evidence-row > div:last-child {
+    grid-template-columns: 1fr;
+  }
+
+  .note-interaction__result,
+  .note-interaction__summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note-certificate,
+  .note-certificate button,
+  .note-segmented button,
+  .note-evidence-row button {
+    transition: none;
+  }
+}

@@ -1,6 +1,6 @@
 {
-  "meta": {"subjectId":"fall-recruiting","subjectName":"秋招准备","version":"1.3.0","directed":true,"focusSubject":"fall-recruiting","networkScope":"subject","view":"network"},
-  "viewConfigs": {"network":{"focusNodeIds":["getting-started","direction","market","profile-preparation","resume","linkedin","cover-letter","portfolio","personal-site","job-search","networking","ai-job-search","applications","interviews","interview-review","leetcode","finance-certificates","offer"]}},
+  "meta": {"subjectId":"fall-recruiting","subjectName":"秋招准备","version":"1.4.0","directed":true,"focusSubject":"fall-recruiting","networkScope":"subject","view":"network"},
+  "viewConfigs": {"network":{"focusNodeIds":["getting-started","direction","market","profile-preparation","resume","linkedin","cover-letter","portfolio","personal-site","job-search","networking","ai-job-search","applications","interviews","interview-review","leetcode","finance-certificates","cfa-certificate","frm-certificate","hkicpa-certificate","offer"]}},
   "categories": [
     {"id":"subject-fall-recruiting","name":"求职主线","displayName":"求职主线","color":"#526D82","subject":"fall-recruiting"},
     {"id":"profile-branches","name":"简历与 Profile","displayName":"简历与 Profile","color":"#66806A","subject":"profile-branches"},
@@ -11,7 +11,7 @@
     {"id":"subject-fall-recruiting","label":"求职主线","subject":"fall-recruiting","color":"#526D82","nodeIds":["getting-started","direction","market","profile-preparation","job-search","applications","interviews","interview-review","offer"]},
     {"id":"profile-branches","label":"简历与 Profile","subject":"profile-branches","color":"#66806A","nodeIds":["resume","linkedin","cover-letter","portfolio","personal-site"]},
     {"id":"search-branches","label":"岗位探索","subject":"search-branches","color":"#B07A4A","nodeIds":["networking","ai-job-search"]},
-    {"id":"skill-branches","label":"技能补充","subject":"skill-branches","color":"#76658E","nodeIds":["leetcode","finance-certificates"]}
+    {"id":"skill-branches","label":"技能补充","subject":"skill-branches","color":"#76658E","nodeIds":["leetcode","finance-certificates","cfa-certificate","frm-certificate","hkicpa-certificate"]}
   ],
   "nodes": [
     {"id":"getting-started","displayTitle":"刚开始准备求职","subject":"fall-recruiting","noteTitle":"秋招定位与行动计划","noteUrl":"/note/fall-recruiting/autumn-recruitment-roadmap.md","categoryId":"subject-fall-recruiting","importance":"high"},
@@ -30,7 +30,10 @@
     {"id":"interviews","displayTitle":"测试与面试","subject":"fall-recruiting","noteTitle":"面试准备","noteUrl":"/note/fall-recruiting/interview-preparation.md","categoryId":"subject-fall-recruiting","importance":"high"},
     {"id":"interview-review","displayTitle":"面试复盘","subject":"fall-recruiting","noteTitle":"面试复盘","noteUrl":"/note/fall-recruiting/interview-review.md","categoryId":"subject-fall-recruiting","importance":"high"},
     {"id":"leetcode","displayTitle":"LeetCode","subject":"skill-branches","noteTitle":"LeetCode","noteUrl":"/note/fall-recruiting/leetcode-practice.md","categoryId":"skill-branches","clusterId":"skill-branches","conceptLevel":"sub","importance":"medium"},
-    {"id":"finance-certificates","displayTitle":"金融知识 / 证书","subject":"skill-branches","noteTitle":"金融知识与证书","noteUrl":"/note/fall-recruiting/finance-knowledge-certificates.md","categoryId":"skill-branches","clusterId":"skill-branches","conceptLevel":"sub","importance":"medium"},
+    {"id":"finance-certificates","displayTitle":"金融证书怎么选","subject":"skill-branches","noteTitle":"金融证书怎么选","noteUrl":"/note/fall-recruiting/finance-knowledge-certificates.md","categoryId":"skill-branches","clusterId":"skill-branches","conceptLevel":"sub","importance":"medium"},
+    {"id":"cfa-certificate","displayTitle":"CFA","subject":"skill-branches","noteTitle":"CFA 是否适合我","noteUrl":"/note/fall-recruiting/cfa-certificate.md","categoryId":"skill-branches","clusterId":"skill-branches","conceptLevel":"detail","importance":"medium"},
+    {"id":"frm-certificate","displayTitle":"FRM","subject":"skill-branches","noteTitle":"FRM 是否适合我","noteUrl":"/note/fall-recruiting/frm-certificate.md","categoryId":"skill-branches","clusterId":"skill-branches","conceptLevel":"detail","importance":"medium"},
+    {"id":"hkicpa-certificate","displayTitle":"HKICPA QP","subject":"skill-branches","noteTitle":"HKICPA QP 是否适合我","noteUrl":"/note/fall-recruiting/hkicpa-certificate.md","categoryId":"skill-branches","clusterId":"skill-branches","conceptLevel":"detail","importance":"medium"},
     {"id":"offer","displayTitle":"Offer 判断","subject":"fall-recruiting","noteTitle":"Offer 判断与求职复盘","noteUrl":"/note/fall-recruiting/offer-review.md","categoryId":"subject-fall-recruiting","importance":"high"}
   ],
   "edges": [
@@ -56,8 +59,13 @@
     {"source":"interviews","target":"interview-review","type":"prerequisite","strength":1,"bidirectional":false},
     {"source":"interview-review","target":"leetcode","type":"extends","strength":0.8,"bidirectional":false},
     {"source":"interview-review","target":"finance-certificates","type":"extends","strength":0.8,"bidirectional":false},
+    {"source":"finance-certificates","target":"cfa-certificate","type":"branches_to","strength":0.8,"bidirectional":false},
+    {"source":"finance-certificates","target":"frm-certificate","type":"branches_to","strength":0.8,"bidirectional":false},
+    {"source":"finance-certificates","target":"hkicpa-certificate","type":"branches_to","strength":0.8,"bidirectional":false},
     {"source":"interview-review","target":"offer","type":"prerequisite","strength":1,"bidirectional":false},
     {"source":"leetcode","target":"applications","type":"related_to","strength":0.5},
-    {"source":"finance-certificates","target":"applications","type":"related_to","strength":0.5}
+    {"source":"cfa-certificate","target":"applications","type":"related_to","strength":0.5},
+    {"source":"frm-certificate","target":"applications","type":"related_to","strength":0.5},
+    {"source":"hkicpa-certificate","target":"applications","type":"related_to","strength":0.5}
   ]
 }

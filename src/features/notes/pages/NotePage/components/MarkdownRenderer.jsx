@@ -13,6 +13,7 @@ import rehypeHighlight from "rehype-highlight";
 import "katex/dist/katex.min.css";
 
 import CopyLinkIcon from "./CopyLinkIcon";
+import NoteInteractiveBlock from "../../../components/interactive/NoteInteractiveBlock";
 
 import { resolveRelativePath } from "../../../lib/markdownUtils";
 import { remarkHighlightMark } from "../../../lib/markdownUtils";
@@ -834,7 +835,7 @@ const MarkdownRenderer = ({
 
       // code block formatting
       pre({ children, ...props }) {
-        if (children?.type === MermaidDiagram) {
+        if (children?.type === MermaidDiagram || children?.type === NoteInteractiveBlock) {
           return children;
         }
         return <pre className="md-fences" {...props}>{children}</pre>;
@@ -844,6 +845,9 @@ const MarkdownRenderer = ({
         const codeText = String(children || "").replace(/\n$/, "");
         if (/\blanguage-mermaid\b/.test(className || "")) {
           return <MermaidDiagram chart={codeText} />;
+        }
+        if (/\blanguage-note-interactive\b/.test(className || "")) {
+          return <NoteInteractiveBlock configText={codeText} />;
         }
         return (
           <code className={className} {...props}>

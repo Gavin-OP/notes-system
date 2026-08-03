@@ -8,6 +8,10 @@ import {
   SEARCH_BRANCH_OPTIONS,
   SKILL_BRANCH_OPTIONS,
 } from "../lib/pilotPath";
+import {
+  FALL_RECRUITING_CERTIFICATES,
+  getNextCertificateWindow,
+} from "../../fallRecruiting/lib/certificates";
 
 import "./PilotPathSetupModal.css";
 
@@ -16,6 +20,7 @@ const EMPTY_PROFILE = {
   profile_branches: [],
   search_branches: [],
   skill_branches: [],
+  certificate_branches: [],
 };
 
 function normalizeInitialProfile(initialProfile = {}) {
@@ -23,7 +28,12 @@ function normalizeInitialProfile(initialProfile = {}) {
     stage: initialProfile.stage === "targeting" ? "getting_started" : initialProfile.stage || "getting_started",
     profile_branches: Array.isArray(initialProfile.profile_branches) ? initialProfile.profile_branches : [],
     search_branches: Array.isArray(initialProfile.search_branches) ? initialProfile.search_branches : [],
-    skill_branches: Array.isArray(initialProfile.skill_branches) ? initialProfile.skill_branches : [],
+    skill_branches: Array.isArray(initialProfile.skill_branches)
+      ? initialProfile.skill_branches.filter((value) => value !== "finance")
+      : [],
+    certificate_branches: Array.isArray(initialProfile.certificate_branches)
+      ? initialProfile.certificate_branches
+      : [],
   };
 }
 
@@ -93,6 +103,85 @@ function MultiChoiceGrid({ options, value, emptyLabel, disabled, onChange }) {
   );
 }
 
+function CertificateComparisonGrid({ value, disabled, onChange }) {
+  const selectedValues = new Set(value);
+
+  const setDecision = (certificateId, shouldAdd) => {
+    const next = shouldAdd
+      ? [...new Set([...value, certificateId])]
+      : value.filter((currentValue) => currentValue !== certificateId);
+    onChange(next);
+  };
+
+  return (
+    <div className="pilot-certificate-comparison">
+      {FALL_RECRUITING_CERTIFICATES.map((certificate) => {
+        const selected = selectedValues.has(certificate.id);
+        const nextWindow = getNextCertificateWindow(certificate.id);
+        return (
+          <article
+            key={certificate.id}
+            className={`pilot-certificate-card${selected ? " pilot-certificate-card--selected" : ""}`}
+          >
+            <header>
+              <span>{certificate.shortName}</span>
+              <small>{certificate.name}</small>
+            </header>
+            <dl>
+              <div>
+                <dt>更常见于</dt>
+                <dd>{certificate.fit}</dd>
+              </div>
+              <div>
+                <dt>主要价值</dt>
+                <dd>{certificate.value}</dd>
+              </div>
+              <div>
+                <dt>准备投入</dt>
+                <dd>{certificate.preparation}</dd>
+              </div>
+              <div className="pilot-certificate-card__window">
+                <dt>下一考试窗口</dt>
+                <dd>
+                  <strong>{nextWindow.label}</strong>
+                  <span>{nextWindow.detail}</span>
+                </dd>
+              </div>
+            </dl>
+            <details>
+              <summary>判断前还要知道什么</summary>
+              <p>{certificate.limitation}</p>
+              <a href={certificate.officialUrl} target="_blank" rel="noreferrer">
+                查看官方考试信息
+              </a>
+            </details>
+            <div className="pilot-certificate-card__actions" aria-label={`${certificate.shortName} Path 选择`}>
+              <button
+                type="button"
+                className={selected ? "is-selected" : ""}
+                aria-pressed={selected}
+                disabled={disabled}
+                onClick={() => setDecision(certificate.id, true)}
+              >
+                加入 Path，进一步了解
+              </button>
+              <button
+                type="button"
+                className={!selected ? "is-selected is-secondary" : ""}
+                aria-pressed={!selected}
+                disabled={disabled}
+                onClick={() => setDecision(certificate.id, false)}
+              >
+                稍后考虑
+              </button>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
+}
+
 function PilotPathSetupDialog({ initialProfile, pending = false, onCancel, onSubmit }) {
   const [profile, setProfile] = useState(() => normalizeInitialProfile(initialProfile));
   const [stepIndex, setStepIndex] = useState(0);
@@ -146,7 +235,7 @@ function PilotPathSetupDialog({ initialProfile, pending = false, onCancel, onSub
     {
       id: "skills",
       title: "你目前明确需要补充哪些技能？",
-      hint: "不确定可以先不选，之后再根据 JD 或面试反馈加入。",
+      hint: "先选择已经从 JD、笔试或面试反馈中确认的技能。",
       content: (
         <MultiChoiceGrid
           options={SKILL_BRANCH_OPTIONS}
@@ -154,6 +243,18 @@ function PilotPathSetupDialog({ initialProfile, pending = false, onCancel, onSub
           emptyLabel="目前还不确定"
           disabled={pending}
           onChange={(value) => update("skill_branches", value)}
+        />
+      ),
+    },
+    {
+      id: "certificates",
+      title: "哪些金融证书值得你进一步了解？",
+      hint: "先比较适用方向和投入，再决定是否加入 Path；这不是报名建议。",
+      content: (
+        <CertificateComparisonGrid
+          value={profile.certificate_branches}
+          disabled={pending}
+          onChange={(value) => update("certificate_branches", value)}
         />
       ),
     },

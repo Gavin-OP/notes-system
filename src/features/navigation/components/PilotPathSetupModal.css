@@ -187,6 +187,171 @@
   color: #fff;
 }
 
+.pilot-certificate-comparison {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+
+.pilot-certificate-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-lg);
+  background: var(--ns-color-bg-container);
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+.pilot-certificate-card--selected {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg, #f4f8ff);
+  box-shadow: inset 0 0 0 1px var(--ns-color-primary);
+}
+
+.pilot-certificate-card > header {
+  display: flex;
+  min-height: 54px;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pilot-certificate-card > header > span {
+  color: var(--ns-color-text);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.pilot-certificate-card > header > small {
+  color: var(--ns-color-text-tertiary);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.pilot-certificate-card dl {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+.pilot-certificate-card dl > div {
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--ns-color-border-secondary);
+}
+
+.pilot-certificate-card dt {
+  margin-bottom: 4px;
+  color: var(--ns-color-text-tertiary);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pilot-certificate-card dd {
+  margin: 0;
+  color: var(--ns-color-text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pilot-certificate-card__window dd {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pilot-certificate-card__window strong {
+  color: var(--ns-color-text);
+  font-size: 12px;
+}
+
+.pilot-certificate-card__window span {
+  color: var(--ns-color-text-tertiary);
+  font-size: 11px;
+}
+
+.pilot-certificate-card details {
+  color: var(--ns-color-text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pilot-certificate-card summary {
+  min-height: 28px;
+  color: var(--ns-color-text-secondary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pilot-certificate-card details p {
+  margin: 6px 0;
+}
+
+.pilot-certificate-card details a {
+  color: var(--ns-color-primary);
+  text-underline-offset: 3px;
+}
+
+.pilot-certificate-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pilot-certificate-card__actions button {
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-sm);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text-secondary);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.pilot-certificate-card__actions button:hover:not(:disabled),
+.pilot-certificate-card__actions button:focus-visible {
+  border-color: var(--ns-color-primary);
+  color: var(--ns-color-primary);
+}
+
+.pilot-certificate-card__actions button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ns-color-primary) 24%, transparent);
+  outline-offset: 2px;
+}
+
+.pilot-certificate-card__actions button.is-selected:not(.is-secondary) {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary);
+  color: var(--ns-color-text-on-primary, #fff);
+}
+
+.pilot-certificate-card__actions button.is-secondary {
+  border-color: var(--ns-color-border-secondary);
+  background: var(--ns-color-fill-quaternary, #f7f7f7);
+  color: var(--ns-color-text-secondary);
+}
+
+.pilot-certificate-card__actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
 .pilot-path-wizard__footer {
   display: flex;
   align-items: center;
@@ -245,6 +410,10 @@
   }
 
   .pilot-path-question__options {
+    grid-template-columns: 1fr;
+  }
+
+  .pilot-certificate-comparison {
     grid-template-columns: 1fr;
   }
 
