@@ -35,6 +35,8 @@ function NoteWorkspaceBar({
   onExploreMindmap,
   isMobile = false,
   showAudioTools = true,
+  showImmersiveMode = true,
+  showNoteVersions = true,
 }) {
   const { t } = useTranslation();
 
@@ -104,20 +106,22 @@ function NoteWorkspaceBar({
           </Tooltip>
         ) : null}
 
-        <Tooltip title={immersiveMode ? t("note.toolbar.exitImmersive") : t("note.toolbar.enterImmersive")}>
-          <button
-            type="button"
-            className={`note-workspace-bar__icon-btn ${
-              immersiveMode ? "note-workspace-bar__icon-btn--active" : ""
-            }`}
-            onClick={onToggleImmersiveMode}
-            aria-label={immersiveMode ? t("note.toolbar.exitImmersive") : t("note.toolbar.enterImmersive")}
-            aria-pressed={immersiveMode}
-          >
-            {immersiveMode ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
-            {!isMobile ? <span>{t("note.toolbar.immersive")}</span> : null}
-          </button>
-        </Tooltip>
+        {showImmersiveMode ? (
+          <Tooltip title={immersiveMode ? t("note.toolbar.exitImmersive") : t("note.toolbar.enterImmersive")}>
+            <button
+              type="button"
+              className={`note-workspace-bar__icon-btn ${
+                immersiveMode ? "note-workspace-bar__icon-btn--active" : ""
+              }`}
+              onClick={onToggleImmersiveMode}
+              aria-label={immersiveMode ? t("note.toolbar.exitImmersive") : t("note.toolbar.enterImmersive")}
+              aria-pressed={immersiveMode}
+            >
+              {immersiveMode ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+              {!isMobile ? <span>{t("note.toolbar.immersive")}</span> : null}
+            </button>
+          </Tooltip>
+        ) : null}
 
         {showAudioTools ? <Dropdown
           trigger={["click"]}
@@ -166,7 +170,7 @@ function NoteWorkspaceBar({
         </Dropdown> : null}
       </div>
 
-      {hasVersions ? (
+      {showNoteVersions && hasVersions ? (
         <details className="note-workspace-bar__version" aria-label={t("note.toolbar.noteVersion")}>
           <summary className="note-workspace-bar__version-trigger">
             <HistoryOutlined aria-hidden="true" />

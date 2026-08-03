@@ -1068,9 +1068,7 @@ const LearningNavigationPanel = ({
               <div className="learning-nav__pilot-summary-heading">
                 <div>
                   <span className="learning-nav__pilot-eyebrow">你的 Timeline</span>
-                  <strong>
-                    {pathPersonalization.region ? `${pathPersonalization.region}秋招` : "下一轮秋招"}
-                  </strong>
+                  <strong>下一轮秋招</strong>
                 </div>
                 {typeof onConfigurePath === "function" ? (
                   <button

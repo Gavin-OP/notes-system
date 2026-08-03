@@ -9,18 +9,9 @@ export const PILOT_STAGE_OPTIONS = [
   { value: "offer", label: "正在比较 Offer" },
 ];
 
-export const PILOT_REGION_OPTIONS = [
-  "香港",
-  "中国内地",
-  "美国",
-  "英国",
-  "欧洲其他地区",
-  "新加坡",
-  "其他地区",
-];
-
 export const PROFILE_BRANCH_OPTIONS = [
   { value: "linkedin", label: "LinkedIn" },
+  { value: "cover_letter", label: "Cover Letter" },
   { value: "portfolio", label: "项目集 / 个人主页" },
 ];
 
@@ -30,7 +21,7 @@ export const SEARCH_BRANCH_OPTIONS = [
 ];
 
 export const SKILL_BRANCH_OPTIONS = [
-  { value: "technical", label: "SQL / LeetCode" },
+  { value: "technical", label: "LeetCode" },
   { value: "finance", label: "金融知识 / 证书" },
 ];
 
@@ -114,52 +105,50 @@ function buildPilotNodes(profile = {}) {
   const profileBranches = new Set(profile.profile_branches || []);
   const searchBranches = new Set(profile.search_branches || []);
   const skillBranches = new Set(profile.skill_branches || []);
-  const needsCantonese = profile.region === "香港" && Boolean(profile.learn_cantonese);
-
   const nodes = [
     pathNode("getting-started", "刚开始准备求职", "autumn-recruitment-roadmap", 1),
-    pathNode("direction", "明确方向与现实限制", "autumn-recruitment-roadmap", 2, "concept-target-role"),
-    pathNode("market", "理解岗位与市场", "job-search-and-screening", 3, "concept-search-channels"),
-    pathNode("profile-preparation", "准备简历与 Profile", "resume-story", 4),
-    pathNode("resume", "简历", "resume-story", 5, "concept-job-description-mapping", { path_relation: "branch" }),
+    pathNode("direction", "明确方向与现实限制", "career-direction", 2),
+    pathNode("market", "理解岗位与市场", "role-market-research", 3),
+    pathNode("profile-preparation", "准备简历与 Profile", "profile-preparation", 4),
+    pathNode("resume", "简历", "resume-story", 5, "", { path_relation: "branch" }),
   ];
 
   if (profileBranches.has("linkedin")) {
-    nodes.push(pathNode("linkedin", "LinkedIn", "resume-story", 5, "concept-linkedin", { path_relation: "branch" }));
+    nodes.push(pathNode("linkedin", "LinkedIn", "linkedin-profile", 5, "", { path_relation: "branch" }));
+  }
+  if (profileBranches.has("cover_letter")) {
+    nodes.push(pathNode("cover-letter", "Cover Letter", "cover-letter", 5, "", { path_relation: "branch" }));
   }
   if (profileBranches.has("portfolio")) {
-    nodes.push(pathNode("portfolio", "项目集 / 个人主页", "resume-story", 5, "concept-portfolio", { path_relation: "branch" }));
+    nodes.push(pathNode("portfolio", "项目集 / 个人主页", "portfolio-personal-site", 5, "", { path_relation: "branch" }));
   }
 
   nodes.push(pathNode("job-search", "寻找和筛选岗位", "job-search-and-screening", 6));
 
   if (searchBranches.has("networking")) {
     nodes.push(
-      pathNode("coffee-chat", "Coffee Chat", "job-search-and-screening", 7, "concept-coffee-chat", { path_relation: "branch" }),
-      pathNode("alumni", "校友 / 往届生交流", "job-search-and-screening", 7, "concept-alumni-networking", { path_relation: "branch" }),
+      pathNode("coffee-chat", "Coffee Chat", "coffee-chat", 7, "", { path_relation: "branch" }),
+      pathNode("alumni", "校友 / 往届生交流", "alumni-networking", 7, "", { path_relation: "branch" }),
     );
   }
   if (searchBranches.has("ai_job_search")) {
-    nodes.push(pathNode("ai-job-search", "用 AI 辅助找岗位", "job-search-and-screening", 7, "concept-ai-job-search", { path_relation: "branch" }));
+    nodes.push(pathNode("ai-job-search", "用 AI 辅助找岗位", "ai-job-search", 7, "", { path_relation: "branch" }));
   }
 
   nodes.push(
     pathNode("applications", "投递与流程管理", "application-communication", 8),
     pathNode("interviews", "测试与面试", "interview-preparation", 9),
-    pathNode("interview-review", "面试复盘", "interview-preparation", 10, "concept-interview-review"),
+    pathNode("interview-review", "面试复盘", "interview-review", 10),
   );
 
   if (skillBranches.has("technical")) {
-    nodes.push(pathNode("technical-skills", "SQL / LeetCode", "offer-review", 11, "concept-technical-skill-gap", { path_relation: "branch" }));
+    nodes.push(pathNode("technical-skills", "LeetCode", "leetcode-practice", 11, "", { path_relation: "branch" }));
   }
   if (skillBranches.has("finance")) {
-    nodes.push(pathNode("finance-skills", "金融知识 / 证书", "offer-review", 11, "concept-finance-skill-gap", { path_relation: "branch" }));
-  }
-  if (needsCantonese) {
-    nodes.push(pathNode("cantonese", "粤语", "autumn-recruitment-roadmap", 11, "concept-cantonese-learning", { path_relation: "branch" }));
+    nodes.push(pathNode("finance-skills", "金融知识 / 证书", "finance-knowledge-certificates", 11, "", { path_relation: "branch" }));
   }
 
-  nodes.push(pathNode("offer", "Offer 判断", "offer-review", 12, "concept-offer-comparison"));
+  nodes.push(pathNode("offer", "Offer 判断", "offer-review", 12));
   return nodes;
 }
 
@@ -211,13 +200,10 @@ export function buildPilotTimeline(stage, now = new Date()) {
 
 export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = new Date()) {
   const profile = {
-    region: rawProfile.region || "",
     stage: normalizeStage(rawProfile.stage),
-    work_authorization: rawProfile.work_authorization || "",
     profile_branches: (rawProfile.profile_branches || []).filter((value) => PROFILE_BRANCH_OPTIONS.some((option) => option.value === value)),
     search_branches: (rawProfile.search_branches || []).filter((value) => SEARCH_BRANCH_OPTIONS.some((option) => option.value === value)),
     skill_branches: (rawProfile.skill_branches || []).filter((value) => SKILL_BRANCH_OPTIONS.some((option) => option.value === value)),
-    learn_cantonese: rawProfile.region === "香港" && Boolean(rawProfile.learn_cantonese),
     setup_complete: Boolean(rawProfile.setup_complete),
   };
   const focusNodeId = STAGE_FOCUS_NODE[profile.stage];
@@ -231,9 +217,9 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
   return {
     ...draft,
     path_id: draft?.path_id || "primary",
-    learning_set_name: profile.region ? `${profile.region}秋招 Path` : "秋招准备 Path",
+    learning_set_name: "秋招准备 Path",
     learning_set_note: `当前阶段：${PILOT_STAGE_OPTIONS.find((item) => item.value === profile.stage)?.label}`,
-    goal_title: profile.region ? `${profile.region}秋招准备` : "准备下一轮校园招聘",
+    goal_title: "准备下一轮校园招聘",
     metadata: {
       ...(draft?.metadata || {}),
       order_mode: "canonical",
@@ -255,13 +241,10 @@ export function buildDefaultPilotDraft(draft = {}, now = new Date()) {
   return buildPersonalizedPilotDraft(
     draft,
     {
-      region: "",
       stage: "getting_started",
-      work_authorization: "",
       profile_branches: [],
       search_branches: [],
       skill_branches: [],
-      learn_cantonese: false,
       setup_complete: false,
     },
     now,
@@ -274,9 +257,6 @@ export function buildInterviewProfileContext(profile = {}) {
     ...(profile.profile_branches || []),
   ];
   const details = [
-    profile.region ? `目标地区：${profile.region}` : "",
-    profile.work_authorization ? `工作资格：${profile.work_authorization}` : "",
-    profile.learn_cantonese ? "需要准备粤语求职沟通" : "",
     branchLabels.length ? `当前专项准备：${branchLabels.join("、")}` : "",
   ].filter(Boolean);
   return details.length ? `请结合以下求职背景进行模拟面试：${details.join("；")}。` : "";

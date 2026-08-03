@@ -55,7 +55,14 @@ import useTranslation from "../../../i18n/useTranslation";
 import { listPodcasts } from "../../podcasts/api/podcasts";
 
 import LearningPageMetaBar from "../../../shared/layouts/LearningPageMetaBar";
-import { FULL_PRODUCT_ENABLED, PILOT_SUBJECT_SLUG } from "../../../config/productMode";
+import {
+  FULL_PRODUCT_ENABLED,
+  GLOBAL_ASSISTANT_ENABLED,
+  IMMERSIVE_MODE_ENABLED,
+  LEARNING_SUPPORT_ENABLED,
+  NOTE_VERSION_SWITCHER_ENABLED,
+  PILOT_SUBJECT_SLUG,
+} from "../../../config/productMode";
 import "./NoteLayout.css";
 import "../components/LearningSupportPanel.css";
 
@@ -1625,7 +1632,11 @@ const NoteLayout = () => {
           className={`note-layout__content-wrapper ${isMobile ? "note-layout__content-wrapper--mobile" : ""}`}
         >
           <div
-            className={`note-layout__content-shell ${!isMobile && assistantMode === "dock" ? "note-layout__content-shell--with-assistant" : ""}`}
+            className={`note-layout__content-shell ${
+              LEARNING_SUPPORT_ENABLED && !isMobile && assistantMode === "dock"
+                ? "note-layout__content-shell--with-assistant"
+                : ""
+            }`}
           >
             <Content
               className={`note-layout__content ${isMobile ? "note-layout__content--mobile" : ""}`}
@@ -1655,6 +1666,8 @@ const NoteLayout = () => {
                 onExploreMindmap={handleExploreMindmap}
                 isMobile={isMobile}
                 showAudioTools={FULL_PRODUCT_ENABLED}
+                showImmersiveMode={IMMERSIVE_MODE_ENABLED}
+                showNoteVersions={NOTE_VERSION_SWITCHER_ENABLED}
               />
               <Outlet
                 context={{
@@ -1663,14 +1676,16 @@ const NoteLayout = () => {
                   onToggleCurrentNoteCompletion: handleToggleCurrentNoteCompletion,
                   noteQuotes,
                   onCreateQuoteFromSelection: handleCreateQuoteFromSelection,
-                  onAskWithSelectedText: handleAskWithSelectedText,
-                  onGenerateQuizFromSelection: handleGenerateQuizFromSelection,
+                  onAskWithSelectedText: GLOBAL_ASSISTANT_ENABLED ? handleAskWithSelectedText : undefined,
+                  onGenerateQuizFromSelection: LEARNING_SUPPORT_ENABLED
+                    ? handleGenerateQuizFromSelection
+                    : undefined,
                   immersiveMode,
                   registerWorkspaceMeta,
                 }}
               />
             </Content>
-            {!isMobile && !immersiveMode && assistantMode === "dock" ? (
+            {LEARNING_SUPPORT_ENABLED && !isMobile && !immersiveMode && assistantMode === "dock" ? (
               <>
                 {assistantCollapsed ? (
                   <button
@@ -1785,16 +1800,18 @@ const NoteLayout = () => {
           </div>
         </Checkbox.Group>
       </Modal>
-      <Modal
-        title={assistantTool === "quiz" ? "Quiz" : "Study tools"}
-        open={assistantModalOpen}
-        onCancel={() => setAssistantModalOpen(false)}
-        footer={null}
-        width={920}
-        className="note-layout__assistant-modal"
-      >
-        {renderAssistantWorkspace(true)}
-      </Modal>
+      {LEARNING_SUPPORT_ENABLED ? (
+        <Modal
+          title={assistantTool === "quiz" ? "Quiz" : "Study tools"}
+          open={assistantModalOpen}
+          onCancel={() => setAssistantModalOpen(false)}
+          footer={null}
+          width={920}
+          className="note-layout__assistant-modal"
+        >
+          {renderAssistantWorkspace(true)}
+        </Modal>
+      ) : null}
       {!FULL_PRODUCT_ENABLED ? (
         <PilotPathSetupModal
           open={pilotPathSetupOpen}

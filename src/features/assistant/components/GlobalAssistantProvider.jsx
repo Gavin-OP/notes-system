@@ -16,6 +16,7 @@ import useTranslation from "../../../i18n/useTranslation";
 import AssistantWorkspace from "./AssistantWorkspace";
 import useCurrentUserSummary from "../../profile/hooks/useCurrentUserSummary";
 import { GlobalAssistantContext } from "./GlobalAssistantContext";
+import { GLOBAL_ASSISTANT_ENABLED } from "../../../config/productMode";
 import "./GlobalAssistantProvider.css";
 
 const { Text } = Typography;
@@ -149,6 +150,7 @@ export default function GlobalAssistantProvider({ children }) {
   );
 
   const openAssistant = useCallback(({ prompt = "" } = {}) => {
+    if (!GLOBAL_ASSISTANT_ENABLED) return;
     if (!currentUser.isAuthenticated) {
       navigate("/user/login", {
         state: { from: `${location.pathname}${location.search}${location.hash}` },
@@ -370,7 +372,7 @@ export default function GlobalAssistantProvider({ children }) {
   return (
     <GlobalAssistantContext.Provider value={contextValue}>
       {children}
-      {assistantOpen ? (
+      {GLOBAL_ASSISTANT_ENABLED && assistantOpen ? (
         <section
           className={`global-assistant global-assistant--open ${
             assistantExpanded ? "global-assistant--expanded" : ""
@@ -477,7 +479,7 @@ export default function GlobalAssistantProvider({ children }) {
             ) : null}
           </div>
         </section>
-      ) : (
+      ) : GLOBAL_ASSISTANT_ENABLED ? (
         <button
           type="button"
           className="global-assistant global-assistant__launcher"
@@ -495,7 +497,7 @@ export default function GlobalAssistantProvider({ children }) {
         >
           <RobotOutlined aria-hidden="true" />
         </button>
-      )}
+      ) : null}
     </GlobalAssistantContext.Provider>
   );
 }
