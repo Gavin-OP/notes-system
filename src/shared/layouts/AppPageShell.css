@@ -33,6 +33,32 @@
   z-index: var(--ns-z-sticky);
 }
 
+.app-page-shell__topbar--compact {
+  min-height: 52px;
+  padding-inline: var(--ns-space-3);
+  border-bottom-color: transparent;
+  background: var(--ns-color-bg-layout);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.app-page-shell__topbar--compact .app-meta-topbar__start:empty {
+  display: none;
+}
+
+.app-page-shell__topbar--compact .app-page-shell__tools {
+  margin-left: auto;
+}
+
+.app-page-shell__topbar--compact .app-page-shell__tool-btn,
+.app-page-shell__topbar--compact .app-page-shell__language-btn {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding-inline: 0;
+  border-radius: 50%;
+}
+
 .app-page-shell__brand {
   display: inline-flex;
   align-items: center;

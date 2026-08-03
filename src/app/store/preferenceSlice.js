@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  language: "en",
+  language: "cn",
   theme: "light",
   isMobile: window.innerWidth < 768,
 };

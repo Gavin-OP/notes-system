@@ -35,11 +35,12 @@ function buildAnchorItems(outline) {
 const OutlineSider = ({ outline, collapsed, onCollapse, hideHeader = false }) => {
   const language = useSelector((state) => state.preference.language);
 
-  const outlineTitle = language === "cn" ? "大纲" : "Outline";
-  const collapseTitle = language === "cn" ? "收起大纲" : "Collapse outline";
-  const expandTitle = language === "cn" ? "展开大纲" : "Expand outline";
+  const useChineseInterface = language !== "en";
+  const outlineTitle = useChineseInterface ? "大纲" : "Outline";
+  const collapseTitle = useChineseInterface ? "收起大纲" : "Collapse outline";
+  const expandTitle = useChineseInterface ? "展开大纲" : "Expand outline";
   const emptyLabel =
-    language === "cn" ? "此页暂无标题大纲。" : "No headings on this page yet.";
+    useChineseInterface ? "此页暂无标题大纲。" : "No headings on this page yet.";
 
   if (collapsed) {
     return (

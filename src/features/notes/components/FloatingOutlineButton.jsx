@@ -12,7 +12,7 @@ const FloatingOutlineButton = ({ outline, visible }) => {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const drawerTitle = language === "cn" ? "大纲" : "Outline";
+  const drawerTitle = language !== "en" ? "大纲" : "Outline";
 
   return (
     <>

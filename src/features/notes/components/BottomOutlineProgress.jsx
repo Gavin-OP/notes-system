@@ -59,7 +59,7 @@ const BottomOutlineProgress = ({ outline }) => {
 
   if (outlineItems.length === 0) return null;
 
-  const label = language === "cn" ? "阅读进度" : "Reading progress";
+  const label = language !== "en" ? "阅读进度" : "Reading progress";
 
   return (
     <aside className="bottom-outline-progress" aria-label={label}>

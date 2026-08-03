@@ -20,25 +20,40 @@ function AppMetaTopBar({
   const { displayName, isAuthenticated } = useCurrentUserSummary({ disabled: !PILOT_BACKEND_ENABLED });
   const languageItems = [
     {
+      key: "cn",
+      label: t("language.chinese"),
+      onClick: () => dispatch(setLanguage("cn")),
+    },
+    {
       key: "en",
       label: t("language.english"),
       onClick: () => dispatch(setLanguage("en")),
     },
     {
-      key: "cn",
-      label: t("language.chinese"),
-      onClick: () => dispatch(setLanguage("cn")),
+      key: "tw",
+      label: t("language.traditional", "繁體中文"),
+      onClick: () => dispatch(setLanguage("tw")),
     },
   ];
+  const languageLabel = language === "cn"
+    ? t("language.chinese")
+    : language === "tw"
+      ? t("language.traditional", "繁體中文")
+      : t("language.english");
 
   return (
-    <header className="app-page-shell__topbar" ref={topBarRef}>
+    <header
+      className={`app-page-shell__topbar ${FULL_PRODUCT_ENABLED ? "" : "app-page-shell__topbar--compact"}`.trim()}
+      ref={topBarRef}
+    >
       <div className="app-meta-topbar__start">
         {startSlot}
-        <button type="button" className="app-page-shell__brand" onClick={() => navigate("/")}>
-          <span className="app-page-shell__logo">NS</span>
-          <span className="app-page-shell__brand-name">{t("home.brand", "Notes System")}</span>
-        </button>
+        {FULL_PRODUCT_ENABLED ? (
+          <button type="button" className="app-page-shell__brand" onClick={() => navigate("/")}>
+            <span className="app-page-shell__logo">NS</span>
+            <span className="app-page-shell__brand-name">{t("home.brand", "Notes System")}</span>
+          </button>
+        ) : null}
       </div>
       <Space size={8} className="app-page-shell__tools">
         {toolSlot}
@@ -55,11 +70,12 @@ function AppMetaTopBar({
           placement="bottomRight"
         >
           <Button
+            shape={FULL_PRODUCT_ENABLED ? "default" : "circle"}
             className="app-page-shell__language-btn"
             icon={<GlobalOutlined />}
             aria-label={t("home.languageSelector", "Choose language")}
           >
-            {language === "cn" ? t("language.chinese") : t("language.english")}
+            {FULL_PRODUCT_ENABLED ? languageLabel : null}
           </Button>
         </Dropdown>
         {FULL_PRODUCT_ENABLED ? (

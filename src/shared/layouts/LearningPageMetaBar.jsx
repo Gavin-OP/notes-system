@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button, Tooltip } from "antd";
-import { HomeOutlined, SearchOutlined, ShopOutlined } from "@ant-design/icons";
+import { ApartmentOutlined, HomeOutlined, SearchOutlined, ShopOutlined } from "@ant-design/icons";
 
 import AppFeatureTour from "../../features/profile/components/guide/AppFeatureTour";
 import SearchModal from "../../features/search/components/SearchModal";
@@ -16,6 +16,9 @@ function LearningPageMetaBar({
   notesGuideSteps = [],
   notesTourStartToken = 0,
   onNotesTourStepChange,
+  showMindmap = false,
+  onExploreMindmap,
+  exploreGuideRef = null,
   topBarRef = null,
 }) {
   const navigate = useNavigate();
@@ -36,6 +39,18 @@ function LearningPageMetaBar({
           aria-label={t("note.toolbar.searchNotes")}
         />
       </Tooltip>
+      {showMindmap && typeof onExploreMindmap === "function" ? (
+        <Tooltip title={t("note.toolbar.openMindmap")}>
+          <Button
+            shape="circle"
+            className="app-page-shell__tool-btn"
+            icon={<ApartmentOutlined />}
+            ref={exploreGuideRef}
+            onClick={onExploreMindmap}
+            aria-label={t("note.toolbar.openMindmap")}
+          />
+        </Tooltip>
+      ) : null}
       {FULL_PRODUCT_ENABLED ? <Tooltip title={t("common.backToHome", "Back to Home")}>
         <Button
           shape="circle"

@@ -109,7 +109,7 @@ function SubjectOverviewContent({ subjectId }) {
   }, [graphData, resolvedSyllabus]);
 
   const conceptCountLabel =
-    language === "cn"
+    language !== "en"
       ? `${conceptPreview.totalConcepts} 个概念`
       : `${conceptPreview.totalConcepts} concepts`;
 

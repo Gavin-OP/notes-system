@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { translate } from "./translations";
 
 function useTranslation() {
-  const language = useSelector((state) => state.preference.language) || "en";
+  const language = useSelector((state) => state.preference.language) || "cn";
   const t = useCallback(
     (key, fallback) => translate(language, key, fallback),
     [language],

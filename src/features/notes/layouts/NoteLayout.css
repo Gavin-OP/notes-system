@@ -44,6 +44,10 @@
 }
 
 .note-layout__menu-button--mobile {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
   margin-right: var(--ns-space-2);
 }
 

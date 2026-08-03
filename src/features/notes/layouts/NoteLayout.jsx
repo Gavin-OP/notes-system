@@ -1539,7 +1539,7 @@ const NoteLayout = () => {
         "--sider-bg": colorBgContainer,
         "--content-bg": colorBgContainer,
         "--content-radius": borderRadiusLG,
-        "--note-meta-topbar-height": immersiveMode ? "0px" : "64px",
+        "--note-meta-topbar-height": immersiveMode ? "0px" : FULL_PRODUCT_ENABLED ? "64px" : "52px",
       }}
     >
       {!immersiveMode ? (
@@ -1563,6 +1563,9 @@ const NoteLayout = () => {
           notesGuideSteps={noteGuideSteps}
           notesTourStartToken={notesTourStartToken}
           onNotesTourStepChange={handleNoteTourStepChange}
+          showMindmap={!FULL_PRODUCT_ENABLED && Boolean(workspaceMeta?.showMindmap)}
+          onExploreMindmap={handleExploreMindmap}
+          exploreGuideRef={!FULL_PRODUCT_ENABLED ? exploreGuideRef : null}
           topBarRef={metaTopBarRef}
         />
       ) : null}
@@ -1717,6 +1720,7 @@ const NoteLayout = () => {
                 showAudioTools={FULL_PRODUCT_ENABLED}
                 showImmersiveMode={IMMERSIVE_MODE_ENABLED}
                 showNoteVersions={NOTE_VERSION_SWITCHER_ENABLED}
+                showMindmapTool={FULL_PRODUCT_ENABLED}
               />
               <Outlet
                 context={{

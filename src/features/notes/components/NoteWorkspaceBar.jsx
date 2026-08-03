@@ -37,6 +37,7 @@ function NoteWorkspaceBar({
   showAudioTools = true,
   showImmersiveMode = true,
   showNoteVersions = true,
+  showMindmapTool = true,
 }) {
   const { t } = useTranslation();
 
@@ -48,7 +49,7 @@ function NoteWorkspaceBar({
   }
   if (narrationState === "error") narrationLabel = t("note.narration.failed");
 
-  const showMindmap = Boolean(workspaceMeta?.showMindmap);
+  const showMindmap = showMindmapTool && Boolean(workspaceMeta?.showMindmap);
   const versions = Array.isArray(workspaceMeta?.versions) ? workspaceMeta.versions : [];
   const hasVersions = versions.length > 0;
   const restoreCount = Number(workspaceMeta?.restoreCandidateCount || 0);
@@ -58,6 +59,14 @@ function NoteWorkspaceBar({
     : isCurrentNoteCompleted
       ? t("note.toolbar.completed")
       : t("note.toolbar.markComplete");
+
+  const hasVisibleTools = typeof onToggleCompletion === "function"
+    || typeof onEnoughForNow === "function"
+    || showMindmap
+    || showImmersiveMode
+    || showAudioTools
+    || (showNoteVersions && hasVersions);
+  if (!hasVisibleTools) return null;
 
   return (
     <div className="note-workspace-bar" ref={workspaceBarRef} aria-label="Note workspace tools">

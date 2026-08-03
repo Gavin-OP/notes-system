@@ -1,6 +1,7 @@
 export const LANGUAGE_LABELS = {
   en: "English",
-  cn: "中文",
+  cn: "简体中文",
+  tw: "繁體中文",
 };
 
 export const translations = {
@@ -14,7 +15,8 @@ export const translations = {
     "common.retry": "Retry",
     "common.noData": "No data yet.",
     "language.english": "English",
-    "language.chinese": "中文",
+    "language.chinese": "简体中文",
+    "language.traditional": "繁體中文",
 
     "home.brand": "Notes System",
     "home.languageSelector": "Choose language",
@@ -350,7 +352,8 @@ export const translations = {
     "common.retry": "重试",
     "common.noData": "暂无数据。",
     "language.english": "English",
-    "language.chinese": "中文",
+    "language.chinese": "简体中文",
+    "language.traditional": "繁體中文",
 
     "home.brand": "Notes System",
     "home.languageSelector": "选择语言",
@@ -654,6 +657,18 @@ export const translations = {
     "guide.note.5.title": "工作区快捷入口",
     "guide.note.5.description": "你可以标记完成、搜索、打开助手，或在更多菜单中切换主题、语言、朗读、版本和个人资料。",
   },
+};
+
+translations.tw = {
+  ...translations.cn,
+  "language.english": "English",
+  "language.chinese": "簡體中文",
+  "language.traditional": "繁體中文",
+  "home.languageSelector": "選擇語言",
+  "note.toolbar.mindmap": "知識圖譜",
+  "note.toolbar.openMindmap": "開啟知識圖譜",
+  "note.toolbar.searchNotes": "搜尋筆記",
+  "note.toolbar.darkMode": "夜間模式",
 };
 
 export function translate(language, key, fallback = key) {
