@@ -173,30 +173,67 @@ function buildPilotNodes(profile = {}) {
 }
 
 function buildPilotEdges(nodes) {
-  const groups = new Map();
-  nodes.forEach((node) => {
-    const order = Number(node.metadata?.estimated_order || 0);
-    const group = groups.get(order) || [];
-    group.push(node);
-    groups.set(order, group);
-  });
-  const orderedGroups = [...groups.entries()].sort(([a], [b]) => a - b).map(([, group]) => group);
+  const nodeIds = new Set(nodes.map((node) => node.node_id));
   const edges = [];
-  orderedGroups.slice(0, -1).forEach((group, index) => {
-    const nextGroup = orderedGroups[index + 1];
-    group.forEach((source) => {
-      nextGroup.forEach((target) => {
-        const branching = group.length > 1 || nextGroup.length > 1;
-        edges.push({
-          edge_id: `pilot:${source.node_id}:${target.node_id}`,
-          source: source.node_id,
-          target: target.node_id,
-          relation: branching ? "branches_to" : "precedes",
-          metadata: { pilot_official_path: true },
-        });
-      });
+  const connect = (sourceId, targetId, relation = "precedes") => {
+    const source = `pilot:${sourceId}`;
+    const target = `pilot:${targetId}`;
+    if (!nodeIds.has(source) || !nodeIds.has(target)) return;
+    edges.push({
+      edge_id: `pilot-edge:${sourceId}:${targetId}`,
+      source,
+      target,
+      relation,
+      metadata: { pilot_official_path: true },
     });
+  };
+
+  connect("getting-started", "direction");
+  connect("direction", "market");
+  connect("market", "profile-preparation");
+
+  const profileBranchIds = ["resume", "linkedin", "cover-letter", "portfolio", "personal-site"]
+    .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
+  profileBranchIds.forEach((nodeId) => {
+    connect("profile-preparation", nodeId, "branches_to");
+    connect(nodeId, "job-search", "converges_to");
   });
+
+  const searchBranchIds = ["networking", "ai-job-search"]
+    .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
+  if (searchBranchIds.length > 0) {
+    searchBranchIds.forEach((nodeId) => {
+      connect("job-search", nodeId, "branches_to");
+      connect(nodeId, "applications", "converges_to");
+    });
+  } else {
+    connect("job-search", "applications");
+  }
+
+  connect("applications", "interviews");
+  connect("interviews", "interview-review");
+
+  const supplementIds = ["technical-skills", "finance-skills"]
+    .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
+  if (supplementIds.length === 0) {
+    connect("interview-review", "offer");
+  } else {
+    supplementIds.forEach((nodeId) => connect("interview-review", nodeId, "branches_to"));
+    connect("technical-skills", "offer", "converges_to");
+
+    const certificateIds = FALL_RECRUITING_CERTIFICATES
+      .map((certificate) => `certificate-${certificate.id}`)
+      .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
+    if (certificateIds.length > 0) {
+      certificateIds.forEach((nodeId) => {
+        connect("finance-skills", nodeId, "branches_to");
+        connect(nodeId, "offer", "converges_to");
+      });
+    } else {
+      connect("finance-skills", "offer", "converges_to");
+    }
+  }
+
   return edges;
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ApartmentOutlined,
   CompassOutlined,
@@ -179,6 +179,7 @@ function buildSubjectLibrary(items = [], personalizedSteps = []) {
 
 function buildLearningPathGraph(steps = [], canonicalGraph = null, options = {}) {
   const useCustomOrder = Boolean(options.useCustomOrder);
+  const pathEdges = Array.isArray(options.pathEdges) ? options.pathEdges : [];
   const graphNodes = Array.isArray(canonicalGraph?.nodes) ? canonicalGraph.nodes : [];
   const graphNodeById = new Map(graphNodes.map((node) => [node.node_id || node.nodeId, node]));
   const defaultPathIds = Array.isArray(canonicalGraph?.default_path?.node_ids)
@@ -242,34 +243,63 @@ function buildLearningPathGraph(steps = [], canonicalGraph = null, options = {})
       positioned.push({
         ...node,
         groupIndex,
-        incomingCount: groupIndex > 0 ? groups[groupIndex - 1].nodes.length : 0,
-        outgoingCount: groupIndex < groups.length - 1 ? groups[groupIndex + 1].nodes.length : 0,
         x: startX + nodeIndex * (GRAPH_NODE_WIDTH + GRAPH_COLUMN_GAP),
         y: GRAPH_PADDING_Y + groupIndex * (GRAPH_NODE_HEIGHT + GRAPH_ROW_GAP),
       });
     });
   });
 
-  const edges = [];
-  groups.forEach((group, groupIndex) => {
-    const nextGroup = groups[groupIndex + 1];
-    if (!nextGroup) return;
-    group.nodes.forEach((source) => {
-      nextGroup.nodes.forEach((target) => {
-        edges.push({
-          source: source.id,
-          target: target.id,
-          strength: group.nodes.length > 1 || nextGroup.nodes.length > 1 ? "parallel" : "main",
-          relation: "estimated_order",
+  const positionedNodeIds = new Set(positioned.map((node) => node.id));
+  let edges = [];
+  if (!useCustomOrder && pathEdges.length > 0) {
+    const seenEdges = new Set();
+    pathEdges.forEach((edge) => {
+      const source = String(edge?.source || "");
+      const target = String(edge?.target || "");
+      const edgeKey = `${source}:${target}`;
+      if (!positionedNodeIds.has(source) || !positionedNodeIds.has(target) || seenEdges.has(edgeKey)) return;
+      seenEdges.add(edgeKey);
+      edges.push({ source, target, relation: edge?.relation || "precedes" });
+    });
+  } else {
+    groups.forEach((group, groupIndex) => {
+      const nextGroup = groups[groupIndex + 1];
+      if (!nextGroup) return;
+      group.nodes.forEach((source) => {
+        nextGroup.nodes.forEach((target) => {
+          edges.push({
+            source: source.id,
+            target: target.id,
+            relation: "estimated_order",
+          });
         });
       });
     });
+  }
+
+  const incomingCounts = new Map();
+  const outgoingCounts = new Map();
+  edges.forEach((edge) => {
+    outgoingCounts.set(edge.source, (outgoingCounts.get(edge.source) || 0) + 1);
+    incomingCounts.set(edge.target, (incomingCounts.get(edge.target) || 0) + 1);
   });
+  edges = edges.map((edge) => ({
+    ...edge,
+    strength:
+      (outgoingCounts.get(edge.source) || 0) > 1 || (incomingCounts.get(edge.target) || 0) > 1
+        ? "parallel"
+        : "main",
+  }));
+  const positionedWithConnections = positioned.map((node) => ({
+    ...node,
+    incomingCount: incomingCounts.get(node.id) || 0,
+    outgoingCount: outgoingCounts.get(node.id) || 0,
+  }));
 
   const height =
     GRAPH_PADDING_Y * 2 + groups.length * GRAPH_NODE_HEIGHT + Math.max(0, groups.length - 1) * GRAPH_ROW_GAP;
 
-  return { nodes: positioned, edges, width, height };
+  return { nodes: positionedWithConnections, edges, width, height };
 }
 
 function subjectSlugFromNodeId(nodeId) {
@@ -311,6 +341,7 @@ const LearningNavigationPanel = ({
   const [dragPayload, setDragPayload] = useState(null);
   const [isPathDropActive, setIsPathDropActive] = useState(false);
   const [nearbyAnchorUrl, setNearbyAnchorUrl] = useState("");
+  const graphScrollRef = useRef(null);
   const normalizedCurrent = normalizeKey(currentNoteUrl);
   const personalizedSteps = useMemo(
     () => collectLearningPathSteps(learningPathDraft),
@@ -369,9 +400,26 @@ const LearningNavigationPanel = ({
     return Array.from(groups.entries());
   }, [addCandidateSteps, t]);
   const personalizedGraph = useMemo(
-    () => buildLearningPathGraph(personalizedSteps, canonicalGraph, { useCustomOrder: useCustomPathOrder }),
-    [personalizedSteps, canonicalGraph, useCustomPathOrder],
+    () => buildLearningPathGraph(personalizedSteps, canonicalGraph, {
+      useCustomOrder: useCustomPathOrder,
+      pathEdges: learningPathDraft?.metadata?.pilot_official_path ? learningPathDraft?.edges : [],
+    }),
+    [personalizedSteps, canonicalGraph, useCustomPathOrder, learningPathDraft?.edges, learningPathDraft?.metadata?.pilot_official_path],
   );
+  useEffect(() => {
+    const scrollContainer = graphScrollRef.current;
+    if (!scrollContainer || personalizedGraph.width <= scrollContainer.clientWidth) return;
+    const currentNode = personalizedGraph.nodes.find(
+      (node) => normalizeKey(node.step?.key) === normalizedCurrent,
+    );
+    const focusNode = currentNode
+      || personalizedGraph.nodes.find((node) => node.step?.recommendedNow)
+      || personalizedGraph.nodes[0];
+    if (!focusNode) return;
+    const centeredLeft = focusNode.x + GRAPH_NODE_WIDTH / 2 - scrollContainer.clientWidth / 2;
+    const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+    scrollContainer.scrollLeft = Math.min(maxScrollLeft, Math.max(0, centeredLeft));
+  }, [normalizedCurrent, personalizedGraph]);
   const nearbyAnchorNormalized = useMemo(() => {
     if (nearbyAnchorUrl && pathKeySet.has(normalizeKey(nearbyAnchorUrl))) {
       return normalizeKey(nearbyAnchorUrl);
@@ -680,7 +728,7 @@ const LearningNavigationPanel = ({
     };
 
     return (
-      <div className="learning-nav__graph-scroll">
+      <div ref={graphScrollRef} className="learning-nav__graph-scroll">
         <div
           className="learning-nav__graph-canvas"
           style={{ width: graph.width, height: graph.height }}

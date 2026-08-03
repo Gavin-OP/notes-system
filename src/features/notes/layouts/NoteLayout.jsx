@@ -77,7 +77,6 @@ const { Sider, Content } = Layout;
 const LEARNING_SIDER_MIN_WIDTH = 350;
 const LEARNING_SIDER_MAX_WIDTH = 960;
 const LEARNING_SIDER_NEARBY_MIN_WIDTH = 520;
-const LEARNING_SIDER_DEFAULT_WIDTH = 820;
 const PILOT_LOCAL_ONLY = !FULL_PRODUCT_ENABLED && !PILOT_BACKEND_ENABLED;
 
 const LEARNING_SUPPORT_TABS = [
@@ -385,7 +384,7 @@ const NoteLayout = () => {
   const [learningPathPending, setLearningPathPending] = useState(false);
   const [pilotPathSetupOpen, setPilotPathSetupOpen] = useState(false);
   const [pathEditMode, setPathEditMode] = useState(false);
-  const [learningSiderWidth, setLearningSiderWidth] = useState(LEARNING_SIDER_DEFAULT_WIDTH);
+  const [learningSiderWidth, setLearningSiderWidth] = useState(LEARNING_SIDER_MIN_WIDTH);
   const [canonicalGraph, setCanonicalGraph] = useState(null);
   const [noteQuotes, setNoteQuotes] = useState([]);
   const [completeNotePending, setCompleteNotePending] = useState(false);
