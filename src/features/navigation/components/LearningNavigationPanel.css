@@ -800,17 +800,19 @@
 }
 
 .learning-nav__graph-scroll {
-  display: flex;
+  display: block;
   flex: 1 1 auto;
   min-height: 0;
-  justify-content: center;
   overflow: auto;
   padding: var(--ns-space-3);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .learning-nav__graph-canvas {
   flex: 0 0 auto;
   position: relative;
+  margin-inline: auto;
 }
 
 .learning-nav__graph-lines {
