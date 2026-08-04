@@ -16,6 +16,7 @@ import {
   MenuUnfoldOutlined,
   LeftOutlined,
   RightOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 
 import LearningNavigationPanel from "../../navigation/components/LearningNavigationPanel";
@@ -35,7 +36,6 @@ import {
 import BottomOutlineProgress from "../components/BottomOutlineProgress";
 import NoteWorkspaceBar from "../components/NoteWorkspaceBar";
 import OutlineSider from "../../navigation/components/OutlineSider";
-import FloatingOutlineButton from "../components/FloatingOutlineButton";
 import AssistantWorkspace from "../../assistant/components/AssistantWorkspace";
 import { useGlobalAssistant } from "../../assistant/components/GlobalAssistantContext";
 import { PENDING_NOTES_TOUR_KEY } from "../../profile/components/guide/AppFeatureTour";
@@ -357,7 +357,6 @@ const NoteLayout = () => {
   // local state
   const [collapsed, setCollapsed] = useState(isMobile);
   const [showMenu, setShowMenu] = useState(true);
-  const [showFloatingButton, setShowFloatingButton] = useState(true);
   const [assistantMode, setAssistantMode] = useState("dock");
   const [assistantDockTab, setAssistantDockTab] = useState("outline");
   const [assistantTool, setAssistantTool] = useState("notes");
@@ -470,36 +469,6 @@ const NoteLayout = () => {
       cancelled = true;
     };
   }, []);
-
-  // Scroll listener for floating button (mobile only)
-  useEffect(() => {
-    if (!isMobile) return;
-
-    let lastScrollY = window.scrollY;
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const currentScrollY = window.scrollY;
-
-          // hide button when scrolling down, show when scrolling up
-          if (currentScrollY > lastScrollY && currentScrollY > 100) {
-            setShowFloatingButton(false);
-          } else {
-            setShowFloatingButton(true);
-          }
-
-          lastScrollY = currentScrollY;
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isMobile]);
 
   // menu contents & icons
   const plainMenuItems = useMemo(
@@ -1551,9 +1520,8 @@ const NoteLayout = () => {
                 className="note-layout__menu-button note-layout__menu-button--mobile"
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 onClick={() => {
-                  if (!collapsed) setShowMenu(false);
-                  else setShowMenu(true);
-                  setCollapsed(!collapsed);
+                  setShowMenu(true);
+                  setCollapsed((value) => !value);
                 }}
                 aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
               />
@@ -1620,14 +1588,29 @@ const NoteLayout = () => {
                 </div>
               ) : (
                 <div className="note-layout__sider-mobile-controls">
-                  <LearningPathControls
-                    hasPersonalizedPath={hasPersonalizedPath}
-                    hasEditableDraft={hasEditableDraft}
-                    pathEditMode={pathEditMode}
-                    learningPathPending={learningPathPending}
-                    onPrimaryAction={handlePathPrimaryAction}
-                    onClearPath={FULL_PRODUCT_ENABLED ? handleClearPath : undefined}
-                  />
+                  <div className="note-layout__sider-mobile-heading">
+                    <span>秋招准备</span>
+                    <strong>你的 Path</strong>
+                  </div>
+                  <div className="note-layout__sider-mobile-actions">
+                    <LearningPathControls
+                      hasPersonalizedPath={hasPersonalizedPath}
+                      hasEditableDraft={hasEditableDraft}
+                      pathEditMode={pathEditMode}
+                      learningPathPending={learningPathPending}
+                      onPrimaryAction={handlePathPrimaryAction}
+                      onClearPath={FULL_PRODUCT_ENABLED ? handleClearPath : undefined}
+                    />
+                    <button
+                      type="button"
+                      className="note-layout__sider-mobile-close"
+                      onClick={() => setCollapsed(true)}
+                      aria-label="关闭 Path"
+                      title="关闭 Path"
+                    >
+                      <CloseOutlined />
+                    </button>
+                  </div>
                 </div>
               )}
               <LearningNavigationPanel
@@ -1820,10 +1803,6 @@ const NoteLayout = () => {
         </Layout>
       </Layout>
 
-      {/* floating outline button for mobile */}
-      {isMobile && (
-        <FloatingOutlineButton outline={outline} visible={showFloatingButton} />
-      )}
       {immersiveMode && !isOverviewPage ? (
         <BottomOutlineProgress outline={outline} />
       ) : null}

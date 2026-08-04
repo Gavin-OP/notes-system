@@ -90,13 +90,23 @@
 
 .note-layout__sider--mobile {
   position: fixed;
-  left: 0;
-  top: var(--note-meta-topbar-height, 64px);
-  bottom: 0;
+  inset: 0;
   z-index: var(--ns-z-drawer);
-  width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  box-shadow: none;
+}
+
+.note-layout__sider--mobile:not(.ant-layout-sider-collapsed) {
+  width: 100% !important;
+  min-width: 100% !important;
   max-width: 100% !important;
-  height: auto;
+  flex: 0 0 100% !important;
+}
+
+.note-layout__sider--mobile.ant-layout-sider-collapsed {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* Menu */
@@ -277,6 +287,8 @@
 
 .note-layout__breadcrumb--mobile {
   margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .note-layout__content {
@@ -407,10 +419,65 @@
 }
 
 .note-layout__sider-mobile-controls {
+  position: sticky;
+  top: 0;
+  z-index: 4;
   display: flex;
-  justify-content: flex-end;
-  padding: var(--ns-space-2) var(--ns-space-3);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ns-space-3);
+  min-height: 68px;
+  padding: max(12px, env(safe-area-inset-top)) var(--ns-space-3) 12px;
   border-bottom: 1px solid var(--ns-color-split);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 94%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+.note-layout__sider-mobile-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.note-layout__sider-mobile-heading > span {
+  color: var(--ns-color-text-tertiary);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.note-layout__sider-mobile-heading > strong {
+  color: var(--ns-color-text);
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.note-layout__sider-mobile-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ns-space-2);
+}
+
+.note-layout__sider-mobile-close {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: 50%;
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.note-layout__sider-mobile-close:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
 }
 
 .note-layout__sider-collapse-btn {

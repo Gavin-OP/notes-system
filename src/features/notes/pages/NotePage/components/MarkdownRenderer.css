@@ -357,27 +357,51 @@
 @media (max-width: 768px) {
   /* Ensure markdown content is readable on mobile */
   .markdown-body {
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 1.72;
     min-width: 0;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   .markdown-body h1 {
-    font-size: 1.8em;
+    font-size: 28px;
+    line-height: 1.25;
   }
 
   .markdown-body h2 {
-    font-size: 1.5em;
+    font-size: 22px;
+    line-height: 1.32;
   }
 
   .markdown-body h3 {
-    font-size: 1.3em;
+    font-size: 18px;
+    line-height: 1.4;
   }
 
-  /* Ensure tables are scrollable on mobile */
+  .markdown-body p,
+  .markdown-body li {
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  /* Keep simple course tables legible without clipping their text. */
   .markdown-body table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+    display: table;
+    width: 100%;
+    table-layout: auto;
+    white-space: normal;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .markdown-body th,
+  .markdown-body td {
+    min-width: 0;
+    padding: 10px 8px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   /* Ensure code blocks fit mobile screens */

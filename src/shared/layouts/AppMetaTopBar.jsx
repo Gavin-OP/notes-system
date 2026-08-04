@@ -75,7 +75,9 @@ function AppMetaTopBar({
             icon={<GlobalOutlined />}
             aria-label={t("home.languageSelector", "Choose language")}
           >
-            {FULL_PRODUCT_ENABLED ? languageLabel : null}
+            {FULL_PRODUCT_ENABLED ? (
+              <span className="app-page-shell__language-label">{languageLabel}</span>
+            ) : null}
           </Button>
         </Dropdown>
         {FULL_PRODUCT_ENABLED ? (
@@ -85,7 +87,9 @@ function AppMetaTopBar({
             onClick={() => navigate(isAuthenticated ? "/user/profile" : "/user/login")}
             aria-label={isAuthenticated ? displayName || t("profile.title", "Profile") : t("auth.signIn", "Sign in")}
           >
-            {isAuthenticated ? displayName || t("profile.title", "Profile") : t("auth.signIn", "Sign in")}
+            <span className="app-page-shell__auth-label">
+              {isAuthenticated ? displayName || t("profile.title", "Profile") : t("auth.signIn", "Sign in")}
+            </span>
           </Button>
         ) : null}
       </Space>

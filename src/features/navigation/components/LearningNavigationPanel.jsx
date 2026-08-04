@@ -606,6 +606,7 @@ const LearningNavigationPanel = ({
   const renderSteps = (steps, subjectLabel, options = {}) => {
     const allowRemove = Boolean(options.allowRemove && typeof onRemovePathNode === "function");
     const allowEdit = Boolean(options.allowEdit);
+    const showRelation = options.showRelation !== false;
     const firstIncompleteIndex = steps.findIndex(
       (step) => !isStepCompleted(step, completedNoteUrls),
     );
@@ -652,7 +653,7 @@ const LearningNavigationPanel = ({
               <button
                 type="button"
                 className="learning-nav__node"
-                onClick={() => onSelect(step.key)}
+                onClick={() => selectPathStep(step.key)}
                 aria-current={isCurrent ? "page" : undefined}
               >
                 <span className="learning-nav__connector learning-nav__connector--left" aria-hidden="true" />
@@ -661,7 +662,7 @@ const LearningNavigationPanel = ({
                     <span className="learning-nav__module">{step.module}</span>
                   ) : null}
                   <span className="learning-nav__node-title">{step.title}</span>
-                  {step.pathRelation && step.pathRelation !== "linear" ? (
+                  {showRelation && step.pathRelation && step.pathRelation !== "linear" ? (
                     <span className={`learning-nav__relation learning-nav__relation--${step.pathRelation}`}>
                       {step.pathRelation}
                     </span>
@@ -1155,10 +1156,16 @@ const LearningNavigationPanel = ({
           <div className="learning-nav__workspace">
             <div className="learning-nav__path-column">
               {hasPersonalizedPath ? (
-                renderDecisionGraph(personalizedGraph, {
-                  allowRemove: pathEditMode,
-                  allowReorder: pathEditMode,
-                })
+                isMobile
+                  ? renderSteps(personalizedSteps, "秋招准备", {
+                      allowRemove: pathEditMode,
+                      allowEdit: false,
+                      showRelation: false,
+                    })
+                  : renderDecisionGraph(personalizedGraph, {
+                      allowRemove: pathEditMode,
+                      allowReorder: pathEditMode,
+                    })
               ) : (
                 <div className="learning-nav__empty-path">
                   <p className="learning-nav__empty-path-title">

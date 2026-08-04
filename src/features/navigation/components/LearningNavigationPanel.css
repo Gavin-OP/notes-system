@@ -1409,3 +1409,92 @@
 [data-theme="dark"] .learning-nav__empty-path--main-tree {
   background: rgba(255, 255, 255, 0.035);
 }
+
+@media (max-width: 768px) {
+  .learning-nav--mobile {
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+
+  .learning-nav--mobile .learning-nav__pilot-summary {
+    padding: 16px;
+  }
+
+  .learning-nav--mobile .learning-nav__pilot-summary-heading {
+    align-items: center;
+  }
+
+  .learning-nav--mobile .learning-nav__timeline {
+    margin-top: 14px;
+  }
+
+  .learning-nav--mobile .learning-nav__timeline li {
+    grid-template-columns: 8px minmax(72px, 84px) minmax(0, 1fr);
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  .learning-nav--mobile .learning-nav__workspace {
+    display: block;
+    flex: none;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .learning-nav--mobile .learning-nav__section--personalized,
+  .learning-nav--mobile .learning-nav__drop-zone {
+    flex: none;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .learning-nav--mobile .learning-nav__path-column {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+    min-height: auto;
+    padding: 12px 16px 8px;
+    overflow: visible;
+  }
+
+  .learning-nav--mobile .learning-nav__path {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .learning-nav--mobile .learning-nav__step {
+    width: 100%;
+    padding-bottom: 12px;
+  }
+
+  .learning-nav--mobile .learning-nav__node {
+    width: 100%;
+    min-height: 60px;
+    padding: 12px 16px;
+    text-align: left;
+  }
+
+  .learning-nav--mobile .learning-nav__node-body {
+    align-items: flex-start;
+  }
+
+  .learning-nav--mobile .learning-nav__node-title {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .learning-nav--mobile .learning-nav__connector,
+  .learning-nav--mobile .learning-nav__step--branch .learning-nav__node::before,
+  .learning-nav--mobile .learning-nav__step--branch .learning-nav__node::after,
+  .learning-nav--mobile .learning-nav__step--converge .learning-nav__node::before,
+  .learning-nav--mobile .learning-nav__step--converge .learning-nav__node::after {
+    display: none;
+  }
+
+  .learning-nav--mobile .learning-nav__path-legend-bar {
+    margin: 4px 16px 16px;
+    border: 1px solid var(--ns-color-border-secondary);
+    border-radius: var(--ns-radius-md);
+  }
+}

@@ -400,8 +400,8 @@
     padding-inline: 0;
   }
 
-  .app-page-shell__language-btn > span:last-child,
-  .app-page-shell__auth-btn > span:last-child {
+  .app-page-shell__language-label,
+  .app-page-shell__auth-label {
     display: none;
   }
 
