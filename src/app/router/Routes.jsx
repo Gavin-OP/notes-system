@@ -31,6 +31,9 @@ const PodcastEpisodePage = lazy(() => import("../../features/podcasts/pages/Podc
 const MicroCourseDemoPage = lazy(() => import("../../features/notes/pages/MicroCourseDemoPage"));
 const DataCleaningMicroCoursePage = lazy(() => import("../../features/notes/pages/DataCleaningMicroCoursePage"));
 const SearchResultsPage = lazy(() => import("../../features/search/pages/SearchResultsPage"));
+const JobSeekerPersonalityPage = lazy(() =>
+  import("../../features/personality/pages/JobSeekerPersonalityPage"),
+);
 const AdminAuthRoot = lazy(() =>
   import("../../features/admin/auth/AdminAuthProvider").then((module) => ({ default: module.AdminAuthRoot })),
 );
@@ -236,6 +239,9 @@ function RoutesWithTracking() {
         {FULL_PRODUCT_ENABLED ? <Route path="course-packages/official/:domainSlug" element={<CoursePackageDetailPage />} /> : null}
         {FULL_PRODUCT_ENABLED ? <Route path="course-packages/:courseId" element={<CoursePackageDetailPage />} /> : null}
         <Route path="disclaimer" element={<DisclaimerPage />} />
+
+        {/* Standalone campaign page for the fall-recruiting pilot. */}
+        <Route path="job-seeker-personality" element={<JobSeekerPersonalityPage />} />
 
         {/* Search */}
         {FULL_PRODUCT_ENABLED ? <Route path="search" element={<SearchResultsPage />} /> : null}
