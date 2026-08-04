@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
-import { ArrowLeftOutlined, ArrowRightOutlined, CopyOutlined, HomeOutlined, ReloadOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeftOutlined, ArrowRightOutlined, DownloadOutlined, HomeOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import QRCode from "qrcode";
 import "./JobSeekerPersonalityPage.css";
 
 const STORAGE_KEY = "notes-system:job-seeker-personality:v1";
@@ -66,8 +67,22 @@ function rankResults(answers) {
   return Object.entries(scores).sort((a, b) => b[1] - a[1]).map(([key]) => key);
 }
 
-function TestHeader({ onHome }) {
-  return <header className="personality-header"><button type="button" className="personality-brand" onClick={onHome} aria-label="返回 Notes System 学习空间"><span className="personality-brand-mark">NS</span><span>Notes System</span></button><span className="personality-header-note">秋招趣味测试</span></header>;
+function splitSummary(summary) {
+  const sentences = summary.match(/[^。！？]+(?:[。！？]+[”"』】）)]*|$)/g)?.map((item) => item.trim()).filter(Boolean) || [summary];
+  const paragraphs = [];
+  for (let index = 0; index < sentences.length; index += 2) {
+    paragraphs.push(sentences.slice(index, index + 2).join(""));
+  }
+  return paragraphs;
+}
+
+function getPublicTestUrl() {
+  const basePath = String(import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+  return `${window.location.origin}${basePath}/job-seeker-personality`;
+}
+
+function TestHeader() {
+  return <header className="personality-header"><span className="personality-header-note">秋招趣味测试</span></header>;
 }
 
 export default function JobSeekerPersonalityPage() {
@@ -79,14 +94,31 @@ export default function JobSeekerPersonalityPage() {
   const [questionIndex, setQuestionIndex] = useState(Math.min(answers.length, QUESTIONS.length - 1));
   const [resultKey, setResultKey] = useState(sharedResult);
   const [shareStatus, setShareStatus] = useState("");
+  const [qrDataUrl, setQrDataUrl] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const posterRef = useRef(null);
   const rankedResults = useMemo(() => rankResults(answers), [answers]);
-  const result = TYPES[resultKey] || TYPES.navigator;
+  const result = TYPES[resultKey] || TYPES.explorer;
   const currentAnswer = answers[questionIndex];
   const currentQuestion = QUESTIONS[questionIndex];
+  const resultParagraphs = useMemo(() => splitSummary(result.summary), [result.summary]);
+  const publicTestUrl = typeof window === "undefined" ? "" : getPublicTestUrl();
+
+  useEffect(() => {
+    if (step !== "result" || !publicTestUrl) return;
+    QRCode.toDataURL(publicTestUrl, { width: 240, margin: 1, color: { dark: "#17202a", light: "#ffffff" } })
+      .then(setQrDataUrl)
+      .catch(() => setQrDataUrl(""));
+  }, [publicTestUrl, step]);
 
   const startTest = () => {
     setAnswers([]); setQuestionIndex(0); setResultKey(""); setSearchParams({}); setStep("quiz");
     window.localStorage.removeItem(STORAGE_KEY);
+  };
+  const returnToTestHome = () => {
+    setSearchParams({});
+    setShareStatus("");
+    setStep("intro");
   };
   const chooseAnswer = (optionIndex) => {
     const nextAnswers = answers.slice(0, questionIndex);
@@ -100,16 +132,32 @@ export default function JobSeekerPersonalityPage() {
     const nextResult = rankResults(answers)[0];
     setResultKey(nextResult); setSearchParams({ result: nextResult }); setStep("result");
   };
-  const shareResult = async () => {
-    const text = `我的求职者人格是「${result.name}」——${result.eyebrow}。来测测你是哪一种：`;
+  const saveResultPoster = async () => {
+    if (!posterRef.current || !qrDataUrl || isSaving) return;
+    setIsSaving(true);
+    setShareStatus("正在生成长图…");
     try {
-      if (navigator.share) { await navigator.share({ title: "我的求职者人格", text, url: window.location.href }); setShareStatus("已打开分享菜单"); }
-      else { await navigator.clipboard.writeText(`${text} ${window.location.href}`); setShareStatus("结果链接已复制"); }
-    } catch (error) { if (error?.name !== "AbortError") setShareStatus("暂时无法分享，请复制浏览器地址"); }
+      const { default: html2canvas } = await import("html2canvas");
+      const canvas = await html2canvas(posterRef.current, { backgroundColor: "#f4f6fb", scale: 2, useCORS: true, logging: false });
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+      if (!blob) throw new Error("Could not create image");
+      const fileName = `我的求职者人格-${result.name}.png`;
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = fileName;
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+      setShareStatus("结果长图已保存，可在相册或下载目录查看");
+    } catch (error) {
+      if (error?.name !== "AbortError") setShareStatus("长图生成失败，请稍后再试");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return <div className="personality-page">
-    <TestHeader onHome={() => navigate("/")} />
+    <TestHeader />
     {step === "intro" && <main className="personality-intro">
       <section className="personality-hero" aria-labelledby="personality-title"><div className="personality-hero-copy">
         <span className="personality-kicker">10 道互联网生存题 · 大约 3 分钟</span>
@@ -117,8 +165,7 @@ export default function JobSeekerPersonalityPage() {
         <p>面对机会、简历、Networking 和面试，每个人都有自己的自然节奏。看看你更像哪一种秋招玩家，也顺便发现最适合自己的下一步。</p>
         <div className="personality-hero-actions"><button type="button" className="personality-primary-button" onClick={startTest}>开始测试 <ArrowRightOutlined /></button>{answers.length > 0 && answers.length < QUESTIONS.length && <button type="button" className="personality-text-button" onClick={() => { setQuestionIndex(Math.min(answers.length, QUESTIONS.length - 1)); setStep("quiz"); }}>继续上次测试</button>}</div>
         <small>这是一项趣味测试，不评判能力，也不决定职业。答案只保存在你的浏览器中。</small>
-      </div><div className="personality-orbit" aria-hidden="true"><div className="personality-orbit-center">你</div>{Object.values(TYPES).map((type, index) => <span key={type.code} className={`personality-orbit-chip personality-orbit-chip-${index + 1}`}>{type.name}</span>)}</div></section>
-      <section className="personality-preview" aria-label="测试会告诉你什么"><div><strong>01</strong><span>你的自然优势</span></div><div><strong>02</strong><span>容易卡住的时刻</span></div><div><strong>03</strong><span>适合你的秋招起点</span></div></section>
+      </div><div className="personality-hero-art" aria-hidden="true"><span /><span /><span /><div>?</div></div></section>
     </main>}
     {step === "quiz" && <main className="personality-quiz">
       <div className="personality-progress-meta"><span>求职者人格测试</span><strong>{questionIndex + 1} / {QUESTIONS.length}</strong></div>
@@ -129,9 +176,16 @@ export default function JobSeekerPersonalityPage() {
       </section>
     </main>}
     {step === "result" && <main className={`personality-result personality-result-${result.color}`}>
-      <section className="personality-result-hero"><span className="personality-kicker">你的求职者人格是</span><div className="personality-result-title-row"><div className="personality-result-code">{result.code}</div><div><h1>{result.name}</h1><p>{result.eyebrow}</p></div></div><p className="personality-result-summary">{result.summary}</p>{answers.length === QUESTIONS.length && rankedResults[0] === resultKey && rankedResults[1] && <span className="personality-secondary-type">你也带有一点「{TYPES[rankedResults[1]].name}」的特质</span>}</section>
+      <section className="personality-result-hero"><span className="personality-kicker">你的求职者人格是</span><div className="personality-result-title-row"><div className="personality-result-code">{result.code}</div><div><h1>{result.name}</h1><p>{result.eyebrow}</p></div></div><div className="personality-result-summary">{resultParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>{answers.length === QUESTIONS.length && rankedResults[0] === resultKey && rankedResults[1] && <span className="personality-secondary-type">你也带有一点「{TYPES[rankedResults[1]].name}」的特质</span>}</section>
       <section className="personality-result-grid"><article className="personality-result-card personality-buff-card"><span className="personality-card-label">你的秋招 Buff</span><strong>{result.buff}</strong><span className="personality-card-label">你的隐藏技能</span><p>{result.skill}</p></article><article className="personality-result-card"><span className="personality-card-label">你的秋招提醒</span><p>{result.watch}</p></article><article className="personality-result-card personality-path-card"><span className="personality-card-label">适合你的 Path 起点</span><p>{result.path}</p><button type="button" onClick={() => navigate("/note/fall-recruiting/autumn-recruitment-roadmap.md")}>去看看我的秋招 Path <ArrowRightOutlined /></button></article></section>
-      <section className="personality-result-actions" aria-label="分享或重新测试"><button type="button" className="personality-primary-button" onClick={shareResult}>{navigator.share ? <ShareAltOutlined /> : <CopyOutlined />} 分享结果</button><button type="button" className="personality-secondary-button" onClick={startTest}><ReloadOutlined /> 再测一次</button><button type="button" className="personality-icon-button" onClick={() => navigate("/")} aria-label="返回 Learning Workspace"><HomeOutlined /></button><span className="personality-share-status" role="status" aria-live="polite">{shareStatus}</span></section>
+      <section className="personality-result-actions" aria-label="保存结果或重新测试"><button type="button" className="personality-primary-button" onClick={saveResultPoster} disabled={isSaving || !qrDataUrl}><DownloadOutlined /> {isSaving ? "正在生成…" : "保存结果长图"}</button><button type="button" className="personality-secondary-button" onClick={startTest}><ReloadOutlined /> 再测一次</button><button type="button" className="personality-icon-button" onClick={returnToTestHome} aria-label="返回测试首页"><HomeOutlined /></button><span className="personality-share-status" role="status" aria-live="polite">{shareStatus}</span></section>
+      <div className={`personality-share-poster personality-share-poster-${result.color}`} ref={posterRef} aria-hidden="true">
+        <div className="personality-poster-top"><span>求职者人格测试</span><small>MY JOB SEEKER PERSONA</small></div>
+        <div className="personality-poster-heading"><div className="personality-poster-code">{result.code}</div><div><span>我的求职者人格是</span><h2>{result.name}</h2><p>{result.eyebrow}</p></div></div>
+        <div className="personality-poster-summary">{resultParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+        <div className="personality-poster-cards"><div><span>我的秋招 Buff</span><strong>{result.buff}</strong></div><div><span>我的隐藏技能</span><strong>{result.skill}</strong></div><div><span>我的秋招提醒</span><strong>{result.watch}</strong></div></div>
+        <div className="personality-poster-footer"><div><strong>你是哪一种求职者人格？</strong><span>{publicTestUrl}</span></div>{qrDataUrl && <img src={qrDataUrl} alt="求职者人格测试二维码" />}</div>
+      </div>
     </main>}
   </div>;
 }
