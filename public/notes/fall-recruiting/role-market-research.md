@@ -15,8 +15,10 @@ tags: [秋招, 岗位研究, 市场研究]
 
 偶尔出现一次的工具，可以先记下来观察；同一能力反复出现时，再看看自己是否已经有相关证据。这样补技能会更有方向，也不容易被长长的要求列表吓到。
 
+同一个岗位名在不同公司可能对应完全不同的日常，不同名称也可能在做相近的事。除了能力匹配，也可以看看学习空间、发展路径、工作地点和准备成本。这些现实信息不是在限制选择，而是在帮你判断机会是否真的适合当下的自己。
+
 ```note-interactive
-{"type":"evidence-matrix","id":"fall-recruiting-jd-evidence","items":[{"id":"responsibility","label":"核心工作内容","hint":"是否做过相似问题或任务"},{"id":"technical","label":"硬技能与工具","hint":"能否拿出作品、项目或测试结果"},{"id":"communication","label":"沟通与协作","hint":"是否有具体对象、难点和结果"},{"id":"industry","label":"行业与业务理解","hint":"能否解释公司如何创造价值"},{"id":"language","label":"语言要求","hint":"是否能完成真实工作与面试沟通"}]}
+{"type":"evidence-matrix","id":"fall-recruiting-jd-evidence","items":[{"id":"responsibility","label":"核心工作内容","hint":"是否做过相似问题或任务"},{"id":"technical","label":"硬技能与工具","hint":"能否拿出作品、项目或测试结果"},{"id":"soft-skills","label":"软技能","hint":"Leadership、communication、detail-oriented 等是否有具体行为证据"},{"id":"industry","label":"行业与业务理解","hint":"能否解释公司如何创造价值"},{"id":"language","label":"语言要求","hint":"是否能完成真实工作与面试沟通"}]}
 ```
 
 ## 研究公司语境

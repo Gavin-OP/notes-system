@@ -23,6 +23,10 @@ tags: [秋招, 简历, Profile, 求职材料]
 
 材料并不是越齐全越好。跟着岗位要求和自己的内容选择，就已经足够完整。
 
+```note-interactive
+{"type":"profile-kit","id":"fall-recruiting-profile-kit"}
+```
+
 ## 保持一致但不完全重复
 
 所有材料中的公司、时间、职责和结果需要互相对得上，表达重点则可以不同。简历短而直接；LinkedIn 提供方向和上下文；Cover Letter 解释选择；项目集展示过程；个人主页把分散内容组织成稳定入口。

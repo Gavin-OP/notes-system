@@ -141,14 +141,15 @@ function EvidenceMatrixLab({ id, items = [] }) {
     [items],
   );
   const [decisions, setDecisions] = useSavedInteractionState(id, initialState);
+  const currentDecisions = { ...initialState, ...decisions };
 
   const counts = EVIDENCE_STATES.map((state) => ({
     ...state,
-    count: items.filter((item) => decisions[item.id] === state.id).length,
+    count: items.filter((item) => currentDecisions[item.id] === state.id).length,
   }));
 
   const setDecision = (itemId, stateId) => {
-    setDecisions({ ...decisions, [itemId]: stateId });
+    setDecisions({ ...currentDecisions, [itemId]: stateId });
   };
 
   return (
@@ -167,8 +168,8 @@ function EvidenceMatrixLab({ id, items = [] }) {
                 <button
                   key={state.id}
                   type="button"
-                  className={decisions[item.id] === state.id ? "is-selected" : ""}
-                  aria-pressed={decisions[item.id] === state.id}
+                  className={currentDecisions[item.id] === state.id ? "is-selected" : ""}
+                  aria-pressed={currentDecisions[item.id] === state.id}
                   onClick={() => setDecision(item.id, state.id)}
                 >
                   {state.label}
@@ -181,6 +182,92 @@ function EvidenceMatrixLab({ id, items = [] }) {
       <div className="note-interaction__summary" aria-live="polite">
         {counts.map((state) => (
           <span key={state.id}><strong>{state.count}</strong>{state.label}</span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+const PROFILE_GOALS = [
+  {
+    id: "public-profile",
+    label: "让别人快速了解我的职业方向",
+    materials: ["linkedin"],
+  },
+  {
+    id: "motivation",
+    label: "解释我为什么选择这家公司或岗位",
+    materials: ["cover-letter"],
+  },
+  {
+    id: "project-depth",
+    label: "展示简历放不下的作品和过程",
+    materials: ["portfolio"],
+  },
+  {
+    id: "single-entry",
+    label: "把经历、项目和外部链接放在同一个入口",
+    materials: ["personal-site"],
+  },
+];
+
+const PROFILE_MATERIALS = [
+  { id: "resume", label: "简历", note: "快速呈现与岗位最相关的证据" },
+  { id: "linkedin", label: "LinkedIn", note: "建立公开职业身份，也方便 Networking" },
+  { id: "cover-letter", label: "Cover Letter", note: "展开动机，以及经历与岗位之间的连接" },
+  { id: "portfolio", label: "项目集", note: "深入展示作品、方法、过程和个人贡献" },
+  { id: "personal-site", label: "个人主页", note: "用一个稳定入口串起介绍、经历与链接" },
+];
+
+function ProfileKitLab({ id }) {
+  const [selectedGoals, setSelectedGoals] = useSavedInteractionState(id, []);
+  const selected = new Set(Array.isArray(selectedGoals) ? selectedGoals : []);
+  const recommendedIds = new Set(["resume"]);
+
+  PROFILE_GOALS.forEach((goal) => {
+    if (!selected.has(goal.id)) return;
+    goal.materials.forEach((materialId) => recommendedIds.add(materialId));
+  });
+
+  const toggle = (goalId) => {
+    const next = selected.has(goalId)
+      ? selectedGoals.filter((currentId) => currentId !== goalId)
+      : [...selectedGoals, goalId];
+    setSelectedGoals(next);
+  };
+
+  return (
+    <section className="note-interaction" aria-labelledby={`${id}-title`}>
+      <header className="note-interaction__header">
+        <span>材料组合预览</span>
+        <h3 id={`${id}-title`}>你还希望招聘方看见什么？</h3>
+        <p>点选符合你的情况，看看哪些材料更适合承接这些内容。选择只保存在当前设备，不会修改 Path。</p>
+      </header>
+      <div className="note-profile-goals" role="group" aria-label="选择希望呈现的内容">
+        {PROFILE_GOALS.map((goal) => {
+          const isSelected = selected.has(goal.id);
+          return (
+            <button
+              key={goal.id}
+              type="button"
+              className={isSelected ? "is-selected" : ""}
+              aria-pressed={isSelected}
+              onClick={() => toggle(goal.id)}
+            >
+              <span className="note-profile-goals__check" aria-hidden="true">
+                {isSelected ? <CheckOutlined /> : null}
+              </span>
+              {goal.label}
+            </button>
+          );
+        })}
+      </div>
+      <div className="note-profile-kit" aria-live="polite">
+        {PROFILE_MATERIALS.filter((material) => recommendedIds.has(material.id)).map((material) => (
+          <article key={material.id}>
+            <CheckOutlined aria-hidden="true" />
+            <div><strong>{material.label}</strong><span>{material.note}</span></div>
+          </article>
         ))}
       </div>
     </section>
@@ -200,5 +287,6 @@ export default function NoteInteractiveBlock({ configText }) {
   if (config.type === "certificate-comparison") return <CertificateComparisonLab id={config.id} />;
   if (config.type === "resume-focus") return <ResumeFocusLab id={config.id} roles={config.roles} />;
   if (config.type === "evidence-matrix") return <EvidenceMatrixLab id={config.id} items={config.items} />;
+  if (config.type === "profile-kit") return <ProfileKitLab id={config.id} />;
   return null;
 }

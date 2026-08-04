@@ -113,7 +113,6 @@ function buildPilotNodes(profile = {}) {
   const certificateBranches = new Set(profile.certificate_branches || []);
   const nodes = [
     pathNode("getting-started", "刚开始准备求职", "autumn-recruitment-roadmap", 1),
-    pathNode("direction", "明确方向与现实限制", "career-direction", 2),
     pathNode("market", "理解岗位与市场", "role-market-research", 3),
     pathNode("profile-preparation", "准备简历与 Profile", "profile-preparation", 4),
     pathNode("resume", "简历", "resume-story", 5, "", { path_relation: "branch" }),
@@ -188,8 +187,7 @@ function buildPilotEdges(nodes) {
     });
   };
 
-  connect("getting-started", "direction");
-  connect("direction", "market");
+  connect("getting-started", "market");
   connect("market", "profile-preparation");
 
   const profileBranchIds = ["resume", "linkedin", "cover-letter", "portfolio", "personal-site"]

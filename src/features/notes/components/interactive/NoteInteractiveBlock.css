@@ -276,6 +276,99 @@
   font-size: 17px;
 }
 
+.note-profile-goals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.note-profile-goals button {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text-secondary);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.note-profile-goals button:hover,
+.note-profile-goals button:focus-visible {
+  border-color: var(--ns-color-primary);
+}
+
+.note-profile-goals button:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
+}
+
+.note-profile-goals button.is-selected {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg, #f4f8ff);
+  color: var(--ns-color-text);
+}
+
+.note-profile-goals__check {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  place-items: center;
+  border: 1px solid var(--ns-color-border);
+  border-radius: 50%;
+  color: var(--ns-color-text-on-primary, #fff);
+}
+
+.note-profile-goals button.is-selected .note-profile-goals__check {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary);
+}
+
+.note-profile-kit {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.note-profile-kit article {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-fill-quaternary, #f7f7f7);
+}
+
+.note-profile-kit article > svg {
+  margin-top: 3px;
+  color: var(--ns-color-primary);
+}
+
+.note-profile-kit article > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.note-profile-kit strong {
+  color: var(--ns-color-text);
+  font-size: 13px;
+}
+
+.note-profile-kit span {
+  color: var(--ns-color-text-secondary);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
 @media (max-width: 760px) {
   .note-interaction {
     padding: 18px;
@@ -283,7 +376,8 @@
 
   .note-certificate-grid,
   .note-segmented,
-  .note-resume-preview ul {
+  .note-resume-preview ul,
+  .note-profile-goals {
     grid-template-columns: 1fr;
   }
 
@@ -307,6 +401,10 @@
   .note-certificate button,
   .note-segmented button,
   .note-evidence-row button {
+    transition: none;
+  }
+
+  .note-profile-goals button {
     transition: none;
   }
 }
