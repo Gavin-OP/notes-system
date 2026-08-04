@@ -165,7 +165,7 @@ export default function JobSeekerPersonalityPage() {
         <p>面对机会、简历、Networking 和面试，每个人都有自己的自然节奏。看看你更像哪一种秋招玩家，也顺便发现最适合自己的下一步。</p>
         <div className="personality-hero-actions"><button type="button" className="personality-primary-button" onClick={startTest}>开始测试 <ArrowRightOutlined /></button>{answers.length > 0 && answers.length < QUESTIONS.length && <button type="button" className="personality-text-button" onClick={() => { setQuestionIndex(Math.min(answers.length, QUESTIONS.length - 1)); setStep("quiz"); }}>继续上次测试</button>}</div>
         <small>这是一项趣味测试，不评判能力，也不决定职业。答案只保存在你的浏览器中。</small>
-      </div><div className="personality-hero-art" aria-hidden="true"><span /><span /><span /><div>?</div></div></section>
+      </div><figure className="personality-hero-art"><img src={`${import.meta.env.BASE_URL}images/fall-recruiting/offer-building.jpg`} alt="被求职同学称为 Offer 大楼的城市建筑" width="1022" height="1706" /></figure></section>
     </main>}
     {step === "quiz" && <main className="personality-quiz">
       <div className="personality-progress-meta"><span>求职者人格测试</span><strong>{questionIndex + 1} / {QUESTIONS.length}</strong></div>
