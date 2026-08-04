@@ -6,50 +6,46 @@ import "./JobSeekerPersonalityPage.css";
 const STORAGE_KEY = "notes-system:job-seeker-personality:v1";
 
 const TYPES = {
-  navigator: { code: "NAV", name: "战略航海家", eyebrow: "方向感是你的超能力", color: "blue", summary: "你习惯先看清地图，再决定把时间放在哪里。比起追着所有机会跑，你更在意目标是否值得认真准备。", strengths: ["能把复杂信息整理成清晰路线", "做选择时有自己的判断标准", "愿意为重要机会投入深度准备"], watch: "地图画得太久，也可能错过从真实反馈中修正方向的机会。允许第一版计划不完美，会让你走得更快。", path: "从「秋招定位与行动计划」开始，再进入「理解岗位与市场」。" },
-  radar: { code: "RAD", name: "机会雷达", eyebrow: "你总能发现下一扇门", color: "gold", summary: "你对新机会很敏锐，也愿意保持开放。别人还在犹豫要不要申请时，你可能已经发现了另一条有趣的路线。", strengths: ["信息搜集速度快、渠道多", "不容易被单一路径限制", "面对变化时很有适应力"], watch: "机会太多时，精力也容易被切得很碎。给申请设一条轻量筛选线，会让你的行动更从容。", path: "优先看看「寻找与筛选合适岗位」和「投递与流程管理」。" },
-  curator: { code: "CUR", name: "故事策展人", eyebrow: "你擅长让经历被看见", color: "lavender", summary: "你会留意表达、细节与整体呈现，也懂得一段经历的价值不只在于做了什么，更在于怎样把它讲清楚。", strengths: ["善于提炼经历中的亮点", "对内容结构和呈现有感觉", "能让个人特点自然地被看见"], watch: "一份材料永远还能继续润色。把“足够清楚”当作阶段性完成，比等待完美更有帮助。", path: "从「准备简历与 Profile」出发，按需加入 Cover Letter、项目集或个人主页。" },
-  connector: { code: "CON", name: "人脉连接者", eyebrow: "你从真实交流中获得答案", color: "teal", summary: "你相信人与人的交流能补上搜索框找不到的信息。你对团队氛围、真实体验和彼此是否合拍格外敏感。", strengths: ["容易从交流中发现隐性信息", "能建立自然、真诚的连接", "擅长理解不同人的视角"], watch: "Networking 不需要每次都带来结果。把好奇心放在“认识一个人”之前，交流会更轻松。", path: "把「Coffee Chat / Networking」加入 Path，并结合「理解岗位与市场」。" },
-  experimenter: { code: "EXP", name: "实战迭代家", eyebrow: "你在行动里越走越清楚", color: "coral", summary: "你不太相信纸上谈兵，更习惯先试一次，再根据反馈调整。一次投递、一次测试或一场面试，都是你的新版本。", strengths: ["启动快，不容易困在准备阶段", "能把反馈迅速变成下一步", "临场适应力和恢复力较强"], watch: "行动很宝贵，偶尔停下来整理规律，会让下一轮尝试不只是“再来一次”。", path: "优先进入「在线测试」「面试准备」与「面试复盘」。" },
-  planner: { code: "PLN", name: "稳健规划师", eyebrow: "你让混乱重新变得可控", color: "sage", summary: "面对秋招的多线程任务，你会本能地建立秩序。清单、时间线和进度状态，能让你安心地把事情一件件推进。", strengths: ["擅长管理截止时间与流程", "准备细致，遗漏较少", "在长期过程里保持稳定节奏"], watch: "计划是为了减轻负担，不是另一张需要满分完成的试卷。给变化留一点空间，会更舒服。", path: "从「秋招定位与行动计划」和「投递与流程管理」开始。" },
+  explorer: { code: "WILD", name: "人生旷野探险家", eyebrow: "Offer 是入口，不是终点", color: "sky", summary: "你的秋招关键词是：可能性。比起找到一条所有人都认可的“正确路线”，你更在意自己究竟想去哪里。大厂、热门岗位、光鲜 Title 对你当然有吸引力，但它们很难成为你唯一的坐标。你会研究新的行业，会对意料之外的岗位产生兴趣，也允许自己的职业规划随着经历不断变化。", buff: "开放世界玩家", skill: "在别人没注意的地方发现新入口", watch: "探索可以没有标准路线，但记得给喜欢的方向多走几步。", path: "从「秋招定位与行动计划」出发，再去「理解岗位与市场」打开地图。" },
+  radar: { code: "RADAR", name: "人形岗位雷达", eyebrow: "JD 一出现，大脑自动开始匹配", color: "blue", summary: "别人看到 JD：投就完事！你看到 JD：这个 team 在组织里负责什么？这个岗位真正解决什么问题？我的经历应该突出哪部分？未来 progression 怎么样？十分钟后，你已经快把公司组织架构研究明白了。你不太喜欢为了秋招而秋招，比起申请数量，更在意这个岗位究竟能把自己带到哪里。", buff: "JD 信号捕捉器", skill: "从三行招聘描述里研究出一整条职业路径", watch: "有些机会需要走进去以后才知道合不合适，允许自己偶尔先投再研究。", path: "优先看看「理解岗位与市场」和「寻找与筛选合适岗位」。" },
+  engine: { code: "GO!", name: "秋招永动机", eyebrow: "焦虑解决不了问题，但海投五家可以", color: "orange", summary: "你的秋招哲学非常朴素：有机会，就试试。别人还在纠结“我只有 70% match 要不要投”，你的申请已经进入公司系统了。焦虑的时候投递，迷茫的时候投递，看到神仙打架还是投递。你知道就业市场里存在大量随机性，所以更愿意给自己增加一次被看见的机会。你的秋招 Excel 可能已经长得像企业数据库。", buff: "行动力 +100", skill: "被拒之后光速寻找下一个入口", watch: "数量能够增加概率，精力也值得留给真正想去的机会。", path: "进入「寻找与筛选合适岗位」和「投递与流程管理」，让行动更有章法。" },
+  alchemist: { code: "V17", name: "求职炼金术士", eyebrow: "一份经历可以炼出八个版本", color: "purple", summary: "你深谙秋招世界的一条生存法则：同一段经历，可以有很多种讲法。Data Analyst 要数据分析，Product 要需求洞察，Consulting 要 problem-solving。然后你看着三个月前的自己：“当时怎么写得这么朴素？”你擅长理解招聘规则，也愿意研究怎样让自己的经历被别人更快看懂。面对竞争，你的第一反应通常是继续优化。", buff: "经历炼金术", skill: "同一段实习讲出八种 competency", watch: "让别人看见你的价值就够了，你无需把自己包装成一个不存在的完美候选人。", path: "从「准备简历与 Profile」开始，按需加入 Cover Letter、项目集或个人主页。" },
+  researcher: { code: "R&D", name: "秋招学术研究员", eyebrow: "面试结束五分钟，复盘文档已经建好了", color: "teal", summary: "你的秋招可能已经形成完整闭环：申请 → 测评 → 面试 → 记录 → 复盘 → Version 2.0。别人面试结束开始刷小红书，你已经打开 Notion：Question 1、What went well、What could be improved、下次怎么回答。你相信很多事情可以通过练习变得更好，所以即使一场面试没有结果，它在你这里通常也不会完全浪费。", buff: "EXP 获取速度 ×2", skill: "把一次社死变成下一场面试素材", watch: "有些拒信没有值得复盘的深层原因。招聘本身也包含时机、HC、竞争结构和运气。", path: "优先进入「在线测试」「面试准备」和「面试复盘」。" },
+  protector: { code: "OFF", name: "精神状态保护协会会长", eyebrow: "Offer 可以晚点来，觉必须今天睡", color: "rose", summary: "秋招群：“XX 开奖了！”“有人收到 OC 吗？”“今年是不是缩 HC？”“我同学已经三个 Offer 了。”你：消息免打扰。你已经逐渐意识到，秋招最危险的 KPI 可能不是投递数量，而是每天打开小红书之后的精神状态。你愿意努力，也允许自己休息。今天没有收到 Offer，不妨碍今天的晚饭依然好吃。", buff: "精神防御 +100", skill: "在“XX 届秋招互助群 99+”中保持生命体征", watch: "松弛感和行动力可以同时存在。该争取的机会，依然值得认真争取。", path: "从自己的节奏出发查看「秋招定位与行动计划」，需要时再调整 Path。" },
+  gardener: { code: "GROW", name: "自己的人生园丁", eyebrow: "不赶别人的花期", color: "green", summary: "从高考到 GPA，从实习数量到大厂 Logo，再从 Offer 数量到起薪，好像人生永远存在下一张排行榜。你开始对这套排行榜产生了一点免疫力。你依然希望拥有一份好的工作，也希望获得成长、收入和成就感，只是越来越在意另一个问题：“这样的生活，是我自己想要的吗？”花期不同，人生没有统一的校招截止日期。", buff: "长期主义", skill: "在集体焦虑里重新找到自己的坐标", watch: "按自己的节奏走，也记得主动为想要的生活创造机会。", path: "先看「秋招定位与行动计划」，慢慢确认什么才是你想要的生活。" },
+  koi: { code: "LUCK", name: "就业市场幸存锦鲤", eyebrow: "科学求职，玄学上岸", color: "gold", summary: "你的秋招方法论十分丰富：投递时间玄学、Offer 大楼、许愿帖、开奖群、求职搭子、转发锦鲤。你当然知道这些东西未必真的影响 HR，但是万一呢。更重要的是，你拥有一种在高压环境里非常珍贵的能力：把荒诞的事情变成段子。测评做麻了，可以笑；面试答崩了，可以笑；看到“3 年经验，应届生岗位”，更值得笑。", buff: "幸运值？？？", skill: "把就业寒冬过成大型互联网真人秀", watch: "可以许愿，也记得点击 Submit Application。", path: "看看「寻找与筛选合适岗位」，把好运落到一次真实的 Submit 上。" },
 };
 
 const QUESTIONS = [
-  ["校招季快开始了，你最自然的第一步是？", [
-    ["先画一张全局地图：岗位、公司和时间线", "navigator", "planner"], ["先打开招聘网站，看看最近都有什么机会", "radar", "experimenter"], ["先整理自己的经历，看看能讲出什么故事", "curator", "navigator"], ["先问问学长学姐，他们当时是怎么开始的", "connector", "radar"],
+  ["看到“名校优先、3 段大厂、5 段实习”，你的脑内弹幕是？", "凭第一反应选，秋招已经够费脑子了。", [
+    ["让我看看这个岗位到底有多少含金量", "radar", "researcher"], ["符合多少算多少，先投了再说", "engine", "explorer"], ["研究一下我的经历还能怎么膨胀", "alchemist", "radar"], ["好的，看来招聘市场也有自己的许愿池", "koi", "protector"],
   ]],
-  ["同时出现几个看起来不错的岗位，你通常会？", [
-    ["研究发展路径，判断哪个更接近长期方向", "navigator", "planner"], ["先都收藏起来，继续观察新的可能", "radar", "connector"], ["挑几个先申请，反馈会帮我做判断", "experimenter", "radar"], ["比较自己能为每个岗位讲出怎样的匹配故事", "curator", "navigator"],
+  ["秋招群里突然有人说“已开奖”，你的第一反应是？", "这里不是公司测评，这里没有标准答案。", [
+    ["打开招聘软件：立刻海投五家减少焦虑", "engine", "radar"], ["打开自己的简历：是不是还能再抢救一下", "alchemist", "researcher"], ["打开小红书：开始在评论区狂发 Offer 大楼", "koi", "explorer"], ["关掉群聊，躺下睡觉", "protector", "gardener"],
   ]],
-  ["一份很想投的 JD 让你有点心动，你会先注意什么？", [
-    ["岗位在团队和业务里到底解决什么问题", "navigator", "connector"], ["职责关键词和我现有经历如何对应", "curator", "planner"], ["截止时间和申请流程，先别错过窗口", "planner", "experimenter"], ["相似岗位、关联团队和其他潜在入口", "radar", "navigator"],
+  ["当你发现“神仙打架”的岗位，JD 下面已经显示 1000+ 人申请……", "在做的 GPA 全部拉满！", [
+    ["研究一下岗位，我和它合不合适才是最重要的", "radar", "gardener"], ["先投。1000+ 里面为什么不能有我", "engine", "koi"], ["默默关闭，开始刷新最新开放的岗位", "explorer", "protector"], ["修改简历，争取让自己显得更突出", "alchemist", "researcher"],
   ]],
-  ["修改简历时，哪个瞬间最让你有成就感？", [
-    ["终于用一句话说清了一个复杂项目", "curator", "navigator"], ["针对目标岗位做出了一版更匹配的版本", "navigator", "curator"], ["请别人看过后，立刻改掉了一个盲点", "connector", "experimenter"], ["文件名、版本和申请记录都整理得清清楚楚", "planner", "radar"],
+  ["改简历改到第 17 版时，什么最能给你一点成就感？", "放心，没有人会检查你的答案一致性。", [
+    ["终于能用一句人话讲明白自己做过什么", "alchemist", "researcher"], ["这版与 dream position 简直是完美匹配", "radar", "alchemist"], ["朋友看完崇拜地说：“你原来做过这么多东西？”", "alchemist", "koi"], ["简历只是一页纸，我的人生塞不完", "explorer", "gardener"],
   ]],
-  ["遇到一个完全不了解的公司，你更想怎样认识它？", [
-    ["从官网、年报和行业资料搭出完整脉络", "navigator", "planner"], ["找在职员工聊聊真实工作体验", "connector", "curator"], ["先申请再说，在流程中继续了解", "experimenter", "radar"], ["看看它还有哪些团队和不太显眼的岗位", "radar", "navigator"],
+  ["HR 问：“你的职业规划是什么？”时，你的内心真实版本更接近？", "此处无需展现 leadership，请诚实作答。", [
+    ["我有方向，也愿意一路修正", "radar", "gardener"], ["世界这么大，我想多看看有哪些可能", "explorer", "koi"], ["先把眼前的事情做好，答案会慢慢出现", "researcher", "engine"], ["希望未来的我有工作，有下班，也有双休", "protector", "gardener"],
   ]],
-  ["收到在线测试邀请时，你更可能？", [
-    ["先做一次样题，看看真实手感", "experimenter", "radar"], ["查清题型，再安排针对性的准备节奏", "planner", "navigator"], ["找做过的人问问流程和注意事项", "connector", "planner"], ["复盘自己擅长怎样表达和解决问题", "curator", "experimenter"],
+  ["收到测评链接，发现又是“限时 60 分钟，建议提前准备”，你会？", "选真实的你，不是公司价值观里的你。", [
+    ["打开小红书，购买题库", "researcher", "koi"], ["直接打开，反正已经做过 20 套测评了", "researcher", "engine"], ["管它那么多，立刻开做", "engine", "koi"], ["认真准备，争取完美符合公司价值观", "alchemist", "radar"],
   ]],
-  ["准备面试故事时，你最在意的是？", [
-    ["故事能不能证明岗位真正需要的能力", "navigator", "curator"], ["细节是否生动，让对方容易记住我", "curator", "connector"], ["多练几轮，在实际表达中调整", "experimenter", "curator"], ["不同题型有没有覆盖，素材是否好调用", "planner", "navigator"],
+  ["面试官问：“你最大的失败是什么？”时，你的脑内第一反应？", "这里不用 STAR，选一个就行。", [
+    ["挑一个真正让我学到东西的经历", "researcher", "gardener"], ["寻找一个最适合这个岗位的故事", "radar", "alchemist"], ["想想怎么讲得真实、有逻辑、有成长", "alchemist", "researcher"], ["还没找到工作就是我的失败", "protector", "koi"],
   ]],
-  ["一场面试结束后，你最想做什么？", [
-    ["趁记忆新鲜，写下问题和回答卡点", "planner", "experimenter"], ["想想这家公司和我是否真的合拍", "navigator", "connector"], ["给帮助过我的人更新进展并表达感谢", "connector", "curator"], ["把发现的问题改好，准备下一场", "experimenter", "radar"],
+  ["一场面试结束，你走出会议室后的第一件事更可能是？", "面试已经结束，请停止保持职业微笑。", [
+    ["趁记忆新鲜，记录问题和自己的回答", "researcher", "radar"], ["复盘两分钟，然后去吃点好吃的", "protector", "researcher"], ["给朋友发：“活着出来了”", "koi", "protector"], ["发 Thank you letter，这也是面试的一环", "alchemist", "radar"],
   ]],
-  ["如果申请暂时没有回音，哪种方式最能帮你找回节奏？", [
-    ["重新检查方向和筛选标准", "navigator", "planner"], ["换一批渠道，寻找之前没看到的机会", "radar", "experimenter"], ["和信任的人聊聊，获得新的视角", "connector", "curator"], ["完成一个小动作，让流程重新转起来", "experimenter", "planner"],
+  ["连续几周没有 Offer，你的做法更接近？", "先深呼吸。暂时没有消息，也是一种消息静音。", [
+    ["重新看看方向，调整投递策略", "radar", "researcher"], ["换几个渠道，也看看之前忽略的机会", "explorer", "engine"], ["找朋友聊聊，一起吐槽就业市场", "protector", "koi"], ["允许自己丧一会儿，然后继续生活", "gardener", "protector"],
   ]],
-  ["朋友会怎样形容你处理重要任务的方式？", [
-    ["想得清楚，知道为什么做", "navigator", "curator"], ["眼观六路，总能找到新办法", "radar", "connector"], ["边做边学，很快就有第一版", "experimenter", "radar"], ["靠谱细致，事情交给你很放心", "planner", "connector"],
-  ]],
-  ["如果秋招是一场旅行，你更想带上什么？", [
-    ["一张能随时修正的路线图", "navigator", "planner"], ["一本记录沿途故事的手账", "curator", "connector"], ["一双随时可以出发的鞋", "experimenter", "radar"], ["一群可以交换消息的旅伴", "connector", "radar"],
-  ]],
-  ["最后一题：你希望这次秋招更像哪句话？", [
-    ["我在做一项适合自己的选择", "navigator", "curator"], ["世界很大，我想看看还有哪些可能", "radar", "connector"], ["每次尝试，都会让我更接近答案", "experimenter", "curator"], ["一步一步来，我有自己的节奏", "planner", "navigator"],
+  ["最后一题：如果给今年秋招的自己留一句话，你更想选？", "这一题不计鸡汤浓度，只看你现在想听哪句。", [
+    ["我在寻找适合自己的生活，不是在参加比赛", "gardener", "radar"], ["世界很大，一份 Offer 只是其中一个入口", "explorer", "koi"], ["走过的路都会留下东西，暂时没有结果也算经历", "researcher", "engine"], ["慢一点也可以，我有自己的时间表", "protector", "gardener"],
   ]],
 ];
 
@@ -63,7 +59,7 @@ function readSavedAnswers() {
 function rankResults(answers) {
   const scores = Object.fromEntries(Object.keys(TYPES).map((key) => [key, 0]));
   answers.forEach((optionIndex, questionIndex) => {
-    const option = QUESTIONS[questionIndex]?.[1]?.[optionIndex] || [];
+    const option = QUESTIONS[questionIndex]?.[2]?.[optionIndex] || [];
     if (option[1]) scores[option[1]] += 2;
     if (option[2]) scores[option[2]] += 1;
   });
@@ -116,7 +112,7 @@ export default function JobSeekerPersonalityPage() {
     <TestHeader onHome={() => navigate("/")} />
     {step === "intro" && <main className="personality-intro">
       <section className="personality-hero" aria-labelledby="personality-title"><div className="personality-hero-copy">
-        <span className="personality-kicker">12 道轻松小题 · 大约 3 分钟</span>
+        <span className="personality-kicker">10 道互联网生存题 · 大约 3 分钟</span>
         <h1 id="personality-title">测测你的<br /><span>求职者人格</span></h1>
         <p>面对机会、简历、Networking 和面试，每个人都有自己的自然节奏。看看你更像哪一种秋招玩家，也顺便发现最适合自己的下一步。</p>
         <div className="personality-hero-actions"><button type="button" className="personality-primary-button" onClick={startTest}>开始测试 <ArrowRightOutlined /></button>{answers.length > 0 && answers.length < QUESTIONS.length && <button type="button" className="personality-text-button" onClick={() => { setQuestionIndex(Math.min(answers.length, QUESTIONS.length - 1)); setStep("quiz"); }}>继续上次测试</button>}</div>
@@ -127,14 +123,14 @@ export default function JobSeekerPersonalityPage() {
     {step === "quiz" && <main className="personality-quiz">
       <div className="personality-progress-meta"><span>求职者人格测试</span><strong>{questionIndex + 1} / {QUESTIONS.length}</strong></div>
       <div className="personality-progress" role="progressbar" aria-valuemin="1" aria-valuemax={QUESTIONS.length} aria-valuenow={questionIndex + 1}><span style={{ transform: `scaleX(${(questionIndex + 1) / QUESTIONS.length})` }} /></div>
-      <section className="personality-question-card" aria-labelledby="personality-question"><span className="personality-question-number">QUESTION {String(questionIndex + 1).padStart(2, "0")}</span><h1 id="personality-question">{currentQuestion[0]}</h1><p>跟随第一反应就好，不需要想哪一个答案更“正确”。</p>
-        <div className="personality-options" role="radiogroup" aria-label={currentQuestion[0]}>{currentQuestion[1].map(([label], index) => <button type="button" role="radio" aria-checked={currentAnswer === index} className={`personality-option ${currentAnswer === index ? "is-selected" : ""}`} key={label} onClick={() => chooseAnswer(index)}><span className="personality-option-letter">{String.fromCharCode(65 + index)}</span><span>{label}</span></button>)}</div>
+      <section className="personality-question-card" aria-labelledby="personality-question"><span className="personality-question-number">QUESTION {String(questionIndex + 1).padStart(2, "0")}</span><h1 id="personality-question">{currentQuestion[0]}</h1><p>{currentQuestion[1]}</p>
+        <div className="personality-options" role="radiogroup" aria-label={currentQuestion[0]}>{currentQuestion[2].map(([label], index) => <button type="button" role="radio" aria-checked={currentAnswer === index} className={`personality-option personality-option-${index + 1} ${currentAnswer === index ? "is-selected" : ""}`} key={label} onClick={() => chooseAnswer(index)}><span className="personality-option-letter">{String.fromCharCode(65 + index)}</span><span>{label}</span></button>)}</div>
         <div className="personality-question-actions"><button type="button" className="personality-back-button" onClick={() => questionIndex === 0 ? setStep("intro") : setQuestionIndex((value) => value - 1)}><ArrowLeftOutlined /> 返回</button><button type="button" className="personality-primary-button" onClick={goNext} disabled={currentAnswer === undefined}>{questionIndex === QUESTIONS.length - 1 ? "查看结果" : "下一题"} <ArrowRightOutlined /></button></div>
       </section>
     </main>}
     {step === "result" && <main className={`personality-result personality-result-${result.color}`}>
       <section className="personality-result-hero"><span className="personality-kicker">你的求职者人格是</span><div className="personality-result-title-row"><div className="personality-result-code">{result.code}</div><div><h1>{result.name}</h1><p>{result.eyebrow}</p></div></div><p className="personality-result-summary">{result.summary}</p>{answers.length === QUESTIONS.length && rankedResults[0] === resultKey && rankedResults[1] && <span className="personality-secondary-type">你也带有一点「{TYPES[rankedResults[1]].name}」的特质</span>}</section>
-      <section className="personality-result-grid"><article className="personality-result-card"><span className="personality-card-label">你的自然优势</span><ul>{result.strengths.map((strength) => <li key={strength}>{strength}</li>)}</ul></article><article className="personality-result-card"><span className="personality-card-label">给你的小提醒</span><p>{result.watch}</p></article><article className="personality-result-card personality-path-card"><span className="personality-card-label">适合你的 Path 起点</span><p>{result.path}</p><button type="button" onClick={() => navigate("/note/fall-recruiting/autumn-recruitment-roadmap.md")}>去看看我的秋招 Path <ArrowRightOutlined /></button></article></section>
+      <section className="personality-result-grid"><article className="personality-result-card personality-buff-card"><span className="personality-card-label">你的秋招 Buff</span><strong>{result.buff}</strong><span className="personality-card-label">你的隐藏技能</span><p>{result.skill}</p></article><article className="personality-result-card"><span className="personality-card-label">你的秋招提醒</span><p>{result.watch}</p></article><article className="personality-result-card personality-path-card"><span className="personality-card-label">适合你的 Path 起点</span><p>{result.path}</p><button type="button" onClick={() => navigate("/note/fall-recruiting/autumn-recruitment-roadmap.md")}>去看看我的秋招 Path <ArrowRightOutlined /></button></article></section>
       <section className="personality-result-actions" aria-label="分享或重新测试"><button type="button" className="personality-primary-button" onClick={shareResult}>{navigator.share ? <ShareAltOutlined /> : <CopyOutlined />} 分享结果</button><button type="button" className="personality-secondary-button" onClick={startTest}><ReloadOutlined /> 再测一次</button><button type="button" className="personality-icon-button" onClick={() => navigate("/")} aria-label="返回 Learning Workspace"><HomeOutlined /></button><span className="personality-share-status" role="status" aria-live="polite">{shareStatus}</span></section>
     </main>}
   </div>;
