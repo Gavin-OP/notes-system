@@ -142,16 +142,17 @@ function buildPilotNodes(profile = {}) {
 
   nodes.push(
     pathNode("applications", "投递与流程管理", "application-communication", 8),
-    pathNode("interviews", "测试与面试", "interview-preparation", 9),
-    pathNode("interview-review", "面试复盘", "interview-review", 10),
+    pathNode("assessments", "在线测试", "assessment-preparation", 9),
+    pathNode("interviews", "面试准备", "interview-preparation", 10),
+    pathNode("interview-review", "面试复盘", "interview-review", 11),
   );
 
   if (skillBranches.has("technical")) {
-    nodes.push(pathNode("technical-skills", "LeetCode", "leetcode-practice", 11, "", { path_relation: "branch" }));
+    nodes.push(pathNode("technical-skills", "LeetCode", "leetcode-practice", 12, "", { path_relation: "branch" }));
   }
 
   if (certificateBranches.size > 0) {
-    nodes.push(pathNode("finance-skills", "金融证书怎么选", "finance-knowledge-certificates", 11, "", { path_relation: "branch" }));
+    nodes.push(pathNode("finance-skills", "金融证书怎么选", "finance-knowledge-certificates", 12, "", { path_relation: "branch" }));
     FALL_RECRUITING_CERTIFICATES.forEach((certificate) => {
       if (!certificateBranches.has(certificate.id)) return;
       nodes.push(
@@ -159,7 +160,7 @@ function buildPilotNodes(profile = {}) {
           `certificate-${certificate.id}`,
           `${certificate.shortName} 是否适合我`,
           `${certificate.id}-certificate`,
-          12,
+          13,
           "",
           { path_relation: "branch", certificate_id: certificate.id },
         ),
@@ -167,7 +168,7 @@ function buildPilotNodes(profile = {}) {
     });
   }
 
-  nodes.push(pathNode("offer", "Offer 判断", "offer-review", 13));
+  nodes.push(pathNode("offer", "Offer 判断", "offer-review", 14));
   return nodes;
 }
 
@@ -208,7 +209,8 @@ function buildPilotEdges(nodes) {
     connect("job-search", "applications");
   }
 
-  connect("applications", "interviews");
+  connect("applications", "assessments");
+  connect("assessments", "interviews");
   connect("interviews", "interview-review");
 
   const supplementIds = ["technical-skills", "finance-skills"]

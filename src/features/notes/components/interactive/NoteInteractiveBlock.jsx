@@ -274,6 +274,176 @@ function ProfileKitLab({ id }) {
   );
 }
 
+const OFFER_DIMENSIONS = [
+  { id: "work", label: "实际工作内容", hint: "日常任务是否愿意长期投入" },
+  { id: "team", label: "团队与管理方式", hint: "沟通、反馈和新人支持" },
+  { id: "growth", label: "学习与发展", hint: "能力积累、轮岗与后续路径" },
+  { id: "life", label: "地点与生活", hint: "通勤、节奏和个人安排" },
+  { id: "rewards", label: "薪酬与保障", hint: "基本薪酬、奖金、福利与稳定性" },
+];
+
+function OfferComparisonLab({ id }) {
+  const initialScores = Object.fromEntries(
+    OFFER_DIMENSIONS.map((dimension) => [dimension.id, { a: 3, b: 3 }]),
+  );
+  const [state, setState] = useSavedInteractionState(id, {
+    names: { a: "Offer A", b: "Offer B" },
+    priorities: [],
+    scores: initialScores,
+  });
+  const names = { a: "Offer A", b: "Offer B", ...(state.names || {}) };
+  const priorities = new Set(Array.isArray(state.priorities) ? state.priorities : []);
+  const scores = { ...initialScores, ...(state.scores || {}) };
+
+  const updateName = (key, value) => setState({ ...state, names: { ...names, [key]: value } });
+  const togglePriority = (dimensionId) => {
+    const next = priorities.has(dimensionId)
+      ? [...priorities].filter((currentId) => currentId !== dimensionId)
+      : [...priorities, dimensionId];
+    setState({ ...state, priorities: next });
+  };
+  const updateScore = (dimensionId, offerKey, value) => {
+    setState({
+      ...state,
+      scores: {
+        ...scores,
+        [dimensionId]: { ...scores[dimensionId], [offerKey]: Number(value) },
+      },
+    });
+  };
+  const totals = ["a", "b"].reduce((result, offerKey) => {
+    result[offerKey] = OFFER_DIMENSIONS.reduce((sum, dimension) => {
+      const weight = priorities.has(dimension.id) ? 2 : 1;
+      return sum + Number(scores[dimension.id]?.[offerKey] || 0) * weight;
+    }, 0);
+    return result;
+  }, {});
+
+  return (
+    <section className="note-interaction" aria-labelledby={`${id}-title`}>
+      <header className="note-interaction__header">
+        <span>Offer 对比</span>
+        <h3 id={`${id}-title`}>把重要条件放在同一张表里</h3>
+        <p>点亮你最在意的维度，它会获得更高权重。分数只帮助整理想法，不替你做决定。</p>
+      </header>
+      <div className="note-offer-names">
+        {["a", "b"].map((offerKey) => (
+          <label key={offerKey}>
+            <span>{offerKey === "a" ? "第一个选择" : "第二个选择"}</span>
+            <input
+              value={names[offerKey]}
+              onChange={(event) => updateName(offerKey, event.target.value)}
+              aria-label={`${offerKey === "a" ? "第一个" : "第二个"} Offer 名称`}
+            />
+          </label>
+        ))}
+      </div>
+      <div className="note-offer-grid">
+        {OFFER_DIMENSIONS.map((dimension) => (
+          <article key={dimension.id} className={priorities.has(dimension.id) ? "is-priority" : ""}>
+            <header>
+              <div><strong>{dimension.label}</strong><span>{dimension.hint}</span></div>
+              <button
+                type="button"
+                aria-pressed={priorities.has(dimension.id)}
+                onClick={() => togglePriority(dimension.id)}
+              >
+                {priorities.has(dimension.id) ? "重点考虑" : "设为重点"}
+              </button>
+            </header>
+            <div className="note-offer-scores">
+              {["a", "b"].map((offerKey) => (
+                <label key={offerKey}>
+                  <span>{names[offerKey] || (offerKey === "a" ? "Offer A" : "Offer B")}</span>
+                  <input
+                    type="range"
+                    min="1"
+                    max="5"
+                    step="1"
+                    value={scores[dimension.id]?.[offerKey] || 3}
+                    onChange={(event) => updateScore(dimension.id, offerKey, event.target.value)}
+                  />
+                  <strong>{scores[dimension.id]?.[offerKey] || 3}</strong>
+                </label>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+      <div className="note-interaction__summary note-offer-total" aria-live="polite">
+        <span><strong>{totals.a}</strong>{names.a || "Offer A"}</span>
+        <span><strong>{totals.b}</strong>{names.b || "Offer B"}</span>
+        <small>书面事实、口头信息和个人推测记得分开核实。</small>
+      </div>
+    </section>
+  );
+}
+
+const FUNNEL_STAGES = [
+  { id: "saved", label: "认真考虑的岗位" },
+  { id: "applied", label: "实际投递" },
+  { id: "assessment", label: "进入测试 / VI" },
+  { id: "interview", label: "进入面试" },
+  { id: "offer", label: "收到 Offer" },
+];
+
+function ApplicationFunnelLab({ id }) {
+  const [counts, setCounts] = useSavedInteractionState(
+    id,
+    Object.fromEntries(FUNNEL_STAGES.map((stage) => [stage.id, ""])),
+  );
+  const transitions = FUNNEL_STAGES.slice(1).map((stage, index) => {
+    const previous = FUNNEL_STAGES[index];
+    const from = Number(counts[previous.id]);
+    const to = Number(counts[stage.id]);
+    return {
+      label: `${previous.label} → ${stage.label}`,
+      rate: from > 0 && to >= 0 ? Math.min(100, Math.round((to / from) * 100)) : null,
+    };
+  });
+  const availableTransitions = transitions.filter((item) => item.rate !== null);
+  const lowest = availableTransitions.length
+    ? [...availableTransitions].sort((a, b) => a.rate - b.rate)[0]
+    : null;
+
+  return (
+    <section className="note-interaction" aria-labelledby={`${id}-title`}>
+      <header className="note-interaction__header">
+        <span>求职漏斗</span>
+        <h3 id={`${id}-title`}>看看反馈集中出现在哪里</h3>
+        <p>只填已有数据即可。阶段转化用来发现模式，不用和别人的数字比较。</p>
+      </header>
+      <div className="note-funnel-inputs">
+        {FUNNEL_STAGES.map((stage) => (
+          <label key={stage.id}>
+            <span>{stage.label}</span>
+            <input
+              type="number"
+              min="0"
+              inputMode="numeric"
+              value={counts[stage.id] ?? ""}
+              placeholder="—"
+              onChange={(event) => setCounts({ ...counts, [stage.id]: event.target.value })}
+            />
+          </label>
+        ))}
+      </div>
+      <div className="note-funnel-transitions" aria-live="polite">
+        {transitions.map((transition) => (
+          <span key={transition.label}>
+            <small>{transition.label}</small>
+            <strong>{transition.rate === null ? "—" : `${transition.rate}%`}</strong>
+          </span>
+        ))}
+      </div>
+      <div className="note-interaction__result">
+        <strong>{lowest ? "目前最值得回看" : "等待更多数据"}</strong>
+        <span>{lowest ? `${lowest.label}（${lowest.rate}%）` : "填入相邻阶段后，这里会显示转化较低的一段。"}</span>
+      </div>
+    </section>
+  );
+}
+
 export default function NoteInteractiveBlock({ configText }) {
   const config = useMemo(() => {
     try {
@@ -288,5 +458,7 @@ export default function NoteInteractiveBlock({ configText }) {
   if (config.type === "resume-focus") return <ResumeFocusLab id={config.id} roles={config.roles} />;
   if (config.type === "evidence-matrix") return <EvidenceMatrixLab id={config.id} items={config.items} />;
   if (config.type === "profile-kit") return <ProfileKitLab id={config.id} />;
+  if (config.type === "offer-comparison") return <OfferComparisonLab id={config.id} />;
+  if (config.type === "application-funnel") return <ApplicationFunnelLab id={config.id} />;
   return null;
 }
