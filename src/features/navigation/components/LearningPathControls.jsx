@@ -22,7 +22,7 @@ function LearningPathControls({
     : pathEditMode
       ? t("learningPath.doneEditing", "Done")
       : hasPersonalizedPath
-        ? t("learningPath.editPath", "Edit")
+        ? t("learningPath.editPath", "编辑 Path")
         : t("learningPath.createPath", "Create path");
 
   const primaryFilled = !canManage || pathEditMode;

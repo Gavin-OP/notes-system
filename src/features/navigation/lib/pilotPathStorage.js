@@ -1,6 +1,6 @@
 import { PILOT_START_PATH, PILOT_SUBJECT_SLUG } from "../../../config/productMode";
 
-const PILOT_STORAGE_VERSION = 1;
+const PILOT_STORAGE_VERSION = 2;
 const PILOT_PATH_STORAGE_KEY = "notes-system:fall-recruiting:path";
 const PILOT_LAST_NOTE_STORAGE_KEY = "notes-system:fall-recruiting:last-note";
 
@@ -23,7 +23,7 @@ export function loadPilotPathDraft() {
   if (!storage) return null;
   try {
     const payload = JSON.parse(storage.getItem(PILOT_PATH_STORAGE_KEY) || "null");
-    if (!payload || payload.version !== PILOT_STORAGE_VERSION) return null;
+    if (!payload || ![1, PILOT_STORAGE_VERSION].includes(payload.version)) return null;
     return payload.draft && typeof payload.draft === "object" ? payload.draft : null;
   } catch {
     return null;

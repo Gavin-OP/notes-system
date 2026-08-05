@@ -27,6 +27,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
+      target: "safari16.4",
       rollupOptions: {
         output: {
           manualChunks(id) {

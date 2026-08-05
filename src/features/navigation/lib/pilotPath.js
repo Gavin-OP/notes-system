@@ -284,7 +284,8 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
       ...(draft?.metadata || {}),
       order_mode: "canonical",
       pilot_official_path: true,
-      pilot_path_schema_version: 2,
+      pilot_path_schema_version: 3,
+      graph_layout: draft?.metadata?.graph_layout || {},
       personalization: {
         ...profile,
         setup_complete: Boolean(profile.setup_complete),

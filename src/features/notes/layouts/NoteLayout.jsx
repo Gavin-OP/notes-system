@@ -23,6 +23,7 @@ import LearningNavigationPanel from "../../navigation/components/LearningNavigat
 import LearningPathControls from "../../navigation/components/LearningPathControls";
 import PilotPathSetupModal from "../../navigation/components/PilotPathSetupModal";
 import { sortPathNodesCanonically } from "../../navigation/lib/learningPathUtils";
+import { connectPathNodes } from "../../navigation/lib/pathGraphModel";
 import {
   buildDefaultPilotDraft,
   buildInterviewProfileContext,
@@ -382,6 +383,7 @@ const NoteLayout = () => {
   const [learningPathDraft, setLearningPathDraft] = useState(null);
   const [learningPathPending, setLearningPathPending] = useState(false);
   const [pilotPathSetupOpen, setPilotPathSetupOpen] = useState(false);
+  const pathSetupHandledRef = useRef(false);
   const [pathEditMode, setPathEditMode] = useState(false);
   const [learningSiderWidth, setLearningSiderWidth] = useState(LEARNING_SIDER_MIN_WIDTH);
   const [canonicalGraph, setCanonicalGraph] = useState(null);
@@ -394,6 +396,16 @@ const NoteLayout = () => {
   const [currentNarrationChunkIndex, setCurrentNarrationChunkIndex] = useState(0);
   const [isNarrationPlaying, setIsNarrationPlaying] = useState(false);
   const [officialPodcasts, setOfficialPodcasts] = useState([]);
+
+  useEffect(() => {
+    if (pathSetupHandledRef.current || FULL_PRODUCT_ENABLED) return;
+    const requested = new URLSearchParams(location.search).get("pathSetup") === "1";
+    if (!requested || !learningPathDraft) return;
+    pathSetupHandledRef.current = true;
+    setCollapsed(false);
+    setShowMenu(true);
+    if (!learningPathDraft?.metadata?.personalization?.setup_complete) setPilotPathSetupOpen(true);
+  }, [learningPathDraft, location.search]);
   const narrationAudioRef = useRef(null);
   const narrationAudioUrlsRef = useRef([]);
   const narrationChunkIndexRef = useRef(0);
@@ -1624,6 +1636,17 @@ const NoteLayout = () => {
                 onReorderPathNodes={handleReorderPathNodes}
                 onRemovePathNode={handleRemovePathNode}
                 onRestoreRecommendedOrder={handleRestoreRecommendedOrder}
+                onConnectPathNodes={(source, target) => {
+                  const { graph, validation } = connectPathNodes(learningPathDraft, source, target, {
+                    rootId: "pilot:getting-started",
+                    terminalId: "pilot:offer",
+                  });
+                  if (!validation.valid) {
+                    message.warning("这条连接会让 Path 出现循环或断开的步骤，已保留原来的结构。");
+                    return;
+                  }
+                  persistLearningPathDraft({ ...graph, metadata: { ...(graph.metadata || {}), order_mode: "custom" } }, "Path 连接已保存", "Connected learning path nodes");
+                }}
                 onStartPathBuilder={handleStartPathBuilder}
                 pathEditMode={pathEditMode}
                 canonicalGraph={canonicalGraph}

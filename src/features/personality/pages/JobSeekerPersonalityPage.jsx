@@ -1,12 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeftOutlined, ArrowRightOutlined, DownloadOutlined, HomeOutlined, ReloadOutlined } from "@ant-design/icons";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeftOutlined, ArrowRightOutlined, DownloadOutlined, InfoCircleOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import QRCode from "qrcode";
 import "./JobSeekerPersonalityPage.css";
 
 const STORAGE_KEY = "notes-system:job-seeker-personality:v1";
 
-const TYPES = {
+// Shared with the lightweight type-gallery route.
+// eslint-disable-next-line react-refresh/only-export-components
+export const TYPES = {
   explorer: { code: "WILD", name: "人生旷野探险家", eyebrow: "Offer 是入口，不是终点", color: "sky", summary: "你的秋招关键词是：可能性。比起找到一条所有人都认可的“正确路线”，你更在意自己究竟想去哪里。大厂、热门岗位、光鲜 Title 对你当然有吸引力，但它们很难成为你唯一的坐标。你会研究新的行业，会对意料之外的岗位产生兴趣，也允许自己的职业规划随着经历不断变化。", buff: "开放世界玩家", skill: "在别人没注意的地方发现新入口", watch: "探索可以没有标准路线，但记得给喜欢的方向多走几步。", path: "从「秋招定位与行动计划」出发，再去「理解岗位与市场」打开地图。" },
   radar: { code: "RADAR", name: "人形岗位雷达", eyebrow: "JD 一出现，大脑自动开始匹配", color: "blue", summary: "别人看到 JD：投就完事！你看到 JD：这个 team 在组织里负责什么？这个岗位真正解决什么问题？我的经历应该突出哪部分？未来 progression 怎么样？十分钟后，你已经快把公司组织架构研究明白了。你不太喜欢为了秋招而秋招，比起申请数量，更在意这个岗位究竟能把自己带到哪里。", buff: "JD 信号捕捉器", skill: "从三行招聘描述里研究出一整条职业路径", watch: "有些机会需要走进去以后才知道合不合适，允许自己偶尔先投再研究。", path: "优先看看「理解岗位与市场」和「寻找与筛选合适岗位」。" },
   engine: { code: "GO!", name: "秋招永动机", eyebrow: "焦虑解决不了问题，但海投五家可以", color: "orange", summary: "你的秋招哲学非常朴素：有机会，就试试。别人还在纠结“我只有 70% match 要不要投”，你的申请已经进入公司系统了。焦虑的时候投递，迷茫的时候投递，看到神仙打架还是投递。你知道就业市场里存在大量随机性，所以更愿意给自己增加一次被看见的机会。你的秋招 Excel 可能已经长得像企业数据库。", buff: "行动力 +100", skill: "被拒之后光速寻找下一个入口", watch: "数量能够增加概率，精力也值得留给真正想去的机会。", path: "进入「寻找与筛选合适岗位」和「投递与流程管理」，让行动更有章法。" },
@@ -18,11 +20,11 @@ const TYPES = {
 };
 
 const QUESTIONS = [
-  ["看到“名校优先、3 段大厂、5 段实习”，你的脑内弹幕是？", "凭第一反应选，秋招已经够费脑子了。", [
+  ["看到一份岗位 JD 写着“偏好相关院校背景、多段知名企业实习，并熟悉若干工具”，你的脑内弹幕是？", "凭第一反应选，求职已经够费脑子了。", [
     ["让我看看这个岗位到底有多少含金量", "radar", "researcher"], ["符合多少算多少，先投了再说", "engine", "explorer"], ["研究一下我的经历还能怎么膨胀", "alchemist", "radar"], ["好的，看来招聘市场也有自己的许愿池", "koi", "protector"],
   ]],
-  ["秋招群里突然有人说“已开奖”，你的第一反应是？", "这里不是公司测评，这里没有标准答案。", [
-    ["打开招聘软件：立刻海投五家减少焦虑", "engine", "radar"], ["打开自己的简历：是不是还能再抢救一下", "alchemist", "researcher"], ["打开小红书：开始在评论区狂发 Offer 大楼", "koi", "explorer"], ["关掉群聊，躺下睡觉", "protector", "gardener"],
+  ["求职群里突然有人说“已开奖”，你的第一反应是？", "这里不是公司在线测试，没有标准答案。", [
+    ["打开招聘软件：投几份合适的岗位减少焦虑", "engine", "radar"], ["打开自己的简历：是不是还能再抢救一下", "alchemist", "researcher"], ["看看其他人的进度，再给自己加点好运", "koi", "explorer"], ["关掉群聊，先去休息", "protector", "gardener"],
   ]],
   ["当你发现“神仙打架”的岗位，JD 下面已经显示 1000+ 人申请……", "在做的 GPA 全部拉满！", [
     ["研究一下岗位，我和它合不合适才是最重要的", "radar", "gardener"], ["先投。1000+ 里面为什么不能有我", "engine", "koi"], ["默默关闭，开始刷新最新开放的岗位", "explorer", "protector"], ["修改简历，争取让自己显得更突出", "alchemist", "researcher"],
@@ -33,8 +35,8 @@ const QUESTIONS = [
   ["HR 问：“你的职业规划是什么？”时，你的内心真实版本更接近？", "此处无需展现 leadership，请诚实作答。", [
     ["我有方向，也愿意一路修正", "radar", "gardener"], ["世界这么大，我想多看看有哪些可能", "explorer", "koi"], ["先把眼前的事情做好，答案会慢慢出现", "researcher", "engine"], ["希望未来的我有工作，有下班，也有双休", "protector", "gardener"],
   ]],
-  ["收到测评链接，发现又是“限时 60 分钟，建议提前准备”，你会？", "选真实的你，不是公司价值观里的你。", [
-    ["打开小红书，购买题库", "researcher", "koi"], ["直接打开，反正已经做过 20 套测评了", "researcher", "engine"], ["管它那么多，立刻开做", "engine", "koi"], ["认真准备，争取完美符合公司价值观", "alchemist", "radar"],
+  ["收到招聘流程中的在线测试邀请，页面写着“限时 60 分钟，建议提前准备”，你会？", "可能是能力测试、限时笔试或情境判断，按真实反应选就好。", [
+    ["先查清测试形式，找几道样题练手", "researcher", "koi"], ["直接打开，类似的在线测试已经做过不少", "researcher", "engine"], ["先做再说，相信第一反应", "engine", "koi"], ["认真研究说明，希望准备得更充分", "alchemist", "radar"],
   ]],
   ["面试官问：“你最大的失败是什么？”时，你的脑内第一反应？", "这里不用 STAR，选一个就行。", [
     ["挑一个真正让我学到东西的经历", "researcher", "gardener"], ["寻找一个最适合这个岗位的故事", "radar", "alchemist"], ["想想怎么讲得真实、有逻辑、有成长", "alchemist", "researcher"], ["还没找到工作就是我的失败", "protector", "koi"],
@@ -45,7 +47,7 @@ const QUESTIONS = [
   ["连续几周没有 Offer，你的做法更接近？", "先深呼吸。暂时没有消息，也是一种消息静音。", [
     ["重新看看方向，调整投递策略", "radar", "researcher"], ["换几个渠道，也看看之前忽略的机会", "explorer", "engine"], ["找朋友聊聊，一起吐槽就业市场", "protector", "koi"], ["允许自己丧一会儿，然后继续生活", "gardener", "protector"],
   ]],
-  ["最后一题：如果给今年秋招的自己留一句话，你更想选？", "这一题不计鸡汤浓度，只看你现在想听哪句。", [
+  ["最后一题：如果给这次求职的自己留一句话，你更想选？", "这一题不计鸡汤浓度，只看你现在想听哪句。", [
     ["我在寻找适合自己的生活，不是在参加比赛", "gardener", "radar"], ["世界很大，一份 Offer 只是其中一个入口", "explorer", "koi"], ["走过的路都会留下东西，暂时没有结果也算经历", "researcher", "engine"], ["慢一点也可以，我有自己的时间表", "protector", "gardener"],
   ]],
 ];
@@ -81,8 +83,18 @@ function getPublicTestUrl() {
   return `${window.location.origin}${basePath}/job-seeker-personality`;
 }
 
-function TestHeader() {
-  return <header className="personality-header"><span className="personality-header-note">秋招趣味测试</span></header>;
+export function PersonalityMark({ type, className = "" }) {
+  const paths = {
+    explorer: <><circle cx="32" cy="32" r="20" /><path d="m39 22-5 13-13 5 5-13 13-5Z" /></>,
+    radar: <><circle cx="32" cy="32" r="20" /><circle cx="32" cy="32" r="11" /><path d="M32 32 47 20" /></>,
+    engine: <><path d="M18 27a16 16 0 0 1 27-8l3 4m0-8 .5 8-8-.5M46 37a16 16 0 0 1-27 8l-3-4m0 8-.5-8 8 .5" /></>,
+    alchemist: <><path d="m32 11 18 11-7 23-11 8-11-8-7-23 18-11Z" /><path d="m14 22 18 11 18-11M32 33v20" /></>,
+    researcher: <><path d="M17 17h24v24H17zM25 17v24M33 17v24M17 25h24M17 33h24" /><circle cx="43" cy="43" r="8" /><path d="m49 49 7 7" /></>,
+    protector: <><path d="M32 11 49 18v13c0 11-7 18-17 23-10-5-17-12-17-23V18l17-7Z" /><path d="M38 21a10 10 0 1 0 4 17 11 11 0 0 1-4-17Z" /></>,
+    gardener: <><path d="M32 53V29M31 34C18 34 15 24 16 17c9 0 17 4 17 14M33 27c1-10 8-15 17-15 1 8-3 17-17 18M18 53h28" /></>,
+    koi: <><path d="M12 36c10-19 29-20 41-5-9 19-29 22-41 5Z" /><circle cx="43" cy="30" r="2" /><path d="M20 30c6 5 6 10 0 15M12 36 5 28v16l7-8Z" /></>,
+  };
+  return <svg className={`personality-mark ${className}`} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[type] || paths.explorer}</svg>;
 }
 
 export default function JobSeekerPersonalityPage() {
@@ -115,23 +127,38 @@ export default function JobSeekerPersonalityPage() {
     setAnswers([]); setQuestionIndex(0); setResultKey(""); setSearchParams({}); setStep("quiz");
     window.localStorage.removeItem(STORAGE_KEY);
   };
-  const returnToTestHome = () => {
-    setSearchParams({});
-    setShareStatus("");
-    setStep("intro");
-  };
-  const chooseAnswer = (optionIndex) => {
-    const nextAnswers = answers.slice(0, questionIndex);
+  const advanceTimerRef = useRef(null);
+  const chooseAnswer = useCallback((optionIndex) => {
+    const nextAnswers = [...answers];
     nextAnswers[questionIndex] = optionIndex;
     setAnswers(nextAnswers);
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextAnswers));
-  };
-  const goNext = () => {
-    if (currentAnswer === undefined) return;
-    if (questionIndex < QUESTIONS.length - 1) return setQuestionIndex((value) => value + 1);
-    const nextResult = rankResults(answers)[0];
-    setResultKey(nextResult); setSearchParams({ result: nextResult }); setStep("result");
-  };
+    window.clearTimeout(advanceTimerRef.current);
+    advanceTimerRef.current = window.setTimeout(() => {
+      if (questionIndex < QUESTIONS.length - 1) setQuestionIndex((value) => value + 1);
+      else {
+        const nextResult = rankResults(nextAnswers)[0];
+        setResultKey(nextResult); setSearchParams({ result: nextResult }); setStep("result");
+      }
+    }, 260);
+  }, [answers, questionIndex, setSearchParams]);
+  useEffect(() => {
+    if (step !== "quiz") return undefined;
+    const onKeyDown = (event) => {
+      const numeric = Number(event.key);
+      if (numeric >= 1 && numeric <= currentQuestion[2].length) {
+        event.preventDefault(); chooseAnswer(numeric - 1); return;
+      }
+      if (event.key === "ArrowLeft" && questionIndex > 0) {
+        event.preventDefault(); window.clearTimeout(advanceTimerRef.current); setQuestionIndex((value) => value - 1);
+      }
+      if (event.key === "ArrowRight" && currentAnswer !== undefined && questionIndex < QUESTIONS.length - 1) {
+        event.preventDefault(); window.clearTimeout(advanceTimerRef.current); setQuestionIndex((value) => value + 1);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [chooseAnswer, currentAnswer, currentQuestion, questionIndex, step]);
   const saveResultPoster = async () => {
     if (!posterRef.current || !qrDataUrl || isSaving) return;
     setIsSaving(true);
@@ -141,7 +168,13 @@ export default function JobSeekerPersonalityPage() {
       const canvas = await html2canvas(posterRef.current, { backgroundColor: "#f4f6fb", scale: 2, useCORS: true, logging: false });
       const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
       if (!blob) throw new Error("Could not create image");
-      const fileName = `我的求职者人格-${result.name}.png`;
+      const fileName = `jobti-${resultKey || "personality"}-result.png`;
+      const file = new File([blob], fileName, { type: "image/png" });
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: `我的 JobTI：${result.name}` });
+        setShareStatus("已打开系统分享面板，可选择存储图像");
+        return;
+      }
       const downloadUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = downloadUrl;
@@ -157,31 +190,30 @@ export default function JobSeekerPersonalityPage() {
   };
 
   return <div className="personality-page">
-    <TestHeader />
     {step === "intro" && <main className="personality-intro">
       <section className="personality-hero" aria-labelledby="personality-title"><div className="personality-hero-copy">
-        <span className="personality-kicker">10 道互联网生存题 · 大约 3 分钟</span>
+        <span className="personality-brand">JobTI</span><span className="personality-kicker">10 道求职情境题 · 约 3 分钟</span>
         <h1 id="personality-title">测测你的<br /><span>求职者人格</span></h1>
-        <p>面对机会、简历、Networking 和面试，每个人都有自己的自然节奏。看看你更像哪一种秋招玩家，也顺便发现最适合自己的下一步。</p>
+        <p>面对机会、简历、Networking 和面试，每个人都有自己的自然节奏。看看你更像哪一种求职玩家，也顺便认识自己的下一步。</p>
         <div className="personality-hero-actions"><button type="button" className="personality-primary-button" onClick={startTest}>开始测试 <ArrowRightOutlined /></button>{answers.length > 0 && answers.length < QUESTIONS.length && <button type="button" className="personality-text-button" onClick={() => { setQuestionIndex(Math.min(answers.length, QUESTIONS.length - 1)); setStep("quiz"); }}>继续上次测试</button>}</div>
         <small>这是一项趣味测试，不评判能力，也不决定职业。答案只保存在你的浏览器中。</small>
-      </div><figure className="personality-hero-art"><img src={`${import.meta.env.BASE_URL}images/fall-recruiting/offer-building.jpg`} alt="被求职同学称为 Offer 大楼的城市建筑" width="1022" height="1706" /></figure></section>
+      </div></section>
     </main>}
     {step === "quiz" && <main className="personality-quiz">
       <div className="personality-progress-meta"><span>求职者人格测试</span><strong>{questionIndex + 1} / {QUESTIONS.length}</strong></div>
       <div className="personality-progress" role="progressbar" aria-valuemin="1" aria-valuemax={QUESTIONS.length} aria-valuenow={questionIndex + 1}><span style={{ transform: `scaleX(${(questionIndex + 1) / QUESTIONS.length})` }} /></div>
       <section className="personality-question-card" aria-labelledby="personality-question"><span className="personality-question-number">QUESTION {String(questionIndex + 1).padStart(2, "0")}</span><h1 id="personality-question">{currentQuestion[0]}</h1><p>{currentQuestion[1]}</p>
         <div className="personality-options" role="radiogroup" aria-label={currentQuestion[0]}>{currentQuestion[2].map(([label], index) => <button type="button" role="radio" aria-checked={currentAnswer === index} className={`personality-option personality-option-${index + 1} ${currentAnswer === index ? "is-selected" : ""}`} key={label} onClick={() => chooseAnswer(index)}><span className="personality-option-letter">{String.fromCharCode(65 + index)}</span><span>{label}</span></button>)}</div>
-        <div className="personality-question-actions"><button type="button" className="personality-back-button" onClick={() => questionIndex === 0 ? setStep("intro") : setQuestionIndex((value) => value - 1)}><ArrowLeftOutlined /> 返回</button><button type="button" className="personality-primary-button" onClick={goNext} disabled={currentAnswer === undefined}>{questionIndex === QUESTIONS.length - 1 ? "查看结果" : "下一题"} <ArrowRightOutlined /></button></div>
+        <div className="personality-question-actions"><button type="button" className="personality-back-button" onClick={() => questionIndex === 0 ? setStep("intro") : setQuestionIndex((value) => value - 1)}><ArrowLeftOutlined /> 上一题</button><span className="personality-auto-hint">选择后自动进入下一题</span></div>
       </section>
     </main>}
     {step === "result" && <main className={`personality-result personality-result-${result.color}`}>
-      <section className="personality-result-hero"><span className="personality-kicker">你的求职者人格是</span><div className="personality-result-title-row"><div className="personality-result-code">{result.code}</div><div><h1>{result.name}</h1><p>{result.eyebrow}</p></div></div><div className="personality-result-summary">{resultParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>{answers.length === QUESTIONS.length && rankedResults[0] === resultKey && rankedResults[1] && <span className="personality-secondary-type">你也带有一点「{TYPES[rankedResults[1]].name}」的特质</span>}</section>
-      <section className="personality-result-grid"><article className="personality-result-card personality-buff-card"><span className="personality-card-label">你的秋招 Buff</span><strong>{result.buff}</strong><span className="personality-card-label">你的隐藏技能</span><p>{result.skill}</p></article><article className="personality-result-card"><span className="personality-card-label">你的秋招提醒</span><p>{result.watch}</p></article><article className="personality-result-card personality-path-card"><span className="personality-card-label">适合你的 Path 起点</span><p>{result.path}</p><button type="button" onClick={() => navigate("/note/fall-recruiting/autumn-recruitment-roadmap.md")}>去看看我的秋招 Path <ArrowRightOutlined /></button></article></section>
-      <section className="personality-result-actions" aria-label="保存结果或重新测试"><button type="button" className="personality-primary-button" onClick={saveResultPoster} disabled={isSaving || !qrDataUrl}><DownloadOutlined /> {isSaving ? "正在生成…" : "保存结果长图"}</button><button type="button" className="personality-secondary-button" onClick={startTest}><ReloadOutlined /> 再测一次</button><button type="button" className="personality-icon-button" onClick={returnToTestHome} aria-label="返回测试首页"><HomeOutlined /></button><span className="personality-share-status" role="status" aria-live="polite">{shareStatus}</span></section>
+      <section className="personality-result-hero"><div className="personality-result-eyebrow-row"><span className="personality-kicker">你的求职者人格是</span><button type="button" className="personality-types-link" onClick={() => navigate("/job-seeker-personality/types")}><InfoCircleOutlined /> 查看全部人格</button></div><div className="personality-result-title-row"><PersonalityMark type={resultKey} /><div><h1>{result.name}</h1><p>{result.eyebrow}</p></div></div><div className="personality-result-summary">{resultParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>{answers.length === QUESTIONS.length && rankedResults[0] === resultKey && rankedResults[1] && <span className="personality-secondary-type">你也带有一点「{TYPES[rankedResults[1]].name}」的特质</span>}</section>
+      <section className="personality-result-grid"><article className="personality-result-card personality-buff-card"><span className="personality-card-label">你的求职 Buff</span><strong>{result.buff}</strong><span className="personality-card-label">你的隐藏技能</span><p>{result.skill}</p></article><article className="personality-result-card"><span className="personality-card-label">你的求职提醒</span><p>{result.watch}</p></article><article className="personality-result-card personality-path-card"><span className="personality-card-label">把认识自己变成下一步</span><p>测试不会替你决定方向。你可以根据自己的准备情况，生成并继续调整一条求职 Path。</p><button type="button" onClick={() => navigate("/note/fall-recruiting/autumn-recruitment-roadmap.md?pathSetup=1")}>打开并设置我的求职 Path <ArrowRightOutlined /></button></article></section>
+      <section className="personality-result-actions" aria-label="保存结果或重新测试"><button type="button" className="personality-primary-button" onClick={saveResultPoster} disabled={isSaving || !qrDataUrl}><DownloadOutlined /> {isSaving ? "正在生成…" : "保存结果长图"}</button><button type="button" className="personality-secondary-button" onClick={startTest}><ReloadOutlined /> 重新测试</button><span className="personality-share-status" role="status" aria-live="polite">{shareStatus}</span></section>
       <div className={`personality-share-poster personality-share-poster-${result.color}`} ref={posterRef} aria-hidden="true">
         <div className="personality-poster-top"><span>求职者人格测试</span><small>MY JOB SEEKER PERSONA</small></div>
-        <div className="personality-poster-heading"><div className="personality-poster-code">{result.code}</div><div><span>我的求职者人格是</span><h2>{result.name}</h2><p>{result.eyebrow}</p></div></div>
+        <div className="personality-poster-heading"><PersonalityMark type={resultKey} className="personality-poster-mark" /><div><span>我的求职者人格是</span><h2>{result.name}</h2><p>{result.eyebrow}</p></div></div>
         <div className="personality-poster-summary">{resultParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
         <div className="personality-poster-cards"><div><span>我的秋招 Buff</span><strong>{result.buff}</strong></div><div><span>我的隐藏技能</span><strong>{result.skill}</strong></div><div><span>我的秋招提醒</span><strong>{result.watch}</strong></div></div>
         <div className="personality-poster-footer"><div><strong>你是哪一种求职者人格？</strong><span>{publicTestUrl}</span></div>{qrDataUrl && <img src={qrDataUrl} alt="求职者人格测试二维码" />}</div>

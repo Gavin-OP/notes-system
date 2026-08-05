@@ -8,6 +8,11 @@
   background: color-mix(in srgb, var(--ns-color-bg-layout) 74%, var(--ns-color-bg-container) 26%);
 }
 
+.learning-nav__graph-port{margin:0;padding:0;cursor:crosshair}
+.learning-nav__graph-port:disabled{pointer-events:none}
+.learning-nav__graph-port:not(:disabled)::after{content:"";position:absolute;inset:-18px}
+.learning-nav__graph-port.is-connecting{box-shadow:0 0 0 5px rgba(47,111,173,.2)}
+
 .learning-nav--mobile {
   padding-bottom: var(--ns-space-6);
 }

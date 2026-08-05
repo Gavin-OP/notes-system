@@ -30,7 +30,7 @@ function LearningPageMetaBar({
 
   const toolSlot = (
     <>
-      <Tooltip title={t("note.toolbar.searchNotes")}>
+      {FULL_PRODUCT_ENABLED ? <Tooltip title={t("note.toolbar.searchNotes")}>
         <Button
           shape="circle"
           className="app-page-shell__tool-btn"
@@ -38,7 +38,7 @@ function LearningPageMetaBar({
           onClick={() => setSearchOpen(true)}
           aria-label={t("note.toolbar.searchNotes")}
         />
-      </Tooltip>
+      </Tooltip> : null}
       {showMindmap && typeof onExploreMindmap === "function" ? (
         <Tooltip title={t("note.toolbar.openMindmap")}>
           <Button
@@ -95,7 +95,7 @@ function LearningPageMetaBar({
         toolSlot={toolSlot}
         topBarRef={topBarRef}
       />
-      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} localOptions={searchOptions} />
+      {FULL_PRODUCT_ENABLED ? <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} localOptions={searchOptions} /> : null}
     </>
   );
 }

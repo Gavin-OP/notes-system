@@ -103,11 +103,11 @@ function getStepNodeId(step) {
   return step.nodeId || pathKeyToNodeId(step.key);
 }
 
-const GRAPH_NODE_WIDTH = 224;
-const GRAPH_NODE_HEIGHT = 80;
-const GRAPH_ROW_GAP = 44;
-const GRAPH_COLUMN_GAP = 28;
-const GRAPH_PADDING_X = 24;
+const GRAPH_NODE_WIDTH = 168;
+const GRAPH_NODE_HEIGHT = 64;
+const GRAPH_ROW_GAP = 38;
+const GRAPH_COLUMN_GAP = 18;
+const GRAPH_PADDING_X = 18;
 const GRAPH_PADDING_Y = 20;
 
 const ESTIMATED_ORDER_BY_NODE_ID = new Map(
@@ -325,6 +325,7 @@ const LearningNavigationPanel = ({
   onReorderPathNodes,
   onRemovePathNode,
   onRestoreRecommendedOrder,
+  onConnectPathNodes,
   onStartPathBuilder,
   pathEditMode = false,
   canonicalGraph,
@@ -340,6 +341,7 @@ const LearningNavigationPanel = ({
   const [draggedKey, setDraggedKey] = useState("");
   const [dragPayload, setDragPayload] = useState(null);
   const [isPathDropActive, setIsPathDropActive] = useState(false);
+  const [connectionSourceId, setConnectionSourceId] = useState("");
   const [nearbyAnchorUrl, setNearbyAnchorUrl] = useState("");
   const graphScrollRef = useRef(null);
   const normalizedCurrent = normalizeKey(currentNoteUrl);
@@ -791,13 +793,23 @@ const LearningNavigationPanel = ({
                 setDragPayload(null);
               }}
             >
-                <span
+                <button
+                  type="button"
                   className={`learning-nav__graph-port learning-nav__graph-port--top learning-nav__graph-port--${status}`}
-                  aria-hidden="true"
+                  aria-label={connectionSourceId ? `连接到 ${step.title}` : `${step.title} 的输入连接点`}
+                  disabled={!allowReorder}
+                  onClick={() => {
+                    if (!allowReorder || !connectionSourceId || connectionSourceId === node.id) return;
+                    onConnectPathNodes?.(connectionSourceId, node.id);
+                    setConnectionSourceId("");
+                  }}
                 />
-                <span
-                  className={`learning-nav__graph-port learning-nav__graph-port--bottom learning-nav__graph-port--${status}`}
-                  aria-hidden="true"
+                <button
+                  type="button"
+                  className={`learning-nav__graph-port learning-nav__graph-port--bottom learning-nav__graph-port--${status} ${connectionSourceId === node.id ? "is-connecting" : ""}`}
+                  aria-label={`从 ${step.title} 添加后续连接`}
+                  disabled={!allowReorder}
+                  onClick={() => setConnectionSourceId((value) => value === node.id ? "" : node.id)}
                 />
                 <button
                   type="button"
@@ -1129,7 +1141,7 @@ const LearningNavigationPanel = ({
                     onClick={onConfigurePath}
                   >
                     <SettingOutlined aria-hidden="true" />
-                    <span>{pathPersonalization.setup_complete ? "调整" : "设置"}</span>
+                    <span>{pathPersonalization.setup_complete ? "编辑 Path" : "设置 Path"}</span>
                   </button>
                 ) : null}
               </div>
