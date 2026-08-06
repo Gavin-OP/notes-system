@@ -48,45 +48,48 @@ export function buildConstellationElements(draft, options = {}) {
   if (horizontal && draftNodes.some((node) => node.metadata?.pilot_official_path)) {
     const mainIds = PILOT_MAIN_ROUTE.filter((id) => draftNodes.some((node) => node.node_id === id));
     const startX = 44;
-    const mainY = 290;
+    const mainY = 168;
     let cursorX = startX;
     mainIds.forEach((id) => {
       positions.set(id, { x: cursorX, y: mainY });
-      const hasBranches = draftEdges.some((edge) => edge.source === id && edge.relation === "branches_to");
-      cursorX += hasBranches ? 340 : 205;
+      const branchCount = draftEdges.filter((edge) => edge.source === id && edge.relation === "branches_to").length;
+      cursorX += branchCount === 0 ? 205 : Math.min(500, 170 + branchCount * 80);
     });
 
-    const midpoint = (sourceId, targetId) => {
-      const source = positions.get(sourceId);
-      const target = positions.get(targetId);
-      return {
-        x: source ? source.x + 200 : startX,
-        y: source && target ? (source.y + target.y) / 2 : mainY,
-      };
+    const placeChildren = (ids, parentId, slots) => {
+      const parent = positions.get(parentId);
+      if (!parent) return;
+      ids.filter((id) => draftNodes.some((node) => node.node_id === id))
+        .forEach((id, index) => {
+          const slot = slots[index] || slots[slots.length - 1];
+          positions.set(id, { x: parent.x + slot.x, y: parent.y + slot.y });
+        });
     };
-
-    const placeStack = (ids, anchor, offsets) => ids.filter((id) => draftNodes.some((node) => node.node_id === id))
-      .forEach((id, index) => positions.set(id, { x: anchor.x, y: anchor.y + offsets[index] }));
-    placeStack(
+    placeChildren(
       ["pilot:resume", "pilot:linkedin", "pilot:cover-letter", "pilot:portfolio", "pilot:personal-site"],
-      midpoint("pilot:profile-preparation", "pilot:job-search"),
-      [-224, -152, -80, 82, 154],
+      "pilot:profile-preparation",
+      [
+        { x: -170, y: 104 },
+        { x: 0, y: 104 },
+        { x: 170, y: 104 },
+        { x: -85, y: 178 },
+        { x: 85, y: 178 },
+      ],
     );
-    placeStack(
+    placeChildren(
       ["pilot:networking", "pilot:ai-job-search"],
-      midpoint("pilot:job-search", "pilot:applications"),
-      [108, 186],
+      "pilot:job-search",
+      [{ x: -85, y: 104 }, { x: 85, y: 104 }],
     );
-    placeStack(
+    placeChildren(
       ["pilot:technical-skills", "pilot:finance-skills"],
-      midpoint("pilot:interview-review", "pilot:offer"),
-      [108, 186],
+      "pilot:interview-review",
+      [{ x: -85, y: 104 }, { x: 85, y: 104 }],
     );
-    const financeAnchor = positions.get("pilot:finance-skills") || midpoint("pilot:interview-review", "pilot:offer");
-    placeStack(
+    placeChildren(
       ["pilot:certificate-cfa", "pilot:certificate-frm", "pilot:certificate-hkicpa"],
-      { x: financeAnchor.x + 190, y: financeAnchor.y },
-      [-44, 34, 112],
+      "pilot:finance-skills",
+      [{ x: -170, y: 94 }, { x: 0, y: 94 }, { x: 170, y: 94 }],
     );
   }
 
@@ -123,13 +126,15 @@ export function buildConstellationElements(draft, options = {}) {
         id: edge.edge_id,
         source: edge.source,
         target: edge.target,
+        sourceHandle: relation === "branches_to" ? "branch-source" : "main-source",
+        targetHandle: relation === "branches_to" ? "branch-target" : "main-target",
         type: "fixedRoute",
         animated: false,
         selectable: false,
         data: {
           relation,
-          busX: relation === "branches_to" && sourcePosition
-            ? sourcePosition.x + nodeWidth + 42
+          busY: relation === "branches_to" && sourcePosition
+            ? sourcePosition.y + nodeHeight + 34
             : undefined,
         },
       };

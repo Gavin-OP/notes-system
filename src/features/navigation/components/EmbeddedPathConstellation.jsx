@@ -4,6 +4,7 @@ import ReactFlow, { Background, BaseEdge, Controls, Handle, Position } from "rea
 import "reactflow/dist/style.css";
 
 import { buildConstellationElements } from "../lib/constellationPath";
+import useTranslation from "../../../i18n/useTranslation";
 import "./EmbeddedPathConstellation.css";
 
 function normalize(value) {
@@ -12,12 +13,18 @@ function normalize(value) {
 
 function StarNode({ data }) {
   return <div className={`path-star-node path-star-node--tone-${data.tone}${data.isCurrent ? " is-current" : ""}${data.isComplete ? " is-complete" : ""}${data.metadata?.path_relation === "branch" ? " is-branch" : ""}`} style={{ "--star-index": data.index || 0 }}>
-    {!data.hideHandles ? <Handle type="target" position={Position.Left} isConnectable={false} /> : null}
-    <button type="button" className="path-star-node__button" onClick={(event) => { event.stopPropagation(); data.onOpen?.(); }} aria-label={`打开${data.title}`}>
+    {!data.hideHandles ? <>
+      <Handle id="main-target" type="target" position={Position.Left} isConnectable={false} />
+      <Handle id="branch-target" type="target" position={Position.Top} isConnectable={false} />
+    </> : null}
+    <button type="button" className="path-star-node__button" onClick={(event) => { event.stopPropagation(); data.onOpen?.(); }} aria-label={data.openLabel}>
       <span className="path-star-node__orb" aria-hidden="true"><i /></span>
-      <span className="path-star-node__copy"><strong>{data.title}</strong>{data.isCurrent ? <small>正在这里</small> : data.isComplete ? <small>已完成</small> : null}</span>
+      <span className="path-star-node__copy"><strong>{data.localizedTitle || data.title}</strong>{data.isCurrent ? <small>{data.currentLabel}</small> : data.isComplete ? <small>{data.completedLabel}</small> : null}</span>
     </button>
-    {!data.hideHandles ? <Handle type="source" position={Position.Right} isConnectable={false} /> : null}
+    {!data.hideHandles ? <>
+      <Handle id="main-source" type="source" position={Position.Right} isConnectable={false} />
+      <Handle id="branch-source" type="source" position={Position.Bottom} isConnectable={false} />
+    </> : null}
   </div>;
 }
 
@@ -25,9 +32,9 @@ const nodeTypes = { constellation: StarNode };
 
 function FixedRouteEdge({ id, sourceX, sourceY, targetX, targetY, style, data, markerEnd }) {
   const isBranch = data?.relation === "branches_to";
-  const busX = Number.isFinite(data?.busX) ? data.busX : sourceX + Math.max(36, (targetX - sourceX) / 2);
+  const busY = Number.isFinite(data?.busY) ? data.busY : sourceY + Math.max(28, (targetY - sourceY) / 2);
   const path = isBranch
-    ? `M ${sourceX} ${sourceY} H ${busX} V ${targetY} H ${targetX}`
+    ? `M ${sourceX} ${sourceY} V ${busY} H ${targetX} V ${targetY}`
     : `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`;
   return <BaseEdge id={id} path={path} style={style} markerEnd={markerEnd} />;
 }
@@ -43,6 +50,7 @@ function pathTone(nodeId) {
 }
 
 export default function EmbeddedPathConstellation({ draft, currentNoteUrl, completedNoteUrls, onSelect, isRail = false, onToggleExpand }) {
+  const { t } = useTranslation();
   const elements = useMemo(() => {
     const completed = new Set([...completedNoteUrls].map(normalize));
     const current = normalize(currentNoteUrl);
@@ -58,6 +66,10 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
       ...node,
       data: {
         ...node.data,
+        localizedTitle: t(`pilot.node.${node.id.replace(/^pilot:/, "")}`, node.data.title),
+        openLabel: `${t("learningPath.open")} ${t(`pilot.node.${node.id.replace(/^pilot:/, "")}`, node.data.title)}`,
+        currentLabel: t("pilot.node.current"),
+        completedLabel: t("pilot.node.completed"),
         index,
         tone: pathTone(node.id),
         isCurrent: node.id === currentNode?.id,
@@ -74,15 +86,15 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
       return { ...edge, className: `${active ? "is-travelled " : ""}${isBranch ? "is-branch-route" : "is-main-route"} ${relationClass}`.trim(), animated: false, style: { "--edge-index": source?.data?.index || 0, "--route-color": `var(--stage-${target?.data?.tone || 0})` } };
     });
     return { nodes, edges, currentNode: nodes.find((node) => node.data.isCurrent) || nodes[0] };
-  }, [completedNoteUrls, currentNoteUrl, draft, isRail, onSelect]);
+  }, [completedNoteUrls, currentNoteUrl, draft, isRail, onSelect, t]);
 
-  return <section className={`embedded-constellation${isRail ? " is-rail" : " is-expanded"}`} aria-label="你的求职星图">
-    <header className="embedded-constellation__header"><div><span>YOUR PATH</span><strong>{isRail ? "当前路线" : "求职 Learning Path"}</strong></div><nav><button type="button" className="embedded-constellation__resize" onClick={onToggleExpand} aria-label={isRail ? "打开 Path 设置" : "返回阅读模式"}>{isRail ? <ExpandOutlined /> : <CompressOutlined />}</button></nav></header>
+  return <section className={`embedded-constellation${isRail ? " is-rail" : " is-expanded"}`} aria-label={t("pilot.path.aria")}>
+    <header className="embedded-constellation__header"><div><span>YOUR PATH</span><strong>{isRail ? t("pilot.path.currentRoute") : t("pilot.path.title")}</strong></div><nav><button type="button" className="embedded-constellation__resize" onClick={onToggleExpand} aria-label={isRail ? t("pilot.path.openSettings") : t("pilot.path.backToReading")}>{isRail ? <ExpandOutlined /> : <CompressOutlined />}</button></nav></header>
     <div className="embedded-constellation__canvas">
-      {isRail ? <div className="embedded-constellation__rail-focus"><StarNode data={{ ...elements.currentNode.data, hideHandles: true }} /></div> : <ReactFlow key="expanded" nodes={elements.nodes} edges={elements.edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} nodesDraggable={false} nodesConnectable={false} panOnDrag zoomOnScroll zoomOnPinch minZoom={.4} maxZoom={1.3} defaultViewport={{ x: 22, y: 104, zoom: .72 }} onNodeClick={(_, node) => onSelect?.(node.data.note_url)}>
+      {isRail ? <div className="embedded-constellation__rail-focus"><StarNode data={{ ...elements.currentNode.data, hideHandles: true }} /></div> : <ReactFlow key="expanded" nodes={elements.nodes} edges={elements.edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} nodesDraggable={false} nodesConnectable={false} panOnDrag zoomOnScroll zoomOnPinch minZoom={.4} maxZoom={1.3} defaultViewport={{ x: 22, y: 104, zoom: .82 }} onNodeClick={(_, node) => onSelect?.(node.data.note_url)}>
         <Background variant="dots" gap={24} size={1.1} />
         <Controls showInteractive={false} position="bottom-right" />
-        <div className="embedded-constellation__hint"><AimOutlined /> 横向探索路线 · 点击节点进入笔记</div>
+        <div className="embedded-constellation__hint"><AimOutlined /> {t("pilot.path.hint")}</div>
       </ReactFlow>}
     </div>
   </section>;

@@ -54,6 +54,11 @@ function NoteHeader({
       label: t("language.chinese"),
       onClick: () => onLanguageChange("cn"),
     },
+    {
+      key: "tw",
+      label: t("language.traditional", "繁體中文"),
+      onClick: () => onLanguageChange("tw"),
+    },
   ];
 
   // handle theme toggle

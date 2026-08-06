@@ -14,6 +14,7 @@ import {
 } from "../../fallRecruiting/lib/certificates";
 
 import "./PilotPathSetupModal.css";
+import useTranslation from "../../../i18n/useTranslation";
 
 const EMPTY_PROFILE = {
   stage: "getting_started",
@@ -352,11 +353,16 @@ export function PilotPathSetupPanel(props) {
 }
 
 export function PilotPathSettingsPanel({ initialProfile, pending = false, onClose, onChange }) {
+  const { t } = useTranslation();
   const profile = normalizeInitialProfile(initialProfile);
   const update = (key, value) => onChange?.({ ...profile, [key]: value, setup_complete: true });
   const certificateOptions = FALL_RECRUITING_CERTIFICATES.map((certificate) => ({
     value: certificate.id,
-    label: `${certificate.shortName} · ${certificate.fit}`,
+    label: certificate.shortName,
+  }));
+  const localizeOptions = (options, prefix) => options.map((option) => ({
+    ...option,
+    label: t(`${prefix}.${option.value}`, option.label),
   }));
 
   return (
@@ -364,35 +370,35 @@ export function PilotPathSettingsPanel({ initialProfile, pending = false, onClos
       <header className="pilot-path-settings__header">
         <div>
           <span>PATH SETTINGS</span>
-          <h2>调整你的求职 Path</h2>
-          <p>更改选项后会立即更新左侧路线，并保存在当前浏览器。</p>
+          <h2>{t("pilot.settings.title")}</h2>
+          <p>{t("pilot.settings.description")}</p>
         </div>
-        <button type="button" onClick={onClose}>返回阅读</button>
+        <button type="button" onClick={onClose}>{t("pilot.path.backToReading")}</button>
       </header>
 
       <div className="pilot-path-settings__body">
         <section>
-          <div className="pilot-path-settings__question"><strong>当前求职阶段</strong><small>用于确定当前节点与 Timeline 起点</small></div>
-          <SingleChoiceGrid options={PILOT_STAGE_OPTIONS} value={profile.stage} disabled={pending} onChange={(value) => update("stage", value)} />
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.stage")}</strong><small>{t("pilot.settings.stageHint")}</small></div>
+          <SingleChoiceGrid options={localizeOptions(PILOT_STAGE_OPTIONS, "pilot.stage")} value={profile.stage} disabled={pending} onChange={(value) => update("stage", value)} />
         </section>
         <section>
-          <div className="pilot-path-settings__question"><strong>简历与 Profile</strong><small>简历默认保留，可以添加需要准备的材料</small></div>
-          <MultiChoiceGrid options={PROFILE_BRANCH_OPTIONS} value={profile.profile_branches} emptyLabel="暂时不添加额外分支" disabled={pending} onChange={(value) => update("profile_branches", value)} />
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.profile")}</strong><small>{t("pilot.settings.profileHint")}</small></div>
+          <MultiChoiceGrid options={localizeOptions(PROFILE_BRANCH_OPTIONS, "pilot.option")} value={profile.profile_branches} emptyLabel={t("pilot.settings.profileEmpty")} disabled={pending} onChange={(value) => update("profile_branches", value)} />
         </section>
         <section>
-          <div className="pilot-path-settings__question"><strong>寻找岗位的方式</strong><small>选择希望加入 Path 的辅助方式</small></div>
-          <MultiChoiceGrid options={SEARCH_BRANCH_OPTIONS} value={profile.search_branches} emptyLabel="暂时只使用基础流程" disabled={pending} onChange={(value) => update("search_branches", value)} />
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.search")}</strong><small>{t("pilot.settings.searchHint")}</small></div>
+          <MultiChoiceGrid options={localizeOptions(SEARCH_BRANCH_OPTIONS, "pilot.option")} value={profile.search_branches} emptyLabel={t("pilot.settings.searchEmpty")} disabled={pending} onChange={(value) => update("search_branches", value)} />
         </section>
         <section>
-          <div className="pilot-path-settings__question"><strong>技能补充</strong><small>选择已经从 JD、测试或面试中确认的需要</small></div>
-          <MultiChoiceGrid options={SKILL_BRANCH_OPTIONS} value={profile.skill_branches} emptyLabel="目前还不确定" disabled={pending} onChange={(value) => update("skill_branches", value)} />
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.skills")}</strong><small>{t("pilot.settings.skillsHint")}</small></div>
+          <MultiChoiceGrid options={localizeOptions(SKILL_BRANCH_OPTIONS, "pilot.option")} value={profile.skill_branches} emptyLabel={t("pilot.settings.skillsEmpty")} disabled={pending} onChange={(value) => update("skill_branches", value)} />
         </section>
         <section>
-          <div className="pilot-path-settings__question"><strong>金融证书</strong><small>加入 Path 只是进一步了解，不代表需要报名</small></div>
-          <MultiChoiceGrid options={certificateOptions} value={profile.certificate_branches} emptyLabel="暂时不加入证书分支" disabled={pending} onChange={(value) => update("certificate_branches", value)} />
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.certificates")}</strong><small>{t("pilot.settings.certificatesHint")}</small></div>
+          <MultiChoiceGrid options={certificateOptions} value={profile.certificate_branches} emptyLabel={t("pilot.settings.certificatesEmpty")} disabled={pending} onChange={(value) => update("certificate_branches", value)} />
         </section>
       </div>
-      <footer className="pilot-path-settings__status" aria-live="polite">{pending ? "正在更新 Path…" : "所有更改都会自动保存"}</footer>
+      <footer className="pilot-path-settings__status" aria-live="polite">{pending ? t("pilot.settings.saving") : t("pilot.settings.saved")}</footer>
     </div>
   );
 }

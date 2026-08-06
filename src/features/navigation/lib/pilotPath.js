@@ -71,6 +71,14 @@ const STAGE_FOCUS_NODE = {
   offer: "pilot:offer",
 };
 
+const STAGE_START_ORDER = {
+  getting_started: 1,
+  materials: 4,
+  applying: 8,
+  interviewing: 9,
+  offer: 14,
+};
+
 function normalizeStage(stage) {
   return stage === "targeting" ? "getting_started" : stage || "getting_started";
 }
@@ -107,6 +115,7 @@ function pathNode(id, title, slug, order, anchor = "", metadata = {}) {
 }
 
 function buildPilotNodes(profile = {}) {
+  const stage = normalizeStage(profile.stage);
   const profileBranches = new Set(profile.profile_branches || []);
   const searchBranches = new Set(profile.search_branches || []);
   const skillBranches = new Set(profile.skill_branches || []);
@@ -169,7 +178,9 @@ function buildPilotNodes(profile = {}) {
   }
 
   nodes.push(pathNode("offer", "Offer 判断", "offer-review", 14));
-  return nodes;
+
+  const startOrder = STAGE_START_ORDER[stage] || STAGE_START_ORDER.getting_started;
+  return nodes.filter((node) => (node.metadata?.estimated_order || 0) >= startOrder);
 }
 
 function buildPilotEdges(nodes) {

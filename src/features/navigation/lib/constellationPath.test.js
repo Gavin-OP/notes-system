@@ -13,6 +13,38 @@ const profile = {
 };
 
 describe("fall recruiting constellation", () => {
+  it("cuts completed preparation stages from the path when the learner advances", () => {
+    const materialsDraft = buildPersonalizedPilotDraft({}, { ...profile, stage: "materials" });
+    expect(materialsDraft.nodes.some((node) => node.node_id === "pilot:getting-started")).toBe(false);
+    expect(materialsDraft.nodes.some((node) => node.node_id === "pilot:profile-preparation")).toBe(true);
+
+    const applyingDraft = buildPersonalizedPilotDraft({}, { ...profile, stage: "applying" });
+    expect(applyingDraft.nodes.some((node) => node.node_id === "pilot:profile-preparation")).toBe(false);
+    expect(applyingDraft.nodes.some((node) => node.node_id === "pilot:applications")).toBe(true);
+  });
+
+  it("places every optional child below the parent it grows from", () => {
+    const draft = buildPersonalizedPilotDraft({}, profile);
+    const { nodes } = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+    const positionById = new Map(nodes.map((node) => [node.id, node.position]));
+    const parentByChild = new Map([
+      ["pilot:resume", "pilot:profile-preparation"],
+      ["pilot:linkedin", "pilot:profile-preparation"],
+      ["pilot:cover-letter", "pilot:profile-preparation"],
+      ["pilot:portfolio", "pilot:profile-preparation"],
+      ["pilot:personal-site", "pilot:profile-preparation"],
+      ["pilot:networking", "pilot:job-search"],
+      ["pilot:technical-skills", "pilot:interview-review"],
+      ["pilot:finance-skills", "pilot:interview-review"],
+      ["pilot:certificate-cfa", "pilot:finance-skills"],
+    ]);
+
+    parentByChild.forEach((parentId, childId) => {
+      expect(positionById.get(childId).y, `${childId} should be below ${parentId}`)
+        .toBeGreaterThan(positionById.get(parentId).y);
+    });
+  });
+
   it("builds a stable non-interactive graph without cross-linking LeetCode to certificates", () => {
     const draft = buildPersonalizedPilotDraft({}, profile, new Date("2026-08-05T00:00:00Z"));
     const first = buildConstellationElements(draft);
