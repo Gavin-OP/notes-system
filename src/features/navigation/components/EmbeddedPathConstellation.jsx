@@ -82,7 +82,11 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
       const target = nodes.find((node) => node.id === edge.target);
       const active = currentOrder >= 0 && (target?.data?.metadata?.estimated_order ?? Infinity) <= currentOrder;
       const isBranch = edge.data?.relation === "branches_to" || edge.data?.relation === "converges_to";
-      const relationClass = edge.data?.relation === "converges_to" ? "is-converges-route" : edge.data?.relation === "branches_to" ? "is-branches-route" : "";
+      const relationClass = edge.data?.relation === "converges_to"
+        ? "is-converges-route"
+        : edge.data?.routeStyle === "midpoint-drop"
+          ? "is-midpoint-route"
+          : edge.data?.relation === "branches_to" ? "is-branches-route" : "";
       return { ...edge, className: `${active ? "is-travelled " : ""}${isBranch ? "is-branch-route" : "is-main-route"} ${relationClass}`.trim(), animated: false, style: { "--edge-index": source?.data?.index || 0, "--route-color": `var(--stage-${target?.data?.tone || 0})` } };
     });
     return { nodes, edges, currentNode: nodes.find((node) => node.data.isCurrent) || nodes[0] };

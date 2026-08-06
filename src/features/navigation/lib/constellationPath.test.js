@@ -78,6 +78,7 @@ describe("fall recruiting constellation", () => {
     const skillBranch = first.edges.find((edge) => edge.source === "pilot:market" && edge.target === "pilot:skill-supplement");
     const expectedMidpoint = (market.position.x + market.style.width + profilePreparation.position.x) / 2;
     expect(skillBranch.data.customSourceX).toBe(expectedMidpoint);
+    expect(skillBranch.data.routeStyle).toBe("midpoint-drop");
     expect(skillSupplement.position.x + skillSupplement.style.width / 2).toBe(expectedMidpoint);
   });
 

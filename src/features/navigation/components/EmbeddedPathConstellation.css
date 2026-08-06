@@ -3,7 +3,7 @@
   --path-muted: #6d818b;
   --path-track: #77a7b5;
   --stage-0: #4d91df;
-  --stage-1: #49a9b9;
+  --stage-1: #4fa66f;
   --stage-2: #ef914a;
   --stage-3: #74ad63;
   --stage-4: #7053b6;
@@ -172,6 +172,11 @@
 .embedded-constellation__canvas .react-flow__edge-path { stroke: #c2ccd7; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .embedded-constellation__canvas .react-flow__edge.is-main-route .react-flow__edge-path { stroke: #b8c4d0; stroke-width: 2; }
 .embedded-constellation__canvas .react-flow__edge.is-branch-route .react-flow__edge-path { stroke: #aebbc8; stroke-width: 1.6; stroke-dasharray: 4 5; }
+.embedded-constellation__canvas .react-flow__edge.is-midpoint-route .react-flow__edge-path {
+  stroke: #91a9b4;
+  stroke-width: 2;
+  stroke-dasharray: none;
+}
 .embedded-constellation__canvas .react-flow__edge.is-converges-route { display: none; }
 .embedded-constellation__canvas .react-flow__edge.is-travelled .react-flow__edge-path { stroke: #78a6df; }
 .embedded-constellation__hint { position: absolute; z-index: 6; left: 16px; bottom: 16px; display: flex; align-items: center; gap: 7px; padding: 7px 11px; border: 1px solid rgba(70, 99, 112, 0.1); border-radius: 999px; color: #667c86; background: rgba(255, 255, 255, 0.78); font-size: 10px; pointer-events: none; backdrop-filter: blur(10px); }
