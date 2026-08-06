@@ -162,6 +162,23 @@ export function buildConstellationElements(draft, options = {}) {
     })
     : [];
 
+  const hierarchyLevels = new Map(
+    draftNodes
+      .filter((node) => PILOT_MAIN_ROUTE.includes(node.node_id) || node.node_id === "pilot:skill-supplement")
+      .map((node) => [node.node_id, 0]),
+  );
+  for (let pass = 0; pass < draftNodes.length; pass += 1) {
+    draftEdges.forEach((edge) => {
+      if (edge.relation !== "branches_to" || !hierarchyLevels.has(edge.source)) return;
+      const nextLevel = edge.target === "pilot:skill-supplement"
+        ? 0
+        : Math.min(2, hierarchyLevels.get(edge.source) + 1);
+      if (!hierarchyLevels.has(edge.target) || hierarchyLevels.get(edge.target) > nextLevel) {
+        hierarchyLevels.set(edge.target, nextLevel);
+      }
+    });
+  }
+
   return {
     nodes: draftNodes.map((node) => {
       const nodeDimensions = dimensions.get(node.node_id);
@@ -174,7 +191,13 @@ export function buildConstellationElements(draft, options = {}) {
         type: "constellation",
         position: { x: point.x - nodeDimensions.width / 2, y: point.y - nodeDimensions.height / 2 },
         style: { width: nodeDimensions.width, minHeight: nodeDimensions.height },
-        data: { ...node, compact, nodeWidth: nodeDimensions.width, nodeHeight: nodeDimensions.height },
+        data: {
+          ...node,
+          compact,
+          hierarchyLevel: hierarchyLevels.get(node.node_id) ?? (node.metadata?.path_relation === "branch" ? 1 : 0),
+          nodeWidth: nodeDimensions.width,
+          nodeHeight: nodeDimensions.height,
+        },
         draggable: false,
         connectable: false,
         selectable: false,

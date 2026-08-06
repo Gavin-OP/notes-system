@@ -666,7 +666,7 @@ export const translations = {
     "note.sidebar.overview": "概览",
     "pilot.path.aria": "你的求职 Path",
     "pilot.path.currentRoute": "当前节点",
-    "pilot.path.title": "求职 Learning Path",
+    "pilot.path.title": "求职 Path",
     "pilot.path.openSettings": "打开 Path 设置",
     "pilot.path.backToReading": "返回阅读模式",
     "pilot.path.hint": "横向探索路线 · 点击节点进入笔记",

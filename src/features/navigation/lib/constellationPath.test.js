@@ -90,6 +90,21 @@ describe("fall recruiting constellation", () => {
     expect(longNode.data.nodeWidth).toBe(longNode.style.width);
   });
 
+  it("assigns one orb color level to each directory depth", () => {
+    const draft = buildPersonalizedPilotDraft({}, profile);
+    const { nodes } = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+    const levelById = new Map(nodes.map((node) => [node.id, node.data.hierarchyLevel]));
+
+    expect(levelById.get("pilot:market")).toBe(0);
+    expect(levelById.get("pilot:skill-supplement")).toBe(0);
+    expect(levelById.get("pilot:resume")).toBe(1);
+    expect(levelById.get("pilot:technical-skills")).toBe(1);
+    expect(levelById.get("pilot:finance-skills")).toBe(1);
+    expect(levelById.get("pilot:certificate-cfa")).toBe(2);
+    expect(levelById.get("pilot:certificate-frm")).toBe(2);
+    expect(levelById.get("pilot:certificate-hkicpa")).toBe(2);
+  });
+
   it("keeps comprehensive preparation and branches selected interview formats from it", () => {
     const draft = buildPersonalizedPilotDraft({}, profile);
     expect(draft.nodes.find((node) => node.node_id === "pilot:interviews")?.title).toBe("综合面试准备");

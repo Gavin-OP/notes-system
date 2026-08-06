@@ -151,7 +151,10 @@
 .path-star-node__button:focus-visible { outline: 3px solid rgba(47, 134, 155, 0.36); outline-offset: 3px; }
 .path-star-node.is-current .path-star-node__button { color: #fff; }
 .path-star-node__orb { width: 9px; height: 9px; flex: 0 0 9px; border-radius: 50%; background: var(--platform); box-shadow: 0 0 0 3px color-mix(in srgb, var(--platform) 13%, transparent); }
-.path-star-node.is-current .path-star-node__orb { background: #fff; box-shadow: 0 0 0 4px rgba(255,255,255,.18); }
+.path-star-node.is-current .path-star-node__orb {
+  background: var(--platform);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.88), 0 0 0 6px color-mix(in srgb, var(--platform) 28%, transparent);
+}
 .path-star-node__copy { min-width: 0; display: grid; gap: 1px; }
 .path-star-node strong {
   display: block;

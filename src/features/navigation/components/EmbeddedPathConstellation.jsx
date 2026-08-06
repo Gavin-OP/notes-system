@@ -49,14 +49,6 @@ function FixedRouteEdge({ id, sourceX, sourceY, targetX, targetY, style, data, m
 
 const edgeTypes = { fixedRoute: FixedRouteEdge };
 
-function pathTone(nodeId) {
-  if (["pilot:skill-supplement", "pilot:technical-skills", "pilot:finance-skills", "pilot:certificate-cfa", "pilot:certificate-frm", "pilot:certificate-hkicpa", "pilot:profile-preparation", "pilot:resume", "pilot:linkedin", "pilot:cover-letter", "pilot:portfolio", "pilot:personal-site", "pilot:job-search", "pilot:networking", "pilot:ai-job-search"].includes(nodeId)) return 1;
-  if (["pilot:applications", "pilot:assessments"].includes(nodeId)) return 2;
-  if (["pilot:interviews", "pilot:interview-review", "pilot:interview-hr", "pilot:interview-technical", "pilot:interview-group", "pilot:interview-panel", "pilot:interview-assessment-centre", "pilot:interview-stress", "pilot:interview-final", "pilot:interview-special-situations"].includes(nodeId)) return 3;
-  if (nodeId === "pilot:offer") return 4;
-  return 0;
-}
-
 export default function EmbeddedPathConstellation({ draft, currentNoteUrl, completedNoteUrls, onSelect, isRail = false, onToggleExpand }) {
   const { t } = useTranslation();
   const elements = useMemo(() => {
@@ -79,7 +71,7 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
         currentLabel: t("pilot.node.current"),
         completedLabel: t("pilot.node.completed"),
         index,
-        tone: pathTone(node.id),
+        tone: node.data.hierarchyLevel,
         isCurrent: node.id === currentNode?.id,
         isComplete: completed.has(normalize(node.data.note_url)) || node.data.status === "completed",
         onOpen: () => onSelect?.(node.data.note_url),
