@@ -38,6 +38,27 @@ const CERTIFICATE_CHILD_IDS = [
   "pilot:certificate-hkicpa",
 ];
 
+const PROFILE_CHILD_IDS = [
+  "pilot:resume",
+  "pilot:linkedin",
+  "pilot:cover-letter",
+  "pilot:portfolio",
+  "pilot:personal-site",
+];
+
+const SEARCH_CHILD_IDS = [
+  "pilot:networking",
+  "pilot:ai-job-search",
+];
+
+const DIRECTORY_PARENT_IDS = new Set([
+  "pilot:profile-preparation",
+  "pilot:job-search",
+  "pilot:skill-supplement",
+  "pilot:finance-skills",
+  "pilot:interviews",
+]);
+
 const OPTIONAL_FIELD_BY_VALUE = {
   linkedin: "profile_branches",
   cover_letter: "profile_branches",
@@ -90,53 +111,45 @@ export function buildConstellationElements(draft, options = {}) {
       positions.set(id, { x: cursorX, y: mainY });
       const { width } = dimensions.get(id);
       const branchCount = draftEdges.filter((edge) => edge.source === id && edge.relation === "branches_to").length;
-      cursorX += width + (branchCount === 0 ? 64 : Math.min(210, 82 + branchCount * 22));
+      const hasSkillBranch = id === "pilot:market"
+        && draftNodes.some((node) => node.node_id === "pilot:skill-supplement");
+      cursorX += width + (hasSkillBranch ? 350 : branchCount === 0 ? 64 : Math.min(210, 82 + branchCount * 22));
     });
 
-    const placeChildren = (ids, parentId, slots) => {
+    const placeDirectoryChildren = (ids, parentId, { xOffset = 44, startY = 88, gap = 16 } = {}) => {
       const parent = positions.get(parentId);
       if (!parent) return;
+      let childY = parent.y + startY;
       ids.filter((id) => draftNodes.some((node) => node.node_id === id))
-        .forEach((id, index) => {
-          const slot = slots[index] || slots[slots.length - 1];
-          positions.set(id, { x: parent.x + slot.x, y: parent.y + slot.y });
+        .forEach((id) => {
+          positions.set(id, { x: parent.x + xOffset, y: childY });
+          childY += dimensions.get(id).height + gap;
         });
     };
-    placeChildren(
-      ["pilot:resume", "pilot:linkedin", "pilot:cover-letter", "pilot:portfolio", "pilot:personal-site"],
-      "pilot:profile-preparation",
-      [
-        { x: -170, y: 104 },
-        { x: 0, y: 104 },
-        { x: 170, y: 104 },
-        { x: -85, y: 178 },
-        { x: 85, y: 178 },
-      ],
-    );
-    placeChildren(
-      ["pilot:networking", "pilot:ai-job-search"],
-      "pilot:job-search",
-      [{ x: -85, y: 104 }, { x: 85, y: 104 }],
-    );
-    placeChildren(
-      INTERVIEW_CHILD_IDS,
-      "pilot:interviews",
-      INTERVIEW_CHILD_IDS.map((_, index) => ({ x: 190, y: 104 + index * 68 })),
-    );
+    placeDirectoryChildren(PROFILE_CHILD_IDS, "pilot:profile-preparation");
+    placeDirectoryChildren(SEARCH_CHILD_IDS, "pilot:job-search");
+    placeDirectoryChildren(INTERVIEW_CHILD_IDS, "pilot:interviews", { xOffset: 54, startY: 88, gap: 16 });
 
-    const skillAnchor = positions.get("pilot:market") || positions.get("pilot:profile-preparation");
-    if (skillAnchor && draftNodes.some((node) => node.node_id === "pilot:skill-supplement")) {
-      positions.set("pilot:skill-supplement", { x: skillAnchor.x + 42, y: mainY + 96 });
-      placeChildren(
-        SKILL_CHILD_IDS,
-        "pilot:skill-supplement",
-        [{ x: 34, y: 82 }, { x: 34, y: 146 }],
-      );
-      placeChildren(
-        CERTIFICATE_CHILD_IDS,
-        "pilot:finance-skills",
-        [{ x: 44, y: 76 }, { x: 44, y: 138 }, { x: 44, y: 200 }],
-      );
+    const skillNode = draftNodes.find((node) => node.node_id === "pilot:skill-supplement");
+    const marketPosition = positions.get("pilot:market");
+    const profilePosition = positions.get("pilot:profile-preparation");
+    if (skillNode && marketPosition && profilePosition) {
+      const marketDimensions = dimensions.get("pilot:market");
+      const skillDimensions = dimensions.get("pilot:skill-supplement");
+      const branchMidpointX = (marketPosition.x + marketDimensions.width + profilePosition.x) / 2;
+      positions.set("pilot:skill-supplement", {
+        x: branchMidpointX - skillDimensions.width / 2,
+        y: mainY + 92,
+      });
+      placeDirectoryChildren(SKILL_CHILD_IDS, "pilot:skill-supplement");
+      placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:finance-skills", { xOffset: 44, startY: 78, gap: 16 });
+    } else if (skillNode) {
+      const skillAnchor = marketPosition || profilePosition;
+      if (skillAnchor) {
+        positions.set("pilot:skill-supplement", { x: skillAnchor.x + 44, y: mainY + 92 });
+        placeDirectoryChildren(SKILL_CHILD_IDS, "pilot:skill-supplement");
+        placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:finance-skills", { xOffset: 44, startY: 78, gap: 16 });
+      }
     }
   }
 
@@ -172,21 +185,31 @@ export function buildConstellationElements(draft, options = {}) {
       const sourcePosition = positions.get(edge.source);
       const sourceDimensions = dimensions.get(edge.source);
       const relation = edge.relation || "precedes";
-      const isInterviewBranch = edge.source === "pilot:interviews" && INTERVIEW_CHILD_IDS.includes(edge.target);
+      const isDirectoryBranch = relation === "branches_to" && DIRECTORY_PARENT_IDS.has(edge.source);
+      const isSkillMidpointBranch = edge.source === "pilot:market" && edge.target === "pilot:skill-supplement";
       const isInterviewReturn = INTERVIEW_CHILD_IDS.includes(edge.source) && edge.target === "pilot:interview-review";
+      const marketPosition = positions.get("pilot:market");
+      const profilePosition = positions.get("pilot:profile-preparation");
+      const marketDimensions = dimensions.get("pilot:market");
       return {
         id: edge.edge_id,
         source: edge.source,
         target: edge.target,
         sourceHandle: relation === "branches_to" ? "branch-source" : "main-source",
-        targetHandle: isInterviewBranch ? "tree-target" : relation === "branches_to" ? "branch-target" : "main-target",
+        targetHandle: isDirectoryBranch ? "tree-target" : relation === "branches_to" ? "branch-target" : "main-target",
         type: "fixedRoute",
         animated: false,
         selectable: false,
         hidden: isInterviewReturn,
         data: {
           relation,
-          routeStyle: isInterviewBranch ? "directory" : undefined,
+          routeStyle: isSkillMidpointBranch ? "midpoint-drop" : isDirectoryBranch ? "directory" : undefined,
+          customSourceX: isSkillMidpointBranch && marketPosition && profilePosition
+            ? (marketPosition.x + marketDimensions.width + profilePosition.x) / 2
+            : undefined,
+          customSourceY: isSkillMidpointBranch && marketPosition && marketDimensions
+            ? marketPosition.y + marketDimensions.height / 2
+            : undefined,
           busY: relation === "branches_to" && sourcePosition
             ? sourcePosition.y + sourceDimensions.height + 34
             : undefined,

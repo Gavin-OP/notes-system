@@ -33,13 +33,17 @@ const nodeTypes = { constellation: StarNode };
 
 function FixedRouteEdge({ id, sourceX, sourceY, targetX, targetY, style, data, markerEnd }) {
   const isBranch = data?.relation === "branches_to";
-  const busY = Number.isFinite(data?.busY) ? data.busY : sourceY + Math.max(28, (targetY - sourceY) / 2);
+  const routeSourceX = Number.isFinite(data?.customSourceX) ? data.customSourceX : sourceX;
+  const routeSourceY = Number.isFinite(data?.customSourceY) ? data.customSourceY : sourceY;
+  const busY = Number.isFinite(data?.busY) ? data.busY : routeSourceY + Math.max(28, (targetY - routeSourceY) / 2);
   const directoryTrunkX = targetX - 28;
-  const path = data?.routeStyle === "directory"
-    ? `M ${sourceX} ${sourceY} V ${busY} H ${directoryTrunkX} V ${targetY} H ${targetX}`
+  const path = data?.routeStyle === "midpoint-drop"
+    ? `M ${routeSourceX} ${routeSourceY} V ${targetY}`
+    : data?.routeStyle === "directory"
+    ? `M ${routeSourceX} ${routeSourceY} V ${busY} H ${directoryTrunkX} V ${targetY} H ${targetX}`
     : isBranch
-      ? `M ${sourceX} ${sourceY} V ${busY} H ${targetX} V ${targetY}`
-    : `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`;
+      ? `M ${routeSourceX} ${routeSourceY} V ${busY} H ${targetX} V ${targetY}`
+      : `M ${routeSourceX} ${routeSourceY} L ${targetX} ${targetY}`;
   return <BaseEdge id={id} path={path} style={style} markerEnd={markerEnd} />;
 }
 

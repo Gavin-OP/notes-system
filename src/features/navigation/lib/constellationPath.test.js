@@ -46,24 +46,39 @@ describe("fall recruiting constellation", () => {
       expect(positionById.get(childId).y, `${childId} should be below ${parentId}`)
         .toBeGreaterThan(positionById.get(parentId).y);
     });
+
+    const profileChildren = ["pilot:resume", "pilot:linkedin", "pilot:cover-letter", "pilot:portfolio", "pilot:personal-site"]
+      .map((id) => positionById.get(id));
+    expect(new Set(profileChildren.map((position) => position.x)).size).toBe(1);
+    expect(profileChildren.map((position) => position.y)).toEqual(
+      [...profileChildren.map((position) => position.y)].sort((a, b) => a - b),
+    );
   });
 
   it("builds a stable non-interactive graph without cross-linking LeetCode to certificates", () => {
     const draft = buildPersonalizedPilotDraft({}, profile, new Date("2026-08-05T00:00:00Z"));
-    const first = buildConstellationElements(draft);
-    const second = buildConstellationElements(draft);
+    const first = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+    const second = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
     expect(first).toEqual(second);
     expect(first.nodes.every((node) => node.draggable === false && node.connectable === false)).toBe(true);
     expect(first.edges.some((edge) => edge.source === "pilot:technical-skills" && edge.target.includes("certificate"))).toBe(false);
     expect(first.edges).toContainEqual(expect.objectContaining({
       source: "pilot:market",
       target: "pilot:skill-supplement",
+      data: expect.objectContaining({ routeStyle: "midpoint-drop" }),
     }));
     expect(first.edges).toContainEqual(expect.objectContaining({
       source: "pilot:skill-supplement",
       target: "pilot:technical-skills",
     }));
     expect(first.edges.some((edge) => edge.source === "pilot:interview-review" && ["pilot:technical-skills", "pilot:finance-skills"].includes(edge.target))).toBe(false);
+    const market = first.nodes.find((node) => node.id === "pilot:market");
+    const profilePreparation = first.nodes.find((node) => node.id === "pilot:profile-preparation");
+    const skillSupplement = first.nodes.find((node) => node.id === "pilot:skill-supplement");
+    const skillBranch = first.edges.find((edge) => edge.source === "pilot:market" && edge.target === "pilot:skill-supplement");
+    const expectedMidpoint = (market.position.x + market.style.width + profilePreparation.position.x) / 2;
+    expect(skillBranch.data.customSourceX).toBe(expectedMidpoint);
+    expect(skillSupplement.position.x + skillSupplement.style.width / 2).toBe(expectedMidpoint);
   });
 
   it("sizes cards to their complete labels instead of forcing one width", () => {
