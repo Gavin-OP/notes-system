@@ -187,7 +187,7 @@ export default function JobSeekerPersonalityPage() {
     {step === "quiz" && <main className="personality-quiz">
       <div className="personality-progress-meta"><span>JobTI · 人格与求职 Path</span><strong>{questionIndex + 1} / {QUIZ_ITEMS.length}</strong></div>
       <div className="personality-progress" role="progressbar" aria-valuemin="1" aria-valuemax={QUIZ_ITEMS.length} aria-valuenow={questionIndex + 1}><span style={{ transform: `scaleX(${(questionIndex + 1) / QUIZ_ITEMS.length})` }} /></div>
-      <section className={`personality-question-card${currentQuestion.kind.startsWith("path-") ? " personality-question-card--path" : ""}`} aria-labelledby="personality-question"><span className="personality-question-number">{currentQuestion.kind.startsWith("path-") ? "用于生成你的 PATH" : `PERSONALITY ${String(questionIndex + 1).padStart(2, "0")}`}</span><h1 id="personality-question">{currentQuestion.title}</h1><p>{currentQuestion.hint}</p>
+      <section key={currentQuestion.id} className={`personality-question-card${currentQuestion.kind.startsWith("path-") ? " personality-question-card--path" : ""}`} aria-labelledby="personality-question"><span className="personality-question-number">{String(questionIndex + 1).padStart(2, "0")}</span><h1 id="personality-question">{currentQuestion.title}</h1><p>{currentQuestion.hint}</p>
         <div className="personality-options" role={currentQuestion.kind === "path-multi" ? "group" : "radiogroup"} aria-label={currentQuestion.title}>{currentQuestion.options.map((option, index) => {
           const optionValue = currentQuestion.kind === "personality" ? index : option.value;
           const selected = currentQuestion.kind === "path-multi" ? (currentResponse || []).includes(option.value) : currentResponse === optionValue;

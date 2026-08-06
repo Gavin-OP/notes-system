@@ -33,7 +33,7 @@ describe("JobTI questionnaire model", () => {
       materials: ["linkedin", "cover_letter"],
       search: ["networking"],
       leetcode: true,
-      certificates: true,
+      certificates: "learn",
       interviews: ["hr", "panel"],
     });
     expect(second).toEqual(first);
@@ -45,7 +45,7 @@ describe("JobTI questionnaire model", () => {
       materials: ["linkedin"],
       search: ["networking"],
       leetcode: true,
-      certificates: true,
+      certificates: "learn",
       interviews: ["hr", "assessment_centre"],
     });
 
@@ -58,5 +58,12 @@ describe("JobTI questionnaire model", () => {
       interview_branches: ["hr", "assessment_centre"],
       setup_complete: true,
     });
+  });
+
+  it("keeps every finance-certificate answer visually distinct", () => {
+    const question = QUIZ_ITEMS.find((item) => item.id === "certificates");
+    expect(new Set(question.options.map((option) => option.value)).size).toBe(question.options.length);
+    expect(buildJobTiPathProfile({ certificates: "learn" }).certificate_interest).toBe(true);
+    expect(buildJobTiPathProfile({ certificates: "skip" }).certificate_interest).toBe(false);
   });
 });

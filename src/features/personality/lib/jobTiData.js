@@ -42,14 +42,14 @@ export const QUIZ_ITEMS = [
     { label: "朋友看完说：你原来做过这么多东西？", scores: ["alchemist", "koi"] },
     { label: "简历只是一页纸，我的人生塞不完", scores: ["explorer", "gardener"] },
   ]),
-  pathMulti("materials", "profile_branches", "你的求职材料还想补齐哪些拼图？", "简历默认保留；这题会把所选材料加入 Path，可以多选。", PROFILE_BRANCH_OPTIONS, "暂时只准备简历"),
+  pathMulti("materials", "profile_branches", "除了简历，你的求职材料还想补齐哪些拼图？", "我们会把相关材料的准备方法加入你的 Path，可以多选。", PROFILE_BRANCH_OPTIONS, "暂时只准备简历"),
   personality("planning", "HR 问“你的职业规划是什么？”时，你的内心真实版本更接近？", "此处无需展示 leadership，请诚实作答。", [
     { label: "我有方向，也愿意一路修正", scores: ["radar", "gardener"] },
     { label: "世界这么大，我想多看看有哪些可能", scores: ["explorer", "koi"] },
     { label: "先把眼前的事做好，答案会慢慢出现", scores: ["researcher", "engine"] },
     { label: "希望未来的我有工作、有下班，也有双休", scores: ["protector", "gardener"] },
   ]),
-  pathMulti("search", "search_branches", "找岗位时，你想给自己增加哪些入口？", "所选方式会作为寻找岗位阶段的分支，可以多选。", SEARCH_BRANCH_OPTIONS, "先使用基础岗位搜索流程"),
+  pathMulti("search", "search_branches", "找岗位时，你想给自己增加哪些入口？", "除了直接投递，我们还有一些提升效率的方式。可以多选。", SEARCH_BRANCH_OPTIONS, "先使用基础岗位搜索流程"),
   personality("assessment", "收到招聘流程中的在线测试邀请，页面写着“限时完成，建议提前准备”，你会？", "它可能是能力测试、限时笔试或情境判断。", [
     { label: "先查清形式，找几道样题练手", scores: ["researcher", "radar"] },
     { label: "直接打开，类似的题已经见过不少", scores: ["engine", "researcher"] },
@@ -66,11 +66,11 @@ export const QUIZ_ITEMS = [
     { label: "讲得真实、有逻辑，而且能看到成长", scores: ["alchemist", "researcher"] },
     { label: "还没找到工作就是我的失败", scores: ["protector", "koi"] },
   ]),
-  pathSingle("certificates", "certificate_interest", "你是传说中的持证达人吗？", "这题只决定是否加入证书概览，不会替你报名，也不会擅自选择具体证书。", [
-    { value: false, label: "证书不是宝可梦，我暂时不想集齐" },
-    { value: true, label: "想认真看看，至少先搞懂它们分别有什么用" },
-    { value: true, label: "报名页面打开过几次，但理智还在加载" },
-    { value: false, label: "先把眼前的申请交了，证书以后再议" },
+  pathSingle("certificates", "certificate_interest", "金融证书（CPA、CFA、FRM）要不要加入这局？", "这题只决定是否加入金融证书概览，不会替你报名，也不会擅自选择具体证书。", [
+    { value: "skip", pathValue: false, label: "证书不是宝可梦，我暂时不想集齐" },
+    { value: "learn", pathValue: true, label: "想认真看看，至少先搞懂它们分别有什么用" },
+    { value: "consider", pathValue: true, label: "报名页面打开过几次，但理智还在加载" },
+    { value: "later", pathValue: false, label: "先把眼前的申请交了，证书以后再议" },
   ]),
   personality("silence", "连续一段时间没有新消息，你的做法更接近？", "先深呼吸。暂时没有消息，也是一种消息静音。", [
     { label: "重新看看方向，调整申请策略", scores: ["radar", "researcher"] },
@@ -78,7 +78,7 @@ export const QUIZ_ITEMS = [
     { label: "找朋友聊聊，一起吐槽就业市场", scores: ["protector", "koi"] },
     { label: "允许自己丧一会儿，然后继续生活", scores: ["gardener", "protector"] },
   ]),
-  pathMulti("interviews", "interview_branches", "下一关可能是什么面试副本？", "综合面试准备会始终保留；所选形式会加入专项课程，可以多选。", INTERVIEW_BRANCH_OPTIONS, "暂时不确定，先看综合准备"),
+  pathMulti("interviews", "interview_branches", "接下来，你会遇到什么形式的面试？", "我们为你提供综合性的建议，但你也可以选择对某种面试进行专项突击。可以多选。", INTERVIEW_BRANCH_OPTIONS, "暂时不确定，先看综合准备"),
   personality("message", "如果给这次求职的自己留一句话，你更想选？", "这一题不计鸡汤浓度，只看你现在想听哪句。", [
     { label: "我在寻找适合自己的生活，不是在参加比赛", scores: ["gardener", "radar"] },
     { label: "世界很大，一份 Offer 只是其中一个入口", scores: ["explorer", "koi"] },
@@ -98,7 +98,8 @@ export function rankJobTiResults(responses = {}) {
 }
 
 export function buildJobTiPathProfile(responses = {}, previous = {}) {
-  const certificateInterest = Boolean(responses.certificates);
+  const certificateOption = QUIZ_ITEMS.find((item) => item.id === "certificates")?.options.find((option) => option.value === responses.certificates);
+  const certificateInterest = responses.certificates === true || Boolean(certificateOption?.pathValue);
   return {
     ...previous,
     stage: responses.stage || previous.stage || "getting_started",
@@ -123,7 +124,7 @@ export function getJobTiPathSummary(responses = {}) {
     materials.length ? `材料分支：${materials.join("、")}。` : "材料先从简历开始，需要时再扩展。",
     search.length ? `找岗方式：${search.join("、")}。` : "先沿用基础的岗位搜索与筛选流程。",
     responses.leetcode ? "LeetCode 已加入技能准备。" : "目前不额外加入 LeetCode。",
-    responses.certificates ? "先了解金融证书，再决定是否投入。" : "目前不把金融证书放进主线。",
+    responses.certificates === true || ["learn", "consider"].includes(responses.certificates) ? "先了解金融证书，再决定是否投入。" : "目前不把金融证书放进主线。",
     interviews.length ? `面试专项：${interviews.join("、")}。` : "暂时先从综合面试准备开始。",
   ];
 }

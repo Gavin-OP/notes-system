@@ -70,6 +70,15 @@ describe("fall recruiting constellation", () => {
       target: "pilot:interview-review",
       relation: "converges_to",
     }));
+
+    const elements = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+    const parent = elements.nodes.find((node) => node.id === "pilot:interviews");
+    const children = ["pilot:interview-hr", "pilot:interview-technical", "pilot:interview-group", "pilot:interview-panel"]
+      .map((id) => elements.nodes.find((node) => node.id === id));
+    expect(children.every((node) => node.position.x > parent.position.x)).toBe(true);
+    expect(new Set(children.map((node) => node.position.x)).size).toBe(1);
+    expect(children.map((node) => node.position.y)).toEqual([...children.map((node) => node.position.y)].sort((a, b) => a - b));
+    expect(elements.edges.filter((edge) => edge.source.startsWith("pilot:interview-") && edge.target === "pilot:interview-review").every((edge) => edge.hidden)).toBe(true);
   });
 
   it("adds optional content through profile choices and lets the model rebuild the DAG", () => {

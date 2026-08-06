@@ -16,6 +16,7 @@ function StarNode({ data }) {
     {!data.hideHandles ? <>
       <Handle id="main-target" type="target" position={Position.Left} isConnectable={false} />
       <Handle id="branch-target" type="target" position={Position.Top} isConnectable={false} />
+      <Handle id="tree-target" type="target" position={Position.Left} isConnectable={false} />
     </> : null}
     <button type="button" className="path-star-node__button" onClick={(event) => { event.stopPropagation(); data.onOpen?.(); }} aria-label={data.openLabel}>
       <span className="path-star-node__orb" aria-hidden="true"><i /></span>
@@ -33,8 +34,11 @@ const nodeTypes = { constellation: StarNode };
 function FixedRouteEdge({ id, sourceX, sourceY, targetX, targetY, style, data, markerEnd }) {
   const isBranch = data?.relation === "branches_to";
   const busY = Number.isFinite(data?.busY) ? data.busY : sourceY + Math.max(28, (targetY - sourceY) / 2);
-  const path = isBranch
-    ? `M ${sourceX} ${sourceY} V ${busY} H ${targetX} V ${targetY}`
+  const directoryTrunkX = targetX - 28;
+  const path = data?.routeStyle === "directory"
+    ? `M ${sourceX} ${sourceY} V ${busY} H ${directoryTrunkX} V ${targetY} H ${targetX}`
+    : isBranch
+      ? `M ${sourceX} ${sourceY} V ${busY} H ${targetX} V ${targetY}`
     : `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`;
   return <BaseEdge id={id} path={path} style={style} markerEnd={markerEnd} />;
 }
@@ -44,7 +48,7 @@ const edgeTypes = { fixedRoute: FixedRouteEdge };
 function pathTone(nodeId) {
   if (["pilot:profile-preparation", "pilot:resume", "pilot:linkedin", "pilot:cover-letter", "pilot:portfolio", "pilot:personal-site", "pilot:job-search", "pilot:networking", "pilot:ai-job-search"].includes(nodeId)) return 1;
   if (["pilot:applications", "pilot:assessments"].includes(nodeId)) return 2;
-  if (["pilot:interviews", "pilot:interview-review", "pilot:technical-skills", "pilot:finance-skills", "pilot:certificate-cfa", "pilot:certificate-frm", "pilot:certificate-hkicpa"].includes(nodeId)) return 3;
+  if (["pilot:interviews", "pilot:interview-review", "pilot:interview-hr", "pilot:interview-technical", "pilot:interview-group", "pilot:interview-panel", "pilot:interview-assessment-centre", "pilot:interview-stress", "pilot:interview-final", "pilot:interview-special-situations", "pilot:technical-skills", "pilot:finance-skills", "pilot:certificate-cfa", "pilot:certificate-frm", "pilot:certificate-hkicpa"].includes(nodeId)) return 3;
   if (nodeId === "pilot:offer") return 4;
   return 0;
 }

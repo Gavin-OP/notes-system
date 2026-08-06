@@ -16,6 +16,17 @@ const PILOT_MAIN_ROUTE = [
   "pilot:offer",
 ];
 
+const INTERVIEW_CHILD_IDS = [
+  "pilot:interview-hr",
+  "pilot:interview-technical",
+  "pilot:interview-group",
+  "pilot:interview-panel",
+  "pilot:interview-assessment-centre",
+  "pilot:interview-stress",
+  "pilot:interview-final",
+  "pilot:interview-special-situations",
+];
+
 const OPTIONAL_FIELD_BY_VALUE = {
   linkedin: "profile_branches",
   cover_letter: "profile_branches",
@@ -82,6 +93,11 @@ export function buildConstellationElements(draft, options = {}) {
       [{ x: -85, y: 104 }, { x: 85, y: 104 }],
     );
     placeChildren(
+      INTERVIEW_CHILD_IDS,
+      "pilot:interviews",
+      INTERVIEW_CHILD_IDS.map((_, index) => ({ x: 190, y: 104 + index * 68 })),
+    );
+    placeChildren(
       ["pilot:technical-skills", "pilot:finance-skills"],
       "pilot:interview-review",
       [{ x: -85, y: 104 }, { x: 85, y: 104 }],
@@ -122,17 +138,21 @@ export function buildConstellationElements(draft, options = {}) {
     edges: [...visualBackboneEdges, ...draftEdges].map((edge) => {
       const sourcePosition = positions.get(edge.source);
       const relation = edge.relation || "precedes";
+      const isInterviewBranch = edge.source === "pilot:interviews" && INTERVIEW_CHILD_IDS.includes(edge.target);
+      const isInterviewReturn = INTERVIEW_CHILD_IDS.includes(edge.source) && edge.target === "pilot:interview-review";
       return {
         id: edge.edge_id,
         source: edge.source,
         target: edge.target,
         sourceHandle: relation === "branches_to" ? "branch-source" : "main-source",
-        targetHandle: relation === "branches_to" ? "branch-target" : "main-target",
+        targetHandle: isInterviewBranch ? "tree-target" : relation === "branches_to" ? "branch-target" : "main-target",
         type: "fixedRoute",
         animated: false,
         selectable: false,
+        hidden: isInterviewReturn,
         data: {
           relation,
+          routeStyle: isInterviewBranch ? "directory" : undefined,
           busY: relation === "branches_to" && sourcePosition
             ? sourcePosition.y + nodeHeight + 34
             : undefined,
