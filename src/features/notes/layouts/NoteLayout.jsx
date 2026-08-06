@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useRef, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import {
@@ -9,14 +9,20 @@ import {
   theme,
   Modal,
   Checkbox,
+  Dropdown,
+  Tooltip,
   message,
 } from "antd";
 import {
+  ApartmentOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   LeftOutlined,
   RightOutlined,
   CloseOutlined,
+  GlobalOutlined,
+  MoonOutlined,
+  SunOutlined,
 } from "@ant-design/icons";
 
 import LearningNavigationPanel from "../../navigation/components/LearningNavigationPanel";
@@ -58,6 +64,7 @@ import {
 import { completeMyNote, createMyNoteQuote, getMyNoteQuotes, getMyProfile, uncompleteMyNote, updateMyGuideState, UserApiError } from "../../profile/api/user";
 import useTranslatedContent from "../../../i18n/useTranslatedContent";
 import useTranslation from "../../../i18n/useTranslation";
+import { setLanguage, setTheme } from "../../../app/store/preferenceSlice";
 import { listPodcasts } from "../../podcasts/api/podcasts";
 
 import LearningPageMetaBar from "../../../shared/layouts/LearningPageMetaBar";
@@ -327,6 +334,7 @@ const NoteLayout = () => {
   } = theme.useToken();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const learningPathId = useMemo(() => {
     if (!FULL_PRODUCT_ENABLED) {
@@ -345,6 +353,8 @@ const NoteLayout = () => {
 
   // redux state
   const isMobile = useSelector((state) => state.preference.isMobile);
+  const preferenceTheme = useSelector((state) => state.preference.theme);
+  const language = useSelector((state) => state.preference.language);
   const rawNotesIndex = useSelector((state) => state.notesIndex.data);
   const notesIndex = useMemo(() => {
     const allNotes = Array.isArray(rawNotesIndex) ? rawNotesIndex : [];
@@ -583,6 +593,23 @@ const NoteLayout = () => {
     () => normalizeMenuKey(currentMeta?.url || ""),
     [currentMeta?.url],
   );
+  const adjacentPilotNotes = useMemo(() => {
+    if (FULL_PRODUCT_ENABLED) return { previous: null, next: null };
+    const orderedNodes = Array.isArray(learningPathDraft?.nodes) ? learningPathDraft.nodes : [];
+    const currentIndex = orderedNodes.findIndex(
+      (node) => normalizeMenuKey(node.note_url) === currentNoteUrlNormalized,
+    );
+    if (currentIndex < 0) return { previous: null, next: null };
+    return {
+      previous: orderedNodes[currentIndex - 1] || null,
+      next: orderedNodes[currentIndex + 1] || null,
+    };
+  }, [currentNoteUrlNormalized, learningPathDraft?.nodes]);
+  const pilotLanguageItems = useMemo(() => [
+    { key: "cn", label: t("language.chinese"), onClick: () => dispatch(setLanguage("cn")) },
+    { key: "tw", label: t("language.traditional", "繁體中文"), onClick: () => dispatch(setLanguage("tw")) },
+    { key: "en", label: t("language.english"), onClick: () => dispatch(setLanguage("en")) },
+  ], [dispatch, t]);
   useEffect(() => {
     if (!PILOT_LOCAL_ONLY) return;
     savePilotLastNotePath(`${location.pathname}${location.search}${location.hash}`);
@@ -1526,10 +1553,10 @@ const NoteLayout = () => {
         "--sider-bg": colorBgContainer,
         "--content-bg": colorBgContainer,
         "--content-radius": borderRadiusLG,
-        "--note-meta-topbar-height": immersiveMode ? "0px" : FULL_PRODUCT_ENABLED ? "64px" : "52px",
+        "--note-meta-topbar-height": immersiveMode || !FULL_PRODUCT_ENABLED ? "0px" : "64px",
       }}
     >
-      {!immersiveMode ? (
+      {!immersiveMode && FULL_PRODUCT_ENABLED ? (
         <LearningPageMetaBar
           startSlot={
             isMobile ? (
@@ -1717,10 +1744,77 @@ const NoteLayout = () => {
               className={`note-layout__content ${isMobile ? "note-layout__content--mobile" : ""}`}
               ref={noteAreaRef}
             >
-              <Breadcrumb
-                items={breadcrumbItems}
-                className={`note-layout__breadcrumb ${isMobile ? "note-layout__breadcrumb--mobile" : ""}`}
-              />
+              <div className="note-layout__breadcrumb-row">
+                {!FULL_PRODUCT_ENABLED && isMobile ? (
+                  <Button
+                    type="text"
+                    className="note-layout__breadcrumb-menu-btn"
+                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                    onClick={() => {
+                      setShowMenu(true);
+                      setCollapsed((value) => !value);
+                    }}
+                    aria-label={collapsed ? "Open Path" : "Close Path"}
+                  />
+                ) : null}
+                <Breadcrumb
+                  items={breadcrumbItems}
+                  className={`note-layout__breadcrumb ${isMobile ? "note-layout__breadcrumb--mobile" : ""}`}
+                />
+                {!FULL_PRODUCT_ENABLED ? (
+                  <div className="note-layout__breadcrumb-tools" aria-label={t("note.navigation.controls")}>
+                    <Button
+                      className="note-layout__adjacent-note-btn"
+                      disabled={!adjacentPilotNotes.previous}
+                      onClick={() => handleNoteSelect(adjacentPilotNotes.previous?.note_url)}
+                    >
+                      {t("note.navigation.previous")}
+                    </Button>
+                    <Button
+                      className="note-layout__adjacent-note-btn"
+                      disabled={!adjacentPilotNotes.next}
+                      onClick={() => handleNoteSelect(adjacentPilotNotes.next?.note_url)}
+                    >
+                      {t("note.navigation.next")}
+                    </Button>
+                    {workspaceMeta?.showMindmap ? (
+                      <Tooltip title={t("note.toolbar.openMindmap")}>
+                        <Button
+                          shape="circle"
+                          className="note-layout__breadcrumb-icon-btn"
+                          icon={<ApartmentOutlined />}
+                          ref={exploreGuideRef}
+                          onClick={handleExploreMindmap}
+                          aria-label={t("note.toolbar.openMindmap")}
+                        />
+                      </Tooltip>
+                    ) : null}
+                    <Tooltip title={preferenceTheme === "dark" ? t("note.toolbar.lightMode") : t("note.toolbar.darkMode")}>
+                      <Button
+                        shape="circle"
+                        className="note-layout__breadcrumb-icon-btn"
+                        icon={preferenceTheme === "dark" ? <SunOutlined /> : <MoonOutlined />}
+                        onClick={() => dispatch(setTheme(preferenceTheme === "dark" ? "light" : "dark"))}
+                        aria-label={preferenceTheme === "dark" ? t("note.toolbar.lightMode") : t("note.toolbar.darkMode")}
+                      />
+                    </Tooltip>
+                    <Dropdown
+                      menu={{ items: pilotLanguageItems, selectable: true, selectedKeys: [language] }}
+                      trigger={["click"]}
+                      placement="bottomRight"
+                    >
+                      <Tooltip title={t("home.languageSelector")}>
+                        <Button
+                          shape="circle"
+                          className="note-layout__breadcrumb-icon-btn"
+                          icon={<GlobalOutlined />}
+                          aria-label={t("home.languageSelector")}
+                        />
+                      </Tooltip>
+                    </Dropdown>
+                  </div>
+                ) : null}
+              </div>
               <NoteWorkspaceBar
                 narrationState={narrationState}
                 isNarrationPlaying={isNarrationPlaying}
