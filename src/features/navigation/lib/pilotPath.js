@@ -30,6 +30,28 @@ export const SKILL_BRANCH_OPTIONS = [
   { value: "technical", label: "LeetCode" },
 ];
 
+export const INTERVIEW_BRANCH_OPTIONS = [
+  { value: "hr", label: "HR 面" },
+  { value: "technical", label: "Technical Interview" },
+  { value: "group", label: "群面" },
+  { value: "panel", label: "Panel Interview" },
+  { value: "assessment_centre", label: "Assessment Centre" },
+  { value: "stress", label: "压力面" },
+  { value: "final", label: "终面" },
+  { value: "special_situations", label: "面试特殊情况应对" },
+];
+
+const INTERVIEW_BRANCH_CONTENT = {
+  hr: ["interview-hr", "HR 面", "interview-hr"],
+  technical: ["interview-technical", "Technical Interview", "interview-technical"],
+  group: ["interview-group", "群面", "interview-group"],
+  panel: ["interview-panel", "Panel Interview", "interview-panel"],
+  assessment_centre: ["interview-assessment-centre", "Assessment Centre", "interview-assessment-centre"],
+  stress: ["interview-stress", "压力面", "interview-stress"],
+  final: ["interview-final", "终面", "interview-final"],
+  special_situations: ["interview-special-situations", "面试特殊情况应对", "interview-special-situations"],
+};
+
 const STAGE_TIMELINES = {
   getting_started: [
     ["方向与材料", 14],
@@ -120,6 +142,7 @@ function buildPilotNodes(profile = {}) {
   const searchBranches = new Set(profile.search_branches || []);
   const skillBranches = new Set(profile.skill_branches || []);
   const certificateBranches = new Set(profile.certificate_branches || []);
+  const interviewBranches = new Set(profile.interview_branches || []);
   const nodes = [
     pathNode("getting-started", "刚开始准备求职", "autumn-recruitment-roadmap", 1),
     pathNode("market", "理解岗位与市场", "role-market-research", 3),
@@ -152,15 +175,21 @@ function buildPilotNodes(profile = {}) {
   nodes.push(
     pathNode("applications", "投递与流程管理", "application-communication", 8),
     pathNode("assessments", "在线测试", "assessment-preparation", 9),
-    pathNode("interviews", "面试准备", "interview-preparation", 10),
-    pathNode("interview-review", "面试复盘", "interview-review", 11),
+    pathNode("interviews", "综合面试准备", "interview-preparation", 10),
   );
+
+  INTERVIEW_BRANCH_OPTIONS.forEach(({ value }) => {
+    if (!interviewBranches.has(value)) return;
+    const [id, title, slug] = INTERVIEW_BRANCH_CONTENT[value];
+    nodes.push(pathNode(id, title, slug, 10.5, "", { path_relation: "branch", interview_type: value }));
+  });
+  nodes.push(pathNode("interview-review", "面试复盘", "interview-review", 11));
 
   if (skillBranches.has("technical")) {
     nodes.push(pathNode("technical-skills", "LeetCode", "leetcode-practice", 12, "", { path_relation: "branch" }));
   }
 
-  if (certificateBranches.size > 0) {
+  if (profile.certificate_interest || certificateBranches.size > 0) {
     nodes.push(pathNode("finance-skills", "金融证书怎么选", "finance-knowledge-certificates", 12, "", { path_relation: "branch" }));
     FALL_RECRUITING_CERTIFICATES.forEach((certificate) => {
       if (!certificateBranches.has(certificate.id)) return;
@@ -222,7 +251,17 @@ function buildPilotEdges(nodes) {
 
   connect("applications", "assessments");
   connect("assessments", "interviews");
-  connect("interviews", "interview-review");
+  const interviewBranchIds = Object.values(INTERVIEW_BRANCH_CONTENT)
+    .map(([nodeId]) => nodeId)
+    .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
+  if (interviewBranchIds.length > 0) {
+    interviewBranchIds.forEach((nodeId) => {
+      connect("interviews", nodeId, "branches_to");
+      connect(nodeId, "interview-review", "converges_to");
+    });
+  } else {
+    connect("interviews", "interview-review");
+  }
 
   const supplementIds = ["technical-skills", "finance-skills"]
     .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
@@ -276,6 +315,10 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
     certificate_branches: (rawProfile.certificate_branches || []).filter((value) =>
       FALL_RECRUITING_CERTIFICATES.some((certificate) => certificate.id === value),
     ),
+    certificate_interest: Boolean(rawProfile.certificate_interest || rawProfile.certificate_branches?.length),
+    interview_branches: (rawProfile.interview_branches || []).filter((value) =>
+      INTERVIEW_BRANCH_OPTIONS.some((option) => option.value === value),
+    ),
     setup_complete: Boolean(rawProfile.setup_complete),
   };
   const focusNodeId = STAGE_FOCUS_NODE[profile.stage];
@@ -297,7 +340,7 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
       ...(draft?.metadata || {}),
       order_mode: "canonical",
       pilot_official_path: true,
-      pilot_path_schema_version: 3,
+      pilot_path_schema_version: 4,
       graph_layout: undefined,
       personalization: {
         ...profile,
@@ -320,6 +363,8 @@ export function buildDefaultPilotDraft(draft = {}, now = new Date()) {
       search_branches: [],
       skill_branches: [],
       certificate_branches: [],
+      certificate_interest: false,
+      interview_branches: [],
       setup_complete: false,
     },
     now,
@@ -332,6 +377,9 @@ export function buildInterviewProfileContext(profile = {}) {
     ...(profile.profile_branches || []),
     ...(profile.certificate_branches || []).map(
       (certificateId) => getCertificateById(certificateId)?.shortName || certificateId,
+    ),
+    ...(profile.interview_branches || []).map(
+      (interviewId) => INTERVIEW_BRANCH_OPTIONS.find((option) => option.value === interviewId)?.label || interviewId,
     ),
   ];
   const details = [

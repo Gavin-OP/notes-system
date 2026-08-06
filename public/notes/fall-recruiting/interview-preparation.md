@@ -1,14 +1,16 @@
 ---
-title: 面试准备
+title: 综合面试准备
 slug: interview-preparation.md
 order: 10
 tags: [秋招, 面试, Motivation, Behavior, Technical, STAR]
 ---
 
 <a id="concept-interview-preparation"></a>
-# 面试准备
+# 综合面试准备
 
 面试准备不是背出一套“完美答案”，而是把公司、岗位和自己的经历慢慢连起来。准备得越具体，现场越像一场有内容的交流，而不是临时拼句子。
+
+这篇是跨面试形式的完整主线。已经知道下一轮是 HR 面、Technical Interview、群面、Panel Interview、Assessment Centre、压力面或终面时，可以同时加入对应专项课；暂时不确定形式，也可以先沿着这里准备。
 
 ## 先读公司，再回到 JD
 

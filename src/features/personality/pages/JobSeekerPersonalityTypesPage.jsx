@@ -12,7 +12,7 @@ export default function JobSeekerPersonalityTypesPage() {
     <header><span className="personality-brand">JobTI</span><h1>八种求职者人格</h1><p>每一种都是应对求职不确定性的不同方式。这里没有更好的类型，也不需要集齐。</p></header>
     <section className="personality-types-grid" aria-label="全部 JobTI 人格">
       {Object.entries(TYPES).map(([key, type]) => <article key={key} className={`personality-type-card personality-type-card-${type.color} ${active === key ? "is-active" : ""}`}>
-        <PersonalityMark type={key} /><div><span>{type.eyebrow}</span><h2>{type.name}</h2><p>{type.summary}</p><strong>{type.buff}</strong></div>
+        <PersonalityMark type={key} /><div><span>{type.typeLabel}</span><h2>{type.name}</h2><strong>{type.eyebrow}</strong><p>{type.summary}</p><strong>{type.buff}</strong></div>
       </article>)}
     </section>
   </main>;

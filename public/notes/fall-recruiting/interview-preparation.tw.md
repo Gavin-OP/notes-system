@@ -1,14 +1,16 @@
 ---
-title: 面試準備
+title: 綜合面試準備
 slug: interview-preparation.md
 order: 10
 tags: [秋招, 面試, Motivation, Behavior, Technical, STAR]
 ---
 
 <a id="concept-interview-preparation"></a>
-# 面試準備
+# 綜合面試準備
 
 面試準備不是背出一套“完美答案”，而是把公司、崗位和自己的經歷慢慢連起來。準備得越具體，現場越像一場有內容的交流，而不是臨時拼句子。
+
+這篇是跨面試形式的完整主線。已經知道下一輪是 HR 面、Technical Interview、羣面、Panel Interview、Assessment Centre、壓力面或終面時，可以同時加入對應專項課；暫時不確定形式，也可以先沿着這裏準備。
 
 ## 先讀公司，再回到 JD
 

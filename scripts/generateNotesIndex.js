@@ -316,7 +316,7 @@ function processDirTree(
       children.push(
         processFolderMeta(fullPath, notesDir, subChildren, parentSlugs, urlSet),
       );
-    } else if (file.endsWith(".md")) {
+    } else if (file.endsWith(".md") && !/\.(?:tw|en)\.md$/i.test(file)) {
       // markdown note file
       children.push(processNoteMeta(fullPath, notesDir, parentSlugs, urlSet));
     } else {

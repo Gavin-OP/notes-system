@@ -7,6 +7,7 @@ import {
   PROFILE_BRANCH_OPTIONS,
   SEARCH_BRANCH_OPTIONS,
   SKILL_BRANCH_OPTIONS,
+  INTERVIEW_BRANCH_OPTIONS,
 } from "../lib/pilotPath";
 import {
   FALL_RECRUITING_CERTIFICATES,
@@ -22,7 +23,14 @@ const EMPTY_PROFILE = {
   search_branches: [],
   skill_branches: [],
   certificate_branches: [],
+  certificate_interest: false,
+  interview_branches: [],
 };
+
+const CERTIFICATE_INTEREST_OPTIONS = [
+  { value: true, label: "想进一步了解" },
+  { value: false, label: "目前不加入 Path" },
+];
 
 function normalizeInitialProfile(initialProfile = {}) {
   return {
@@ -34,6 +42,10 @@ function normalizeInitialProfile(initialProfile = {}) {
       : [],
     certificate_branches: Array.isArray(initialProfile.certificate_branches)
       ? initialProfile.certificate_branches
+      : [],
+    certificate_interest: Boolean(initialProfile.certificate_interest || initialProfile.certificate_branches?.length),
+    interview_branches: Array.isArray(initialProfile.interview_branches)
+      ? initialProfile.interview_branches
       : [],
   };
 }
@@ -190,6 +202,13 @@ function PilotPathSetupWizard({ initialProfile, pending = false, onCancel, onSub
   const update = (key, value) => {
     setProfile((current) => ({ ...current, [key]: value }));
   };
+  const updateCertificateInterest = (value) => {
+    setProfile((current) => ({
+      ...current,
+      certificate_interest: value,
+      certificate_branches: value ? current.certificate_branches : [],
+    }));
+  };
 
   const questions = [
     {
@@ -249,13 +268,30 @@ function PilotPathSetupWizard({ initialProfile, pending = false, onCancel, onSub
     },
     {
       id: "certificates",
-      title: "哪些金融证书值得你进一步了解？",
-      hint: "先比较适用方向和投入，再决定是否加入 Path；这不是报名建议。",
+      title: "你想进一步了解金融证书吗？",
+      hint: "想了解时会先加入概览；具体证书可以继续比较，这不是报名建议。",
       content: (
-        <CertificateComparisonGrid
-          value={profile.certificate_branches}
+        <>
+          <SingleChoiceGrid options={CERTIFICATE_INTEREST_OPTIONS} value={profile.certificate_interest} disabled={pending} onChange={updateCertificateInterest} />
+          {profile.certificate_interest && <CertificateComparisonGrid
+            value={profile.certificate_branches}
+            disabled={pending}
+            onChange={(value) => update("certificate_branches", value)}
+          />}
+        </>
+      ),
+    },
+    {
+      id: "interviews",
+      title: "接下来可能进行哪些形式的面试？",
+      hint: "可以多选；综合面试准备会始终保留，专项课程会作为分支加入。",
+      content: (
+        <MultiChoiceGrid
+          options={INTERVIEW_BRANCH_OPTIONS}
+          value={profile.interview_branches}
+          emptyLabel="暂时不确定，先看综合准备"
           disabled={pending}
-          onChange={(value) => update("certificate_branches", value)}
+          onChange={(value) => update("interview_branches", value)}
         />
       ),
     },
@@ -360,6 +396,12 @@ export function PilotPathSettingsPanel({ initialProfile, pending = false, onClos
     value: certificate.id,
     label: certificate.shortName,
   }));
+  const updateCertificateInterest = (value) => onChange?.({
+    ...profile,
+    certificate_interest: value,
+    certificate_branches: value ? profile.certificate_branches : [],
+    setup_complete: true,
+  });
   const localizeOptions = (options, prefix) => options.map((option) => ({
     ...option,
     label: t(`${prefix}.${option.value}`, option.label),
@@ -395,7 +437,12 @@ export function PilotPathSettingsPanel({ initialProfile, pending = false, onClos
         </section>
         <section>
           <div className="pilot-path-settings__question"><strong>{t("pilot.settings.certificates")}</strong><small>{t("pilot.settings.certificatesHint")}</small></div>
-          <MultiChoiceGrid options={certificateOptions} value={profile.certificate_branches} emptyLabel={t("pilot.settings.certificatesEmpty")} disabled={pending} onChange={(value) => update("certificate_branches", value)} />
+          <SingleChoiceGrid options={CERTIFICATE_INTEREST_OPTIONS} value={profile.certificate_interest} disabled={pending} onChange={updateCertificateInterest} />
+          {profile.certificate_interest && <MultiChoiceGrid options={certificateOptions} value={profile.certificate_branches} emptyLabel={t("pilot.settings.certificatesEmpty")} disabled={pending} onChange={(value) => update("certificate_branches", value)} />}
+        </section>
+        <section>
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.interviews")}</strong><small>{t("pilot.settings.interviewsHint")}</small></div>
+          <MultiChoiceGrid options={localizeOptions(INTERVIEW_BRANCH_OPTIONS, "pilot.interview")} value={profile.interview_branches} emptyLabel={t("pilot.settings.interviewsEmpty")} disabled={pending} onChange={(value) => update("interview_branches", value)} />
         </section>
       </div>
       <footer className="pilot-path-settings__status" aria-live="polite">{pending ? t("pilot.settings.saving") : t("pilot.settings.saved")}</footer>

@@ -1,11 +1,13 @@
 ---
-title: Interview Preparation
+title: Comprehensive Interview Preparation
 slug: interview-preparation.md
 order: 10
 tags: [interviews, motivation, behavioural questions]
 ---
 
-# Interview Preparation
+# Comprehensive Interview Preparation
+
+This is the shared preparation route across interview formats. If you already know that the next round is an HR, technical, group, panel, assessment-centre, stress, or final interview, add the relevant specialist note as well. If the format is still unclear, this page is a useful place to begin.
 
 Begin with the company, team, and JD. Identify the organisation's current priorities and the capabilities repeated in the role description. Then connect them to your own evidence rather than memorising a generic script.
 

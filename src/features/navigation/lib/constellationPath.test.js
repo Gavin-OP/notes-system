@@ -9,6 +9,8 @@ const profile = {
   search_branches: ["networking"],
   skill_branches: ["technical"],
   certificate_branches: ["cfa", "frm", "hkicpa"],
+  certificate_interest: true,
+  interview_branches: ["hr", "technical", "group", "panel"],
   setup_complete: true,
 };
 
@@ -52,6 +54,22 @@ describe("fall recruiting constellation", () => {
     expect(first).toEqual(second);
     expect(first.nodes.every((node) => node.draggable === false && node.connectable === false)).toBe(true);
     expect(first.edges.some((edge) => edge.source === "pilot:technical-skills" && edge.target.includes("certificate"))).toBe(false);
+  });
+
+  it("keeps comprehensive preparation and branches selected interview formats from it", () => {
+    const draft = buildPersonalizedPilotDraft({}, profile);
+    expect(draft.nodes.find((node) => node.node_id === "pilot:interviews")?.title).toBe("综合面试准备");
+    expect(draft.nodes.some((node) => node.node_id === "pilot:interview-hr")).toBe(true);
+    expect(draft.edges).toContainEqual(expect.objectContaining({
+      source: "pilot:interviews",
+      target: "pilot:interview-hr",
+      relation: "branches_to",
+    }));
+    expect(draft.edges).toContainEqual(expect.objectContaining({
+      source: "pilot:interview-hr",
+      target: "pilot:interview-review",
+      relation: "converges_to",
+    }));
   });
 
   it("adds optional content through profile choices and lets the model rebuild the DAG", () => {

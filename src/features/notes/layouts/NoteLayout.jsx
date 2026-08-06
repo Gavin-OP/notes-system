@@ -21,6 +21,7 @@ import {
   RightOutlined,
   CloseOutlined,
   GlobalOutlined,
+  InfoCircleOutlined,
   MoonOutlined,
   SunOutlined,
 } from "@ant-design/icons";
@@ -1605,33 +1606,7 @@ const NoteLayout = () => {
         >
           {showMenu && (
             <div className="note-layout__sider-menu-shell" ref={directoryAreaRef}>
-              {!isMobile ? (
-                <div className="note-layout__sider-header">
-                  <span className="note-layout__sider-title">{t("learningPath.title")}</span>
-                  <div className="note-layout__sider-header-actions">
-                    {FULL_PRODUCT_ENABLED ? <LearningPathControls
-                      hasPersonalizedPath={hasPersonalizedPath}
-                      hasEditableDraft={hasEditableDraft}
-                      pathEditMode={pathEditMode}
-                      learningPathPending={learningPathPending}
-                      onPrimaryAction={handlePathPrimaryAction}
-                      onClearPath={FULL_PRODUCT_ENABLED ? handleClearPath : undefined}
-                    /> : null}
-                    <button
-                      type="button"
-                      className="note-layout__sider-collapse-btn"
-                      onClick={() => {
-                        setShowMenu(false);
-                        setCollapsed(true);
-                      }}
-                      aria-label="Collapse sidebar"
-                      title="Collapse sidebar"
-                    >
-                      <MenuFoldOutlined />
-                    </button>
-                  </div>
-                </div>
-              ) : (
+              {isMobile ? (
                 <div className="note-layout__sider-mobile-controls">
                   <div className="note-layout__sider-mobile-heading">
                     <span>秋招准备</span>
@@ -1657,7 +1632,7 @@ const NoteLayout = () => {
                     </button>
                   </div>
                 </div>
-              )}
+              ) : null}
               <LearningNavigationPanel
                 items={localizedPlainMenuItems}
                 currentNoteUrl={`${currentNoteUrlNormalized}${location.hash || ""}`}
@@ -1812,6 +1787,15 @@ const NoteLayout = () => {
                         />
                       </Tooltip>
                     </Dropdown>
+                    <Tooltip title={t("note.toolbar.disclaimer", "Disclaimer")}>
+                      <Button
+                        shape="circle"
+                        className="note-layout__breadcrumb-icon-btn"
+                        icon={<InfoCircleOutlined />}
+                        onClick={() => navigate("/disclaimer")}
+                        aria-label={t("note.toolbar.disclaimer", "Disclaimer")}
+                      />
+                    </Tooltip>
                   </div>
                 ) : null}
               </div>

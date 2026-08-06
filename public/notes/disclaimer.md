@@ -3,27 +3,36 @@ slug: disclaimer.md
 title: Disclaimer
 order: -1
 display: true
-tags: 
+tags:
   - disclaimer
 ---
 
-
-
 # Disclaimer
 
-All of the knowledge and information provided on this site are intended solely for educational and learning purposes. While every effort has been made to ensure the accuracy and reliability of the content, it is provided "as is" without any warranties, express or implied. The authors and contributors are not responsible for any errors or omissions, or for any outcomes related to the use of this information.
+## 1. 平台性质
 
-If you would like to contribute to this project or if you find any errors in the materials, please feel free to contact [Gavin OP](mailto:HaoxiangZhang@link.cuhk.edu.hk). We welcome and appreciate any contributions that help improve the quality and accuracy of the content.
+本平台目前提供的内容主要围绕求职准备展开。所提供的课程、建议及其他内容均为免费、自愿性质，旨在为用户提供一般性的经验参考和信息支持。平台中的经验分享及个性化建议，均建立在开发者自愿分享及用户自愿使用的基础上。
 
-Special thanks to all the contributors who have generously shared their knowledge and expertise to make this project possible:
+使用本平台即表示用户理解并同意自行判断相关内容是否适合自身情况，并自行决定是否采纳或执行。
 
-- [Anita](mailto:1155173850@link.cuhk.edu.hk)  
-- [Cindy](mailto:konnayuki0302@gmail.com)
-- [Gavin OP](mailto:HaoxiangZhang@link.cuhk.edu.hk)
-- [QIU Kexin (Chloe)](mailto:1155173885@link.cuhk.edu.hk)  
-- [Rosa](mailto:ruoshui2021@gmail.com)
-- [WANG Yuxin (Eleanor)](mailto:yuxin0359@gmail.com)  
-- [William](mailto:2004yangyilin@gmail.com)
-- [ZHAI Yunxiao (Clay)](mailto:clay.zhai@link.cuhk.edu.hk)
+## 2. 信息准确性
 
-Thank you for your understanding and support.
+本平台会尽力提升内容的完整性、准确性和实用性，但无法保证所有内容始终准确、完整、及时或适用于每一位用户。
+
+求职市场、招聘流程、考试安排、劳动法规及相关政策可能随时间、地区、行业和机构而变化。涉及招聘要求、考试日期、劳动权益、签证、税务或其他重要决定时，请以有关公司、考试机构及政府部门发布的最新官方信息为准。
+
+## 3. 非专业意见
+
+平台内容不构成法律、财务、移民、医疗、心理或其他专业意见，也不构成任何录用、考试通过或职业结果的保证。用户如需要针对个人情况的专业判断，应向具备相应资格的专业人士或主管机构咨询。
+
+## 4. 第三方内容与链接
+
+平台可能提供第三方网站或资料链接，方便用户进一步了解相关信息。第三方内容由相应提供者负责，本平台无法控制其准确性、可用性、隐私政策或后续变化。访问第三方链接前，请自行判断其是否可靠及适合使用。
+
+## 5. 使用责任
+
+用户依据平台内容采取行动所产生的结果，由用户结合自身情况自行判断和承担。本平台及其贡献者不对因使用、无法使用或依赖平台内容而产生的直接或间接损失承担责任，但适用法律另有规定的除外。
+
+如果你发现内容存在错误、过时或表述不清，欢迎向项目贡献者反馈。我们会在能力范围内持续检查和完善内容。
+
+本平台是由贡献者共同参与、持续探索和完善的独立项目。感谢每一位愿意分享经验、提出建议和帮助改进内容的人。
