@@ -18,17 +18,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
 
       - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
-      - run: npm ci --no-audit --no-fund
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
 
       - run: npm run generate:notes
 
@@ -42,9 +43,24 @@ jobs:
 
       - run: touch dist/.nojekyll
 
-      - uses: actions/upload-pages-artifact@v4
+      # The pilot hides legacy courses and narration. Keeping their generated
+      # media in the Pages artifact added roughly 66 MB without serving any
+      # reachable pilot route, leaving almost no margin under deploy-pages'
+      # fixed ten-minute backend timeout. Source assets remain untouched.
+      - name: Prepare pilot artifact
+        run: |
+          rm -rf dist/audio
+          rm -rf dist/notes/image
+
+      - name: Report Pages artifact
+        run: |
+          echo "Files: $(find dist -type f | wc -l | tr -d ' ')"
+          echo "Size: $(du -sh dist | cut -f1)"
+
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
+          include-hidden-files: true
 
   deploy:
     needs: build
@@ -59,8 +75,10 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
         with:
-          timeout: 900000
+          # deploy-pages caps this value at 600000 ms. A larger value is
+          # ignored, so artifact size must leave enough processing margin.
+          timeout: 600000
           error_count: 30
           reporting_interval: 10000
