@@ -15,7 +15,9 @@
     "commit": "cz",
     "generate:notes": "node scripts/generateNotesIndex.js",
     "sync:backend-content": "node scripts/syncBackendContent.js",
-    "generate:all": "npm run generate:notes"
+    "generate:all": "npm run generate:notes",
+    "generate:fall-tw": "node scripts/generateTraditionalNotes.mjs",
+    "check:fall-locales": "node scripts/checkFallRecruitingLocales.mjs"
   },
   "config": {
     "commitizen": {
@@ -80,6 +82,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "jsdom": "^29.1.1",
+    "opencc-js": "^1.4.1",
     "tsx": "^4.21.0",
     "vite": "^7.2.4",
     "vitest": "^4.1.10"

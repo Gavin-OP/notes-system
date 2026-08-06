@@ -182,7 +182,7 @@ function CertificateComparisonGrid({ value, disabled, onChange }) {
   );
 }
 
-function PilotPathSetupDialog({ initialProfile, pending = false, onCancel, onSubmit }) {
+function PilotPathSetupWizard({ initialProfile, pending = false, onCancel, onSubmit, embedded = false }) {
   const [profile, setProfile] = useState(() => normalizeInitialProfile(initialProfile));
   const [stepIndex, setStepIndex] = useState(0);
 
@@ -273,21 +273,8 @@ function PilotPathSetupDialog({ initialProfile, pending = false, onCancel, onSub
     setStepIndex((current) => Math.min(current + 1, questions.length - 1));
   };
 
-  return (
-    <Modal
-      open
-      centered
-      title={null}
-      footer={null}
-      width={920}
-      className="pilot-path-setup-modal"
-      closable={!pending}
-      maskClosable={!pending}
-      keyboard={!pending}
-      onCancel={onCancel}
-      destroyOnHidden
-    >
-      <div className="pilot-path-wizard">
+  const wizard = (
+      <div className={`pilot-path-wizard${embedded ? " pilot-path-wizard--embedded" : ""}`}>
         <header className="pilot-path-wizard__progress">
           <div className="pilot-path-wizard__progress-meta">
             <span>调整你的秋招 Path</span>
@@ -333,13 +320,81 @@ function PilotPathSetupDialog({ initialProfile, pending = false, onCancel, onSub
           </div>
         </footer>
       </div>
+  );
+
+  if (embedded) return wizard;
+  return (
+    <Modal
+      open
+      centered
+      title={null}
+      footer={null}
+      width={920}
+      className="pilot-path-setup-modal"
+      closable={!pending}
+      maskClosable={!pending}
+      keyboard={!pending}
+      onCancel={onCancel}
+      destroyOnHidden
+    >
+      {wizard}
     </Modal>
   );
 }
 
 function PilotPathSetupModal(props) {
   if (!props.open) return null;
-  return <PilotPathSetupDialog {...props} />;
+  return <PilotPathSetupWizard {...props} />;
+}
+
+export function PilotPathSetupPanel(props) {
+  return <PilotPathSetupWizard {...props} embedded />;
+}
+
+export function PilotPathSettingsPanel({ initialProfile, pending = false, onClose, onChange }) {
+  const profile = normalizeInitialProfile(initialProfile);
+  const update = (key, value) => onChange?.({ ...profile, [key]: value, setup_complete: true });
+  const certificateOptions = FALL_RECRUITING_CERTIFICATES.map((certificate) => ({
+    value: certificate.id,
+    label: `${certificate.shortName} · ${certificate.fit}`,
+  }));
+
+  return (
+    <div className="pilot-path-settings">
+      <header className="pilot-path-settings__header">
+        <div>
+          <span>PATH SETTINGS</span>
+          <h2>调整你的求职 Path</h2>
+          <p>更改选项后会立即更新左侧路线，并保存在当前浏览器。</p>
+        </div>
+        <button type="button" onClick={onClose}>返回阅读</button>
+      </header>
+
+      <div className="pilot-path-settings__body">
+        <section>
+          <div className="pilot-path-settings__question"><strong>当前求职阶段</strong><small>用于确定当前节点与 Timeline 起点</small></div>
+          <SingleChoiceGrid options={PILOT_STAGE_OPTIONS} value={profile.stage} disabled={pending} onChange={(value) => update("stage", value)} />
+        </section>
+        <section>
+          <div className="pilot-path-settings__question"><strong>简历与 Profile</strong><small>简历默认保留，可以添加需要准备的材料</small></div>
+          <MultiChoiceGrid options={PROFILE_BRANCH_OPTIONS} value={profile.profile_branches} emptyLabel="暂时不添加额外分支" disabled={pending} onChange={(value) => update("profile_branches", value)} />
+        </section>
+        <section>
+          <div className="pilot-path-settings__question"><strong>寻找岗位的方式</strong><small>选择希望加入 Path 的辅助方式</small></div>
+          <MultiChoiceGrid options={SEARCH_BRANCH_OPTIONS} value={profile.search_branches} emptyLabel="暂时只使用基础流程" disabled={pending} onChange={(value) => update("search_branches", value)} />
+        </section>
+        <section>
+          <div className="pilot-path-settings__question"><strong>技能补充</strong><small>选择已经从 JD、测试或面试中确认的需要</small></div>
+          <MultiChoiceGrid options={SKILL_BRANCH_OPTIONS} value={profile.skill_branches} emptyLabel="目前还不确定" disabled={pending} onChange={(value) => update("skill_branches", value)} />
+        </section>
+        <section>
+          <div className="pilot-path-settings__question"><strong>金融证书</strong><small>加入 Path 只是进一步了解，不代表需要报名</small></div>
+          <MultiChoiceGrid options={certificateOptions} value={profile.certificate_branches} emptyLabel="暂时不加入证书分支" disabled={pending} onChange={(value) => update("certificate_branches", value)} />
+        </section>
+      </div>
+      <footer className="pilot-path-settings__status" aria-live="polite">{pending ? "正在更新 Path…" : "所有更改都会自动保存"}</footer>
+    </div>
+  );
 }
 
 export default PilotPathSetupModal;

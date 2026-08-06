@@ -1,6 +1,7 @@
 import { PILOT_START_PATH, PILOT_SUBJECT_SLUG } from "../../../config/productMode";
+import { buildPersonalizedPilotDraft } from "./pilotPath";
 
-const PILOT_STORAGE_VERSION = 2;
+const PILOT_STORAGE_VERSION = 3;
 const PILOT_PATH_STORAGE_KEY = "notes-system:fall-recruiting:path";
 const PILOT_LAST_NOTE_STORAGE_KEY = "notes-system:fall-recruiting:last-note";
 
@@ -23,8 +24,19 @@ export function loadPilotPathDraft() {
   if (!storage) return null;
   try {
     const payload = JSON.parse(storage.getItem(PILOT_PATH_STORAGE_KEY) || "null");
-    if (!payload || ![1, PILOT_STORAGE_VERSION].includes(payload.version)) return null;
-    return payload.draft && typeof payload.draft === "object" ? payload.draft : null;
+    if (!payload || ![1, 2, PILOT_STORAGE_VERSION].includes(payload.version)) return null;
+    if (!payload.draft || typeof payload.draft !== "object") return null;
+    const draft = payload.draft;
+    const migrated = {
+      ...draft,
+      metadata: {
+        ...(draft.metadata || {}),
+        graph_layout: undefined,
+        order_mode: "canonical",
+      },
+    };
+    const profile = migrated.metadata?.personalization;
+    return profile ? buildPersonalizedPilotDraft(migrated, profile) : migrated;
   } catch {
     return null;
   }

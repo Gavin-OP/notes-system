@@ -256,6 +256,7 @@ export function buildPilotTimeline(stage, now = new Date()) {
 }
 
 export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = new Date()) {
+  const previousStatusById = new Map((draft?.nodes || []).map((node) => [node.node_id, node.status]));
   const profile = {
     stage: normalizeStage(rawProfile.stage),
     profile_branches: (rawProfile.profile_branches || []).filter((value) => PROFILE_BRANCH_OPTIONS.some((option) => option.value === value)),
@@ -269,6 +270,7 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
   const focusNodeId = STAGE_FOCUS_NODE[profile.stage];
   const nodes = buildPilotNodes(profile).map((node) => ({
     ...node,
+    status: previousStatusById.get(node.node_id) || node.status,
     metadata: {
       ...node.metadata,
       recommended_now: node.node_id === focusNodeId,
@@ -285,7 +287,7 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
       order_mode: "canonical",
       pilot_official_path: true,
       pilot_path_schema_version: 3,
-      graph_layout: draft?.metadata?.graph_layout || {},
+      graph_layout: undefined,
       personalization: {
         ...profile,
         setup_complete: Boolean(profile.setup_complete),

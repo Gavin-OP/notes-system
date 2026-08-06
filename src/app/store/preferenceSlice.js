@@ -1,7 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+function loadLanguage() {
+  try {
+    const saved = window.localStorage.getItem("notes-system:language");
+    return ["cn", "tw", "en"].includes(saved) ? saved : "cn";
+  } catch {
+    return "cn";
+  }
+}
+
 const initialState = {
-  language: "cn",
+  language: loadLanguage(),
   theme: "light",
   isMobile: window.innerWidth < 768,
 };

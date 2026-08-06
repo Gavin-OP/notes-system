@@ -21,7 +21,7 @@ import {
 
 import LearningNavigationPanel from "../../navigation/components/LearningNavigationPanel";
 import LearningPathControls from "../../navigation/components/LearningPathControls";
-import PilotPathSetupModal from "../../navigation/components/PilotPathSetupModal";
+import PilotPathSetupModal, { PilotPathSettingsPanel } from "../../navigation/components/PilotPathSetupModal";
 import { sortPathNodesCanonically } from "../../navigation/lib/learningPathUtils";
 import { connectPathNodes } from "../../navigation/lib/pathGraphModel";
 import {
@@ -75,8 +75,10 @@ import "../components/LearningSupportPanel.css";
 
 const { Sider, Content } = Layout;
 
-const LEARNING_SIDER_MIN_WIDTH = 350;
-const LEARNING_SIDER_MAX_WIDTH = 960;
+const LEARNING_SIDER_MIN_WIDTH = FULL_PRODUCT_ENABLED ? 350 : 260;
+const LEARNING_SIDER_MAX_WIDTH = FULL_PRODUCT_ENABLED ? 960 : 1180;
+const PILOT_PATH_RAIL_WIDTH = 280;
+const getPilotPathExpandedWidth = () => typeof window === "undefined" ? 920 : Math.min(LEARNING_SIDER_MAX_WIDTH, Math.round(window.innerWidth * .72));
 const LEARNING_SIDER_NEARBY_MIN_WIDTH = 520;
 const PILOT_LOCAL_ONLY = !FULL_PRODUCT_ENABLED && !PILOT_BACKEND_ENABLED;
 
@@ -385,7 +387,8 @@ const NoteLayout = () => {
   const [pilotPathSetupOpen, setPilotPathSetupOpen] = useState(false);
   const pathSetupHandledRef = useRef(false);
   const [pathEditMode, setPathEditMode] = useState(false);
-  const [learningSiderWidth, setLearningSiderWidth] = useState(LEARNING_SIDER_MIN_WIDTH);
+  const [learningSiderWidth, setLearningSiderWidth] = useState(() => FULL_PRODUCT_ENABLED ? LEARNING_SIDER_MIN_WIDTH : getPilotPathExpandedWidth());
+  const pilotPathExpanded = !FULL_PRODUCT_ENABLED && !isMobile && learningSiderWidth > 340;
   const [canonicalGraph, setCanonicalGraph] = useState(null);
   const [noteQuotes, setNoteQuotes] = useState([]);
   const [completeNotePending, setCompleteNotePending] = useState(false);
@@ -536,7 +539,10 @@ const NoteLayout = () => {
   }, [currentMeta?.url, localizedPlainMenuItems]);
 
   // event handlers
-  const handleNoteSelect = (path) => navigate(path);
+  const handleNoteSelect = (path) => {
+    if (!FULL_PRODUCT_ENABLED && !isMobile) setLearningSiderWidth(PILOT_PATH_RAIL_WIDTH);
+    navigate(path);
+  };
 
   const handleExploreMindmap = () => {
     const slug = workspaceMeta?.mindmapSubjectSlug;
@@ -1319,7 +1325,7 @@ const NoteLayout = () => {
       if (leftSiderResizeRef.current.active) {
         const delta = event.clientX - leftSiderResizeRef.current.startX;
         const nextWidth = Math.min(
-          LEARNING_SIDER_MAX_WIDTH,
+          FULL_PRODUCT_ENABLED ? LEARNING_SIDER_MAX_WIDTH : getPilotPathExpandedWidth(),
           Math.max(LEARNING_SIDER_MIN_WIDTH, leftSiderResizeRef.current.startWidth + delta),
         );
         setLearningSiderWidth(nextWidth);
@@ -1565,7 +1571,7 @@ const NoteLayout = () => {
           collapsedWidth={0}
           className={`note-layout__sider ${isMobile ? "note-layout__sider--mobile" : ""} ${
             pathEditMode ? "note-layout__sider--path-editing" : ""
-          } ${learningSiderWidth >= LEARNING_SIDER_NEARBY_MIN_WIDTH ? "note-layout__sider--wide" : ""}`}
+          } ${!FULL_PRODUCT_ENABLED ? "note-layout__sider--pilot" : ""} ${learningSiderWidth >= LEARNING_SIDER_NEARBY_MIN_WIDTH ? "note-layout__sider--wide" : ""}`}
           collapsible
           collapsed={collapsed}
           trigger={null}
@@ -1576,14 +1582,14 @@ const NoteLayout = () => {
                 <div className="note-layout__sider-header">
                   <span className="note-layout__sider-title">{t("learningPath.title")}</span>
                   <div className="note-layout__sider-header-actions">
-                    <LearningPathControls
+                    {FULL_PRODUCT_ENABLED ? <LearningPathControls
                       hasPersonalizedPath={hasPersonalizedPath}
                       hasEditableDraft={hasEditableDraft}
                       pathEditMode={pathEditMode}
                       learningPathPending={learningPathPending}
                       onPrimaryAction={handlePathPrimaryAction}
                       onClearPath={FULL_PRODUCT_ENABLED ? handleClearPath : undefined}
-                    />
+                    /> : null}
                     <button
                       type="button"
                       className="note-layout__sider-collapse-btn"
@@ -1605,14 +1611,14 @@ const NoteLayout = () => {
                     <strong>你的 Path</strong>
                   </div>
                   <div className="note-layout__sider-mobile-actions">
-                    <LearningPathControls
+                    {FULL_PRODUCT_ENABLED ? <LearningPathControls
                       hasPersonalizedPath={hasPersonalizedPath}
                       hasEditableDraft={hasEditableDraft}
                       pathEditMode={pathEditMode}
                       learningPathPending={learningPathPending}
                       onPrimaryAction={handlePathPrimaryAction}
                       onClearPath={FULL_PRODUCT_ENABLED ? handleClearPath : undefined}
-                    />
+                    /> : null}
                     <button
                       type="button"
                       className="note-layout__sider-mobile-close"
@@ -1653,7 +1659,9 @@ const NoteLayout = () => {
                 isMobile={isMobile}
                 showNearbyPanel={FULL_PRODUCT_ENABLED && !isMobile && learningSiderWidth >= LEARNING_SIDER_NEARBY_MIN_WIDTH}
                 pilotMode={!FULL_PRODUCT_ENABLED}
-                onConfigurePath={() => setPilotPathSetupOpen(true)}
+                panelWidth={learningSiderWidth}
+                onTogglePathExpand={() => setLearningSiderWidth((width) => width <= 340 ? getPilotPathExpandedWidth() : PILOT_PATH_RAIL_WIDTH)}
+                onConfigurePath={() => setLearningSiderWidth(getPilotPathExpandedWidth())}
                 onSelect={(path) => {
                   handleNoteSelect(path);
                   if (isMobile) setCollapsed(true);
@@ -1661,7 +1669,7 @@ const NoteLayout = () => {
               />
             </div>
           )}
-          {!isMobile && !collapsed ? (
+          {!isMobile && !collapsed && FULL_PRODUCT_ENABLED ? (
             <div
               className="note-layout__sider-resizer"
               onMouseDown={startLeftSiderResize}
@@ -1696,7 +1704,16 @@ const NoteLayout = () => {
                 : ""
             }`}
           >
-            <Content
+            {pilotPathExpanded ? (
+              <aside className="note-layout__path-settings" aria-label="调整 Path">
+                <PilotPathSettingsPanel
+                  initialProfile={learningPathDraft?.metadata?.personalization || {}}
+                  pending={learningPathPending}
+                  onClose={() => setLearningSiderWidth(PILOT_PATH_RAIL_WIDTH)}
+                  onChange={handleSavePilotPathProfile}
+                />
+              </aside>
+            ) : <Content
               className={`note-layout__content ${isMobile ? "note-layout__content--mobile" : ""}`}
               ref={noteAreaRef}
             >
@@ -1743,8 +1760,8 @@ const NoteLayout = () => {
                   registerWorkspaceMeta,
                 }}
               />
-            </Content>
-            {LEARNING_SUPPORT_ENABLED && !isMobile && !immersiveMode && assistantMode === "dock" ? (
+            </Content>}
+            {!pilotPathExpanded && LEARNING_SUPPORT_ENABLED && !isMobile && !immersiveMode && assistantMode === "dock" ? (
               <>
                 {assistantCollapsed ? (
                   <button
@@ -1867,7 +1884,7 @@ const NoteLayout = () => {
           {renderAssistantWorkspace(true)}
         </Modal>
       ) : null}
-      {!FULL_PRODUCT_ENABLED ? (
+      {!FULL_PRODUCT_ENABLED && !pilotPathExpanded ? (
         <PilotPathSetupModal
           open={pilotPathSetupOpen}
           initialProfile={learningPathDraft?.metadata?.personalization || {}}

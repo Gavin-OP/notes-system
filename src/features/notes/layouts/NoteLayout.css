@@ -84,6 +84,19 @@
     width var(--ns-duration-normal) var(--ns-ease-out);
 }
 
+.note-layout__sider--pilot {
+  max-width: 72vw !important;
+  transition: none;
+}
+
+.note-layout__path-settings {
+  width: 100%;
+  height: calc(100vh - var(--note-meta-topbar-height, 64px));
+  min-width: 0;
+  overflow: auto;
+  background: var(--ns-color-bg-container);
+}
+
 .note-layout__sider--path-editing {
   box-shadow: var(--ns-shadow-lg);
 }

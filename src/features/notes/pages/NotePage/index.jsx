@@ -22,6 +22,7 @@ import {
 } from "../../api/noteVersions";
 import useTranslatedContent from "../../../../i18n/useTranslatedContent";
 import { NOTE_VERSION_SWITCHER_ENABLED, PILOT_BACKEND_ENABLED } from "../../../../config/productMode";
+import { getStaticLocaleUnavailableMessage, resolveStaticNoteLocalePath } from "../../lib/staticNoteLocale";
 import "./NotePage.css";
 
 function removeYamlFrontMatter(text) {
@@ -83,6 +84,7 @@ function NotePage() {
   const dispatch = useDispatch();
   const notesIndex = useSelector((state) => state.notesIndex.data);
   const theme = useSelector((state) => state.preference.theme);
+  const language = useSelector((state) => state.preference.language) || "cn";
   const outletContext = useOutletContext() || {};
   const noteSearchParams = new URLSearchParams(location.search);
   const activeQuoteId = noteSearchParams.get("quoteId") || "";
@@ -114,6 +116,7 @@ function NotePage() {
   const [noteContent, setNoteContent] = useState("");
   const [noteLoadState, setNoteLoadState] = useState("idle");
   const [noteErrorText, setNoteErrorText] = useState("");
+  const [localeNotice, setLocaleNotice] = useState("");
   const [noteReloadToken, setNoteReloadToken] = useState(0);
   const [noteVersions, setNoteVersions] = useState([]);
   const [selectedVersionId, setSelectedVersionId] = useState("current");
@@ -245,6 +248,7 @@ function NotePage() {
       setNoteContent("");
       setNoteLoadState("loading");
       setNoteErrorText("");
+      setLocaleNotice("");
       const url = `/note/${noteSlugTrimmed}`;
       const meta = findMeta(notesIndex, url);
       dispatch(setCurrentNoteMeta(meta));
@@ -268,9 +272,12 @@ function NotePage() {
             setNoteLoadState("ready");
             return;
           }
-          const res = await fetch(
-            `${import.meta.env.BASE_URL}notes/${filePath}`,
-          );
+          const localizedPath = resolveStaticNoteLocalePath(filePath, language);
+          let res = await fetch(`${import.meta.env.BASE_URL}notes/${localizedPath}`);
+          if (!res.ok && localizedPath !== filePath) {
+            res = await fetch(`${import.meta.env.BASE_URL}notes/${filePath}`);
+            if (!cancelled && res.ok) setLocaleNotice(getStaticLocaleUnavailableMessage(language));
+          }
           if (cancelled) return;
           if (res.ok) {
             const rawText = await res.text();
@@ -295,7 +302,7 @@ function NotePage() {
       };
     }
     return undefined;
-  }, [notesIndex, noteSlugTrimmed, dispatch, selectedVersionId, subjectSlug, topicSlug, versionApiAvailable, noteReloadToken]);
+  }, [notesIndex, noteSlugTrimmed, dispatch, selectedVersionId, subjectSlug, topicSlug, versionApiAvailable, noteReloadToken, language]);
 
   useEffect(() => {
     if (!NOTE_VERSION_SWITCHER_ENABLED) {
@@ -445,6 +452,7 @@ function NotePage() {
         ) : null}
         {noteLoadState === "ready" && noteContent ? (
           <>
+            {localeNotice ? <div className="note-page__locale-notice" role="status">{localeNotice}</div> : null}
             {location.state?.fromMindmap ? (
               <button
                 type="button"

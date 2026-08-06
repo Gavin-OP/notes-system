@@ -11,6 +11,7 @@ import {
 import { getCareerTaxonomy } from "../../careers/api/careers";
 import { formatCareerRoleLabel } from "../../careers/lib/careerDisplayUtils";
 import useTranslation from "../../../i18n/useTranslation";
+import EmbeddedPathConstellation from "./EmbeddedPathConstellation";
 import {
   buildNearbyPathSuggestions,
   resolvePathOrderMode,
@@ -334,6 +335,8 @@ const LearningNavigationPanel = ({
   showNearbyPanel = false,
   pilotMode = false,
   onConfigurePath,
+  panelWidth = 520,
+  onTogglePathExpand,
 }) => {
   const { t } = useTranslation();
   const [editLibraryTab, setEditLibraryTab] = useState("subject");
@@ -1099,6 +1102,9 @@ const LearningNavigationPanel = ({
   const renderPersonalizedSection = () => {
     if (!hasPathWorkspace) return null;
     const containsCurrent = personalizedSteps.some((step) => normalizeKey(step.key) === normalizedCurrent);
+    if (pilotMode) {
+      return <EmbeddedPathConstellation draft={learningPathDraft} currentNoteUrl={currentNoteUrl} completedNoteUrls={completedNoteUrls} onSelect={onSelect} onAdjust={onConfigurePath} isRail={!isMobile && panelWidth <= 340} onToggleExpand={onTogglePathExpand} />;
+    }
     return (
       <section
         className={`learning-nav__section learning-nav__section--personalized ${

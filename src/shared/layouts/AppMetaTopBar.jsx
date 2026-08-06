@@ -25,14 +25,14 @@ function AppMetaTopBar({
       onClick: () => dispatch(setLanguage("cn")),
     },
     {
-      key: "en",
-      label: t("language.english"),
-      onClick: () => dispatch(setLanguage("en")),
-    },
-    {
       key: "tw",
       label: t("language.traditional", "繁體中文"),
       onClick: () => dispatch(setLanguage("tw")),
+    },
+    {
+      key: "en",
+      label: t("language.english"),
+      onClick: () => dispatch(setLanguage("en")),
     },
   ];
   const languageLabel = language === "cn"
@@ -64,7 +64,7 @@ function AppMetaTopBar({
           onClick={() => dispatch(setTheme(theme === "dark" ? "light" : "dark"))}
           aria-label={t("note.toolbar.darkMode", "Dark mode")}
         />
-        {FULL_PRODUCT_ENABLED ? <Dropdown
+        <Dropdown
           menu={{ items: languageItems, selectable: true, selectedKeys: [language] }}
           trigger={["click"]}
           placement="bottomRight"
@@ -79,7 +79,7 @@ function AppMetaTopBar({
               <span className="app-page-shell__language-label">{languageLabel}</span>
             ) : null}
           </Button>
-        </Dropdown> : null}
+        </Dropdown>
         {FULL_PRODUCT_ENABLED ? (
           <Button
             className={`app-page-shell__auth-btn ${isAuthenticated ? "app-page-shell__auth-btn--user" : ""}`}

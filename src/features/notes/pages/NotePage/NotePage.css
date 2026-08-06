@@ -288,3 +288,4 @@
   outline: var(--ns-focus-ring);
   outline-offset: 4px;
 }
+.note-page__locale-notice{margin:0 0 18px;padding:12px 16px;border:1px solid var(--ns-color-warning-border,#f0d49a);border-radius:12px;color:var(--ns-color-text-secondary);background:var(--ns-color-warning-bg,#fff8e8);font-size:13px;line-height:1.6}

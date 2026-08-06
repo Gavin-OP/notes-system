@@ -81,6 +81,14 @@ function App() {
     }
   }, [language]);
 
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("notes-system:language", language || "cn");
+    } catch {
+      // Language persistence is optional in restricted browser contexts.
+    }
+  }, [language]);
+
   // fetch notes index on idle status
   useEffect(() => {
     if (status === "idle") {
