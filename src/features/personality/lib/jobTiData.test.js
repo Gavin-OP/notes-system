@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   QUIZ_ITEMS,
+  TYPES,
   buildJobTiPathProfile,
   rankJobTiResults,
 } from "./jobTiData";
@@ -17,14 +18,14 @@ describe("JobTI questionnaire model", () => {
     expect(QUIZ_ITEMS.filter((item) => item.kind.startsWith("path-"))).toHaveLength(6);
   });
 
-  it("does not let Path answers change the personality result", () => {
+  it("does not let unscored Path answers change the personality result", () => {
     const first = rankJobTiResults({
       ...personalityAnswers,
       stage: "getting_started",
       materials: [],
       search: [],
       leetcode: false,
-      certificates: false,
+      certificates: "skip",
       interviews: [],
     });
     const second = rankJobTiResults({
@@ -33,10 +34,36 @@ describe("JobTI questionnaire model", () => {
       materials: ["linkedin", "cover_letter"],
       search: ["networking"],
       leetcode: true,
-      certificates: "learn",
+      certificates: "skip",
       interviews: ["hr", "panel"],
     });
     expect(second).toEqual(first);
+  });
+
+  it("uses the finance-certificate answer as personality evidence", () => {
+    expect(rankJobTiResults({ certificates: "skip" })[0]).toBe("protector");
+    expect(rankJobTiResults({ certificates: "learn" })[0]).toBe("researcher");
+    expect(rankJobTiResults({ certificates: "consider" })[0]).toBe("engine");
+    expect(rankJobTiResults({ certificates: "later" })[0]).toBe("explorer");
+  });
+
+  it("balances type exposure across every scored question", () => {
+    const typeKeys = Object.keys(TYPES).sort();
+    const scoredItems = QUIZ_ITEMS.filter((item) => item.options.some((option) => option.scores?.length));
+    const primaryCounts = Object.fromEntries(typeKeys.map((key) => [key, 0]));
+    const secondaryCounts = Object.fromEntries(typeKeys.map((key) => [key, 0]));
+
+    expect(scoredItems).toHaveLength(9);
+    scoredItems.forEach((item) => {
+      expect(item.options.flatMap((option) => option.scores).sort()).toEqual(typeKeys);
+      item.options.forEach((option) => {
+        primaryCounts[option.scores[0]] += 1;
+        secondaryCounts[option.scores[1]] += 1;
+      });
+    });
+
+    expect(Math.max(...Object.values(primaryCounts)) - Math.min(...Object.values(primaryCounts))).toBeLessThanOrEqual(1);
+    expect(Math.max(...Object.values(secondaryCounts)) - Math.min(...Object.values(secondaryCounts))).toBeLessThanOrEqual(1);
   });
 
   it("turns practical answers into a reusable Path profile", () => {

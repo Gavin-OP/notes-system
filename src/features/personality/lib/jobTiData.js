@@ -23,38 +23,38 @@ const pathSingle = (id, field, title, hint, options) => ({ id, field, kind: "pat
 const pathMulti = (id, field, title, hint, options, emptyLabel) => ({ id, field, kind: "path-multi", title, hint, options, emptyLabel });
 
 export const QUIZ_ITEMS = [
-  personality("jd", "看到一份岗位 JD 写着“偏好相关院校背景、多段知名企业实习，并熟悉若干工具”，你的脑内弹幕是？", "凭第一反应选，求职已经够费脑子了。", [
-    { label: "让我看看这个岗位到底有多少含金量", scores: ["radar", "researcher"] },
+  personality("jd", "看到一份岗位 JD 写着“偏好名校背景、3段大厂、5段实习、垂直经历”，你的脑内弹幕是？", "凭第一反应选，求职已经够费脑子了。", [
+    { label: "让我看看这个岗位到底有多少含金量", scores: ["researcher", "radar"] },
     { label: "符合多少算多少，先投了再说", scores: ["engine", "explorer"] },
-    { label: "研究一下我的经历还能怎么膨胀", scores: ["alchemist", "radar"] },
+    { label: "研究一下我的经历还能怎么膨胀", scores: ["gardener", "alchemist"] },
     { label: "好的，看来招聘市场也有自己的许愿池", scores: ["koi", "protector"] },
   ]),
-  pathSingle("stage", "stage", "先定位一下：你现在走到求职的哪一站？", "这题会调整 Path 的起点，已经走过的准备阶段不会再排在前面。", PILOT_STAGE_OPTIONS),
-  personality("competition", "当你发现“神仙打架”的岗位，页面已经显示很多人申请……", "在做的 GPA 全部拉满！", [
-    { label: "研究一下岗位，我和它合不合适才最重要", scores: ["radar", "gardener"] },
-    { label: "先投。申请人里为什么不能有我", scores: ["engine", "koi"] },
+  pathSingle("stage", "stage", "先定位一下：你现在走到求职的哪一站？", "这题会调整你的专属求职规划 Path 的起点，已经走过的准备阶段不会再排在前面。", PILOT_STAGE_OPTIONS),
+  personality("competition", "当你发现“神仙打架”的岗位，页面已经显示2000+人申请……", "在做的 GPA 全部拉满！", [
+    { label: "研究一下岗位，我和它合不合适才最重要", scores: ["gardener", "radar"] },
+    { label: "先投。2000+人里为什么不能有我", scores: ["koi", "engine"] },
     { label: "继续看看其他刚开放的机会", scores: ["explorer", "protector"] },
     { label: "修改简历，争取让重点更突出", scores: ["alchemist", "researcher"] },
   ]),
   personality("resume", "改简历改到第 17 版时，什么最能给你一点成就感？", "放心，没有人会检查你的答案一致性。", [
     { label: "终于能用一句人话讲明白自己做过什么", scores: ["alchemist", "researcher"] },
-    { label: "这版与 dream position 简直完美匹配", scores: ["radar", "alchemist"] },
-    { label: "朋友看完说：你原来做过这么多东西？", scores: ["alchemist", "koi"] },
+    { label: "这版与 dream position 简直完美匹配", scores: ["radar", "engine"] },
+    { label: "朋友看完说：你原来做过这么多东西？", scores: ["koi", "protector"] },
     { label: "简历只是一页纸，我的人生塞不完", scores: ["explorer", "gardener"] },
   ]),
   pathMulti("materials", "profile_branches", "除了简历，你的求职材料还想补齐哪些拼图？", "我们会把相关材料的准备方法加入你的 Path，可以多选。", PROFILE_BRANCH_OPTIONS, "暂时只准备简历"),
   personality("planning", "HR 问“你的职业规划是什么？”时，你的内心真实版本更接近？", "此处无需展示 leadership，请诚实作答。", [
-    { label: "我有方向，也愿意一路修正", scores: ["radar", "gardener"] },
-    { label: "世界这么大，我想多看看有哪些可能", scores: ["explorer", "koi"] },
-    { label: "先把眼前的事做好，答案会慢慢出现", scores: ["researcher", "engine"] },
+    { label: "我有方向，也愿意一路修正", scores: ["radar", "alchemist"] },
+    { label: "世界这么大，我想多看看有哪些可能", scores: ["koi", "explorer"] },
+    { label: "先把眼前的事做好，答案会慢慢出现", scores: ["engine", "researcher"] },
     { label: "希望未来的我有工作、有下班，也有双休", scores: ["protector", "gardener"] },
   ]),
   pathMulti("search", "search_branches", "找岗位时，你想给自己增加哪些入口？", "除了直接投递，我们还有一些提升效率的方式。可以多选。", SEARCH_BRANCH_OPTIONS, "先使用基础岗位搜索流程"),
-  personality("assessment", "收到招聘流程中的在线测试邀请，页面写着“限时完成，建议提前准备”，你会？", "它可能是能力测试、限时笔试或情境判断。", [
-    { label: "先查清形式，找几道样题练手", scores: ["researcher", "radar"] },
-    { label: "直接打开，类似的题已经见过不少", scores: ["engine", "researcher"] },
+  personality("assessment", "收到招聘流程中的在线测试邀请，你会？", "它可能是能力测试、限时笔试或情境判断。", [
+    { label: "先查清题目形式，找几道样题练手", scores: ["researcher", "radar"] },
+    { label: "感觉麻木，秋招至今已经做过不下10套测评题", scores: ["gardener", "protector"] },
     { label: "先做再说，相信第一反应", scores: ["engine", "koi"] },
-    { label: "认真研究说明，希望准备得更充分", scores: ["alchemist", "radar"] },
+    { label: "认真准备，争取完美符合公司价值观", scores: ["alchemist", "explorer"] },
   ]),
   pathSingle("leetcode", "leetcode", "LeetCode 要不要加入这局？", "只有目标岗位确实会考算法、代码或 SQL 时，它才需要进入 Path。", [
     { value: true, label: "要，JD 或流程已经明确会考" },
@@ -62,35 +62,38 @@ export const QUIZ_ITEMS = [
   ]),
   personality("failure", "面试官问“你最大的失败是什么？”时，你的脑内第一反应？", "这里不用 STAR，选一个就行。", [
     { label: "挑一个真正让我学到东西的经历", scores: ["researcher", "gardener"] },
-    { label: "寻找一个最适合这个岗位的故事", scores: ["radar", "alchemist"] },
-    { label: "讲得真实、有逻辑，而且能看到成长", scores: ["alchemist", "researcher"] },
+    { label: "寻找一个最适合这个岗位的故事", scores: ["radar", "engine"] },
+    { label: "讲得真实、有逻辑，而且能看到成长", scores: ["alchemist", "explorer"] },
     { label: "还没找到工作就是我的失败", scores: ["protector", "koi"] },
   ]),
-  pathSingle("certificates", "certificate_interest", "金融证书（CPA、CFA、FRM）要不要加入这局？", "这题只决定是否加入金融证书概览，不会替你报名，也不会擅自选择具体证书。", [
-    { value: "skip", pathValue: false, label: "证书不是宝可梦，我暂时不想集齐" },
-    { value: "learn", pathValue: true, label: "想认真看看，至少先搞懂它们分别有什么用" },
-    { value: "consider", pathValue: true, label: "报名页面打开过几次，但理智还在加载" },
-    { value: "later", pathValue: false, label: "先把眼前的申请交了，证书以后再议" },
+  pathSingle("certificates", "certificate_interest", "金融证书（CPA、CFA、FRM）要不要加入你的准备工作？", "这题只决定是否加入金融证书概览，不会替你报名，也不会擅自选择具体证书。", [
+    { value: "skip", pathValue: false, label: "秋招已经很累了，没精力学习啦", scores: ["protector", "gardener"] },
+    { value: "learn", pathValue: true, label: "想认真看看，至少先搞懂它们分别有什么用", scores: ["researcher", "radar"] },
+    { value: "consider", pathValue: true, label: "已经报名了，主打一个骑虎难下", scores: ["engine", "koi"] },
+    { value: "later", pathValue: false, label: "先把眼前的申请交了，证书以后再议", scores: ["explorer", "alchemist"] },
   ]),
   personality("silence", "连续一段时间没有新消息，你的做法更接近？", "先深呼吸。暂时没有消息，也是一种消息静音。", [
-    { label: "重新看看方向，调整申请策略", scores: ["radar", "researcher"] },
-    { label: "换几个渠道，也看看之前忽略的机会", scores: ["explorer", "engine"] },
+    { label: "重新评估自身，调整申请策略", scores: ["radar", "researcher"] },
+    { label: "换几个申请渠道，也看看之前忽略的机会", scores: ["explorer", "engine"] },
     { label: "找朋友聊聊，一起吐槽就业市场", scores: ["protector", "koi"] },
-    { label: "允许自己丧一会儿，然后继续生活", scores: ["gardener", "protector"] },
+    { label: "允许自己丧一会儿，然后继续生活", scores: ["gardener", "alchemist"] },
   ]),
   pathMulti("interviews", "interview_branches", "接下来，你会遇到什么形式的面试？", "我们为你提供综合性的建议，但你也可以选择对某种面试进行专项突击。可以多选。", INTERVIEW_BRANCH_OPTIONS, "暂时不确定，先看综合准备"),
   personality("message", "如果给这次求职的自己留一句话，你更想选？", "这一题不计鸡汤浓度，只看你现在想听哪句。", [
     { label: "我在寻找适合自己的生活，不是在参加比赛", scores: ["gardener", "radar"] },
     { label: "世界很大，一份 Offer 只是其中一个入口", scores: ["explorer", "koi"] },
     { label: "走过的路都会留下东西，暂时没有结果也算经历", scores: ["researcher", "engine"] },
-    { label: "慢一点也可以，我有自己的时间表", scores: ["protector", "gardener"] },
+    { label: "慢一点也可以，我有自己的时间表", scores: ["protector", "alchemist"] },
   ]),
 ];
 
 export function rankJobTiResults(responses = {}) {
   const scores = Object.fromEntries(Object.keys(TYPES).map((key) => [key, 0]));
-  QUIZ_ITEMS.filter((item) => item.kind === "personality").forEach((item) => {
-    const option = item.options[responses[item.id]];
+  QUIZ_ITEMS.filter((item) => item.options.some((option) => option.scores?.length)).forEach((item) => {
+    const response = responses[item.id];
+    const option = item.kind === "personality"
+      ? item.options[response]
+      : item.options.find((candidate) => candidate.value === response);
     if (option?.scores?.[0]) scores[option.scores[0]] += 2;
     if (option?.scores?.[1]) scores[option.scores[1]] += 1;
   });
