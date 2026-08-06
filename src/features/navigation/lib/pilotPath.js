@@ -143,12 +143,19 @@ function buildPilotNodes(profile = {}) {
   const skillBranches = new Set(profile.skill_branches || []);
   const certificateBranches = new Set(profile.certificate_branches || []);
   const interviewBranches = new Set(profile.interview_branches || []);
+  const hasSkillSupplement = skillBranches.has("technical")
+    || profile.certificate_interest
+    || certificateBranches.size > 0;
   const nodes = [
     pathNode("getting-started", "刚开始准备求职", "autumn-recruitment-roadmap", 1),
     pathNode("market", "理解岗位与市场", "role-market-research", 3),
     pathNode("profile-preparation", "准备简历与 Profile", "profile-preparation", 4),
     pathNode("resume", "简历", "resume-story", 5, "", { path_relation: "branch" }),
   ];
+
+  if (hasSkillSupplement) {
+    nodes.push(pathNode("skill-supplement", "技能补充", "skill-supplement", 4, "", { path_relation: "branch" }));
+  }
 
   if (profileBranches.has("linkedin")) {
     nodes.push(pathNode("linkedin", "LinkedIn", "linkedin-profile", 5, "", { path_relation: "branch" }));
@@ -186,11 +193,11 @@ function buildPilotNodes(profile = {}) {
   nodes.push(pathNode("interview-review", "面试复盘", "interview-review", 11));
 
   if (skillBranches.has("technical")) {
-    nodes.push(pathNode("technical-skills", "LeetCode", "leetcode-practice", 12, "", { path_relation: "branch" }));
+    nodes.push(pathNode("technical-skills", "LeetCode", "leetcode-practice", 4, "", { path_relation: "branch" }));
   }
 
   if (profile.certificate_interest || certificateBranches.size > 0) {
-    nodes.push(pathNode("finance-skills", "金融证书怎么选", "finance-knowledge-certificates", 12, "", { path_relation: "branch" }));
+    nodes.push(pathNode("finance-skills", "金融证书怎么选", "finance-knowledge-certificates", 4, "", { path_relation: "branch" }));
     FALL_RECRUITING_CERTIFICATES.forEach((certificate) => {
       if (!certificateBranches.has(certificate.id)) return;
       nodes.push(
@@ -198,7 +205,7 @@ function buildPilotNodes(profile = {}) {
           `certificate-${certificate.id}`,
           `${certificate.shortName} 是否适合我`,
           `${certificate.id}-certificate`,
-          13,
+          4,
           "",
           { path_relation: "branch", certificate_id: certificate.id },
         ),
@@ -263,25 +270,29 @@ function buildPilotEdges(nodes) {
     connect("interviews", "interview-review");
   }
 
-  const supplementIds = ["technical-skills", "finance-skills"]
-    .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
-  if (supplementIds.length === 0) {
-    connect("interview-review", "offer");
-  } else {
-    supplementIds.forEach((nodeId) => connect("interview-review", nodeId, "branches_to"));
-    connect("technical-skills", "offer", "converges_to");
+  connect("interview-review", "offer");
+
+  if (nodeIds.has("pilot:skill-supplement")) {
+    const branchAnchor = nodeIds.has("pilot:market") ? "market" : "profile-preparation";
+    const branchReturn = branchAnchor === "market" ? "profile-preparation" : "job-search";
+    connect(branchAnchor, "skill-supplement", "branches_to");
+
+    const supplementIds = ["technical-skills", "finance-skills"]
+      .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
+    supplementIds.forEach((nodeId) => connect("skill-supplement", nodeId, "branches_to"));
 
     const certificateIds = FALL_RECRUITING_CERTIFICATES
       .map((certificate) => `certificate-${certificate.id}`)
       .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
-    if (certificateIds.length > 0) {
-      certificateIds.forEach((nodeId) => {
-        connect("finance-skills", nodeId, "branches_to");
-        connect(nodeId, "offer", "converges_to");
-      });
-    } else {
-      connect("finance-skills", "offer", "converges_to");
-    }
+    certificateIds.forEach((nodeId) => connect("finance-skills", nodeId, "branches_to"));
+
+    const terminalIds = [
+      ...(nodeIds.has("pilot:technical-skills") ? ["technical-skills"] : []),
+      ...(certificateIds.length > 0
+        ? certificateIds
+        : nodeIds.has("pilot:finance-skills") ? ["finance-skills"] : []),
+    ];
+    terminalIds.forEach((nodeId) => connect(nodeId, branchReturn, "converges_to"));
   }
 
   return edges;

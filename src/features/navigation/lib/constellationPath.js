@@ -27,6 +27,17 @@ const INTERVIEW_CHILD_IDS = [
   "pilot:interview-special-situations",
 ];
 
+const SKILL_CHILD_IDS = [
+  "pilot:technical-skills",
+  "pilot:finance-skills",
+];
+
+const CERTIFICATE_CHILD_IDS = [
+  "pilot:certificate-cfa",
+  "pilot:certificate-frm",
+  "pilot:certificate-hkicpa",
+];
+
 const OPTIONAL_FIELD_BY_VALUE = {
   linkedin: "profile_branches",
   cover_letter: "profile_branches",
@@ -43,15 +54,29 @@ const OPTIONAL_FIELD_BY_VALUE = {
 export function buildConstellationElements(draft, options = {}) {
   const compact = Boolean(options.compact);
   const horizontal = options.direction === "horizontal";
-  const nodeWidth = compact ? 168 : NODE_WIDTH;
-  const nodeHeight = compact ? 46 : NODE_HEIGHT;
+  const measureTitle = (title) => Array.from(String(title || "")).reduce(
+    (width, character) => width + (character.codePointAt(0) > 0xff ? 13 : 7.2),
+    0,
+  );
+  const getDimensions = (node) => {
+    const isBranch = node.metadata?.path_relation === "branch";
+    const minimum = compact ? (isBranch ? 142 : 162) : (isBranch ? 156 : NODE_WIDTH);
+    const maximum = compact ? 258 : 292;
+    const contentWidth = measureTitle(node.title) + 58;
+    const width = Math.round(Math.max(minimum, Math.min(maximum, contentWidth)));
+    const lineCapacity = Math.max(1, width - 54);
+    const lines = Math.max(1, Math.ceil(measureTitle(node.title) / lineCapacity));
+    const height = Math.max(compact ? 46 : NODE_HEIGHT, 22 + lines * 18);
+    return { width, height };
+  };
   const graph = new dagre.graphlib.Graph();
   graph.setDefaultEdgeLabel(() => ({}));
   graph.setGraph({ rankdir: horizontal ? "LR" : "TB", ranksep: compact ? 58 : 82, nodesep: compact ? 14 : 34, edgesep: 12, marginx: 28, marginy: 30 });
 
   const draftNodes = Array.isArray(draft?.nodes) ? draft.nodes : [];
   const draftEdges = Array.isArray(draft?.edges) ? draft.edges : [];
-  draftNodes.forEach((node) => graph.setNode(node.node_id, { width: nodeWidth, height: nodeHeight }));
+  const dimensions = new Map(draftNodes.map((node) => [node.node_id, getDimensions(node)]));
+  draftNodes.forEach((node) => graph.setNode(node.node_id, dimensions.get(node.node_id)));
   draftEdges.forEach((edge) => graph.setEdge(edge.source, edge.target));
   dagre.layout(graph);
 
@@ -63,8 +88,9 @@ export function buildConstellationElements(draft, options = {}) {
     let cursorX = startX;
     mainIds.forEach((id) => {
       positions.set(id, { x: cursorX, y: mainY });
+      const { width } = dimensions.get(id);
       const branchCount = draftEdges.filter((edge) => edge.source === id && edge.relation === "branches_to").length;
-      cursorX += branchCount === 0 ? 205 : Math.min(500, 170 + branchCount * 80);
+      cursorX += width + (branchCount === 0 ? 64 : Math.min(210, 82 + branchCount * 22));
     });
 
     const placeChildren = (ids, parentId, slots) => {
@@ -97,16 +123,21 @@ export function buildConstellationElements(draft, options = {}) {
       "pilot:interviews",
       INTERVIEW_CHILD_IDS.map((_, index) => ({ x: 190, y: 104 + index * 68 })),
     );
-    placeChildren(
-      ["pilot:technical-skills", "pilot:finance-skills"],
-      "pilot:interview-review",
-      [{ x: -85, y: 104 }, { x: 85, y: 104 }],
-    );
-    placeChildren(
-      ["pilot:certificate-cfa", "pilot:certificate-frm", "pilot:certificate-hkicpa"],
-      "pilot:finance-skills",
-      [{ x: -170, y: 94 }, { x: 0, y: 94 }, { x: 170, y: 94 }],
-    );
+
+    const skillAnchor = positions.get("pilot:market") || positions.get("pilot:profile-preparation");
+    if (skillAnchor && draftNodes.some((node) => node.node_id === "pilot:skill-supplement")) {
+      positions.set("pilot:skill-supplement", { x: skillAnchor.x + 42, y: mainY + 96 });
+      placeChildren(
+        SKILL_CHILD_IDS,
+        "pilot:skill-supplement",
+        [{ x: 34, y: 82 }, { x: 34, y: 146 }],
+      );
+      placeChildren(
+        CERTIFICATE_CHILD_IDS,
+        "pilot:finance-skills",
+        [{ x: 44, y: 76 }, { x: 44, y: 138 }, { x: 44, y: 200 }],
+      );
+    }
   }
 
   const visualBackboneEdges = horizontal
@@ -120,15 +151,17 @@ export function buildConstellationElements(draft, options = {}) {
 
   return {
     nodes: draftNodes.map((node) => {
+      const nodeDimensions = dimensions.get(node.node_id);
       const customPoint = positions.get(node.node_id);
       const point = customPoint
-        ? { x: customPoint.x + nodeWidth / 2, y: customPoint.y + nodeHeight / 2 }
+        ? { x: customPoint.x + nodeDimensions.width / 2, y: customPoint.y + nodeDimensions.height / 2 }
         : graph.node(node.node_id) || { x: 0, y: 0 };
       return {
         id: node.node_id,
         type: "constellation",
-        position: { x: point.x - nodeWidth / 2, y: point.y - nodeHeight / 2 },
-        data: { ...node, compact },
+        position: { x: point.x - nodeDimensions.width / 2, y: point.y - nodeDimensions.height / 2 },
+        style: { width: nodeDimensions.width, minHeight: nodeDimensions.height },
+        data: { ...node, compact, nodeWidth: nodeDimensions.width, nodeHeight: nodeDimensions.height },
         draggable: false,
         connectable: false,
         selectable: false,
@@ -137,6 +170,7 @@ export function buildConstellationElements(draft, options = {}) {
     }),
     edges: [...visualBackboneEdges, ...draftEdges].map((edge) => {
       const sourcePosition = positions.get(edge.source);
+      const sourceDimensions = dimensions.get(edge.source);
       const relation = edge.relation || "precedes";
       const isInterviewBranch = edge.source === "pilot:interviews" && INTERVIEW_CHILD_IDS.includes(edge.target);
       const isInterviewReturn = INTERVIEW_CHILD_IDS.includes(edge.source) && edge.target === "pilot:interview-review";
@@ -154,7 +188,7 @@ export function buildConstellationElements(draft, options = {}) {
           relation,
           routeStyle: isInterviewBranch ? "directory" : undefined,
           busY: relation === "branches_to" && sourcePosition
-            ? sourcePosition.y + nodeHeight + 34
+            ? sourcePosition.y + sourceDimensions.height + 34
             : undefined,
         },
       };

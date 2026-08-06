@@ -7,8 +7,6 @@ tags:
   - disclaimer
 ---
 
-另外，我想请你帮忙把“学习路径”和它旁边的collapse sidebar按钮去掉，直接把下面的内容顶上来，因为这一行现在和下面的“当前节点”很重复。
-然后，在mindmap、夜间模式和语言切换的icon旁边再加一个icon，点进去之后是我们的disclaimer，disclaimer内容如下：
 # Disclaimer
 
 ## 1. 平台性质

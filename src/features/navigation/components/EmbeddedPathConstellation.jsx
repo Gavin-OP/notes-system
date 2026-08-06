@@ -46,9 +46,9 @@ function FixedRouteEdge({ id, sourceX, sourceY, targetX, targetY, style, data, m
 const edgeTypes = { fixedRoute: FixedRouteEdge };
 
 function pathTone(nodeId) {
-  if (["pilot:profile-preparation", "pilot:resume", "pilot:linkedin", "pilot:cover-letter", "pilot:portfolio", "pilot:personal-site", "pilot:job-search", "pilot:networking", "pilot:ai-job-search"].includes(nodeId)) return 1;
+  if (["pilot:skill-supplement", "pilot:technical-skills", "pilot:finance-skills", "pilot:certificate-cfa", "pilot:certificate-frm", "pilot:certificate-hkicpa", "pilot:profile-preparation", "pilot:resume", "pilot:linkedin", "pilot:cover-letter", "pilot:portfolio", "pilot:personal-site", "pilot:job-search", "pilot:networking", "pilot:ai-job-search"].includes(nodeId)) return 1;
   if (["pilot:applications", "pilot:assessments"].includes(nodeId)) return 2;
-  if (["pilot:interviews", "pilot:interview-review", "pilot:interview-hr", "pilot:interview-technical", "pilot:interview-group", "pilot:interview-panel", "pilot:interview-assessment-centre", "pilot:interview-stress", "pilot:interview-final", "pilot:interview-special-situations", "pilot:technical-skills", "pilot:finance-skills", "pilot:certificate-cfa", "pilot:certificate-frm", "pilot:certificate-hkicpa"].includes(nodeId)) return 3;
+  if (["pilot:interviews", "pilot:interview-review", "pilot:interview-hr", "pilot:interview-technical", "pilot:interview-group", "pilot:interview-panel", "pilot:interview-assessment-centre", "pilot:interview-stress", "pilot:interview-final", "pilot:interview-special-situations"].includes(nodeId)) return 3;
   if (nodeId === "pilot:offer") return 4;
   return 0;
 }

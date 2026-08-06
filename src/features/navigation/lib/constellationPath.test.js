@@ -36,8 +36,9 @@ describe("fall recruiting constellation", () => {
       ["pilot:portfolio", "pilot:profile-preparation"],
       ["pilot:personal-site", "pilot:profile-preparation"],
       ["pilot:networking", "pilot:job-search"],
-      ["pilot:technical-skills", "pilot:interview-review"],
-      ["pilot:finance-skills", "pilot:interview-review"],
+      ["pilot:skill-supplement", "pilot:market"],
+      ["pilot:technical-skills", "pilot:skill-supplement"],
+      ["pilot:finance-skills", "pilot:skill-supplement"],
       ["pilot:certificate-cfa", "pilot:finance-skills"],
     ]);
 
@@ -54,6 +55,24 @@ describe("fall recruiting constellation", () => {
     expect(first).toEqual(second);
     expect(first.nodes.every((node) => node.draggable === false && node.connectable === false)).toBe(true);
     expect(first.edges.some((edge) => edge.source === "pilot:technical-skills" && edge.target.includes("certificate"))).toBe(false);
+    expect(first.edges).toContainEqual(expect.objectContaining({
+      source: "pilot:market",
+      target: "pilot:skill-supplement",
+    }));
+    expect(first.edges).toContainEqual(expect.objectContaining({
+      source: "pilot:skill-supplement",
+      target: "pilot:technical-skills",
+    }));
+    expect(first.edges.some((edge) => edge.source === "pilot:interview-review" && ["pilot:technical-skills", "pilot:finance-skills"].includes(edge.target))).toBe(false);
+  });
+
+  it("sizes cards to their complete labels instead of forcing one width", () => {
+    const draft = buildPersonalizedPilotDraft({}, profile);
+    const { nodes } = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+    const shortNode = nodes.find((node) => node.id === "pilot:resume");
+    const longNode = nodes.find((node) => node.id === "pilot:interview-technical");
+    expect(longNode.style.width).toBeGreaterThan(shortNode.style.width);
+    expect(longNode.data.nodeWidth).toBe(longNode.style.width);
   });
 
   it("keeps comprehensive preparation and branches selected interview formats from it", () => {

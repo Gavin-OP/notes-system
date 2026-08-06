@@ -102,7 +102,7 @@
 .path-star-node {
   --platform: #49a9b9;
   position: relative;
-  width: 168px;
+  width: 100%;
   min-height: 48px;
   isolation: isolate;
   color: var(--path-ink);
@@ -127,7 +127,7 @@
 .path-star-node.is-current { transform: none; }
 .path-star-node.is-current::after { border-color: #3f7fd5; background: #3f7fd5; box-shadow: 0 5px 14px rgba(63, 127, 213, 0.2); }
 .path-star-node.is-complete::after { border-color: #a9d8c1; background: #eef8f2; }
-.path-star-node.is-branch { width: 154px; min-height: 42px; }
+.path-star-node.is-branch { min-height: 42px; }
 .path-star-node--tone-0 { --platform: var(--stage-0); }
 .path-star-node--tone-1 { --platform: var(--stage-1); }
 .path-star-node--tone-2 { --platform: var(--stage-2); }
@@ -153,7 +153,15 @@
 .path-star-node__orb { width: 9px; height: 9px; flex: 0 0 9px; border-radius: 50%; background: var(--platform); box-shadow: 0 0 0 3px color-mix(in srgb, var(--platform) 13%, transparent); }
 .path-star-node.is-current .path-star-node__orb { background: #fff; box-shadow: 0 0 0 4px rgba(255,255,255,.18); }
 .path-star-node__copy { min-width: 0; display: grid; gap: 1px; }
-.path-star-node strong { overflow: hidden; font-size: 12px; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+.path-star-node strong {
+  display: block;
+  overflow: visible;
+  font-size: 12px;
+  line-height: 1.38;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+}
 .path-star-node small { color: #6f8293; font-size: 9px; }
 .path-star-node.is-current small { color: rgba(255,255,255,.78); }
 .path-star-node .react-flow__handle { width: 5px; height: 5px; border: 0; background: #7499a5; }
