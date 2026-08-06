@@ -95,6 +95,7 @@
 .embedded-constellation__rail-focus .path-star-node::after { z-index: 0; background: #fff; }
 .embedded-constellation__rail-focus .path-star-node__button { position: relative; z-index: 1; }
 .embedded-constellation__rail-focus .react-flow__handle { display: none; }
+.embedded-constellation__rail-focus .path-star-node.has-prior-path::before { display: none; }
 .embedded-constellation.is-rail .react-flow__controls,
 .embedded-constellation.is-rail .react-flow__background { display: none; }
 
@@ -122,6 +123,18 @@
   border: 1px solid #d9e0e8;
   background: #fff;
   box-shadow: 0 3px 10px rgba(43, 62, 81, 0.08);
+}
+.path-star-node.has-prior-path::before {
+  position: absolute;
+  z-index: -2;
+  top: 50%;
+  right: 100%;
+  width: 120px;
+  height: 2px;
+  border-radius: 999px 0 0 999px;
+  background: #b8c4d0;
+  content: "";
+  transform: translateY(-50%);
 }
 .path-star-node:hover { transform: translateY(-1px); }
 .path-star-node.is-current { transform: none; }

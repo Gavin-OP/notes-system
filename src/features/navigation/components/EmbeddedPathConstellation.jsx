@@ -12,7 +12,7 @@ function normalize(value) {
 }
 
 function StarNode({ data }) {
-  return <div className={`path-star-node path-star-node--tone-${data.tone}${data.isCurrent ? " is-current" : ""}${data.isComplete ? " is-complete" : ""}${data.metadata?.path_relation === "branch" ? " is-branch" : ""}`} style={{ "--star-index": data.index || 0 }}>
+  return <div className={`path-star-node path-star-node--tone-${data.tone}${data.isCurrent ? " is-current" : ""}${data.isComplete ? " is-complete" : ""}${data.hasPriorPath ? " has-prior-path" : ""}${data.metadata?.path_relation === "branch" ? " is-branch" : ""}`} style={{ "--star-index": data.index || 0 }}>
     {!data.hideHandles ? <>
       <Handle id="main-target" type="target" position={Position.Left} isConnectable={false} />
       <Handle id="branch-target" type="target" position={Position.Top} isConnectable={false} />

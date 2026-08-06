@@ -106,6 +106,21 @@ describe("fall recruiting constellation", () => {
     expect(levelById.get("pilot:certificate-hkicpa")).toBe(2);
   });
 
+  it("keeps a prior-route lead-in and branches skills from its midpoint after the first stage", () => {
+    const draft = buildPersonalizedPilotDraft({}, { ...profile, stage: "materials" });
+    const { nodes, edges } = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+    const profilePreparation = nodes.find((node) => node.id === "pilot:profile-preparation");
+    const skillSupplement = nodes.find((node) => node.id === "pilot:skill-supplement");
+    const skillBranch = edges.find((edge) => edge.target === "pilot:skill-supplement");
+    const leadInMidpoint = profilePreparation.position.x - 60;
+
+    expect(nodes.some((node) => node.id === "pilot:market")).toBe(false);
+    expect(profilePreparation.data.hasPriorPath).toBe(true);
+    expect(skillBranch.data.routeStyle).toBe("midpoint-drop");
+    expect(skillBranch.data.customSourceX).toBe(leadInMidpoint);
+    expect(skillSupplement.position.x + skillSupplement.style.width / 2).toBe(leadInMidpoint);
+  });
+
   it("keeps comprehensive preparation and branches selected interview formats from it", () => {
     const draft = buildPersonalizedPilotDraft({}, profile);
     expect(draft.nodes.find((node) => node.node_id === "pilot:interviews")?.title).toBe("综合面试准备");

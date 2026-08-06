@@ -4,6 +4,7 @@ import { buildPersonalizedPilotDraft } from "./pilotPath";
 
 const NODE_WIDTH = 176;
 const NODE_HEIGHT = 54;
+const PRIOR_PATH_LENGTH = 120;
 const PILOT_MAIN_ROUTE = [
   "pilot:getting-started",
   "pilot:market",
@@ -96,6 +97,9 @@ export function buildConstellationElements(draft, options = {}) {
 
   const draftNodes = Array.isArray(draft?.nodes) ? draft.nodes : [];
   const draftEdges = Array.isArray(draft?.edges) ? draft.edges : [];
+  const currentStage = draft?.metadata?.personalization?.stage || "getting_started";
+  const hasPriorPath = horizontal && currentStage !== "getting_started";
+  const firstVisibleMainId = PILOT_MAIN_ROUTE.find((id) => draftNodes.some((node) => node.node_id === id));
   const dimensions = new Map(draftNodes.map((node) => [node.node_id, getDimensions(node)]));
   draftNodes.forEach((node) => graph.setNode(node.node_id, dimensions.get(node.node_id)));
   draftEdges.forEach((edge) => graph.setEdge(edge.source, edge.target));
@@ -104,7 +108,7 @@ export function buildConstellationElements(draft, options = {}) {
   const positions = new Map();
   if (horizontal && draftNodes.some((node) => node.metadata?.pilot_official_path)) {
     const mainIds = PILOT_MAIN_ROUTE.filter((id) => draftNodes.some((node) => node.node_id === id));
-    const startX = 44;
+    const startX = hasPriorPath ? 164 : 44;
     const mainY = 168;
     let cursorX = startX;
     mainIds.forEach((id) => {
@@ -146,7 +150,14 @@ export function buildConstellationElements(draft, options = {}) {
     } else if (skillNode) {
       const skillAnchor = marketPosition || profilePosition;
       if (skillAnchor) {
-        positions.set("pilot:skill-supplement", { x: skillAnchor.x + 44, y: mainY + 92 });
+        const skillDimensions = dimensions.get("pilot:skill-supplement");
+        const branchMidpointX = profilePosition
+          ? profilePosition.x - PRIOR_PATH_LENGTH / 2
+          : skillAnchor.x + dimensions.get(firstVisibleMainId).width / 2;
+        positions.set("pilot:skill-supplement", {
+          x: branchMidpointX - skillDimensions.width / 2,
+          y: mainY + 92,
+        });
         placeDirectoryChildren(SKILL_CHILD_IDS, "pilot:skill-supplement");
         placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:finance-skills", { xOffset: 44, startY: 78, gap: 16 });
       }
@@ -194,6 +205,7 @@ export function buildConstellationElements(draft, options = {}) {
         data: {
           ...node,
           compact,
+          hasPriorPath: hasPriorPath && node.node_id === firstVisibleMainId,
           hierarchyLevel: hierarchyLevels.get(node.node_id) ?? (node.metadata?.path_relation === "branch" ? 1 : 0),
           nodeWidth: nodeDimensions.width,
           nodeHeight: nodeDimensions.height,
@@ -209,7 +221,8 @@ export function buildConstellationElements(draft, options = {}) {
       const sourceDimensions = dimensions.get(edge.source);
       const relation = edge.relation || "precedes";
       const isDirectoryBranch = relation === "branches_to" && DIRECTORY_PARENT_IDS.has(edge.source);
-      const isSkillMidpointBranch = edge.source === "pilot:market" && edge.target === "pilot:skill-supplement";
+      const isSkillMidpointBranch = edge.target === "pilot:skill-supplement"
+        && (edge.source === "pilot:market" || (edge.source === firstVisibleMainId && hasPriorPath));
       const isInterviewReturn = INTERVIEW_CHILD_IDS.includes(edge.source) && edge.target === "pilot:interview-review";
       const marketPosition = positions.get("pilot:market");
       const profilePosition = positions.get("pilot:profile-preparation");
@@ -227,11 +240,13 @@ export function buildConstellationElements(draft, options = {}) {
         data: {
           relation,
           routeStyle: isSkillMidpointBranch ? "midpoint-drop" : isDirectoryBranch ? "directory" : undefined,
-          customSourceX: isSkillMidpointBranch && marketPosition && profilePosition
-            ? (marketPosition.x + marketDimensions.width + profilePosition.x) / 2
+          customSourceX: isSkillMidpointBranch
+            ? marketPosition && profilePosition
+              ? (marketPosition.x + marketDimensions.width + profilePosition.x) / 2
+              : sourcePosition?.x - PRIOR_PATH_LENGTH / 2
             : undefined,
-          customSourceY: isSkillMidpointBranch && marketPosition && marketDimensions
-            ? marketPosition.y + marketDimensions.height / 2
+          customSourceY: isSkillMidpointBranch
+            ? sourcePosition?.y + sourceDimensions.height / 2
             : undefined,
           busY: relation === "branches_to" && sourcePosition
             ? sourcePosition.y + sourceDimensions.height + 34
