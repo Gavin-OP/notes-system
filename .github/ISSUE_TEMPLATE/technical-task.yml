@@ -1,0 +1,38 @@
+name: Technical Task
+description: Track frontend refactoring, deployment, tooling, or migration work.
+title: "[Technical]: "
+labels: []
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Technical Scope
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+    validations:
+      required: true
+  - type: input
+    id: design
+    attributes:
+      label: Related backend Design Document
+  - type: input
+    id: adr
+    attributes:
+      label: Related backend ADR
+

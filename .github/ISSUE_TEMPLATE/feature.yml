@@ -1,0 +1,42 @@
+name: Feature
+description: Propose a product outcome or frontend capability.
+title: "[Feature]: "
+labels: []
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Who has this problem and why does it matter?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is included and excluded?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+    validations:
+      required: true
+  - type: input
+    id: prd
+    attributes:
+      label: Related backend PRD
+  - type: input
+    id: design
+    attributes:
+      label: Related backend Design Document
+  - type: input
+    id: adr
+    attributes:
+      label: Related backend ADR
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies and Risks
+

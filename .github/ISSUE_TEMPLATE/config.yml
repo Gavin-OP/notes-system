@@ -1,0 +1,6 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Project documentation
+    url: https://github.com/notes-system/notes-system-backend/tree/main/docs
+    about: Maintainers should review the private project source of truth before implementation.
+

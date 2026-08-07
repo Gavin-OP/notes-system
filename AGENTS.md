@@ -1,9 +1,13 @@
-## Agent skills
+# Frontend Agent Entry Point
 
-### Issue tracker
+Formal engineering work is tracked in GitHub Issues. Local `.scratch/` files may be used as temporary agent notes but are not authoritative and must not replace an Issue, PRD, Design Document, or ADR.
 
-Engineering issues are tracked as local Markdown under `.scratch/`. See `docs/agents/issue-tracker.md`.
+Before changing behavior, read the project documentation in the sibling/private `notes-system-backend` repository:
 
-### Domain docs
+1. `docs/agents/CONTEXT.md`
+2. the relevant PRD
+3. the relevant Design Document
+4. relevant active ADRs
+5. the existing frontend implementation and tests
 
-This repository uses a single-context domain layout rooted at `CONTEXT.md`, with architecture decisions in `docs/adr/`. See `docs/agents/domain.md`.
+Project-level documentation is owned by the backend repository. This frontend may keep only repo-local setup, deployment, publishing, and implementation guidance. Follow documentation-first development and update the source of truth before modifying product behavior, contracts, data, architecture, security, privacy, or deployment.

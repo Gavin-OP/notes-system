@@ -1,10 +1,21 @@
-# Notes System pilot context
+# Notes System Frontend Language
 
-This branch is a frontend-only autumn-recruiting pilot. JobTI is an entertainment-oriented entry point; it must never infer or prescribe a user's learning path. The Path questionnaire and graph are the authoritative interfaces for personalization. Pilot data is stored locally in the browser and no feature in this mode may call a paid AI API.
+This file defines frontend-local vocabulary. The complete product language is maintained in the backend repository root `CONTEXT.md`.
 
-## Product vocabulary
+## Language
 
-- **JobTI**: the job-seeker type indicator and its eight personality results.
-- **Path**: a directed, acyclic learning graph made from standalone notes.
-- **Recommended Path**: the canonical graph generated from Path questionnaire choices.
-- **Customized Path**: a valid user-edited DAG derived from the recommended graph.
+**Pilot Mode**:
+The public JobTI and fall-recruiting experience that runs from static assets and browser-local state.
+_Avoid_: Demo mode, frontend-only product
+
+**Full-Product Mode**:
+The broader API-backed Notes System experience retained behind product controls.
+_Avoid_: Production mode
+
+**Static Mirror**:
+A frontend copy of approved backend-generated content used for static delivery.
+_Avoid_: Source content, canonical content
+
+**Product Mode Control**:
+A configuration boundary that hides or exposes a coherent product surface without deleting its implementation.
+_Avoid_: Dead-code flag

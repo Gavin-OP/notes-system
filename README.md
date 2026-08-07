@@ -1,53 +1,59 @@
-# notes-system
+# Notes System Frontend
 
-React frontend for Notes System. The app can run in two modes:
+React frontend for Notes System and the public JobTI career-preparation pilot.
 
-- **Static mode** for GitHub Pages, reading published mirrors under `public/`.
-- **API mode** for local development, using `VITE_API_BASE_URL` to call the FastAPI backend.
+Project-level product, design, architecture, domain, governance, and technical documentation is maintained in the private [`notes-system-backend`](https://github.com/notes-system/notes-system-backend) repository. This README covers frontend setup, modes, static content, and deployment only.
 
-Generated subject content is owned by the backend repo. Files under `public/notes/`,
-`public/graphs/`, `public/audio/`, and `public/subjects/` are frontend publish mirrors,
-not canonical authoring sources.
+## Runtime Modes
 
-## Usage
+- **Pilot/static mode**: GitHub Pages reads published content under `public/`; JobTI and the fall-recruiting Path use browser-local storage and do not require the backend.
+- **Full-product/API mode**: local or hosted builds use `VITE_API_BASE_URL` and product flags to call the FastAPI backend and expose broader product surfaces.
 
-1. Open command prompt (terminal) inside the cloned repository folder. 
+See `src/config/productMode.js` and `.env.example` for current flags. Do not expose paid AI/API features in the public pilot without an approved product/design change.
 
-2. Install all required dependencies using the command:
+## Local Development
 
-    ```
-    npm install
-    ```
+```bash
+npm install
+npm run dev
+```
 
-3. Open the website locally using the command:
+For API mode, run the backend separately and configure `VITE_API_BASE_URL` in `.env.local`.
 
-    ```
-    npm run dev
-    ```
+## Verification
 
-    or
+```bash
+npm run lint
+npm test
+npm run build
+npm run test:e2e
+```
 
-    ```
-    npx vite
-    ```
+Use the checks appropriate to the change. GitHub Pages changes should include a production build and deep-link verification.
 
-    To use API mode, run the backend separately and set `VITE_API_BASE_URL` in
-    `.env.local`.
+## Static Content Mirror
 
-## Static content mirror
-
-The backend is the canonical source for generated notes, graphs, images, audio,
-and subject overview data. This frontend keeps a static mirror for GitHub Pages.
-
-Sync current backend outputs into the frontend mirror with:
+Generated Subject content is canonical in the backend. Frontend paths such as `public/notes/`, `public/graphs/`, `public/audio/`, and `public/subjects/` are publishing mirrors, not independent authoring sources.
 
 ```bash
 npm run sync:backend-content -- --subject data-science
 npm run generate:notes
+npm run check:fall-locales
 ```
 
-See `docs/content-sync.md` for the source-of-truth rules and migration plan.
+See [Content Sync Boundary](docs/content-sync.md). Hand-authored pilot content must have explicit ownership and must not be silently overwritten by backend sync.
 
-4. Publish and Deploy  
+## Deployment
 
-    As long as push in `main` branch or pull request to `main` branch is detected, the website will be automatically built, deployed to `gh-pages` branch and published to [https://gavin-op.github.io/notes-system/](https://gavin-op.github.io/notes-system/).
+The experiment branch is built by `.github/workflows/deploy-pages.yml` and published at [https://notes-system.github.io/notes-system/](https://notes-system.github.io/notes-system/). Vite uses the `/notes-system/` base path.
+
+Before deploying, confirm that the workflow uploads `dist`, the SPA `404.html` fallback is present, locale checks pass, and static asset paths work under the repository base path.
+
+## Repository Documentation
+
+- `src/features/README.md`: frontend feature navigation.
+- `docs/content-sync.md`: static mirror workflow.
+- `CONTEXT.md`: frontend-local vocabulary only.
+- `AGENTS.md`: coding-agent entry point.
+
+Do not add a second project PRD, Design Document, ADR library, or roadmap here. Update the backend documentation source of truth first.

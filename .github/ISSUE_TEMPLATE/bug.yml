@@ -1,0 +1,39 @@
+name: Bug
+description: Report behavior that differs from the intended frontend.
+title: "[Bug]: "
+labels: []
+body:
+  - type: textarea
+    id: current
+    attributes:
+      label: Current Behavior
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Include browser, viewport, route, inputs, and minimal steps.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+    validations:
+      required: true
+  - type: input
+    id: related
+    attributes:
+      label: Related feature or documentation
+  - type: textarea
+    id: notes
+    attributes:
+      label: Technical Notes
+
