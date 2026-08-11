@@ -15,6 +15,133 @@ const profile = {
 };
 
 describe("fall recruiting constellation", () => {
+  it("builds editable search routes from behavior, student status, and explicit social choices", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      jobti_type: "radar",
+      candidate_background: "student",
+      company_types: ["big_tech", "consulting"],
+      search_branches: ["networking"],
+      application_strategy: "auto",
+    });
+    const ids = new Set(draft.nodes.map((node) => node.node_id));
+
+    [
+      "pilot:company-big-tech",
+      "pilot:company-consulting",
+      "pilot:networking",
+      "pilot:referral",
+      "pilot:job-board",
+      "pilot:company-career-page",
+      "pilot:ai-job-search",
+      "pilot:campus-recruiting",
+      "pilot:career-fair",
+      "pilot:alumni-networking",
+      "pilot:company-research",
+      "pilot:jd-deep-dive",
+      "pilot:tailored-materials",
+    ].forEach((id) => expect(ids.has(id), `${id} should exist`).toBe(true));
+
+    expect(draft.edges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ source: "pilot:market", target: "pilot:company-big-tech", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:company-big-tech", target: "pilot:profile-preparation", relation: "converges_to" }),
+      expect.objectContaining({ source: "pilot:job-search", target: "pilot:networking", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:networking", target: "pilot:referral", relation: "precedes" }),
+      expect.objectContaining({ source: "pilot:job-search", target: "pilot:job-board", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:job-board", target: "pilot:company-career-page", relation: "precedes" }),
+      expect.objectContaining({ source: "pilot:company-career-page", target: "pilot:ai-job-search", relation: "precedes" }),
+      expect.objectContaining({ source: "pilot:job-search", target: "pilot:campus-recruiting", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:campus-recruiting", target: "pilot:career-fair", relation: "precedes" }),
+      expect.objectContaining({ source: "pilot:career-fair", target: "pilot:alumni-networking", relation: "precedes" }),
+      expect.objectContaining({ source: "pilot:applications", target: "pilot:company-research", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:company-research", target: "pilot:jd-deep-dive", relation: "precedes" }),
+      expect.objectContaining({ source: "pilot:jd-deep-dive", target: "pilot:tailored-materials", relation: "precedes" }),
+    ]));
+    expect(draft.metadata.personalization.resolved_application_strategy).toBe("precision");
+  });
+
+  it("uses the batch application route for the action-execution JobTI type", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      jobti_type: "engine",
+      application_strategy: "auto",
+    });
+    expect(draft.metadata.personalization.resolved_application_strategy).toBe("batch");
+    expect(draft.edges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ source: "pilot:applications", target: "pilot:application-batch-planning", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:application-batch-planning", target: "pilot:application-tracker", relation: "precedes" }),
+      expect.objectContaining({ source: "pilot:application-tracker", target: "pilot:resume-version-management", relation: "precedes" }),
+      expect.objectContaining({ source: "pilot:resume-version-management", target: "pilot:assessments", relation: "converges_to" }),
+    ]));
+  });
+
+  it("adds early-internship side routes and keeps HR Screening first under comprehensive interviews", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      interview_branches: ["technical"],
+    });
+    expect(draft.edges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ source: "pilot:getting-started", target: "pilot:first-internship", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:first-internship", target: "pilot:market", relation: "converges_to" }),
+      expect.objectContaining({ source: "pilot:getting-started", target: "pilot:transition-first-internship", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:transition-first-internship", target: "pilot:market", relation: "converges_to" }),
+      expect.objectContaining({ source: "pilot:interviews", target: "pilot:hr-screening-call", relation: "branches_to" }),
+    ]));
+    const screening = draft.nodes.find((node) => node.node_id === "pilot:hr-screening-call");
+    const technical = draft.nodes.find((node) => node.node_id === "pilot:interview-technical");
+    expect(screening.metadata.directory_order).toBeLessThan(technical.metadata.directory_order);
+  });
+
+  it("marks newly planned path nodes as non-content instead of linking approximate notes", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      jobti_type: "radar",
+      company_types: ["startup"],
+      experience_branches: ["first_internship"],
+    });
+    ["pilot:company-startup", "pilot:job-board", "pilot:referral", "pilot:first-internship", "pilot:hr-screening-call"]
+      .forEach((id) => {
+        const node = draft.nodes.find((candidate) => candidate.node_id === id);
+        expect(node?.note_url, `${id} should not navigate`).toBeUndefined();
+        expect(node?.metadata?.content_status).toBe("planned");
+      });
+  });
+
+  it("lays out the combined personalized branches without overlapping node cards", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      jobti_type: "radar",
+      candidate_background: "student",
+      company_types: ["big_tech", "startup", "consulting", "investment_banking", "graduate_program"],
+      experience_branches: ["first_internship", "transition_first_internship"],
+      search_branches: ["networking", "ai_job_search"],
+      application_strategy: "precision",
+      interview_branches: ["hr", "technical", "group", "panel", "assessment_centre", "stress", "final", "special_situations"],
+    });
+    const { nodes, edges } = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+    const branchNodes = nodes.filter((node) => node.data.metadata?.path_relation === "branch");
+    const overlaps = (first, second) => !(
+      first.position.x + first.style.width <= second.position.x
+      || second.position.x + second.style.width <= first.position.x
+      || first.position.y + first.style.minHeight <= second.position.y
+      || second.position.y + second.style.minHeight <= first.position.y
+    );
+
+    branchNodes.forEach((node, index) => {
+      branchNodes.slice(index + 1).forEach((other) => {
+        expect(overlaps(node, other), `${node.id} should not overlap ${other.id}`).toBe(false);
+      });
+    });
+
+    const earlyEdges = edges.filter((edge) => ["pilot:first-internship", "pilot:transition-first-internship"].includes(edge.target));
+    expect(earlyEdges.every((edge) => edge.data.routeStyle === "midpoint-drop")).toBe(true);
+    expect(new Set(earlyEdges.map((edge) => edge.data.customSourceX)).size).toBe(1);
+
+    const screening = nodes.find((node) => node.id === "pilot:hr-screening-call");
+    const hrInterview = nodes.find((node) => node.id === "pilot:interview-hr");
+    expect(screening.position.y).toBeLessThan(hrInterview.position.y);
+  });
+
   it("cuts completed preparation stages from the path when the learner advances", () => {
     const materialsDraft = buildPersonalizedPilotDraft({}, { ...profile, stage: "materials" });
     expect(materialsDraft.nodes.some((node) => node.node_id === "pilot:getting-started")).toBe(false);

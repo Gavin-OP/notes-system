@@ -3,6 +3,9 @@ import { CheckOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 
 import {
+  APPLICATION_STRATEGY_OPTIONS,
+  CANDIDATE_BACKGROUND_OPTIONS,
+  COMPANY_TYPE_OPTIONS,
   PILOT_STAGE_OPTIONS,
   PROFILE_BRANCH_OPTIONS,
   SEARCH_BRANCH_OPTIONS,
@@ -17,16 +20,6 @@ import {
 import "./PilotPathSetupModal.css";
 import useTranslation from "../../../i18n/useTranslation";
 
-const EMPTY_PROFILE = {
-  stage: "getting_started",
-  profile_branches: [],
-  search_branches: [],
-  skill_branches: [],
-  certificate_branches: [],
-  certificate_interest: false,
-  interview_branches: [],
-};
-
 const CERTIFICATE_INTEREST_OPTIONS = [
   { value: true, label: "想进一步了解" },
   { value: false, label: "目前不加入 Path" },
@@ -35,6 +28,10 @@ const CERTIFICATE_INTEREST_OPTIONS = [
 function normalizeInitialProfile(initialProfile = {}) {
   return {
     stage: initialProfile.stage === "targeting" ? "getting_started" : initialProfile.stage || "getting_started",
+    candidate_background: initialProfile.candidate_background || "other",
+    company_types: Array.isArray(initialProfile.company_types) ? initialProfile.company_types : [],
+    application_strategy: initialProfile.application_strategy || "auto",
+    jobti_type: initialProfile.jobti_type || "",
     profile_branches: Array.isArray(initialProfile.profile_branches) ? initialProfile.profile_branches : [],
     search_branches: Array.isArray(initialProfile.search_branches) ? initialProfile.search_branches : [],
     skill_branches: Array.isArray(initialProfile.skill_branches)
@@ -239,6 +236,22 @@ function PilotPathSetupWizard({ initialProfile, pending = false, onCancel, onSub
       ),
     },
     {
+      id: "background",
+      title: "你目前仍是在校学生吗？",
+      hint: "学生身份会加入 Campus Recruiting、Career Fair 和 Alumni Networking 路线。",
+      content: (
+        <SingleChoiceGrid options={CANDIDATE_BACKGROUND_OPTIONS} value={profile.candidate_background} disabled={pending} onChange={(value) => update("candidate_background", value)} />
+      ),
+    },
+    {
+      id: "company-types",
+      title: "你想优先了解哪些公司或项目类型？",
+      hint: "可以多选；这些介绍会从“理解岗位与市场”延伸出来。",
+      content: (
+        <MultiChoiceGrid options={COMPANY_TYPE_OPTIONS} value={profile.company_types} emptyLabel="暂时先看通用信息" disabled={pending} onChange={(value) => update("company_types", value)} />
+      ),
+    },
+    {
       id: "search",
       title: "寻找岗位时，你想加入哪些方式？",
       hint: "可以多选，也可以先沿用基础的岗位寻找与筛选流程。",
@@ -264,6 +277,14 @@ function PilotPathSetupWizard({ initialProfile, pending = false, onCancel, onSub
           disabled={pending}
           onChange={(value) => update("skill_branches", value)}
         />
+      ),
+    },
+    {
+      id: "application-strategy",
+      title: "投递时，你更想怎样安排节奏？",
+      hint: "可以沿用 JobTI 建议，也可以明确选择批量规划或精准投递。",
+      content: (
+        <SingleChoiceGrid options={APPLICATION_STRATEGY_OPTIONS} value={profile.application_strategy} disabled={pending} onChange={(value) => update("application_strategy", value)} />
       ),
     },
     {
@@ -424,6 +445,14 @@ export function PilotPathSettingsPanel({ initialProfile, pending = false, onClos
           <SingleChoiceGrid options={localizeOptions(PILOT_STAGE_OPTIONS, "pilot.stage")} value={profile.stage} disabled={pending} onChange={(value) => update("stage", value)} />
         </section>
         <section>
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.background", "Student recruiting")}</strong><small>{t("pilot.settings.backgroundHint", "Student status adds campus-specific discovery routes.")}</small></div>
+          <SingleChoiceGrid options={localizeOptions(CANDIDATE_BACKGROUND_OPTIONS, "pilot.background")} value={profile.candidate_background} disabled={pending} onChange={(value) => update("candidate_background", value)} />
+        </section>
+        <section>
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.companyTypes", "Company types")}</strong><small>{t("pilot.settings.companyTypesHint", "Choose the company or programme contexts you want to understand first.")}</small></div>
+          <MultiChoiceGrid options={localizeOptions(COMPANY_TYPE_OPTIONS, "pilot.company")} value={profile.company_types} emptyLabel={t("pilot.settings.companyTypesEmpty", "Use the general market route")} disabled={pending} onChange={(value) => update("company_types", value)} />
+        </section>
+        <section>
           <div className="pilot-path-settings__question"><strong>{t("pilot.settings.profile")}</strong><small>{t("pilot.settings.profileHint")}</small></div>
           <MultiChoiceGrid options={localizeOptions(PROFILE_BRANCH_OPTIONS, "pilot.option")} value={profile.profile_branches} emptyLabel={t("pilot.settings.profileEmpty")} disabled={pending} onChange={(value) => update("profile_branches", value)} />
         </section>
@@ -434,6 +463,10 @@ export function PilotPathSettingsPanel({ initialProfile, pending = false, onClos
         <section>
           <div className="pilot-path-settings__question"><strong>{t("pilot.settings.skills")}</strong><small>{t("pilot.settings.skillsHint")}</small></div>
           <MultiChoiceGrid options={localizeOptions(SKILL_BRANCH_OPTIONS, "pilot.option")} value={profile.skill_branches} emptyLabel={t("pilot.settings.skillsEmpty")} disabled={pending} onChange={(value) => update("skill_branches", value)} />
+        </section>
+        <section>
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.applicationStrategy", "Application style")}</strong><small>{t("pilot.settings.applicationStrategyHint", "Use the JobTI default or choose a route explicitly.")}</small></div>
+          <SingleChoiceGrid options={localizeOptions(APPLICATION_STRATEGY_OPTIONS, "pilot.application")} value={profile.application_strategy} disabled={pending} onChange={(value) => update("application_strategy", value)} />
         </section>
         <section>
           <div className="pilot-path-settings__question"><strong>{t("pilot.settings.certificates")}</strong><small>{t("pilot.settings.certificatesHint")}</small></div>

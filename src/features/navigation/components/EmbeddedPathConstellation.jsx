@@ -12,15 +12,16 @@ function normalize(value) {
 }
 
 function StarNode({ data }) {
-  return <div className={`path-star-node path-star-node--tone-${data.tone}${data.isCurrent ? " is-current" : ""}${data.isComplete ? " is-complete" : ""}${data.hasPriorPath ? " has-prior-path" : ""}${data.metadata?.path_relation === "branch" ? " is-branch" : ""}`} style={{ "--star-index": data.index || 0 }}>
+  const hasContent = Boolean(data.note_url);
+  return <div className={`path-star-node path-star-node--tone-${data.tone}${data.isCurrent ? " is-current" : ""}${data.isComplete ? " is-complete" : ""}${data.hasPriorPath ? " has-prior-path" : ""}${data.metadata?.path_relation === "branch" ? " is-branch" : ""}${hasContent ? "" : " is-content-planned"}`} style={{ "--star-index": data.index || 0 }}>
     {!data.hideHandles ? <>
       <Handle id="main-target" type="target" position={Position.Left} isConnectable={false} />
       <Handle id="branch-target" type="target" position={Position.Top} isConnectable={false} />
       <Handle id="tree-target" type="target" position={Position.Left} isConnectable={false} />
     </> : null}
-    <button type="button" className="path-star-node__button" onClick={(event) => { event.stopPropagation(); data.onOpen?.(); }} aria-label={data.openLabel}>
+    <button type="button" className="path-star-node__button" disabled={!hasContent} onClick={(event) => { event.stopPropagation(); if (hasContent) data.onOpen?.(); }} aria-label={hasContent ? data.openLabel : `${data.localizedTitle || data.title}，${data.plannedLabel}`}>
       <span className="path-star-node__orb" aria-hidden="true"><i /></span>
-      <span className="path-star-node__copy"><strong>{data.localizedTitle || data.title}</strong>{data.isCurrent ? <small>{data.currentLabel}</small> : data.isComplete ? <small>{data.completedLabel}</small> : null}</span>
+      <span className="path-star-node__copy"><strong>{data.localizedTitle || data.title}</strong>{data.isCurrent ? <small>{data.currentLabel}</small> : data.isComplete ? <small>{data.completedLabel}</small> : !hasContent ? <small>{data.plannedLabel}</small> : null}</span>
     </button>
     {!data.hideHandles ? <>
       <Handle id="main-source" type="source" position={Position.Right} isConnectable={false} />
@@ -70,11 +71,12 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
         openLabel: `${t("learningPath.open")} ${t(`pilot.node.${node.id.replace(/^pilot:/, "")}`, node.data.title)}`,
         currentLabel: t("pilot.node.current"),
         completedLabel: t("pilot.node.completed"),
+        plannedLabel: t("pilot.node.contentPlanned", "内容待补充"),
         index,
         tone: node.data.hierarchyLevel,
         isCurrent: node.id === currentNode?.id,
         isComplete: completed.has(normalize(node.data.note_url)) || node.data.status === "completed",
-        onOpen: () => onSelect?.(node.data.note_url),
+        onOpen: node.data.note_url ? () => onSelect?.(node.data.note_url) : undefined,
       },
     }));
     const edges = built.edges.map((edge) => {
@@ -95,7 +97,7 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
   return <section className={`embedded-constellation${isRail ? " is-rail" : " is-expanded"}`} aria-label={t("pilot.path.aria")}>
     <header className="embedded-constellation__header"><div><span>YOUR PATH</span><strong>{isRail ? t("pilot.path.currentRoute") : t("pilot.path.title")}</strong></div><nav><button type="button" className="embedded-constellation__resize" onClick={onToggleExpand} aria-label={isRail ? t("pilot.path.openSettings") : t("pilot.path.backToReading")}>{isRail ? <ExpandOutlined /> : <CompressOutlined />}</button></nav></header>
     <div className="embedded-constellation__canvas">
-      {isRail ? <div className="embedded-constellation__rail-focus"><StarNode data={{ ...elements.currentNode.data, hideHandles: true }} /></div> : <ReactFlow key="expanded" nodes={elements.nodes} edges={elements.edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} nodesDraggable={false} nodesConnectable={false} panOnDrag zoomOnScroll zoomOnPinch minZoom={.4} maxZoom={1.3} defaultViewport={{ x: 22, y: 104, zoom: .82 }} onNodeClick={(_, node) => onSelect?.(node.data.note_url)}>
+      {isRail ? <div className="embedded-constellation__rail-focus"><StarNode data={{ ...elements.currentNode.data, hideHandles: true }} /></div> : <ReactFlow key="expanded" nodes={elements.nodes} edges={elements.edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} nodesDraggable={false} nodesConnectable={false} panOnDrag zoomOnScroll zoomOnPinch minZoom={.4} maxZoom={1.3} defaultViewport={{ x: 22, y: 104, zoom: .82 }} onNodeClick={(_, node) => { if (node.data.note_url) onSelect?.(node.data.note_url); }}>
         <Background variant="dots" gap={24} size={1.1} />
         <Controls showInteractive={false} position="bottom-right" />
         <div className="embedded-constellation__hint"><AimOutlined /> {t("pilot.path.hint")}</div>

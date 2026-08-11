@@ -141,6 +141,9 @@
 .path-star-node.is-current::after { border-color: #3f7fd5; background: #3f7fd5; box-shadow: 0 5px 14px rgba(63, 127, 213, 0.2); }
 .path-star-node.is-complete::after { border-color: #a9d8c1; background: #eef8f2; }
 .path-star-node.is-branch { min-height: 42px; }
+.path-star-node.is-content-planned::after { border-style: dashed; background: #f8fafb; }
+.path-star-node.is-content-planned .path-star-node__button { cursor: default; opacity: 0.82; }
+.path-star-node.is-content-planned:hover { transform: none; }
 .path-star-node--tone-0 { --platform: var(--stage-0); }
 .path-star-node--tone-1 { --platform: var(--stage-1); }
 .path-star-node--tone-2 { --platform: var(--stage-2); }

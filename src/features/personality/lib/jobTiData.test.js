@@ -12,10 +12,10 @@ const personalityAnswers = Object.fromEntries(
 );
 
 describe("JobTI questionnaire model", () => {
-  it("combines eight personality questions with six Path inputs", () => {
-    expect(QUIZ_ITEMS).toHaveLength(14);
+  it("combines eight personality questions with eight Path inputs", () => {
+    expect(QUIZ_ITEMS).toHaveLength(16);
     expect(QUIZ_ITEMS.filter((item) => item.kind === "personality")).toHaveLength(8);
-    expect(QUIZ_ITEMS.filter((item) => item.kind.startsWith("path-"))).toHaveLength(6);
+    expect(QUIZ_ITEMS.filter((item) => item.kind.startsWith("path-"))).toHaveLength(8);
   });
 
   it("does not let unscored Path answers change the personality result", () => {
@@ -31,6 +31,8 @@ describe("JobTI questionnaire model", () => {
     const second = rankJobTiResults({
       ...personalityAnswers,
       stage: "interviewing",
+      candidate_background: "student",
+      company_types: ["big_tech", "graduate_program"],
       materials: ["linkedin", "cover_letter"],
       search: ["networking"],
       leetcode: true,
@@ -69,6 +71,8 @@ describe("JobTI questionnaire model", () => {
   it("turns practical answers into a reusable Path profile", () => {
     const profile = buildJobTiPathProfile({
       stage: "interviewing",
+      candidate_background: "student",
+      company_types: ["big_tech", "graduate_program"],
       materials: ["linkedin"],
       search: ["networking"],
       leetcode: true,
@@ -78,6 +82,9 @@ describe("JobTI questionnaire model", () => {
 
     expect(profile).toMatchObject({
       stage: "interviewing",
+      jobti_type: expect.any(String),
+      candidate_background: "student",
+      company_types: ["big_tech", "graduate_program"],
       profile_branches: ["linkedin"],
       search_branches: ["networking"],
       skill_branches: ["technical"],
