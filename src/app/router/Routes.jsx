@@ -37,6 +37,7 @@ const JobSeekerPersonalityPage = lazy(() =>
 const JobSeekerPersonalityTypesPage = lazy(() =>
   import("../../features/personality/pages/JobSeekerPersonalityTypesPage"),
 );
+const CareerRunPage = lazy(() => import("../../features/careerGame/pages/CareerRunPage"));
 const AdminAuthRoot = lazy(() =>
   import("../../features/admin/auth/AdminAuthProvider").then((module) => ({ default: module.AdminAuthRoot })),
 );
@@ -246,6 +247,7 @@ function RoutesWithTracking() {
         {/* Standalone campaign page for the fall-recruiting pilot. */}
         <Route path="job-seeker-personality" element={<JobSeekerPersonalityPage />} />
         <Route path="job-seeker-personality/types" element={<JobSeekerPersonalityTypesPage />} />
+        <Route path="career-run" element={<CareerRunPage />} />
 
         {/* Search */}
         {FULL_PRODUCT_ENABLED ? <Route path="search" element={<SearchResultsPage />} /> : null}
