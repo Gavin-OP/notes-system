@@ -7,6 +7,7 @@ import { advanceCareerRun, createCareerRun, summarizeCareerRun } from "../domain
 import "./CareerRunPage.css";
 
 const STORAGE_KEY = "notes-system:career-run:v1";
+const ASSET_ROOT = `${String(import.meta.env.BASE_URL || "/").replace(/\/?$/, "/")}assets/career-run`;
 const ATTRIBUTE_META = {
   time: { label: "Time", description: "剩余求职时间" },
   energy: { label: "Energy", description: "继续行动的能量" },
@@ -89,21 +90,26 @@ function Intro({ savedRun, onStart, onResume }) {
   return (
     <main className="career-run-shell career-run-intro">
       <section className="career-run-intro-card">
-        <span className="career-run-overline">LIGHTHOUSE · CAREER RUN</span>
-        <h1>应届生开荒局</h1>
-        <p className="career-run-lead">你有一段有限的求职季，也有很多并不完美的选择。投递、准备、社交、休息——每一步都会改变下一张牌。</p>
-        <div className="career-run-rules" aria-label="游戏说明">
-          <div><strong>5–10 分钟</strong><span>完成一轮求职过程</span></div>
-          <div><strong>没有标准答案</strong><span>只有不同资源与策略</span></div>
-          <div><strong>留在浏览器</strong><span>不调用 AI 或后端 API</span></div>
+        <div className="career-run-intro-copy">
+          <span className="career-run-overline">LIGHTHOUSE · CAREER RUN</span>
+          <h1>应届生开荒局</h1>
+          <p className="career-run-lead">你有一段有限的求职季，也有很多并不完美的选择。投递、准备、社交、休息——每一步都会改变下一张牌。</p>
+          <div className="career-run-rules" aria-label="游戏说明">
+            <div><strong>5–10 分钟</strong><span>完成一轮求职过程</span></div>
+            <div><strong>没有标准答案</strong><span>只有不同资源与策略</span></div>
+            <div><strong>留在浏览器</strong><span>不调用 AI 或后端 API</span></div>
+          </div>
+          <div className="career-run-intro-actions">
+            {savedRun ? <button className="career-run-primary" type="button" onClick={onResume}>继续上次进度</button> : null}
+            <button className={savedRun ? "career-run-secondary" : "career-run-primary"} type="button" onClick={onStart}>
+              {savedRun ? "重新开一局" : "开始这一局"}
+            </button>
+          </div>
+          <p className="career-run-footnote">这是一个趣味互动体验，不预测真实招聘结果，也不评判你的能力。</p>
         </div>
-        <div className="career-run-intro-actions">
-          {savedRun ? <button className="career-run-primary" type="button" onClick={onResume}>继续上次进度</button> : null}
-          <button className={savedRun ? "career-run-secondary" : "career-run-primary"} type="button" onClick={onStart}>
-            {savedRun ? "重新开一局" : "开始这一局"}
-          </button>
+        <div className="career-run-character" aria-hidden="true">
+          <img src={`${ASSET_ROOT}/jobseeker.png`} alt="" width="1024" height="1536" />
         </div>
-        <p className="career-run-footnote">这是一个趣味互动体验，不预测真实招聘结果，也不评判你的能力。</p>
       </section>
     </main>
   );
@@ -111,6 +117,7 @@ function Intro({ savedRun, onStart, onResume }) {
 
 function Play({ run, showingOutcome, onChoose, onContinue, onRestart }) {
   const event = run.currentEvent;
+  const displayedCategory = showingOutcome ? run.history.at(-1)?.category : event?.category;
   const progress = Math.min(100, Math.round((run.turn / 12) * 100));
   return (
     <main className="career-run-shell career-run-play">
@@ -131,9 +138,9 @@ function Play({ run, showingOutcome, onChoose, onContinue, onRestart }) {
           </div>
         </aside>
 
-        <section className={`career-run-event-card category-${event?.category || "profile"}`}>
+        <section className={`career-run-event-card category-${displayedCategory || "profile"}`}>
           {showingOutcome ? (
-            <div className="career-run-outcome" aria-live="polite">
+            <div className="career-run-card-content career-run-outcome" aria-live="polite">
               <span className="career-run-overline">CHOICE RESOLVED</span>
               <h2>{run.history.at(-1)?.choiceLabel}</h2>
               <p>{run.lastOutcome.message}</p>
@@ -143,7 +150,7 @@ function Play({ run, showingOutcome, onChoose, onContinue, onRestart }) {
               </button>
             </div>
           ) : (
-            <>
+            <div className="career-run-card-content">
               <span className="career-run-category">{CATEGORY_LABELS[event.category]}</span>
               <h2>{event.title}</h2>
               <p className="career-run-event-description">{event.description}</p>
@@ -155,7 +162,7 @@ function Play({ run, showingOutcome, onChoose, onContinue, onRestart }) {
                   </button>
                 ))}
               </div>
-            </>
+            </div>
           )}
         </section>
 

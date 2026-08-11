@@ -1,21 +1,18 @@
 # Career Run image assets
 
-The Career Run is fully playable without images. Add reviewed assets here using the stable names below; do not import them into JavaScript bundles.
+The Career Run uses the shared job-seeker character on its introduction. Event cards use accessible HTML text, category colors, and CSS surfaces rather than bitmap backgrounds.
 
 ```text
 public/assets/career-run/
-├── cover/
-│   └── hero.webp                     1600 × 900
+├── jobseeker.png                     1024 × 1536
 ├── events/
-│   ├── profile/{event-id}.webp       1200 × 800
-│   ├── application/{event-id}.webp   1200 × 800
-│   ├── networking/{event-id}.webp    1200 × 800
-│   ├── interview/{event-id}.webp     1200 × 800
-│   └── offer/{event-id}.webp         1200 × 800
-├── endings/{ending-id}.webp          1200 × 1200
-└── personas/{type-key}.webp          800 × 800
+│   ├── profile.png
+│   ├── application.png
+│   ├── networking.png
+│   ├── interview.png
+│   └── offer.png
+├── endings/                          optional future assets
+└── personas/                         optional future assets
 ```
 
-Use the exact Event ids from `src/features/careerGame/config/eventPool.js`, such as `resume-first-draft.webp`, `dream-job-deadline.webp`, or `hr-screening.webp`. Ending ids and Persona type keys are defined in `gameConfig.js`.
-
-Prefer WebP, keep each Event image below 250 KB, avoid embedded text, and leave visual breathing room around the subject for responsive cropping. Every image needs a short Chinese alt-text entry when it is enabled in Event configuration.
+The category images in `events/` are retained as source assets but are not currently rendered. If they are restored later, essential Event information must remain accessible HTML rather than text embedded only inside the bitmap.
