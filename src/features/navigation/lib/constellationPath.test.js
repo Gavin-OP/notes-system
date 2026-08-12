@@ -20,15 +20,12 @@ describe("fall recruiting constellation", () => {
       ...profile,
       jobti_type: "radar",
       candidate_background: "student",
-      company_types: ["big_tech", "consulting"],
       search_branches: ["networking"],
       application_strategy: "auto",
     });
     const ids = new Set(draft.nodes.map((node) => node.node_id));
 
     [
-      "pilot:company-big-tech",
-      "pilot:company-consulting",
       "pilot:networking",
       "pilot:referral",
       "pilot:job-board",
@@ -43,13 +40,14 @@ describe("fall recruiting constellation", () => {
     ].forEach((id) => expect(ids.has(id), `${id} should exist`).toBe(true));
 
     expect(draft.edges).toEqual(expect.arrayContaining([
-      expect.objectContaining({ source: "pilot:market", target: "pilot:company-big-tech", relation: "branches_to" }),
-      expect.objectContaining({ source: "pilot:company-big-tech", target: "pilot:profile-preparation", relation: "converges_to" }),
       expect.objectContaining({ source: "pilot:job-search", target: "pilot:networking", relation: "branches_to" }),
       expect.objectContaining({ source: "pilot:networking", target: "pilot:referral", relation: "precedes" }),
       expect.objectContaining({ source: "pilot:job-search", target: "pilot:job-board", relation: "branches_to" }),
-      expect.objectContaining({ source: "pilot:job-board", target: "pilot:company-career-page", relation: "precedes" }),
-      expect.objectContaining({ source: "pilot:company-career-page", target: "pilot:ai-job-search", relation: "precedes" }),
+      expect.objectContaining({ source: "pilot:job-search", target: "pilot:company-career-page", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:job-search", target: "pilot:ai-job-search", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:job-board", target: "pilot:applications", relation: "converges_to" }),
+      expect.objectContaining({ source: "pilot:company-career-page", target: "pilot:applications", relation: "converges_to" }),
+      expect.objectContaining({ source: "pilot:ai-job-search", target: "pilot:applications", relation: "converges_to" }),
       expect.objectContaining({ source: "pilot:job-search", target: "pilot:campus-recruiting", relation: "branches_to" }),
       expect.objectContaining({ source: "pilot:campus-recruiting", target: "pilot:career-fair", relation: "precedes" }),
       expect.objectContaining({ source: "pilot:career-fair", target: "pilot:alumni-networking", relation: "precedes" }),
@@ -58,6 +56,36 @@ describe("fall recruiting constellation", () => {
       expect.objectContaining({ source: "pilot:jd-deep-dive", target: "pilot:tailored-materials", relation: "precedes" }),
     ]));
     expect(draft.metadata.personalization.resolved_application_strategy).toBe("precision");
+
+    const elements = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+    const searchChannels = ["pilot:job-board", "pilot:company-career-page", "pilot:ai-job-search"]
+      .map((id) => elements.nodes.find((node) => node.id === id));
+    expect(new Set(searchChannels.map((node) => node.position.x)).size).toBe(1);
+    expect(searchChannels.map((node) => node.position.y)).toEqual(
+      [...searchChannels.map((node) => node.position.y)].sort((a, b) => a - b),
+    );
+  });
+
+  it("lets non-radar users add individual analytical search channels", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      jobti_type: "protector",
+      search_branches: ["job_board", "company_career_page"],
+    });
+    const ids = new Set(draft.nodes.map((node) => node.node_id));
+
+    expect(ids.has("pilot:job-board")).toBe(true);
+    expect(ids.has("pilot:company-career-page")).toBe(true);
+    expect(ids.has("pilot:ai-job-search")).toBe(false);
+  });
+
+  it("does not generate deprecated company-type routes", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      company_types: ["big_tech", "startup", "consulting", "investment_banking", "graduate_program"],
+    });
+    expect(draft.nodes.some((node) => node.node_id.startsWith("pilot:company-"))).toBe(false);
+    expect(draft.metadata.personalization).not.toHaveProperty("company_types");
   });
 
   it("uses the batch application route for the action-execution JobTI type", () => {
@@ -78,6 +106,7 @@ describe("fall recruiting constellation", () => {
   it("adds early-internship side routes and keeps HR Screening first under comprehensive interviews", () => {
     const draft = buildPersonalizedPilotDraft({}, {
       ...profile,
+      experience_branches: ["first_internship", "transition_first_internship"],
       interview_branches: ["technical"],
     });
     expect(draft.edges).toEqual(expect.arrayContaining([
@@ -92,14 +121,26 @@ describe("fall recruiting constellation", () => {
     expect(screening.metadata.directory_order).toBeLessThan(technical.metadata.directory_order);
   });
 
+  it("only creates explicitly selected early-internship nodes", () => {
+    const none = buildPersonalizedPilotDraft({}, { ...profile, experience_branches: [] });
+    const transition = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      experience_branches: ["transition_first_internship"],
+    });
+
+    expect(none.nodes.some((node) => node.node_id === "pilot:first-internship")).toBe(false);
+    expect(none.nodes.some((node) => node.node_id === "pilot:transition-first-internship")).toBe(false);
+    expect(transition.nodes.some((node) => node.node_id === "pilot:first-internship")).toBe(false);
+    expect(transition.nodes.some((node) => node.node_id === "pilot:transition-first-internship")).toBe(true);
+  });
+
   it("marks newly planned path nodes as non-content instead of linking approximate notes", () => {
     const draft = buildPersonalizedPilotDraft({}, {
       ...profile,
       jobti_type: "radar",
-      company_types: ["startup"],
       experience_branches: ["first_internship"],
     });
-    ["pilot:company-startup", "pilot:job-board", "pilot:referral", "pilot:first-internship", "pilot:hr-screening-call"]
+    ["pilot:job-board", "pilot:referral", "pilot:first-internship", "pilot:hr-screening-call"]
       .forEach((id) => {
         const node = draft.nodes.find((candidate) => candidate.node_id === id);
         expect(node?.note_url, `${id} should not navigate`).toBeUndefined();
@@ -112,7 +153,6 @@ describe("fall recruiting constellation", () => {
       ...profile,
       jobti_type: "radar",
       candidate_background: "student",
-      company_types: ["big_tech", "startup", "consulting", "investment_banking", "graduate_program"],
       experience_branches: ["first_internship", "transition_first_internship"],
       search_branches: ["networking", "ai_job_search"],
       application_strategy: "precision",

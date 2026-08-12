@@ -1,6 +1,5 @@
 import {
   CANDIDATE_BACKGROUND_OPTIONS,
-  COMPANY_TYPE_OPTIONS,
   INTERVIEW_BRANCH_OPTIONS,
   PILOT_STAGE_OPTIONS,
   PROFILE_BRANCH_OPTIONS,
@@ -52,7 +51,6 @@ export const QUIZ_ITEMS = [
     { label: "先把眼前的事做好，答案会慢慢出现", scores: ["engine", "researcher"] },
     { label: "希望未来的我有工作、有下班，也有双休", scores: ["protector", "gardener"] },
   ]),
-  pathMulti("company_types", "company_types", "你目前更想了解哪些公司或项目类型？", "可以多选；Path 会先加入对应类型的基本介绍，之后仍可随时调整。", COMPANY_TYPE_OPTIONS, "暂时不按公司类型展开"),
   pathMulti("search", "search_branches", "找岗位时，你想给自己增加哪些入口？", "除了直接投递，我们还有一些提升效率的方式。可以多选。", SEARCH_BRANCH_OPTIONS, "先使用基础岗位搜索流程"),
   personality("assessment", "收到招聘流程中的在线测试邀请，你会？", "它可能是能力测试、限时笔试或情境判断。", [
     { label: "先查清题目形式，找几道样题练手", scores: ["researcher", "radar"] },
@@ -112,7 +110,6 @@ export function buildJobTiPathProfile(responses = {}, previous = {}) {
     stage: responses.stage || previous.stage || "getting_started",
     jobti_type: rankJobTiResults(responses)[0] || previous.jobti_type || "",
     candidate_background: responses.candidate_background || previous.candidate_background || "other",
-    company_types: Array.isArray(responses.company_types) ? responses.company_types : (previous.company_types || []),
     application_strategy: previous.application_strategy || "auto",
     profile_branches: Array.isArray(responses.materials) ? responses.materials : [],
     search_branches: Array.isArray(responses.search) ? responses.search : [],
@@ -130,11 +127,9 @@ export function getJobTiPathSummary(responses = {}) {
   const materials = PROFILE_BRANCH_OPTIONS.filter((option) => responses.materials?.includes(option.value)).map((option) => option.label);
   const search = SEARCH_BRANCH_OPTIONS.filter((option) => responses.search?.includes(option.value)).map((option) => option.label);
   const interviews = INTERVIEW_BRANCH_OPTIONS.filter((option) => responses.interviews?.includes(option.value)).map((option) => option.label);
-  const companyTypes = COMPANY_TYPE_OPTIONS.filter((option) => responses.company_types?.includes(option.value)).map((option) => option.label);
   return [
     `你的 Path 将从「${stage}」开始。`,
     responses.candidate_background === "student" ? "学生招聘入口会加入 Path。" : "目前不额外加入学生招聘入口。",
-    companyTypes.length ? `公司类型：${companyTypes.join("、")}。` : "暂时先看通用的公司与市场信息。",
     materials.length ? `材料分支：${materials.join("、")}。` : "材料先从简历开始，需要时再扩展。",
     search.length ? `找岗方式：${search.join("、")}。` : "先沿用基础的岗位搜索与筛选流程。",
     responses.leetcode ? "LeetCode 已加入技能准备。" : "目前不额外加入 LeetCode。",

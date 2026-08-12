@@ -9,13 +9,13 @@ const choice = (id, label, behaviorEffects, options = {}) => ({
 export const EVENT_POOL = [
   {
     id: "market-crossroads", category: "profile", stages: ["preparation"], baseWeight: 1,
-    title: "地图加载完毕，先往哪边走？", description: "你以应届生身份进入求职季。还不用决定一辈子，只需要先挑一个值得探索的方向。",
+    title: "地图加载完毕，先从哪里起步？", description: "你以应届生身份进入求职季。还不用决定一辈子，只需要挑一个当下最值得推进的动作。",
     tags: ["direction"], cooldownTags: ["direction"],
     choices: [
-      choice("tech", "先逛逛大型科技公司和成熟团队", { analysis: 2, exploration: 1 }, { effects: { time: -4, confidence: 2 }, companyTypes: ["big_tech"] }),
-      choice("startup", "去创业公司看看，也许能解锁更多角色", { exploration: 3, action: 1 }, { effects: { time: -4, confidence: 1 }, companyTypes: ["startup"] }),
-      choice("professional", "研究咨询、投行等专业服务路线", { analysis: 3, expression: 1 }, { effects: { time: -5, profile: 2 }, companyTypes: ["consulting", "investment_banking"] }),
-      choice("graduate", "从 Graduate Programme 的轮岗地图开始", { exploration: 1, pacing: 2 }, { effects: { time: -3, confidence: 2 }, companyTypes: ["graduate_program"] }),
+      choice("research", "先研究几份 JD，看看市场到底在找谁", { analysis: 2, exploration: 1 }, { effects: { time: -4, confidence: 2 } }),
+      choice("apply", "先投一份感兴趣的岗位，用行动换信息", { exploration: 2, action: 2 }, { effects: { time: -4, confidence: 1 } }),
+      choice("profile", "先整理经历，把简历和 Profile 做到能见人", { analysis: 1, expression: 3 }, { effects: { time: -5, profile: 2 } }),
+      choice("pace", "先排一下节奏，别让求职吞掉全部生活", { exploration: 1, pacing: 3 }, { effects: { time: -3, confidence: 2 } }),
     ],
   },
   {

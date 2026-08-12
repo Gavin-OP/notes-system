@@ -53,17 +53,11 @@ const EARLY_EXPERIENCE_IDS = [
   "pilot:transition-first-internship",
 ];
 
-const COMPANY_TYPE_IDS = [
-  "pilot:company-big-tech",
-  "pilot:company-startup",
-  "pilot:company-consulting",
-  "pilot:company-investment-banking",
-  "pilot:company-graduate-program",
-];
-
 const SEARCH_ROUTE_GROUPS = [
   ["pilot:networking", "pilot:referral"],
-  ["pilot:job-board", "pilot:company-career-page", "pilot:ai-job-search"],
+  ["pilot:job-board"],
+  ["pilot:company-career-page"],
+  ["pilot:ai-job-search"],
   ["pilot:campus-recruiting", "pilot:career-fair", "pilot:alumni-networking"],
 ];
 
@@ -89,6 +83,8 @@ const OPTIONAL_FIELD_BY_VALUE = {
   portfolio: "profile_branches",
   personal_site: "profile_branches",
   networking: "search_branches",
+  job_board: "search_branches",
+  company_career_page: "search_branches",
   ai_job_search: "search_branches",
   technical: "skill_branches",
   cfa: "certificate_branches",
@@ -191,7 +187,6 @@ export function buildConstellationElements(draft, options = {}) {
         experienceY += childDimensions.height + 16;
       });
     }
-    placeDirectoryChildren(COMPANY_TYPE_IDS, "pilot:market");
     placeDirectoryChildren(PROFILE_CHILD_IDS, "pilot:profile-preparation");
     placeRouteRows(SEARCH_ROUTE_GROUPS, "pilot:job-search");
     placeRouteRows(APPLICATION_ROUTE_GROUPS, "pilot:applications");
@@ -204,10 +199,9 @@ export function buildConstellationElements(draft, options = {}) {
       const marketDimensions = dimensions.get("pilot:market");
       const skillDimensions = dimensions.get("pilot:skill-supplement");
       const branchMidpointX = (marketPosition.x + marketDimensions.width + profilePosition.x) / 2;
-      const companyCount = COMPANY_TYPE_IDS.filter((id) => draftNodes.some((node) => node.node_id === id)).length;
       positions.set("pilot:skill-supplement", {
         x: branchMidpointX - skillDimensions.width / 2,
-        y: mainY + 92 + companyCount * 70,
+        y: mainY + 92,
       });
       placeDirectoryChildren(SKILL_CHILD_IDS, "pilot:skill-supplement");
       placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:finance-skills", { xOffset: 44, startY: 78, gap: 16 });

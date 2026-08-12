@@ -5,7 +5,7 @@ import { Button, Modal } from "antd";
 import {
   APPLICATION_STRATEGY_OPTIONS,
   CANDIDATE_BACKGROUND_OPTIONS,
-  COMPANY_TYPE_OPTIONS,
+  EXPERIENCE_BRANCH_OPTIONS,
   PILOT_STAGE_OPTIONS,
   PROFILE_BRANCH_OPTIONS,
   SEARCH_BRANCH_OPTIONS,
@@ -29,7 +29,9 @@ function normalizeInitialProfile(initialProfile = {}) {
   return {
     stage: initialProfile.stage === "targeting" ? "getting_started" : initialProfile.stage || "getting_started",
     candidate_background: initialProfile.candidate_background || "other",
-    company_types: Array.isArray(initialProfile.company_types) ? initialProfile.company_types : [],
+    experience_branches: Array.isArray(initialProfile.experience_branches)
+      ? initialProfile.experience_branches
+      : ["first_internship", "transition_first_internship"],
     application_strategy: initialProfile.application_strategy || "auto",
     jobti_type: initialProfile.jobti_type || "",
     profile_branches: Array.isArray(initialProfile.profile_branches) ? initialProfile.profile_branches : [],
@@ -244,11 +246,11 @@ function PilotPathSetupWizard({ initialProfile, pending = false, onCancel, onSub
       ),
     },
     {
-      id: "company-types",
-      title: "你想优先了解哪些公司或项目类型？",
-      hint: "可以多选；这些介绍会从“理解岗位与市场”延伸出来。",
+      id: "experience",
+      title: "你需要从第一段实习开始准备吗？",
+      hint: "这些内容会作为求职起步阶段的支线加入，可以多选。",
       content: (
-        <MultiChoiceGrid options={COMPANY_TYPE_OPTIONS} value={profile.company_types} emptyLabel="暂时先看通用信息" disabled={pending} onChange={(value) => update("company_types", value)} />
+        <MultiChoiceGrid options={EXPERIENCE_BRANCH_OPTIONS} value={profile.experience_branches} emptyLabel="暂时不加入第一段实习支线" disabled={pending} onChange={(value) => update("experience_branches", value)} />
       ),
     },
     {
@@ -449,8 +451,8 @@ export function PilotPathSettingsPanel({ initialProfile, pending = false, onClos
           <SingleChoiceGrid options={localizeOptions(CANDIDATE_BACKGROUND_OPTIONS, "pilot.background")} value={profile.candidate_background} disabled={pending} onChange={(value) => update("candidate_background", value)} />
         </section>
         <section>
-          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.companyTypes", "Company types")}</strong><small>{t("pilot.settings.companyTypesHint", "Choose the company or programme contexts you want to understand first.")}</small></div>
-          <MultiChoiceGrid options={localizeOptions(COMPANY_TYPE_OPTIONS, "pilot.company")} value={profile.company_types} emptyLabel={t("pilot.settings.companyTypesEmpty", "Use the general market route")} disabled={pending} onChange={(value) => update("company_types", value)} />
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.experience", "First internship")}</strong><small>{t("pilot.settings.experienceHint", "Add the first-internship guidance that fits your situation.")}</small></div>
+          <MultiChoiceGrid options={localizeOptions(EXPERIENCE_BRANCH_OPTIONS, "pilot.experience")} value={profile.experience_branches} emptyLabel={t("pilot.settings.experienceEmpty", "Skip first-internship routes")} disabled={pending} onChange={(value) => update("experience_branches", value)} />
         </section>
         <section>
           <div className="pilot-path-settings__question"><strong>{t("pilot.settings.profile")}</strong><small>{t("pilot.settings.profileHint")}</small></div>

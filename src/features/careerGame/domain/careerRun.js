@@ -120,7 +120,6 @@ function applyChoicePayload(state, payload = {}) {
   applyFlags(state, payload.flags);
   applyFailureTags(state, payload.failureTags);
   state.nextTags = [...new Set([...(payload.nextTags || [])])];
-  state.companyTypes = [...new Set([...state.companyTypes, ...(payload.companyTypes || [])])];
 }
 
 function successProbability(state, choice) {
@@ -165,7 +164,6 @@ export function createCareerRun({ seed = Date.now() } = {}) {
     seenEventIds: [],
     cooldowns: {},
     nextTags: [],
-    companyTypes: [],
     failureTags: {},
     flags: {},
     lastOutcome: null,
@@ -208,7 +206,6 @@ export function advanceCareerRun(currentState, choiceId) {
   }
   applyChoicePayload(state, selectedOutcome);
   applyFlags(state, choice.flags);
-  state.companyTypes = [...new Set([...state.companyTypes, ...(choice.companyTypes || [])])];
   (event.cooldownTags || []).forEach((tag) => { state.cooldowns[tag] = 2; });
   state.seenEventIds.push(event.id);
   state.turn += 1;
@@ -304,7 +301,6 @@ function buildPath(state, persona) {
       stage: state.counters.offers ? "offer" : state.counters.interviews ? "interviewing" : state.counters.applications ? "applying" : "materials",
       jobti_type: persona.key,
       candidate_background: "student",
-      company_types: state.companyTypes,
       profile_branches: [...new Set(profileBranches)],
       search_branches: [...new Set(searchBranches)],
       skill_branches: [...new Set(skillBranches)],
