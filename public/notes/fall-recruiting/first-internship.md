@@ -67,35 +67,6 @@ tags: [求职, 实习, 起步]
 
 第一段实习的目标之一，就是开始积累这些能够被下一位招聘者理解的证据。
 
-### 如果暂时进不了目标岗位，可以找“相邻岗位”
-
-最想申请的岗位，有时也是最难直接进入的岗位。这时可以看看目标岗位周围有没有能够积累相似技能、工具或工作场景的机会。
-
-例如，想做 Product Manager，可以考虑：
-
-* Product Operations；
-* Business Analyst；
-* UX Research；
-* Growth；
-* Project Coordinator。
-
-想做 Data Scientist，可以考虑：
-
-* Data Analyst；
-* Research Assistant；
-* Business Intelligence；
-* Analytics Intern。
-
-想做 Software Engineer，可以考虑：
-
-* QA Automation；
-* Technical Intern；
-* Research Assistant；
-* Developer Intern；
-* Internal Tools Development。
-
-这些岗位并不等同于目标岗位，但可能帮助你积累一部分以后仍然用得上的能力。下一次申请时，你已经可以告诉招聘方：我接触过相似的问题，也掌握了一部分需要的工具和工作方法。
-
 ## 投递篇：第一段实习也可以主动创造机会
 
 如果正式招聘渠道暂时没有结果，还可以主动寻找规模较小、进入门槛相对友好的真实项目。
