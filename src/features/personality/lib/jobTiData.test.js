@@ -98,4 +98,10 @@ describe("JobTI questionnaire model", () => {
     expect(buildJobTiPathProfile({ certificates: "learn" }).certificate_interest).toBe(true);
     expect(buildJobTiPathProfile({ certificates: "skip" }).certificate_interest).toBe(false);
   });
+
+  it("turns the existing career-planning answer into a Path direction signal", () => {
+    expect(buildJobTiPathProfile({ planning: 0 }).career_direction).toBe("focused");
+    expect(buildJobTiPathProfile({ planning: 1 }).career_direction).toBe("exploring");
+    expect(buildJobTiPathProfile({ planning: 2 }).career_direction).toBe("exploring");
+  });
 });

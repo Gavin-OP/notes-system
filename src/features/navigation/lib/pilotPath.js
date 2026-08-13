@@ -23,9 +23,18 @@ export const PROFILE_BRANCH_OPTIONS = [
 
 export const SEARCH_BRANCH_OPTIONS = [
   { value: "networking", label: "Coffee Chat / Networking" },
+  { value: "networking_event", label: "Networking Event" },
   { value: "job_board", label: "Job Board" },
   { value: "company_career_page", label: "Company Career Page" },
+  { value: "social_media_research", label: "社媒平台 / Glassdoor" },
   { value: "ai_job_search", label: "用 AI 辅助找岗位" },
+];
+
+export const INFORMATION_STYLE_OPTIONS = [
+  { value: "auto", label: "跟随 JobTI 的默认建议" },
+  { value: "social", label: "更喜欢直接与人交流" },
+  { value: "independent", label: "更喜欢自己查找和整理信息" },
+  { value: "balanced", label: "两种方式都想尝试" },
 ];
 
 export const EXPERIENCE_BRANCH_OPTIONS = [
@@ -42,6 +51,25 @@ export const APPLICATION_STRATEGY_OPTIONS = [
   { value: "auto", label: "跟随 JobTI 的默认建议" },
   { value: "batch", label: "海投 / 批量规划" },
   { value: "precision", label: "精准投递" },
+  { value: "batch_then_precision", label: "先海投探索，再转向精准投递" },
+  { value: "precision_then_batch", label: "先打磨最想投的岗位，再扩大投递" },
+];
+
+export const CAREER_DIRECTION_OPTIONS = [
+  { value: "auto", label: "暂时沿用基础路线" },
+  { value: "focused", label: "方向比较清晰，想重点攻克一个赛道" },
+  { value: "exploring", label: "还在探索，想多了解不同可能" },
+];
+
+export const PROFILE_COMPETITIVENESS_OPTIONS = [
+  { value: "neutral", label: "暂时不调整准备重点" },
+  { value: "competitive", label: "已有多段相关经历或较强学业表现" },
+  { value: "unsure", label: "相关经历较少，或不确定材料是否有竞争力" },
+];
+
+export const EXPERIENCE_LEVEL_OPTIONS = [
+  { value: "established", label: "已有可以重点展示的实习或项目" },
+  { value: "limited", label: "实习经历较少，想补充可展示的经历" },
 ];
 
 export const SKILL_BRANCH_OPTIONS = [
@@ -155,11 +183,29 @@ function pathNode(id, title, slug, order, anchor = "", metadata = {}) {
 }
 
 function resolveApplicationStrategy(profile = {}) {
-  if (["batch", "precision"].includes(profile.application_strategy)) {
+  if (["batch", "precision", "batch_then_precision", "precision_then_batch"].includes(profile.application_strategy)) {
     return profile.application_strategy;
   }
   if (profile.jobti_type === "engine") return "batch";
   if (["radar", "alchemist"].includes(profile.jobti_type)) return "precision";
+  if (profile.career_direction === "exploring") return "batch";
+  if (profile.career_direction === "focused") return "precision";
+  return "core";
+}
+
+function resolveInformationStyle(profile = {}) {
+  if (["social", "independent", "balanced"].includes(profile.information_style)) {
+    return profile.information_style;
+  }
+  if (["explorer", "koi"].includes(profile.jobti_type)) return "social";
+  if (["radar", "researcher"].includes(profile.jobti_type)) return "independent";
+  if (profile.career_direction === "exploring") return "balanced";
+  if (profile.career_direction === "focused") return "independent";
+  return "core";
+}
+
+function resolveCareerDirection(profile = {}) {
+  if (["focused", "exploring"].includes(profile.career_direction)) return profile.career_direction;
   return "core";
 }
 
@@ -171,9 +217,12 @@ function buildPilotNodes(profile = {}) {
   const certificateBranches = new Set(profile.certificate_branches || []);
   const interviewBranches = new Set(profile.interview_branches || []);
   const experienceBranches = new Set(profile.experience_branches || []);
-  const analyticalSearch = profile.jobti_type === "radar";
+  const informationStyle = profile.resolved_information_style || resolveInformationStyle(profile);
+  const socialSearch = ["social", "balanced"].includes(informationStyle);
+  const independentSearch = ["independent", "balanced"].includes(informationStyle);
   const studentSearch = profile.candidate_background === "student";
   const applicationStrategy = profile.resolved_application_strategy || resolveApplicationStrategy(profile);
+  const careerDirection = profile.resolved_career_direction || resolveCareerDirection(profile);
   const hasSkillSupplement = skillBranches.has("technical")
     || profile.certificate_interest
     || certificateBranches.size > 0;
@@ -183,6 +232,17 @@ function buildPilotNodes(profile = {}) {
     pathNode("profile-preparation", "准备简历与 Profile", "profile-preparation", 4),
     pathNode("resume", "简历", "resume-story", 5, "", { path_relation: "branch" }),
   ];
+
+  if (careerDirection === "focused") {
+    nodes.push(pathNode("career-track-planning", "聚焦职业赛道", "role-market-research", 3.5, "", { path_relation: "branch" }));
+  }
+  if (careerDirection === "exploring") {
+    nodes.push(
+      pathNode("career-exploration", "探索职业方向", "role-market-research", 3.5, "", { path_relation: "branch" }),
+      pathNode("exploratory-internships", "尝试不同岗位的实习", "first-internship", 3.5, "", { path_relation: "branch" }),
+      pathNode("recruitment-event", "参加 Recruitment Event", "career-fair", 3.5, "", { path_relation: "branch" }),
+    );
+  }
 
   if (experienceBranches.has("first_internship")) {
     nodes.push(pathNode("first-internship", "如何开启第一段实习", "first-internship", 2, "", { path_relation: "branch", directory_order: 0 }));
@@ -208,19 +268,40 @@ function buildPilotNodes(profile = {}) {
     nodes.push(pathNode("personal-site", "个人主页", "personal-site", 5, "", { path_relation: "branch" }));
   }
 
+  if (profile.profile_competitiveness === "competitive") {
+    nodes.push(pathNode("interview-priority", "提前准备面试", "interview-preparation", 5, "", { path_relation: "branch" }));
+  }
+  if (profile.profile_competitiveness === "unsure") {
+    nodes.push(pathNode("resume-positioning", "梳理与包装简历证据", "resume-story", 5, "", { path_relation: "branch" }));
+  }
+  if (profile.experience_level === "limited") {
+    nodes.push(
+      pathNode("experience-building", "补充可展示的经历", "first-internship", 5, "", { path_relation: "branch" }),
+      pathNode("business-competition", "商赛", "business-competition", 5, "", { path_relation: "branch" }),
+      pathNode("kaggle-competition", "Kaggle 数据分析比赛", "kaggle-competition", 5, "", { path_relation: "branch" }),
+      pathNode("course-project-polish", "打磨课程项目", "course-project-polish", 5, "", { path_relation: "branch" }),
+    );
+  }
+
   nodes.push(pathNode("job-search", "寻找和筛选岗位", "job-search-and-screening", 6));
 
-  if (searchBranches.has("networking")) {
+  if (socialSearch || searchBranches.has("networking")) {
     nodes.push(pathNode("networking", "Coffee Chat / Networking", "coffee-chat", 7, "", { path_relation: "branch" }));
     nodes.push(pathNode("referral", "Referral", "referral", 7, "", { path_relation: "branch" }));
   }
-  if (analyticalSearch || searchBranches.has("job_board")) {
+  if (socialSearch || searchBranches.has("networking_event")) {
+    nodes.push(pathNode("networking-event", "Networking Event", "coffee-chat", 7, "", { path_relation: "branch" }));
+  }
+  if (independentSearch || searchBranches.has("job_board")) {
     nodes.push(pathNode("job-board", "Job Board", "job-board", 7, "", { path_relation: "branch" }));
   }
-  if (analyticalSearch || searchBranches.has("company_career_page")) {
+  if (independentSearch || searchBranches.has("company_career_page")) {
     nodes.push(pathNode("company-career-page", "Company Career Page", "company-career-page", 7, "", { path_relation: "branch" }));
   }
-  if (analyticalSearch || searchBranches.has("ai_job_search")) {
+  if (independentSearch || searchBranches.has("social_media_research")) {
+    nodes.push(pathNode("social-media-research", "社媒平台 / Glassdoor", "job-board", 7, "", { path_relation: "branch" }));
+  }
+  if (independentSearch || searchBranches.has("ai_job_search")) {
     nodes.push(pathNode("ai-job-search", "用 AI 辅助找岗位", "ai-job-search", 7, "", { path_relation: "branch" }));
   }
   if (studentSearch) {
@@ -235,18 +316,18 @@ function buildPilotNodes(profile = {}) {
     pathNode("interviews", "综合面试准备", "interview-preparation", 10),
   );
 
-  if (applicationStrategy === "batch") {
+  if (["batch", "batch_then_precision", "precision_then_batch"].includes(applicationStrategy)) {
     nodes.push(
-      pathNode("application-batch-planning", "Application Batch Planning", "application-batch-planning", 8.5, "", { path_relation: "branch" }),
-      pathNode("application-tracker", "Application Tracker", "application-tracker", 8.5, "", { path_relation: "branch" }),
-      pathNode("resume-version-management", "Resume Version Management", "resume-version-management", 8.5, "", { path_relation: "branch" }),
+      pathNode("application-batch-planning", "Application Batch Planning", "application-batch-planning", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
+      pathNode("application-tracker", "Application Tracker", "application-tracker", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
+      pathNode("resume-version-management", "Resume Version Management", "resume-version-management", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
     );
   }
-  if (applicationStrategy === "precision") {
+  if (["precision", "batch_then_precision", "precision_then_batch"].includes(applicationStrategy)) {
     nodes.push(
-      pathNode("company-research", "Company Research", "company-research", 8.5, "", { path_relation: "branch" }),
-      pathNode("jd-deep-dive", "JD Deep Dive", "jd-deep-dive", 8.5, "", { path_relation: "branch" }),
-      pathNode("tailored-materials", "Tailored Resume / Cover Letter", "tailored-materials", 8.5, "", { path_relation: "branch" }),
+      pathNode("company-research", "Company Research", "company-research", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
+      pathNode("jd-deep-dive", "JD Deep Dive", "jd-deep-dive", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
+      pathNode("tailored-materials", "Tailored Resume / Cover Letter", "tailored-materials", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
     );
   }
 
@@ -319,12 +400,30 @@ function buildPilotEdges(nodes) {
 
   connect("market", "profile-preparation");
 
-  const profileBranchIds = ["resume", "linkedin", "cover-letter", "portfolio", "personal-site"]
+  if (nodeIds.has("pilot:career-track-planning")) {
+    connect("market", "career-track-planning", "branches_to");
+    connect("career-track-planning", "profile-preparation", "converges_to");
+  }
+  if (nodeIds.has("pilot:career-exploration")) {
+    connect("market", "career-exploration", "branches_to");
+    connect("career-exploration", "exploratory-internships");
+    connect("exploratory-internships", "recruitment-event");
+    connect("recruitment-event", "profile-preparation", "converges_to");
+  }
+
+  const profileBranchIds = ["resume", "linkedin", "cover-letter", "portfolio", "personal-site", "interview-priority", "resume-positioning"]
     .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
   profileBranchIds.forEach((nodeId) => {
     connect("profile-preparation", nodeId, "branches_to");
     connect(nodeId, "job-search", "converges_to");
   });
+  if (nodeIds.has("pilot:experience-building")) {
+    connect("profile-preparation", "experience-building", "branches_to");
+    ["business-competition", "kaggle-competition", "course-project-polish"].forEach((nodeId) => {
+      connect("experience-building", nodeId, "branches_to");
+      connect(nodeId, "job-search", "converges_to");
+    });
+  }
 
   const searchTerminals = [];
   if (nodeIds.has("pilot:networking")) {
@@ -332,7 +431,7 @@ function buildPilotEdges(nodes) {
     connect("networking", "referral");
     searchTerminals.push("referral");
   }
-  ["job-board", "company-career-page", "ai-job-search"].forEach((nodeId) => {
+  ["networking-event", "job-board", "company-career-page", "social-media-research", "ai-job-search"].forEach((nodeId) => {
     if (!nodeIds.has(`pilot:${nodeId}`)) return;
     connect("job-search", nodeId, "branches_to");
     searchTerminals.push(nodeId);
@@ -349,16 +448,43 @@ function buildPilotEdges(nodes) {
     connect("job-search", "applications");
   }
 
-  if (nodeIds.has("pilot:application-batch-planning")) {
+  const hasBatchRoute = nodeIds.has("pilot:application-batch-planning");
+  const hasPrecisionRoute = nodeIds.has("pilot:company-research");
+  const applicationStrategy = hasBatchRoute && hasPrecisionRoute
+    ? (nodes.find((node) => node.node_id === "pilot:application-batch-planning")?.metadata?.application_sequence || "batch_then_precision")
+    : hasBatchRoute ? "batch" : hasPrecisionRoute ? "precision" : "core";
+  const connectBatchRoute = (source, target) => {
+    connect(source, "application-batch-planning", "branches_to");
+    connect("application-batch-planning", "application-tracker");
+    connect("application-tracker", "resume-version-management");
+    connect("resume-version-management", target, "converges_to");
+  };
+  const connectPrecisionRoute = (source, target) => {
+    connect(source, "company-research", "branches_to");
+    connect("company-research", "jd-deep-dive");
+    connect("jd-deep-dive", "tailored-materials");
+    connect("tailored-materials", target, "converges_to");
+  };
+  if (applicationStrategy === "batch_then_precision") {
     connect("applications", "application-batch-planning", "branches_to");
     connect("application-batch-planning", "application-tracker");
     connect("application-tracker", "resume-version-management");
-    connect("resume-version-management", "assessments", "converges_to");
-  } else if (nodeIds.has("pilot:company-research")) {
-    connect("applications", "company-research", "branches_to");
+    connect("resume-version-management", "company-research");
     connect("company-research", "jd-deep-dive");
     connect("jd-deep-dive", "tailored-materials");
     connect("tailored-materials", "assessments", "converges_to");
+  } else if (applicationStrategy === "precision_then_batch") {
+    connect("applications", "company-research", "branches_to");
+    connect("company-research", "jd-deep-dive");
+    connect("jd-deep-dive", "tailored-materials");
+    connect("tailored-materials", "application-batch-planning");
+    connect("application-batch-planning", "application-tracker");
+    connect("application-tracker", "resume-version-management");
+    connect("resume-version-management", "assessments", "converges_to");
+  } else if (hasBatchRoute) {
+    connectBatchRoute("applications", "assessments");
+  } else if (hasPrecisionRoute) {
+    connectPrecisionRoute("applications", "assessments");
   } else {
     connect("applications", "assessments");
   }
@@ -426,6 +552,18 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
   const profile = {
     stage: normalizeStage(rawProfile.stage),
     jobti_type: typeof rawProfile.jobti_type === "string" ? rawProfile.jobti_type : "",
+    information_style: INFORMATION_STYLE_OPTIONS.some((option) => option.value === rawProfile.information_style)
+      ? rawProfile.information_style
+      : "auto",
+    career_direction: CAREER_DIRECTION_OPTIONS.some((option) => option.value === rawProfile.career_direction)
+      ? rawProfile.career_direction
+      : "auto",
+    profile_competitiveness: PROFILE_COMPETITIVENESS_OPTIONS.some((option) => option.value === rawProfile.profile_competitiveness)
+      ? rawProfile.profile_competitiveness
+      : "neutral",
+    experience_level: EXPERIENCE_LEVEL_OPTIONS.some((option) => option.value === rawProfile.experience_level)
+      ? rawProfile.experience_level
+      : "established",
     candidate_background: CANDIDATE_BACKGROUND_OPTIONS.some((option) => option.value === rawProfile.candidate_background)
       ? rawProfile.candidate_background
       : "other",
@@ -448,6 +586,8 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
     setup_complete: Boolean(rawProfile.setup_complete),
   };
   profile.resolved_application_strategy = resolveApplicationStrategy(profile);
+  profile.resolved_information_style = resolveInformationStyle(profile);
+  profile.resolved_career_direction = resolveCareerDirection(profile);
   const focusNodeId = STAGE_FOCUS_NODE[profile.stage];
   const nodes = buildPilotNodes(profile).map((node) => ({
     ...node,
@@ -467,7 +607,7 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
       ...(draft?.metadata || {}),
       order_mode: "canonical",
       pilot_official_path: true,
-      pilot_path_schema_version: 5,
+      pilot_path_schema_version: 6,
       graph_layout: undefined,
       personalization: {
         ...profile,
@@ -494,6 +634,10 @@ export function buildDefaultPilotDraft(draft = {}, now = new Date()) {
       interview_branches: [],
       jobti_type: "",
       candidate_background: "other",
+      information_style: "auto",
+      career_direction: "auto",
+      profile_competitiveness: "neutral",
+      experience_level: "established",
       experience_branches: ["first_internship", "transition_first_internship"],
       application_strategy: "auto",
       setup_complete: false,

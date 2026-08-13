@@ -11,6 +11,7 @@ const PILOT_MAIN_ROUTE = [
   "pilot:profile-preparation",
   "pilot:job-search",
   "pilot:applications",
+  "pilot:experience-building",
   "pilot:assessments",
   "pilot:interviews",
   "pilot:interview-review",
@@ -46,6 +47,20 @@ const PROFILE_CHILD_IDS = [
   "pilot:cover-letter",
   "pilot:portfolio",
   "pilot:personal-site",
+  "pilot:interview-priority",
+  "pilot:resume-positioning",
+  "pilot:experience-building",
+];
+
+const EXPERIENCE_BUILDING_CHILD_IDS = [
+  "pilot:business-competition",
+  "pilot:kaggle-competition",
+  "pilot:course-project-polish",
+];
+
+const CAREER_DIRECTION_ROUTE_GROUPS = [
+  ["pilot:career-track-planning"],
+  ["pilot:career-exploration", "pilot:exploratory-internships", "pilot:recruitment-event"],
 ];
 
 const EARLY_EXPERIENCE_IDS = [
@@ -55,8 +70,10 @@ const EARLY_EXPERIENCE_IDS = [
 
 const SEARCH_ROUTE_GROUPS = [
   ["pilot:networking", "pilot:referral"],
+  ["pilot:networking-event"],
   ["pilot:job-board"],
   ["pilot:company-career-page"],
+  ["pilot:social-media-research"],
   ["pilot:ai-job-search"],
   ["pilot:campus-recruiting", "pilot:career-fair", "pilot:alumni-networking"],
 ];
@@ -83,8 +100,10 @@ const OPTIONAL_FIELD_BY_VALUE = {
   portfolio: "profile_branches",
   personal_site: "profile_branches",
   networking: "search_branches",
+  networking_event: "search_branches",
   job_board: "search_branches",
   company_career_page: "search_branches",
+  social_media_research: "search_branches",
   ai_job_search: "search_branches",
   technical: "skill_branches",
   cfa: "certificate_branches",
@@ -188,6 +207,8 @@ export function buildConstellationElements(draft, options = {}) {
       });
     }
     placeDirectoryChildren(PROFILE_CHILD_IDS, "pilot:profile-preparation");
+    placeDirectoryChildren(EXPERIENCE_BUILDING_CHILD_IDS, "pilot:experience-building", { xOffset: 44, startY: 78, gap: 16 });
+    placeRouteRows(CAREER_DIRECTION_ROUTE_GROUPS, "pilot:market");
     placeRouteRows(SEARCH_ROUTE_GROUPS, "pilot:job-search");
     placeRouteRows(APPLICATION_ROUTE_GROUPS, "pilot:applications");
     placeDirectoryChildren(INTERVIEW_CHILD_IDS, "pilot:interviews", { xOffset: 54, startY: 88, gap: 16 });

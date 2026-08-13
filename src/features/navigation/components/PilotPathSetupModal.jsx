@@ -5,8 +5,12 @@ import { Button, Modal } from "antd";
 import {
   APPLICATION_STRATEGY_OPTIONS,
   CANDIDATE_BACKGROUND_OPTIONS,
+  CAREER_DIRECTION_OPTIONS,
   EXPERIENCE_BRANCH_OPTIONS,
+  EXPERIENCE_LEVEL_OPTIONS,
+  INFORMATION_STYLE_OPTIONS,
   PILOT_STAGE_OPTIONS,
+  PROFILE_COMPETITIVENESS_OPTIONS,
   PROFILE_BRANCH_OPTIONS,
   SEARCH_BRANCH_OPTIONS,
   SKILL_BRANCH_OPTIONS,
@@ -28,6 +32,10 @@ function normalizeInitialProfile(initialProfile = {}) {
       ? initialProfile.experience_branches
       : ["first_internship", "transition_first_internship"],
     application_strategy: initialProfile.application_strategy || "auto",
+    information_style: initialProfile.information_style || "auto",
+    career_direction: initialProfile.career_direction || "auto",
+    profile_competitiveness: initialProfile.profile_competitiveness || "neutral",
+    experience_level: initialProfile.experience_level || "established",
     jobti_type: initialProfile.jobti_type || "",
     profile_branches: Array.isArray(initialProfile.profile_branches) ? initialProfile.profile_branches : [],
     search_branches: Array.isArray(initialProfile.search_branches) ? initialProfile.search_branches : [],
@@ -249,6 +257,30 @@ function PilotPathSetupWizard({ initialProfile, pending = false, onCancel, onSub
       ),
     },
     {
+      id: "career-direction",
+      title: "你的职业方向现在清晰吗？",
+      hint: "方向清晰时可以聚焦一个赛道；还在探索时会加入更多获取信息和尝试岗位的入口。",
+      content: (
+        <SingleChoiceGrid options={CAREER_DIRECTION_OPTIONS} value={profile.career_direction} disabled={pending} onChange={(value) => update("career_direction", value)} />
+      ),
+    },
+    {
+      id: "competitiveness",
+      title: "你希望现阶段把准备重点放在哪里？",
+      hint: "这里只调整准备顺序，不会评价你的背景是否足够好。",
+      content: (
+        <SingleChoiceGrid options={PROFILE_COMPETITIVENESS_OPTIONS} value={profile.profile_competitiveness} disabled={pending} onChange={(value) => update("profile_competitiveness", value)} />
+      ),
+    },
+    {
+      id: "experience-level",
+      title: "你需要补充更多可展示的经历吗？",
+      hint: "经历较少时会加入商赛、Kaggle 和课程项目打磨支线。",
+      content: (
+        <SingleChoiceGrid options={EXPERIENCE_LEVEL_OPTIONS} value={profile.experience_level} disabled={pending} onChange={(value) => update("experience_level", value)} />
+      ),
+    },
+    {
       id: "search",
       title: "寻找岗位时，你想加入哪些方式？",
       hint: "可以多选，也可以先沿用基础的岗位寻找与筛选流程。",
@@ -260,6 +292,14 @@ function PilotPathSetupWizard({ initialProfile, pending = false, onCancel, onSub
           disabled={pending}
           onChange={(value) => update("search_branches", value)}
         />
+      ),
+    },
+    {
+      id: "information-style",
+      title: "你更习惯怎样获取岗位信息？",
+      hint: "可以偏向直接与人交流、自己查找资料，或把两种方式结合起来。",
+      content: (
+        <SingleChoiceGrid options={INFORMATION_STYLE_OPTIONS} value={profile.information_style} disabled={pending} onChange={(value) => update("information_style", value)} />
       ),
     },
     {
@@ -449,12 +489,28 @@ export function PilotPathSettingsPanel({ initialProfile, pending = false, onClos
           <MultiChoiceGrid options={localizeOptions(EXPERIENCE_BRANCH_OPTIONS, "pilot.experience")} value={profile.experience_branches} emptyLabel={t("pilot.settings.experienceEmpty", "Skip first-internship routes")} disabled={pending} onChange={(value) => update("experience_branches", value)} />
         </section>
         <section>
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.careerDirection")}</strong><small>{t("pilot.settings.careerDirectionHint")}</small></div>
+          <SingleChoiceGrid options={localizeOptions(CAREER_DIRECTION_OPTIONS, "pilot.careerDirection")} value={profile.career_direction} disabled={pending} onChange={(value) => update("career_direction", value)} />
+        </section>
+        <section>
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.competitiveness")}</strong><small>{t("pilot.settings.competitivenessHint")}</small></div>
+          <SingleChoiceGrid options={localizeOptions(PROFILE_COMPETITIVENESS_OPTIONS, "pilot.competitiveness")} value={profile.profile_competitiveness} disabled={pending} onChange={(value) => update("profile_competitiveness", value)} />
+        </section>
+        <section>
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.experienceLevel")}</strong><small>{t("pilot.settings.experienceLevelHint")}</small></div>
+          <SingleChoiceGrid options={localizeOptions(EXPERIENCE_LEVEL_OPTIONS, "pilot.experienceLevel")} value={profile.experience_level} disabled={pending} onChange={(value) => update("experience_level", value)} />
+        </section>
+        <section>
           <div className="pilot-path-settings__question"><strong>{t("pilot.settings.profile")}</strong><small>{t("pilot.settings.profileHint")}</small></div>
           <MultiChoiceGrid options={localizeOptions(PROFILE_BRANCH_OPTIONS, "pilot.option")} value={profile.profile_branches} emptyLabel={t("pilot.settings.profileEmpty")} disabled={pending} onChange={(value) => update("profile_branches", value)} />
         </section>
         <section>
           <div className="pilot-path-settings__question"><strong>{t("pilot.settings.search")}</strong><small>{t("pilot.settings.searchHint")}</small></div>
           <MultiChoiceGrid options={localizeOptions(SEARCH_BRANCH_OPTIONS, "pilot.option")} value={profile.search_branches} emptyLabel={t("pilot.settings.searchEmpty")} disabled={pending} onChange={(value) => update("search_branches", value)} />
+        </section>
+        <section>
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.informationStyle")}</strong><small>{t("pilot.settings.informationStyleHint")}</small></div>
+          <SingleChoiceGrid options={localizeOptions(INFORMATION_STYLE_OPTIONS, "pilot.informationStyle")} value={profile.information_style} disabled={pending} onChange={(value) => update("information_style", value)} />
         </section>
         <section>
           <div className="pilot-path-settings__question"><strong>{t("pilot.settings.skills")}</strong><small>{t("pilot.settings.skillsHint")}</small></div>

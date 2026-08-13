@@ -339,4 +339,80 @@ describe("fall recruiting constellation", () => {
     expect(next.metadata.personalization.profile_branches).toContain("linkedin");
     expect(next.nodes.some((node) => node.node_id === "pilot:linkedin")).toBe(true);
   });
+
+  it("combines social and independent information routes when both fit the learner", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      information_style: "balanced",
+      search_branches: [],
+    });
+    const ids = new Set(draft.nodes.map((node) => node.node_id));
+
+    [
+      "pilot:networking",
+      "pilot:networking-event",
+      "pilot:job-board",
+      "pilot:company-career-page",
+      "pilot:social-media-research",
+    ].forEach((id) => expect(ids.has(id), `${id} should be recommended`).toBe(true));
+  });
+
+  it("orders hybrid application routes according to the selected exploration strategy", () => {
+    const batchFirst = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      application_strategy: "batch_then_precision",
+    });
+    expect(batchFirst.edges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ source: "pilot:applications", target: "pilot:application-batch-planning" }),
+      expect.objectContaining({ source: "pilot:resume-version-management", target: "pilot:company-research" }),
+      expect.objectContaining({ source: "pilot:tailored-materials", target: "pilot:assessments" }),
+    ]));
+
+    const precisionFirst = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      application_strategy: "precision_then_batch",
+    });
+    expect(precisionFirst.edges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ source: "pilot:applications", target: "pilot:company-research" }),
+      expect.objectContaining({ source: "pilot:tailored-materials", target: "pilot:application-batch-planning" }),
+      expect.objectContaining({ source: "pilot:resume-version-management", target: "pilot:assessments" }),
+    ]));
+  });
+
+  it("personalizes career direction, preparation priority, and limited-experience support independently", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      career_direction: "exploring",
+      profile_competitiveness: "unsure",
+      experience_level: "limited",
+    });
+    const ids = new Set(draft.nodes.map((node) => node.node_id));
+
+    [
+      "pilot:career-exploration",
+      "pilot:exploratory-internships",
+      "pilot:recruitment-event",
+      "pilot:networking",
+      "pilot:job-board",
+      "pilot:application-batch-planning",
+      "pilot:resume-positioning",
+      "pilot:experience-building",
+      "pilot:business-competition",
+      "pilot:kaggle-competition",
+      "pilot:course-project-polish",
+    ].forEach((id) => expect(ids.has(id), `${id} should exist`).toBe(true));
+    expect(ids.has("pilot:interview-priority")).toBe(false);
+
+    const competitive = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      career_direction: "focused",
+      profile_competitiveness: "competitive",
+      experience_level: "established",
+    });
+    const competitiveIds = new Set(competitive.nodes.map((node) => node.node_id));
+    expect(competitiveIds.has("pilot:career-track-planning")).toBe(true);
+    expect(competitiveIds.has("pilot:interview-priority")).toBe(true);
+    expect(competitiveIds.has("pilot:company-research")).toBe(true);
+    expect(competitiveIds.has("pilot:experience-building")).toBe(false);
+  });
 });

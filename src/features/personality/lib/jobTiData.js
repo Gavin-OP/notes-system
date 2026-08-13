@@ -105,11 +105,19 @@ export function rankJobTiResults(responses = {}) {
 export function buildJobTiPathProfile(responses = {}, previous = {}) {
   const certificateOption = QUIZ_ITEMS.find((item) => item.id === "certificates")?.options.find((option) => option.value === responses.certificates);
   const certificateInterest = responses.certificates === true || Boolean(certificateOption?.pathValue);
+  const planningAnswer = responses.planning;
+  const careerDirection = planningAnswer === 0
+    ? "focused"
+    : [1, 2].includes(planningAnswer) ? "exploring" : previous.career_direction || "auto";
   return {
     ...previous,
     stage: responses.stage || previous.stage || "getting_started",
     jobti_type: rankJobTiResults(responses)[0] || previous.jobti_type || "",
     candidate_background: responses.candidate_background || previous.candidate_background || "other",
+    career_direction: careerDirection,
+    information_style: previous.information_style || "auto",
+    profile_competitiveness: previous.profile_competitiveness || "neutral",
+    experience_level: previous.experience_level || "established",
     application_strategy: previous.application_strategy || "auto",
     profile_branches: Array.isArray(responses.materials) ? responses.materials : [],
     search_branches: Array.isArray(responses.search) ? responses.search : [],
