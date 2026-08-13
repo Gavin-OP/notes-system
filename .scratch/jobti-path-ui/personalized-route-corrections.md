@@ -7,6 +7,13 @@
 - [x] Keep the student route as Campus Recruiting → Career Fair → Alumni Networking.
 - [x] Verify the generated graph, JobTI profile, localization, tests, and production build.
 
+## Follow-up: concrete content
+
+- [x] Replace every remaining planned-only node with a concrete Note route.
+- [x] Add Simplified Chinese, Traditional Chinese, and English starter Notes.
+- [x] Collapse finance-certificate editing into one multi-select decision.
+- [x] Verify node labels, locale coverage, lint, tests, and production build.
+
 ## Public test seam
 
 Tests exercise the questionnaire-to-Path boundary through `buildJobTiPathProfile`,

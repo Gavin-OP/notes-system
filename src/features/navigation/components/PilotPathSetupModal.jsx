@@ -20,11 +20,6 @@ import {
 import "./PilotPathSetupModal.css";
 import useTranslation from "../../../i18n/useTranslation";
 
-const CERTIFICATE_INTEREST_OPTIONS = [
-  { value: true, label: "想进一步了解" },
-  { value: false, label: "目前不加入 Path" },
-];
-
 function normalizeInitialProfile(initialProfile = {}) {
   return {
     stage: initialProfile.stage === "targeting" ? "getting_started" : initialProfile.stage || "getting_started",
@@ -201,11 +196,11 @@ function PilotPathSetupWizard({ initialProfile, pending = false, onCancel, onSub
   const update = (key, value) => {
     setProfile((current) => ({ ...current, [key]: value }));
   };
-  const updateCertificateInterest = (value) => {
+  const updateCertificateBranches = (value) => {
     setProfile((current) => ({
       ...current,
-      certificate_interest: value,
-      certificate_branches: value ? current.certificate_branches : [],
+      certificate_interest: value.length > 0,
+      certificate_branches: value,
     }));
   };
 
@@ -295,12 +290,11 @@ function PilotPathSetupWizard({ initialProfile, pending = false, onCancel, onSub
       hint: "想了解时会先加入概览；具体证书可以继续比较，这不是报名建议。",
       content: (
         <>
-          <SingleChoiceGrid options={CERTIFICATE_INTEREST_OPTIONS} value={profile.certificate_interest} disabled={pending} onChange={updateCertificateInterest} />
-          {profile.certificate_interest && <CertificateComparisonGrid
+          <CertificateComparisonGrid
             value={profile.certificate_branches}
             disabled={pending}
-            onChange={(value) => update("certificate_branches", value)}
-          />}
+            onChange={updateCertificateBranches}
+          />
         </>
       ),
     },
@@ -419,10 +413,10 @@ export function PilotPathSettingsPanel({ initialProfile, pending = false, onClos
     value: certificate.id,
     label: certificate.shortName,
   }));
-  const updateCertificateInterest = (value) => onChange?.({
+  const updateCertificateBranches = (value) => onChange?.({
     ...profile,
-    certificate_interest: value,
-    certificate_branches: value ? profile.certificate_branches : [],
+    certificate_interest: value.length > 0,
+    certificate_branches: value,
     setup_complete: true,
   });
   const localizeOptions = (options, prefix) => options.map((option) => ({
@@ -472,8 +466,7 @@ export function PilotPathSettingsPanel({ initialProfile, pending = false, onClos
         </section>
         <section>
           <div className="pilot-path-settings__question"><strong>{t("pilot.settings.certificates")}</strong><small>{t("pilot.settings.certificatesHint")}</small></div>
-          <SingleChoiceGrid options={CERTIFICATE_INTEREST_OPTIONS} value={profile.certificate_interest} disabled={pending} onChange={updateCertificateInterest} />
-          {profile.certificate_interest && <MultiChoiceGrid options={certificateOptions} value={profile.certificate_branches} emptyLabel={t("pilot.settings.certificatesEmpty")} disabled={pending} onChange={(value) => update("certificate_branches", value)} />}
+          <MultiChoiceGrid options={certificateOptions} value={profile.certificate_branches} emptyLabel={t("pilot.settings.certificatesEmpty")} disabled={pending} onChange={updateCertificateBranches} />
         </section>
         <section>
           <div className="pilot-path-settings__question"><strong>{t("pilot.settings.interviews")}</strong><small>{t("pilot.settings.interviewsHint")}</small></div>

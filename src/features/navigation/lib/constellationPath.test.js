@@ -134,18 +134,38 @@ describe("fall recruiting constellation", () => {
     expect(transition.nodes.some((node) => node.node_id === "pilot:transition-first-internship")).toBe(true);
   });
 
-  it("marks newly planned path nodes as non-content instead of linking approximate notes", () => {
+  it("gives every visible Path node a concrete note", () => {
     const draft = buildPersonalizedPilotDraft({}, {
       ...profile,
       jobti_type: "radar",
       experience_branches: ["first_internship"],
     });
-    ["pilot:job-board", "pilot:referral", "pilot:first-internship", "pilot:hr-screening-call"]
+    draft.nodes
       .forEach((id) => {
-        const node = draft.nodes.find((candidate) => candidate.node_id === id);
-        expect(node?.note_url, `${id} should not navigate`).toBeUndefined();
-        expect(node?.metadata?.content_status).toBe("planned");
+        expect(id.note_url, `${id.node_id} should navigate`).toMatch(/^\/note\/fall-recruiting\/.+\.md$/);
+        expect(id.metadata?.content_status).not.toBe("planned");
       });
+  });
+
+  it("keeps titles visible for internship, Referral, and HR Screening nodes", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      experience_branches: ["first_internship", "transition_first_internship"],
+      search_branches: ["networking"],
+    });
+    const elements = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+
+    [
+      ["pilot:first-internship", "如何开启第一段实习"],
+      ["pilot:transition-first-internship", "如何在转专业 / 转行后开启第一段实习"],
+      ["pilot:referral", "Referral"],
+      ["pilot:hr-screening-call", "HR Screening Call"],
+    ].forEach(([id, title]) => {
+      const node = elements.nodes.find((candidate) => candidate.id === id);
+      expect(node?.data?.title).toBe(title);
+      expect(node?.data?.note_url).toMatch(/^\/note\/fall-recruiting\/.+\.md$/);
+      expect(node?.style?.width).toBeGreaterThan(0);
+    });
   });
 
   it("lays out the combined personalized branches without overlapping node cards", () => {

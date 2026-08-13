@@ -154,22 +154,6 @@ function pathNode(id, title, slug, order, anchor = "", metadata = {}) {
   };
 }
 
-function plannedNode(id, title, order, metadata = {}) {
-  return {
-    node_id: `pilot:${id}`,
-    title,
-    subject: SUBJECT,
-    status: "planned",
-    metadata: {
-      pilot_official_path: true,
-      subject_title: "秋招准备",
-      estimated_order: order,
-      content_status: "planned",
-      ...metadata,
-    },
-  };
-}
-
 function resolveApplicationStrategy(profile = {}) {
   if (["batch", "precision"].includes(profile.application_strategy)) {
     return profile.application_strategy;
@@ -201,10 +185,10 @@ function buildPilotNodes(profile = {}) {
   ];
 
   if (experienceBranches.has("first_internship")) {
-    nodes.push(plannedNode("first-internship", "如何开启第一段实习", 2, { path_relation: "branch", directory_order: 0 }));
+    nodes.push(pathNode("first-internship", "如何开启第一段实习", "first-internship", 2, "", { path_relation: "branch", directory_order: 0 }));
   }
   if (experienceBranches.has("transition_first_internship")) {
-    nodes.push(plannedNode("transition-first-internship", "如何在转专业 / 转行后开启第一段实习", 2, { path_relation: "branch", directory_order: 1 }));
+    nodes.push(pathNode("transition-first-internship", "如何在转专业 / 转行后开启第一段实习", "transition-first-internship", 2, "", { path_relation: "branch", directory_order: 1 }));
   }
 
   if (hasSkillSupplement) {
@@ -228,21 +212,21 @@ function buildPilotNodes(profile = {}) {
 
   if (searchBranches.has("networking")) {
     nodes.push(pathNode("networking", "Coffee Chat / Networking", "coffee-chat", 7, "", { path_relation: "branch" }));
-    nodes.push(plannedNode("referral", "Referral", 7, { path_relation: "branch" }));
+    nodes.push(pathNode("referral", "Referral", "referral", 7, "", { path_relation: "branch" }));
   }
   if (analyticalSearch || searchBranches.has("job_board")) {
-    nodes.push(plannedNode("job-board", "Job Board", 7, { path_relation: "branch" }));
+    nodes.push(pathNode("job-board", "Job Board", "job-board", 7, "", { path_relation: "branch" }));
   }
   if (analyticalSearch || searchBranches.has("company_career_page")) {
-    nodes.push(plannedNode("company-career-page", "Company Career Page", 7, { path_relation: "branch" }));
+    nodes.push(pathNode("company-career-page", "Company Career Page", "company-career-page", 7, "", { path_relation: "branch" }));
   }
   if (analyticalSearch || searchBranches.has("ai_job_search")) {
     nodes.push(pathNode("ai-job-search", "用 AI 辅助找岗位", "ai-job-search", 7, "", { path_relation: "branch" }));
   }
   if (studentSearch) {
-    nodes.push(plannedNode("campus-recruiting", "Campus Recruiting", 7, { path_relation: "branch" }));
-    nodes.push(plannedNode("career-fair", "Career Fair", 7, { path_relation: "branch" }));
-    nodes.push(plannedNode("alumni-networking", "Alumni Networking", 7, { path_relation: "branch" }));
+    nodes.push(pathNode("campus-recruiting", "Campus Recruiting", "campus-recruiting", 7, "", { path_relation: "branch" }));
+    nodes.push(pathNode("career-fair", "Career Fair", "career-fair", 7, "", { path_relation: "branch" }));
+    nodes.push(pathNode("alumni-networking", "Alumni Networking", "alumni-networking", 7, "", { path_relation: "branch" }));
   }
 
   nodes.push(
@@ -253,20 +237,20 @@ function buildPilotNodes(profile = {}) {
 
   if (applicationStrategy === "batch") {
     nodes.push(
-      plannedNode("application-batch-planning", "Application Batch Planning", 8.5, { path_relation: "branch" }),
-      plannedNode("application-tracker", "Application Tracker", 8.5, { path_relation: "branch" }),
-      plannedNode("resume-version-management", "Resume Version Management", 8.5, { path_relation: "branch" }),
+      pathNode("application-batch-planning", "Application Batch Planning", "application-batch-planning", 8.5, "", { path_relation: "branch" }),
+      pathNode("application-tracker", "Application Tracker", "application-tracker", 8.5, "", { path_relation: "branch" }),
+      pathNode("resume-version-management", "Resume Version Management", "resume-version-management", 8.5, "", { path_relation: "branch" }),
     );
   }
   if (applicationStrategy === "precision") {
     nodes.push(
-      plannedNode("company-research", "Company Research", 8.5, { path_relation: "branch" }),
-      plannedNode("jd-deep-dive", "JD Deep Dive", 8.5, { path_relation: "branch" }),
-      plannedNode("tailored-materials", "Tailored Resume / Cover Letter", 8.5, { path_relation: "branch" }),
+      pathNode("company-research", "Company Research", "company-research", 8.5, "", { path_relation: "branch" }),
+      pathNode("jd-deep-dive", "JD Deep Dive", "jd-deep-dive", 8.5, "", { path_relation: "branch" }),
+      pathNode("tailored-materials", "Tailored Resume / Cover Letter", "tailored-materials", 8.5, "", { path_relation: "branch" }),
     );
   }
 
-  nodes.push(plannedNode("hr-screening-call", "HR Screening Call", 10.5, {
+  nodes.push(pathNode("hr-screening-call", "HR Screening Call", "hr-screening-call", 10.5, "", {
     path_relation: "branch",
     interview_type: "screening",
     directory_order: 0,
