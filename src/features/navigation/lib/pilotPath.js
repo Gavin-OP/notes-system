@@ -186,10 +186,10 @@ function resolveApplicationStrategy(profile = {}) {
   if (["batch", "precision", "batch_then_precision", "precision_then_batch"].includes(profile.application_strategy)) {
     return profile.application_strategy;
   }
-  if (profile.jobti_type === "engine") return "batch";
-  if (["radar", "alchemist"].includes(profile.jobti_type)) return "precision";
   if (profile.career_direction === "exploring") return "batch";
   if (profile.career_direction === "focused") return "precision";
+  if (profile.jobti_type === "engine") return "batch";
+  if (["radar", "alchemist"].includes(profile.jobti_type)) return "precision";
   return "core";
 }
 
@@ -197,10 +197,10 @@ function resolveInformationStyle(profile = {}) {
   if (["social", "independent", "balanced"].includes(profile.information_style)) {
     return profile.information_style;
   }
-  if (["explorer", "koi"].includes(profile.jobti_type)) return "social";
-  if (["radar", "researcher"].includes(profile.jobti_type)) return "independent";
   if (profile.career_direction === "exploring") return "balanced";
   if (profile.career_direction === "focused") return "independent";
+  if (["explorer", "koi"].includes(profile.jobti_type)) return "social";
+  if (["radar", "researcher"].includes(profile.jobti_type)) return "independent";
   return "core";
 }
 

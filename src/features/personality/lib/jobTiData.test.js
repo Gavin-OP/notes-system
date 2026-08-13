@@ -6,17 +6,19 @@ import {
   buildJobTiPathProfile,
   rankJobTiResults,
 } from "./jobTiData";
+import { buildPersonalizedPilotDraft } from "../../navigation/lib/pilotPath";
 
 const personalityAnswers = Object.fromEntries(
   QUIZ_ITEMS.filter((item) => item.kind === "personality").map((item) => [item.id, 0]),
 );
 
 describe("JobTI questionnaire model", () => {
-  it("combines eight personality questions with seven Path inputs", () => {
-    expect(QUIZ_ITEMS).toHaveLength(15);
+  it("combines eight personality questions with ten Path inputs", () => {
+    expect(QUIZ_ITEMS).toHaveLength(18);
     expect(QUIZ_ITEMS.filter((item) => item.kind === "personality")).toHaveLength(8);
-    expect(QUIZ_ITEMS.filter((item) => item.kind.startsWith("path-"))).toHaveLength(7);
+    expect(QUIZ_ITEMS.filter((item) => item.kind.startsWith("path-"))).toHaveLength(10);
     expect(QUIZ_ITEMS.some((item) => item.id === "company_types")).toBe(false);
+    expect(QUIZ_ITEMS.some((item) => item.id === "search")).toBe(false);
   });
 
   it("does not let unscored Path answers change the personality result", () => {
@@ -73,7 +75,10 @@ describe("JobTI questionnaire model", () => {
       stage: "interviewing",
       candidate_background: "student",
       materials: ["linkedin"],
-      search: ["networking"],
+      information_style: "social",
+      application_strategy: "batch_then_precision",
+      profile_competitiveness: "unsure",
+      experience_level: "limited",
       leetcode: true,
       certificates: "learn",
       interviews: ["hr", "assessment_centre"],
@@ -84,7 +89,11 @@ describe("JobTI questionnaire model", () => {
       jobti_type: expect.any(String),
       candidate_background: "student",
       profile_branches: ["linkedin"],
-      search_branches: ["networking"],
+      information_style: "social",
+      application_strategy: "batch_then_precision",
+      profile_competitiveness: "unsure",
+      experience_level: "limited",
+      search_branches: [],
       skill_branches: ["technical"],
       certificate_interest: true,
       interview_branches: ["hr", "assessment_centre"],
@@ -103,5 +112,46 @@ describe("JobTI questionnaire model", () => {
     expect(buildJobTiPathProfile({ planning: 0 }).career_direction).toBe("focused");
     expect(buildJobTiPathProfile({ planning: 1 }).career_direction).toBe("exploring");
     expect(buildJobTiPathProfile({ planning: 2 }).career_direction).toBe("exploring");
+  });
+
+  it("maps the new practical questions to independent reusable Path signals", () => {
+    const profile = buildJobTiPathProfile({
+      information_style: "balanced",
+      application_strategy: "precision_then_batch",
+      profile_competitiveness: "competitive",
+      experience_level: "limited",
+    });
+
+    expect(profile).toMatchObject({
+      information_style: "balanced",
+      application_strategy: "precision_then_batch",
+      profile_competitiveness: "competitive",
+      experience_level: "limited",
+    });
+  });
+
+  it("turns questionnaire answers into the corresponding personalized Path nodes", () => {
+    const profile = buildJobTiPathProfile({
+      planning: 1,
+      information_style: "social",
+      application_strategy: "batch_then_precision",
+      profile_competitiveness: "unsure",
+      experience_level: "limited",
+    });
+    const draft = buildPersonalizedPilotDraft({}, profile);
+    const ids = new Set(draft.nodes.map((node) => node.node_id));
+
+    [
+      "pilot:career-exploration",
+      "pilot:networking",
+      "pilot:networking-event",
+      "pilot:application-batch-planning",
+      "pilot:company-research",
+      "pilot:resume-positioning",
+      "pilot:experience-building",
+      "pilot:business-competition",
+      "pilot:kaggle-competition",
+      "pilot:course-project-polish",
+    ].forEach((id) => expect(ids.has(id), `${id} should exist`).toBe(true));
   });
 });

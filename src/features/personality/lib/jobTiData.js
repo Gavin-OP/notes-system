@@ -3,7 +3,6 @@ import {
   INTERVIEW_BRANCH_OPTIONS,
   PILOT_STAGE_OPTIONS,
   PROFILE_BRANCH_OPTIONS,
-  SEARCH_BRANCH_OPTIONS,
 } from "../../navigation/lib/pilotPath";
 
 export const JOBTI_STORAGE_KEY = "notes-system:job-seeker-personality:v2";
@@ -51,7 +50,18 @@ export const QUIZ_ITEMS = [
     { label: "先把眼前的事做好，答案会慢慢出现", scores: ["engine", "researcher"] },
     { label: "希望未来的我有工作、有下班，也有双休", scores: ["protector", "gardener"] },
   ]),
-  pathMulti("search", "search_branches", "找岗位时，你想给自己增加哪些入口？", "除了直接投递，我们还有一些提升效率的方式。可以多选。", SEARCH_BRANCH_OPTIONS, "先使用基础岗位搜索流程"),
+  pathSingle("information_style", "information_style", "找工作的信息，你更习惯从哪里捞？", "这会决定 Path 默认加入沟通型入口、资料检索入口，还是两边都走。", [
+    { value: "social", label: "直接找人聊：Coffee Chat、Networking Event，真人信息比较有温度" },
+    { value: "independent", label: "自己查清楚：Job Board、公司官网、Glassdoor，先做一份情报整理" },
+    { value: "balanced", label: "两种都要：网上做功课，再找人验证；或者先聊完再回去查资料" },
+    { value: "auto", label: "暂时没偏好，让 JobTI 先给一个默认建议" },
+  ]),
+  pathSingle("application_strategy", "application_strategy", "面对一长串岗位，你更想怎样安排投递？", "没有唯一正确顺序；Path 会按你的选择排列海投与精准投递支线。", [
+    { value: "batch", label: "先广撒网。岗位不进申请系统，就永远没有后续故事" },
+    { value: "precision", label: "认准再投。每份申请都值得认真研究和打磨" },
+    { value: "batch_then_precision", label: "先海投探索，用真实反馈慢慢缩小方向，再精准投入" },
+    { value: "precision_then_batch", label: "先把最喜欢的岗位打磨好投完，再放心扩大投递" },
+  ]),
   personality("assessment", "收到招聘流程中的在线测试邀请，你会？", "它可能是能力测试、限时笔试或情境判断。", [
     { label: "先查清题目形式，找几道样题练手", scores: ["researcher", "radar"] },
     { label: "感觉麻木，秋招至今已经做过不下10套测评题", scores: ["gardener", "protector"] },
@@ -67,6 +77,15 @@ export const QUIZ_ITEMS = [
     { label: "寻找一个最适合这个岗位的故事", scores: ["radar", "engine"] },
     { label: "讲得真实、有逻辑，而且能看到成长", scores: ["alchemist", "explorer"] },
     { label: "还没找到工作就是我的失败", scores: ["protector", "koi"] },
+  ]),
+  pathSingle("profile_competitiveness", "profile_competitiveness", "看着自己的履历，你现在更想先补哪一块？", "这里只调整准备重点，不会用 GPA 或实习数量判断你是否配得上某个岗位。", [
+    { value: "competitive", label: "经历和 GPA 已经攒出一点底气，想把重点前移到面试准备" },
+    { value: "unsure", label: "实习较少或 GPA 不突出，想先把现有经历讲清楚、放对位置" },
+    { value: "neutral", label: "暂时说不准，先保持材料与面试的基础顺序" },
+  ]),
+  pathSingle("experience_level", "experience_level", "你的经历素材库现在够讲吗？", "经历较少时，Path 会加入商赛、Kaggle 和课程项目打磨；已有素材则保持主线简洁。", [
+    { value: "limited", label: "库存告急：希望再补一些比赛、数据项目或课程项目" },
+    { value: "established", label: "手上已有实习或项目，先把这些故事打磨好" },
   ]),
   pathSingle("certificates", "certificate_interest", "金融证书（CPA、CFA、FRM）要不要加入你的准备工作？", "这题只决定是否加入金融证书概览，不会替你报名，也不会擅自选择具体证书。", [
     { value: "skip", pathValue: false, label: "秋招已经很累了，没精力学习啦", scores: ["protector", "gardener"] },
@@ -115,17 +134,17 @@ export function buildJobTiPathProfile(responses = {}, previous = {}) {
     jobti_type: rankJobTiResults(responses)[0] || previous.jobti_type || "",
     candidate_background: responses.candidate_background || previous.candidate_background || "other",
     career_direction: careerDirection,
-    information_style: previous.information_style || "auto",
-    profile_competitiveness: previous.profile_competitiveness || "neutral",
-    experience_level: previous.experience_level || "established",
-    application_strategy: previous.application_strategy || "auto",
+    information_style: responses.information_style || previous.information_style || "auto",
+    profile_competitiveness: responses.profile_competitiveness || previous.profile_competitiveness || "neutral",
+    experience_level: responses.experience_level || previous.experience_level || "established",
+    application_strategy: responses.application_strategy || previous.application_strategy || "auto",
     profile_branches: Array.isArray(responses.materials) ? responses.materials : [],
-    search_branches: Array.isArray(responses.search) ? responses.search : [],
+    search_branches: [],
     skill_branches: responses.leetcode ? ["technical"] : [],
     certificate_interest: certificateInterest,
     certificate_branches: certificateInterest ? (previous.certificate_branches || []) : [],
     interview_branches: Array.isArray(responses.interviews) ? responses.interviews : [],
-    jobti_path_version: 1,
+    jobti_path_version: 2,
     setup_complete: true,
   };
 }
@@ -133,13 +152,24 @@ export function buildJobTiPathProfile(responses = {}, previous = {}) {
 export function getJobTiPathSummary(responses = {}) {
   const stage = PILOT_STAGE_OPTIONS.find((option) => option.value === responses.stage)?.label || "刚开始准备求职";
   const materials = PROFILE_BRANCH_OPTIONS.filter((option) => responses.materials?.includes(option.value)).map((option) => option.label);
-  const search = SEARCH_BRANCH_OPTIONS.filter((option) => responses.search?.includes(option.value)).map((option) => option.label);
   const interviews = INTERVIEW_BRANCH_OPTIONS.filter((option) => responses.interviews?.includes(option.value)).map((option) => option.label);
   return [
     `你的 Path 将从「${stage}」开始。`,
     responses.candidate_background === "student" ? "学生招聘入口会加入 Path。" : "目前不额外加入学生招聘入口。",
     materials.length ? `材料分支：${materials.join("、")}。` : "材料先从简历开始，需要时再扩展。",
-    search.length ? `找岗方式：${search.join("、")}。` : "先沿用基础的岗位搜索与筛选流程。",
+    responses.information_style === "social" ? "找岗方式：优先通过 Coffee Chat 和 Networking 获取信息。"
+      : responses.information_style === "independent" ? "找岗方式：优先通过 Job Board、公司官网和社媒资料做研究。"
+        : responses.information_style === "balanced" ? "找岗方式：结合资料研究与真人交流。"
+          : "先沿用基础的岗位搜索与筛选流程。",
+    responses.application_strategy === "batch" ? "投递节奏：以批量投递和流程管理为主。"
+      : responses.application_strategy === "precision" ? "投递节奏：以岗位研究和定制申请为主。"
+        : responses.application_strategy === "batch_then_precision" ? "投递节奏：先广泛探索，再转向精准投递。"
+          : responses.application_strategy === "precision_then_batch" ? "投递节奏：先完成重点申请，再扩大投递。"
+            : "投递节奏会根据其他回答生成默认建议。",
+    responses.profile_competitiveness === "competitive" ? "准备重点：提前进入面试准备。"
+      : responses.profile_competitiveness === "unsure" ? "准备重点：先梳理和呈现现有经历。"
+        : "材料与面试保持基础准备顺序。",
+    responses.experience_level === "limited" ? "经历支线：加入商赛、Kaggle 和课程项目打磨。" : "先打磨已有实习和项目。",
     responses.leetcode ? "LeetCode 已加入技能准备。" : "目前不额外加入 LeetCode。",
     responses.certificates === true || ["learn", "consider"].includes(responses.certificates) ? "先了解金融证书，再决定是否投入。" : "目前不把金融证书放进主线。",
     interviews.length ? `面试专项：${interviews.join("、")}。` : "暂时先从综合面试准备开始。",
