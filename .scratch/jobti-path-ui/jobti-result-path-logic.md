@@ -4,6 +4,21 @@ This document describes the current Pilot Mode questionnaire and its explainable
 Path-generation behavior. It separates personality scoring from practical Path
 signals so a JobTI type never becomes a claim about career suitability.
 
+## Comprehensive single-map source
+
+The canonical review view is now the single Graphviz source below:
+
+- [`jobti-comprehensive-map.dot`](./jobti-comprehensive-map.dot)
+
+It places all 18 JobTI questions in sequence on the upper lane and the complete
+career Path on the lower lane. Every answer row includes its personality score and
+Path effect; orange dashed connectors point from Path-changing answers to the exact
+main or branch node they control.
+
+The map intentionally exposes one current product gap: the two first-internship
+branches are configurable in the Path editor but do not yet have a corresponding
+JobTI question. They remain visible in the lower lane and are labelled accordingly.
+
 ## 1. End-to-end data flow
 
 ```mermaid
@@ -191,12 +206,44 @@ flowchart TD
 | 16 No news | LinkedIn / 复仇者 | 林克 / 海王 | GPT / 卡戴珊太后 | 野王 / X团神券 |
 | 18 Message | 野王 / LinkedIn | 林克 / 卡戴珊太后 | 复仇者 / 海王 | GPT / X团神券 |
 
-## Rendering the diagrams
+## Rendering the comprehensive map
+
+Recommended:
+
+1. Open <https://dreampuf.github.io/GraphvizOnline/>.
+2. Copy the complete contents of `jobti-comprehensive-map.dot`.
+3. Confirm the rendering engine is **dot** rather than `neato`, `fdp`, or `sfdp`.
+4. Paste the source into the editor.
+5. Export SVG for lossless zooming. The canvas is intentionally very wide because
+   it preserves all questions, answers, scoring signals, and Path connections in
+   one reviewable artifact.
+
+The canonical map uses `splines=polyline` instead of orthogonal obstacle routing.
+This is deliberate: browser-based Graphviz runs in WebAssembly, and calculating
+orthogonal routes across many HTML-table ports can exceed its fixed memory and
+raise `memory access out of bounds`. The lighter polyline engine preserves the
+same logical connections without that expensive routing pass.
+
+Graphviz HTML tables do not perform browser-style automatic word wrapping. Long
+cells in the canonical source therefore use explicit `<BR ALIGN="LEFT"/>` breaks at
+semantic boundaries. When adding new copy, keep each unbroken segment below roughly
+38 Latin characters (or 19 full-width Chinese characters) to avoid oversized cells.
+
+In VS Code, install **Graphviz Interactive Preview**, open the `.dot` file, and run
+**Graphviz: Open Preview to the Side**. If Graphviz is installed locally, render it
+with:
+
+```bash
+dot -Tsvg .scratch/jobti-path-ui/jobti-comprehensive-map.dot \
+  -o .scratch/jobti-path-ui/jobti-comprehensive-map.svg
+```
+
+## Rendering the smaller appendix diagrams
 
 1. Open <https://mermaid.live/>.
 2. Copy one complete `mermaid` code block, excluding the Markdown backticks.
 3. Paste it into the editor to render, export SVG/PNG, or share a link.
 
 Alternatively, in draw.io choose **Arrange → Insert → Advanced → Mermaid**, then
-paste one block. Keeping the four diagrams separate is recommended; combining all
-branches into one canvas makes the product logic difficult to review.
+paste one block. These smaller diagrams are retained only as focused appendices;
+the Graphviz file above is the comprehensive product-logic map.

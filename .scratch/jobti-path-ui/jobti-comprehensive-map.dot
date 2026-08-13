@@ -1,0 +1,461 @@
+digraph JobTIComprehensiveMap {
+  graph [
+    rankdir=LR,
+    newrank=true,
+    splines=polyline,
+    outputorder=edgesfirst,
+    mclimit=0.5,
+    nslimit=2,
+    nslimit1=2,
+    bgcolor="#F7F9FC",
+    pad=0.35,
+    nodesep=0.28,
+    ranksep=0.78,
+    fontname="Arial",
+    label="JobTI → Personality Result → Personalized Career Path · Comprehensive Logic Map",
+    labelloc=t,
+    labeljust=l,
+    fontsize=24,
+    fontcolor="#18263A"
+  ];
+
+  node [fontname="Arial", fontsize=10, color="#CBD5E1"];
+  edge [fontname="Arial", fontsize=9, color="#94A3B8", arrowsize=0.65];
+
+  /*
+   * TOP LANE — QUESTIONNAIRE
+   * Each HTML row shows: answer copy | personality score | Path effect.
+   * Ports on Path-effect cells connect directly to the lower Path lane.
+   */
+  subgraph cluster_questions {
+    label="主线 A · JobTI 问卷（从左到右）";
+    labelloc=t;
+    labeljust=l;
+    color="#D8E5F5";
+    fillcolor="#EEF5FF";
+    style="rounded,filled";
+    penwidth=1.2;
+    margin=20;
+
+    q01 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>01 · 高门槛 JD 的第一反应</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 看看岗位含金量</TD><TD>复仇者 +2 / LinkedIn +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">B 符合多少算多少，先投</TD><TD>海王 +2 / 林克 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">C 研究经历还能怎么表达</TD><TD>野王 +2 / X团神券 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">D 招聘市场也有许愿池</TD><TD>卡戴珊太后 +2 / GPT +1</TD><TD>—</TD></TR>
+      </TABLE>
+    >];
+
+    q02 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>02 · 当前求职阶段</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 刚开始准备求职</TD><TD>—</TD><TD PORT="a">保留完整主线</TD></TR>
+        <TR><TD ALIGN="LEFT">B 正在准备简历与 Profile</TD><TD>—</TD><TD PORT="b">从材料准备开始</TD></TR>
+        <TR><TD ALIGN="LEFT">C 已经开始投递</TD><TD>—</TD><TD PORT="c">从投递开始</TD></TR>
+        <TR><TD ALIGN="LEFT">D 已进入测试或面试</TD><TD>—</TD><TD PORT="d">从测试 / 面试开始</TD></TR>
+        <TR><TD ALIGN="LEFT">E 正在比较 Offer</TD><TD>—</TD><TD PORT="e">从 Offer 判断开始</TD></TR>
+      </TABLE>
+    >];
+
+    q03 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>03 · 是否仍是在校学生</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 仍是在校学生</TD><TD>—</TD><TD PORT="a">加入学生招聘组合包</TD></TR>
+        <TR><TD ALIGN="LEFT">B 目前不是在校学生</TD><TD>—</TD><TD>不加入该支线</TD></TR>
+      </TABLE>
+    >];
+
+    q04 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>04 · 面对 2000+ 申请者</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 先研究是否适合</TD><TD>野王 +2 / LinkedIn +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">B 先投，为什么不能有我</TD><TD>卡戴珊太后 +2 / 海王 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">C 看其他刚开放机会</TD><TD>林克 +2 / GPT +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">D 修改简历突出重点</TD><TD>X团神券 +2 / 复仇者 +1</TD><TD>—</TD></TR>
+      </TABLE>
+    >];
+
+    q05 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>05 · 简历 V17 的成就感</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 用人话讲清做过什么</TD><TD>X团神券 +2 / 复仇者 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">B 与 Dream Position 完美匹配</TD><TD>LinkedIn +2 / 海王 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">C 朋友发现我做过很多</TD><TD>卡戴珊太后 +2 / GPT +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">D 一页纸塞不下人生</TD><TD>林克 +2 / 野王 +1</TD><TD>—</TD></TR>
+      </TABLE>
+    >];
+
+    q06 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>06 · 简历之外的求职材料（多选）</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">LinkedIn</TD><TD>—</TD><TD PORT="linkedin">加入 LinkedIn</TD></TR>
+        <TR><TD ALIGN="LEFT">Cover Letter</TD><TD>—</TD><TD PORT="cover">加入 Cover Letter</TD></TR>
+        <TR><TD ALIGN="LEFT">项目集</TD><TD>—</TD><TD PORT="portfolio">加入项目集</TD></TR>
+        <TR><TD ALIGN="LEFT">个人主页</TD><TD>—</TD><TD PORT="site">加入个人主页</TD></TR>
+        <TR><TD ALIGN="LEFT">暂时只准备简历</TD><TD>—</TD><TD>保持基础材料主线</TD></TR>
+      </TABLE>
+    >];
+
+    q07 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>07 · 职业规划的真实版本</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 有方向，也愿意修正</TD><TD>LinkedIn +2 / X团神券 +1</TD><TD PORT="a">重点赛道规划</TD></TR>
+        <TR><TD ALIGN="LEFT">B 世界很大，想多看看</TD><TD>卡戴珊太后 +2 / 林克 +1</TD><TD PORT="b">探索不同可能</TD></TR>
+        <TR><TD ALIGN="LEFT">C 先做好眼前的事</TD><TD>海王 +2 / 复仇者 +1</TD><TD PORT="c">探索不同可能</TD></TR>
+        <TR><TD ALIGN="LEFT">D 有工作、有下班、有双休</TD><TD>GPT +2 / 野王 +1</TD><TD>保持中性路线</TD></TR>
+      </TABLE>
+    >];
+
+    q08 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>08 · 获取求职信息的习惯</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 直接找人聊</TD><TD>—</TD><TD PORT="social">沟通型入口</TD></TR>
+        <TR><TD ALIGN="LEFT">B 自己查清楚</TD><TD>—</TD><TD PORT="independent">资料检索入口</TD></TR>
+        <TR><TD ALIGN="LEFT">C 两种都要</TD><TD>—</TD><TD PORT="balanced">两套入口都加入</TD></TR>
+        <TR><TD ALIGN="LEFT">D 暂时没偏好</TD><TD>—</TD><TD>按职业方向生成默认值</TD></TR>
+      </TABLE>
+    >];
+
+    q09 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>09 · 投递策略</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 先广撒网</TD><TD>—</TD><TD PORT="batch">海投管理支线</TD></TR>
+        <TR><TD ALIGN="LEFT">B 认准再投</TD><TD>—</TD><TD PORT="precision">精准投递支线</TD></TR>
+        <TR><TD ALIGN="LEFT">C 先海投探索，再精准</TD><TD>—</TD><TD PORT="bp">海投 → 精准</TD></TR>
+        <TR><TD ALIGN="LEFT">D 先投最喜欢的，再扩大</TD><TD>—</TD><TD PORT="pb">精准 → 海投</TD></TR>
+      </TABLE>
+    >];
+
+    q10 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>10 · 收到在线测试邀请</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 查形式，找样题练手</TD><TD>复仇者 +2 / LinkedIn +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">B 已做过很多，感觉麻木</TD><TD>野王 +2 / GPT +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">C 先做再说</TD><TD>海王 +2 / 卡戴珊太后 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">D 准备到符合价值观</TD><TD>X团神券 +2 / 林克 +1</TD><TD>—</TD></TR>
+      </TABLE>
+    >];
+
+    q11 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>11 · LeetCode 是否相关</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A JD / 流程明确会考</TD><TD>—</TD><TD PORT="yes">技能补充 → LeetCode</TD></TR>
+        <TR><TD ALIGN="LEFT">B 暂时不相关</TD><TD>—</TD><TD>不加入 LeetCode</TD></TR>
+      </TABLE>
+    >];
+
+    q12 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>12 · 如何讲“最大的失败”</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 选真正学到东西的经历</TD><TD>复仇者 +2 / 野王 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">B 选最适合岗位的故事</TD><TD>LinkedIn +2 / 海王 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">C 真实、有逻辑、有成长</TD><TD>X团神券 +2 / 林克 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">D 还没工作就是失败</TD><TD>GPT +2 / 卡戴珊太后 +1</TD><TD>—</TD></TR>
+      </TABLE>
+    >];
+
+    q13 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>13 · 当前准备重点</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 经历 / GPA 已有底气</TD><TD>—</TD><TD PORT="a">面试准备前移</TD></TR>
+        <TR><TD ALIGN="LEFT">B 经历较少或 GPA 不突出</TD><TD>—</TD><TD PORT="b">先包装与定位简历证据</TD></TR>
+        <TR><TD ALIGN="LEFT">C 暂时说不准</TD><TD>—</TD><TD>保持基础顺序</TD></TR>
+      </TABLE>
+    >];
+
+    q14 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>14 · 经历素材是否够用</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 需要补比赛 / 项目</TD><TD>—</TD><TD PORT="limited">加入经历建设支线</TD></TR>
+        <TR><TD ALIGN="LEFT">B 已有实习或项目</TD><TD>—</TD><TD>打磨已有故事</TD></TR>
+      </TABLE>
+    >];
+
+    q15 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>15 · 金融证书（CPA / CFA / FRM）</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 没精力学习</TD><TD>GPT +2 / 野王 +1</TD><TD>不加入证书</TD></TR>
+        <TR><TD ALIGN="LEFT">B 先搞懂分别有什么用</TD><TD>复仇者 +2 / LinkedIn +1</TD><TD PORT="learn">加入证书概览</TD></TR>
+        <TR><TD ALIGN="LEFT">C 已报名，骑虎难下</TD><TD>海王 +2 / 卡戴珊太后 +1</TD><TD PORT="consider">加入证书概览</TD></TR>
+        <TR><TD ALIGN="LEFT">D 申请优先，证书以后再议</TD><TD>林克 +2 / X团神券 +1</TD><TD>不加入证书</TD></TR>
+      </TABLE>
+    >];
+
+    q16 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>16 · 一段时间没有新消息</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 评估自己，调整策略</TD><TD>LinkedIn +2 / 复仇者 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">B 换渠道，看遗漏机会</TD><TD>林克 +2 / 海王 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">C 找朋友聊聊吐槽</TD><TD>GPT +2 / 卡戴珊太后 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">D 丧一会儿，继续生活</TD><TD>野王 +2 / X团神券 +1</TD><TD>—</TD></TR>
+      </TABLE>
+    >];
+
+    q17 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>17 · 接下来可能遇到的面试（多选）</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">HR 面</TD><TD>—</TD><TD PORT="hr">加入 HR 面专项</TD></TR>
+        <TR><TD ALIGN="LEFT">Technical Interview</TD><TD>—</TD><TD PORT="technical">加入技术面专项</TD></TR>
+        <TR><TD ALIGN="LEFT">群面</TD><TD>—</TD><TD PORT="group">加入群面专项</TD></TR>
+        <TR><TD ALIGN="LEFT">Panel Interview</TD><TD>—</TD><TD PORT="panel">加入 Panel 专项</TD></TR>
+        <TR><TD ALIGN="LEFT">Assessment Centre</TD><TD>—</TD><TD PORT="ac">加入 AC 专项</TD></TR>
+        <TR><TD ALIGN="LEFT">压力面</TD><TD>—</TD><TD PORT="stress">加入压力面专项</TD></TR>
+        <TR><TD ALIGN="LEFT">终面</TD><TD>—</TD><TD PORT="final">加入终面专项</TD></TR>
+        <TR><TD ALIGN="LEFT">特殊情况应对</TD><TD>—</TD><TD PORT="special">加入特殊情况专项</TD></TR>
+        <TR><TD ALIGN="LEFT">暂时不确定</TD><TD>—</TD><TD>仅保留综合准备 + HR Screening</TD></TR>
+      </TABLE>
+    >];
+
+    q18 [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#B8CBE5" BGCOLOR="white">
+        <TR><TD COLSPAN="3" BGCOLOR="#DCEBFF"><B>18 · 留给求职中的自己一句话</B></TD></TR>
+        <TR><TD><B>选项</B></TD><TD><B>人格计分</B></TD><TD><B>Path 影响</B></TD></TR>
+        <TR><TD ALIGN="LEFT">A 找适合的生活，不是比赛</TD><TD>野王 +2 / LinkedIn +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">B Offer 只是一个入口</TD><TD>林克 +2 / 卡戴珊太后 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">C 没结果也算经历</TD><TD>复仇者 +2 / 海王 +1</TD><TD>—</TD></TR>
+        <TR><TD ALIGN="LEFT">D 慢一点，有自己的时间表</TD><TD>GPT +2 / X团神券 +1</TD><TD>—</TD></TR>
+      </TABLE>
+    >];
+
+    result [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#9F8BD8" BGCOLOR="white">
+        <TR><TD BGCOLOR="#EDE7FF"><B>人格结果</B></TD></TR>
+        <TR><TD ALIGN="LEFT">每题主类型 +2，副类型 +1</TD></TR>
+        <TR><TD ALIGN="LEFT">林克 · LinkedIn · 海王 · X团神券</TD></TR>
+        <TR><TD ALIGN="LEFT">复仇者 · GPT · 野王 · 卡戴珊太后</TD></TR>
+        <TR><TD ALIGN="LEFT">同分按固定顺序决定，结果可解释且可复现</TD></TR>
+      </TABLE>
+    >];
+
+    q01 -> q02 -> q03 -> q04 -> q05 -> q06 -> q07 -> q08 -> q09 -> q10 -> q11 -> q12 -> q13 -> q14 -> q15 -> q16 -> q17 -> q18 -> result [color="#6F8FB8", penwidth=2.0, weight=20];
+  }
+
+  /*
+   * BOTTOM LANE — GENERATED PATH
+   */
+  subgraph cluster_path {
+    label="主线 B · Personalized Career Path（从左到右）";
+    labelloc=t;
+    labeljust=l;
+    color="#CCE4DE";
+    fillcolor="#F0FAF7";
+    style="rounded,filled";
+    penwidth=1.2;
+    margin=20;
+
+    node [shape=box, style="rounded,filled", fillcolor="white", color="#5DA6A0", fontcolor="#183A3A", penwidth=1.7, margin="0.16,0.10"];
+    p_start [label="刚开始准备求职"];
+    p_market [label="理解岗位与市场"];
+    p_profile [label="准备简历与 Profile"];
+    p_search [label="寻找和筛选岗位"];
+    p_apply [label="投递与流程管理"];
+    p_assess [label="在线测试"];
+    p_interview [label="综合面试准备"];
+    p_review [label="面试复盘"];
+    p_offer [label="Offer 判断"];
+
+    p_start -> p_market -> p_profile -> p_search -> p_apply -> p_assess -> p_interview -> p_review -> p_offer [color="#2E8E86", penwidth=3.0, weight=25];
+
+    b_direction [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#86C6B7" BGCOLOR="white">
+        <TR><TD BGCOLOR="#DDF4EC"><B>职业方向支线</B></TD></TR>
+        <TR><TD PORT="focused" ALIGN="LEFT">重点赛道：技能 + 行业知识</TD></TR>
+        <TR><TD PORT="explore" ALIGN="LEFT">探索：不同实习 → Recruitment Event</TD></TR>
+      </TABLE>
+    >];
+
+    b_early [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#86C6B7" BGCOLOR="white">
+        <TR><TD BGCOLOR="#DDF4EC"><B>早期经历支线</B></TD></TR>
+        <TR><TD ALIGN="LEFT">如何开启第一段实习</TD></TR>
+        <TR><TD ALIGN="LEFT">如何在转专业 / 转行后开启第一段实习</TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT COLOR="#64748B">当前由 Path 编辑区控制<BR ALIGN="LEFT"/>JobTI 尚无对应题目</FONT></TD></TR>
+      </TABLE>
+    >];
+
+    b_skill [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#86C6B7" BGCOLOR="white">
+        <TR><TD BGCOLOR="#DDF4EC"><B>技能补充（副线）</B></TD></TR>
+        <TR><TD PORT="leetcode" ALIGN="LEFT">LeetCode（算法 / 代码 / SQL）</TD></TR>
+        <TR><TD PORT="finance" ALIGN="LEFT">金融证书概览（CPA / CFA / FRM）</TD></TR>
+      </TABLE>
+    >];
+
+    b_materials [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#86C6B7" BGCOLOR="white">
+        <TR><TD BGCOLOR="#DDF4EC"><B>求职材料</B></TD></TR>
+        <TR><TD PORT="linkedin" ALIGN="LEFT">LinkedIn</TD></TR>
+        <TR><TD PORT="cover" ALIGN="LEFT">Cover Letter</TD></TR>
+        <TR><TD PORT="portfolio" ALIGN="LEFT">项目集</TD></TR>
+        <TR><TD PORT="site" ALIGN="LEFT">个人主页</TD></TR>
+      </TABLE>
+    >];
+
+    b_priority [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#86C6B7" BGCOLOR="white">
+        <TR><TD BGCOLOR="#DDF4EC"><B>准备重点</B></TD></TR>
+        <TR><TD PORT="interview" ALIGN="LEFT">面试准备前移</TD></TR>
+        <TR><TD PORT="resume" ALIGN="LEFT">简历证据定位与包装</TD></TR>
+      </TABLE>
+    >];
+
+    b_experience [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#86C6B7" BGCOLOR="white">
+        <TR><TD BGCOLOR="#DDF4EC"><B>经历建设</B></TD></TR>
+        <TR><TD PORT="root" ALIGN="LEFT">经历素材不足</TD></TR>
+        <TR><TD ALIGN="LEFT">├ 商业比赛</TD></TR>
+        <TR><TD ALIGN="LEFT">├ Kaggle 数据比赛</TD></TR>
+        <TR><TD ALIGN="LEFT">└ 课程项目打磨</TD></TR>
+      </TABLE>
+    >];
+
+    b_info [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#86C6B7" BGCOLOR="white">
+        <TR><TD BGCOLOR="#DDF4EC"><B>岗位信息入口</B></TD></TR>
+        <TR><TD PORT="social" ALIGN="LEFT">沟通型：Networking → Referral + Event</TD></TR>
+        <TR><TD PORT="independent" ALIGN="LEFT">检索型：Job Board / 公司官网<BR ALIGN="LEFT"/>Glassdoor / AI Job Search</TD></TR>
+        <TR><TD PORT="balanced" ALIGN="LEFT">混合型：沟通 + 检索</TD></TR>
+      </TABLE>
+    >];
+
+    b_campus [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#86C6B7" BGCOLOR="white">
+        <TR><TD BGCOLOR="#DDF4EC"><B>学生招聘组合包</B></TD></TR>
+        <TR><TD PORT="root" ALIGN="LEFT">Campus Recruiting → Career Fair<BR ALIGN="LEFT"/>→ Alumni Networking</TD></TR>
+      </TABLE>
+    >];
+
+    b_apply [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#86C6B7" BGCOLOR="white">
+        <TR><TD BGCOLOR="#DDF4EC"><B>投递策略支线</B></TD></TR>
+        <TR><TD PORT="batch" ALIGN="LEFT">海投：Batch Planning → Tracker<BR ALIGN="LEFT"/>→ Resume Version Management</TD></TR>
+        <TR><TD PORT="precision" ALIGN="LEFT">精准：Company Research → JD Deep Dive<BR ALIGN="LEFT"/>→ Tailored Resume / Cover Letter</TD></TR>
+        <TR><TD PORT="bp" ALIGN="LEFT">先海投探索 → 再精准投入</TD></TR>
+        <TR><TD PORT="pb" ALIGN="LEFT">先完成重点申请 → 再扩大投递</TD></TR>
+      </TABLE>
+    >];
+
+    b_interviews [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#86C6B7" BGCOLOR="white">
+        <TR><TD BGCOLOR="#DDF4EC"><B>面试专项目录</B></TD></TR>
+        <TR><TD ALIGN="LEFT">HR Screening Call（固定第一个子节点）</TD></TR>
+        <TR><TD PORT="hr" ALIGN="LEFT">├ HR 面</TD></TR>
+        <TR><TD PORT="technical" ALIGN="LEFT">├ Technical Interview</TD></TR>
+        <TR><TD PORT="group" ALIGN="LEFT">├ 群面</TD></TR>
+        <TR><TD PORT="panel" ALIGN="LEFT">├ Panel Interview</TD></TR>
+        <TR><TD PORT="ac" ALIGN="LEFT">├ Assessment Centre</TD></TR>
+        <TR><TD PORT="stress" ALIGN="LEFT">├ 压力面</TD></TR>
+        <TR><TD PORT="final" ALIGN="LEFT">├ 终面</TD></TR>
+        <TR><TD PORT="special" ALIGN="LEFT">└ 特殊情况应对</TD></TR>
+      </TABLE>
+    >];
+
+    workspace [shape=plain, label=<
+      <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#9F8BD8" BGCOLOR="white">
+        <TR><TD BGCOLOR="#EDE7FF"><B>Learning Workspace</B></TD></TR>
+        <TR><TD>保存问卷、Path、Timeline 与完成状态</TD></TR>
+        <TR><TD>用户可在 Path 编辑区继续调整</TD></TR>
+      </TABLE>
+    >];
+
+    /* Directory-tree branches grow below their parent stages. */
+    p_start:s -> b_early:n [dir=none, style=dashed, color="#65AFA5", constraint=false];
+    p_market:s -> b_direction:n [dir=none, style=dashed, color="#65AFA5", constraint=false];
+    p_profile:s -> b_skill:n [dir=none, color="#2E8E86", penwidth=1.6, constraint=false];
+    p_profile:s -> b_materials:n [dir=none, style=dashed, color="#65AFA5", constraint=false];
+    p_profile:s -> b_priority:n [dir=none, style=dashed, color="#65AFA5", constraint=false];
+    p_profile:s -> b_experience:n [dir=none, style=dashed, color="#65AFA5", constraint=false];
+    p_search:s -> b_info:n [dir=none, style=dashed, color="#65AFA5", constraint=false];
+    p_search:s -> b_campus:n [dir=none, style=dashed, color="#65AFA5", constraint=false];
+    p_apply:s -> b_apply:n [dir=none, style=dashed, color="#65AFA5", constraint=false];
+    p_interview:s -> b_interviews:n [dir=none, style=dashed, color="#65AFA5", constraint=false];
+    p_offer -> workspace [color="#7C5AC5", penwidth=2.2];
+  }
+
+  /* Align the two horizontal main lanes at meaningful columns. */
+  { rank=same; q02; p_start; b_early; }
+  { rank=same; q04; p_market; b_direction; }
+  { rank=same; q06; p_profile; b_skill; b_materials; b_priority; b_experience; }
+  { rank=same; q08; p_search; b_info; b_campus; }
+  { rank=same; q09; p_apply; b_apply; }
+  { rank=same; q10; p_assess; }
+  { rank=same; q17; p_interview; b_interviews; }
+  { rank=same; q18; p_review; }
+  { rank=same; result; p_offer; workspace; }
+
+  /* Path-input answer rows → exact generated Path locations. */
+  edge [style=dashed, color="#D68145", fontcolor="#A85E2D", penwidth=1.15, arrowsize=0.55, constraint=false];
+  q02:a:s -> p_start:n;
+  q02:b:s -> p_profile:n;
+  q02:c:s -> p_apply:n;
+  q02:d:s -> p_assess:n;
+  q02:e:s -> p_offer:n;
+
+  q03:a:s -> b_campus:root:n;
+
+  q06:linkedin:s -> b_materials:linkedin:n;
+  q06:cover:s -> b_materials:cover:n;
+  q06:portfolio:s -> b_materials:portfolio:n;
+  q06:site:s -> b_materials:site:n;
+
+  q07:a:s -> b_direction:focused:n;
+  q07:b:s -> b_direction:explore:n;
+  q07:c:s -> b_direction:explore:n;
+
+  q08:social:s -> b_info:social:n;
+  q08:independent:s -> b_info:independent:n;
+  q08:balanced:s -> b_info:balanced:n;
+
+  q09:batch:s -> b_apply:batch:n;
+  q09:precision:s -> b_apply:precision:n;
+  q09:bp:s -> b_apply:bp:n;
+  q09:pb:s -> b_apply:pb:n;
+
+  q11:yes:s -> b_skill:leetcode:n;
+  q13:a:s -> b_priority:interview:n;
+  q13:b:s -> b_priority:resume:n;
+  q14:limited:s -> b_experience:root:n;
+  q15:learn:s -> b_skill:finance:n;
+  q15:consider:s -> b_skill:finance:n;
+
+  q17:hr:s -> b_interviews:hr:n;
+  q17:technical:s -> b_interviews:technical:n;
+  q17:group:s -> b_interviews:group:n;
+  q17:panel:s -> b_interviews:panel:n;
+  q17:ac:s -> b_interviews:ac:n;
+  q17:stress:s -> b_interviews:stress:n;
+  q17:final:s -> b_interviews:final:n;
+  q17:special:s -> b_interviews:special:n;
+
+  /* Result and explicit Path answers are merged into one local profile. */
+  result:s -> workspace:n [style=dashed, color="#7C5AC5", penwidth=1.4, label="人格结果用于解释与默认建议\n不覆盖用户的明确 Path 选择"];
+
+  legend [shape=plain, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#CBD5E1" BGCOLOR="white">
+      <TR><TD BGCOLOR="#F1F5F9"><B>图例</B></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT COLOR="#6F8FB8">━━</FONT> 问卷顺序</TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT COLOR="#2E8E86">━━</FONT> Path 主干</TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT COLOR="#D68145">┄┄</FONT> 选项对 Path 的影响</TD></TR>
+      <TR><TD ALIGN="LEFT">人格列中的 +2 / +1 为当前 scoring 权重</TD></TR>
+    </TABLE>
+  >];
+  { rank=same; legend; workspace; }
+}
