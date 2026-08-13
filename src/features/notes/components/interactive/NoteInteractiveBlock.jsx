@@ -444,6 +444,89 @@ function ApplicationFunnelLab({ id }) {
   );
 }
 
+const INTERNSHIP_REVIEW_STEPS = [
+  { id: "problem", label: "解决了什么问题？" },
+  { id: "method", label: "使用了哪些工具或方法？" },
+  { id: "challenge", label: "遇到了什么困难？" },
+  { id: "decision", label: "自己做了什么决定？" },
+  { id: "feedback", label: "得到了什么反馈？" },
+  { id: "result", label: "最后的结果是什么？" },
+];
+
+function InternshipReviewCycleLab({ id }) {
+  const emptyState = {
+    completed: "",
+    story: "",
+    steps: Object.fromEntries(INTERNSHIP_REVIEW_STEPS.map((step) => [step.id, ""])),
+  };
+  const [savedState, setSavedState] = useSavedInteractionState(id, emptyState);
+  const state = {
+    ...emptyState,
+    ...savedState,
+    steps: { ...emptyState.steps, ...(savedState?.steps || {}) },
+  };
+
+  const updateField = (field, value) => setSavedState({ ...state, [field]: value });
+  const updateStep = (stepId, value) => setSavedState({
+    ...state,
+    steps: { ...state.steps, [stepId]: value },
+  });
+
+  return (
+    <section className="note-interaction note-internship-review" aria-labelledby={`${id}-title`}>
+      <header className="note-interaction__header">
+        <span>每周实习复盘</span>
+        <h3 id={`${id}-title`}>把一周的工作，慢慢沉淀成下一次求职的故事</h3>
+        <p>不需要一次写得很完整。先留下关键词，内容会自动保存在这台设备上。</p>
+      </header>
+
+      <label className="note-internship-review__bookend note-internship-review__bookend--start">
+        <span>这一周完成了什么？</span>
+        <textarea
+          rows="2"
+          value={state.completed}
+          placeholder="例如：完成了新功能用户行为分析，并在周会上分享发现。"
+          onChange={(event) => updateField("completed", event.target.value)}
+        />
+      </label>
+
+      <div className="note-internship-cycle" aria-label="从问题到结果的六步复盘循环">
+        <svg className="note-internship-cycle__path" viewBox="0 0 900 420" aria-hidden="true">
+          <defs>
+            <marker id={`${id}-arrow`} markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+          </defs>
+          <path d="M 170 98 H 438 H 715 Q 790 98 790 180 V 242 Q 790 322 715 322 H 445 H 175 Q 100 322 100 242 V 180 Q 100 98 170 98" markerEnd={`url(#${id}-arrow)`} />
+        </svg>
+        {INTERNSHIP_REVIEW_STEPS.map((step, index) => (
+          <label key={step.id} className={`note-internship-cycle__step note-internship-cycle__step--${index + 1}`}>
+            <span className="note-internship-cycle__number" aria-hidden="true">{index + 1}</span>
+            <strong>{step.label}</strong>
+            <textarea
+              rows="3"
+              value={state.steps[step.id]}
+              aria-label={step.label}
+              placeholder="记下关键词…"
+              onChange={(event) => updateStep(step.id, event.target.value)}
+            />
+          </label>
+        ))}
+      </div>
+
+      <label className="note-internship-review__bookend note-internship-review__bookend--finish">
+        <span>这件事以后可以怎样写进 Resume 或 STAR Story？</span>
+        <textarea
+          rows="3"
+          value={state.story}
+          placeholder="试着串起来：在什么背景下，我为了解决什么问题，采取了哪些行动，最后带来了什么结果？"
+          onChange={(event) => updateField("story", event.target.value)}
+        />
+      </label>
+    </section>
+  );
+}
+
 export default function NoteInteractiveBlock({ configText }) {
   const config = useMemo(() => {
     try {
@@ -460,5 +543,6 @@ export default function NoteInteractiveBlock({ configText }) {
   if (config.type === "profile-kit") return <ProfileKitLab id={config.id} />;
   if (config.type === "offer-comparison") return <OfferComparisonLab id={config.id} />;
   if (config.type === "application-funnel") return <ApplicationFunnelLab id={config.id} />;
+  if (config.type === "internship-review-cycle") return <InternshipReviewCycleLab id={config.id} />;
   return null;
 }

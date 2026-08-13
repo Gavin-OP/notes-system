@@ -525,6 +525,133 @@
   font-size: 18px;
 }
 
+.note-internship-review {
+  overflow: hidden;
+}
+
+.note-internship-review__bookend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 15px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-fill-quaternary, #f7f7f7);
+}
+
+.note-internship-review__bookend > span {
+  color: var(--ns-color-text);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.note-internship-review__bookend--start {
+  border-left: 4px solid var(--ns-color-primary);
+}
+
+.note-internship-review__bookend--finish {
+  border-left: 4px solid #65a987;
+}
+
+.note-internship-review textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  resize: vertical;
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-sm);
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-text);
+  padding: 9px 10px;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.note-internship-review textarea::placeholder {
+  color: var(--ns-color-text-tertiary);
+}
+
+.note-internship-review textarea:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
+}
+
+.note-internship-cycle {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-areas:
+    "one two three"
+    "six five four";
+  gap: 54px 24px;
+  margin: 20px 0;
+  padding: 22px 12px;
+}
+
+.note-internship-cycle__path {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.note-internship-cycle__path > path {
+  fill: none;
+  stroke: var(--ns-color-primary);
+  stroke-width: 3;
+  stroke-dasharray: 7 8;
+  opacity: 0.38;
+}
+
+.note-internship-cycle__path marker path {
+  fill: var(--ns-color-primary);
+  opacity: 0.75;
+}
+
+.note-internship-cycle__step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-color-bg-container);
+  box-shadow: var(--ns-shadow-sm);
+}
+
+.note-internship-cycle__step--1 { grid-area: one; }
+.note-internship-cycle__step--2 { grid-area: two; }
+.note-internship-cycle__step--3 { grid-area: three; }
+.note-internship-cycle__step--4 { grid-area: four; }
+.note-internship-cycle__step--5 { grid-area: five; }
+.note-internship-cycle__step--6 { grid-area: six; }
+
+.note-internship-cycle__step > strong {
+  min-height: 38px;
+  color: var(--ns-color-text);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.note-internship-cycle__number {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ns-color-primary-bg, #eef5ff);
+  color: var(--ns-color-primary);
+  font-size: 12px;
+  font-weight: 800;
+}
+
 @media (max-width: 760px) {
   .note-interaction {
     padding: 18px;
@@ -561,6 +688,32 @@
   .note-interaction__summary {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .note-internship-cycle {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 4px 0;
+  }
+
+  .note-internship-cycle__path {
+    display: none;
+  }
+
+  .note-internship-cycle__step {
+    min-height: auto;
+  }
+
+  .note-internship-cycle__step:not(:last-child)::after {
+    position: absolute;
+    bottom: -12px;
+    left: 27px;
+    width: 2px;
+    height: 12px;
+    background: var(--ns-color-primary);
+    content: "";
+    opacity: 0.35;
   }
 }
 
