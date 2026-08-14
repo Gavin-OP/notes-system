@@ -2,7 +2,7 @@
 title: Coffee Chat / Networking
 slug: coffee-chat.md
 order: 7
-tags: [秋招, Coffee Chat, Networking, Informational Interview]
+tags: [求職, Coffee Chat, Networking, Informational Interview]
 ---
 
 # Coffee Chat / Networking

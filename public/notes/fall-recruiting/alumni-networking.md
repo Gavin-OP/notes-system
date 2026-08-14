@@ -2,7 +2,7 @@
 title: Coffee Chat / Networking
 slug: alumni-networking.md
 order: 7
-tags: [秋招, Coffee Chat, Networking]
+tags: [求职, Coffee Chat, Networking]
 display: false
 ---
 

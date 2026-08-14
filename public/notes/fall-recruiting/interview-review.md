@@ -2,7 +2,7 @@
 title: 面试复盘
 slug: interview-review.md
 order: 11
-tags: [秋招, 面试, 复盘, 反馈]
+tags: [求职, 面试, 复盘, 反馈]
 ---
 
 # 面试复盘

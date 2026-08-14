@@ -2,7 +2,7 @@
 title: 在線測試準備
 slug: assessment-preparation.md
 order: 9
-tags: [秋招, Online Test, VI, 性格測試, Assessment]
+tags: [求職, Online Test, VI, 性格測試, Assessment]
 ---
 
 # 在線測試準備

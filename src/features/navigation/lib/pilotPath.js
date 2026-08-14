@@ -73,7 +73,7 @@ export const EXPERIENCE_LEVEL_OPTIONS = [
 ];
 
 export const SKILL_BRANCH_OPTIONS = [
-  { value: "technical", label: "LeetCode" },
+  { value: "technical", label: "额外技能包" },
 ];
 
 export const INTERVIEW_BRANCH_OPTIONS = [
@@ -175,7 +175,7 @@ function pathNode(id, title, slug, order, anchor = "", metadata = {}) {
     status: "planned",
     metadata: {
       pilot_official_path: true,
-      subject_title: "秋招准备",
+      subject_title: "求职准备",
       estimated_order: order,
       ...metadata,
     },
@@ -344,10 +344,6 @@ function buildPilotNodes(profile = {}) {
   });
   nodes.push(pathNode("interview-review", "面试复盘", "interview-review", 11));
 
-  if (skillBranches.has("technical")) {
-    nodes.push(pathNode("technical-skills", "LeetCode", "leetcode-practice", 4, "", { path_relation: "branch" }));
-  }
-
   if (profile.certificate_interest || certificateBranches.size > 0) {
     nodes.push(pathNode("finance-skills", "金融证书怎么选", "finance-knowledge-certificates", 4, "", { path_relation: "branch" }));
     FALL_RECRUITING_CERTIFICATES.forEach((certificate) => {
@@ -508,7 +504,7 @@ function buildPilotEdges(nodes) {
     const branchReturn = branchAnchor === "market" ? "profile-preparation" : "job-search";
     connect(branchAnchor, "skill-supplement", "branches_to");
 
-    const supplementIds = ["technical-skills", "finance-skills"]
+    const supplementIds = ["finance-skills"]
       .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
     supplementIds.forEach((nodeId) => connect("skill-supplement", nodeId, "branches_to"));
 
@@ -517,12 +513,9 @@ function buildPilotEdges(nodes) {
       .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
     certificateIds.forEach((nodeId) => connect("finance-skills", nodeId, "branches_to"));
 
-    const terminalIds = [
-      ...(nodeIds.has("pilot:technical-skills") ? ["technical-skills"] : []),
-      ...(certificateIds.length > 0
-        ? certificateIds
-        : nodeIds.has("pilot:finance-skills") ? ["finance-skills"] : []),
-    ];
+    const terminalIds = certificateIds.length > 0
+      ? certificateIds
+      : nodeIds.has("pilot:finance-skills") ? ["finance-skills"] : ["skill-supplement"];
     terminalIds.forEach((nodeId) => connect(nodeId, branchReturn, "converges_to"));
   }
 
@@ -600,7 +593,7 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
   return {
     ...draft,
     path_id: draft?.path_id || "primary",
-    learning_set_name: "秋招准备 Path",
+    learning_set_name: "求职准备 Path",
     learning_set_note: `当前阶段：${PILOT_STAGE_OPTIONS.find((item) => item.value === profile.stage)?.label}`,
     goal_title: "准备下一轮校园招聘",
     metadata: {

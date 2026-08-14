@@ -2,12 +2,12 @@
 title: LeetCode
 slug: leetcode-practice.md
 order: 12
-tags: [秋招, LeetCode, SQL, 技術面試]
+tags: [求職, LeetCode, SQL, 技術面試]
 ---
 
 # LeetCode
 
-LeetCode 不只包含算法，也可以直接練習 SQL。是否需要這條分支，先看目標崗位的 JD、在線測試與面試説明。“秋招都要刷題”聽起來聲勢浩大，實際還是具體崗位説了算。
+LeetCode 不只包含算法，也可以直接練習 SQL。是否需要這條分支，先看目標崗位的 JD、在線測試與面試説明。“求職都要刷題”聽起來聲勢浩大，實際還是具體崗位説了算。
 
 ## 先判斷崗位會考什麼
 

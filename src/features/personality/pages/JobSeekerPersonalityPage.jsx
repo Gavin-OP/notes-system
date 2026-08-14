@@ -206,7 +206,7 @@ export default function JobSeekerPersonalityPage() {
         <div className="personality-poster-top"><span>求职者人格测试</span><small>MY JOB SEEKER PERSONA</small></div>
         <div className="personality-poster-heading"><PersonalityMark type={resultKey} className="personality-poster-mark" /><div><span>我的求职者人格是 · {result.typeLabel}</span><h2>{result.name}</h2><p>{result.eyebrow}</p></div></div>
         <div className="personality-poster-summary">{resultParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
-        <div className="personality-poster-cards"><div><span>我的秋招 Buff</span><strong>{result.buff}</strong></div><div><span>我的隐藏技能</span><strong>{result.skill}</strong></div><div><span>我的秋招提醒</span><strong>{result.watch}</strong></div></div>
+        <div className="personality-poster-cards"><div><span>我的求职 Buff</span><strong>{result.buff}</strong></div><div><span>我的隐藏技能</span><strong>{result.skill}</strong></div><div><span>我的求职提醒</span><strong>{result.watch}</strong></div></div>
         <div className="personality-poster-footer"><div><strong>你是哪一种求职者人格？</strong><span>{publicTestUrl}</span></div>{qrDataUrl && <img src={qrDataUrl} alt="求职者人格测试二维码" />}</div>
       </div>
     </main>}

@@ -2,7 +2,7 @@
 title: Offer 判断与求职复盘
 slug: offer-review.md
 order: 14
-tags: [秋招, Offer, 求职复盘, 双向选择]
+tags: [求职, Offer, 求职复盘, 双向选择]
 ---
 
 <a id="concept-offer-review"></a>

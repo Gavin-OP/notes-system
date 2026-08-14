@@ -64,13 +64,13 @@ export const QUIZ_ITEMS = [
   ]),
   personality("assessment", "收到招聘流程中的在线测试邀请，你会？", "它可能是能力测试、限时笔试或情境判断。", [
     { label: "先查清题目形式，找几道样题练手", scores: ["researcher", "radar"] },
-    { label: "感觉麻木，秋招至今已经做过不下10套测评题", scores: ["gardener", "protector"] },
+    { label: "感觉麻木，求职至今已经做过不下 10 套测评题", scores: ["gardener", "protector"] },
     { label: "先做再说，相信第一反应", scores: ["engine", "koi"] },
     { label: "认真准备，争取完美符合公司价值观", scores: ["alchemist", "explorer"] },
   ]),
-  pathSingle("leetcode", "leetcode", "LeetCode 要不要加入这局？", "只有目标岗位确实会考算法、代码或 SQL 时，它才需要进入 Path。", [
-    { value: true, label: "要，JD 或流程已经明确会考" },
-    { value: false, label: "暂时不用，先把时间留给更相关的准备" },
+  pathSingle("leetcode", "leetcode", "你的目标岗位需要额外准备一份技能包吗？", "可能是刷题、岗位知识、数据工具、竞赛或作品证明。先根据 JD 和招聘流程判断。", [
+    { value: true, label: "需要，把技能补充导航加入 Path，我再按岗位选择" },
+    { value: false, label: "暂时没有明确要求，先不额外加码" },
   ]),
   personality("failure", "面试官问“你最大的失败是什么？”时，你的脑内第一反应？", "这里不用 STAR，选一个就行。", [
     { label: "挑一个真正让我学到东西的经历", scores: ["researcher", "gardener"] },
@@ -88,7 +88,7 @@ export const QUIZ_ITEMS = [
     { value: "established", label: "手上已有实习或项目，先把这些故事打磨好" },
   ]),
   pathSingle("certificates", "certificate_interest", "金融证书（CPA、CFA、FRM）要不要加入你的准备工作？", "这题只决定是否加入金融证书概览，不会替你报名，也不会擅自选择具体证书。", [
-    { value: "skip", pathValue: false, label: "秋招已经很累了，没精力学习啦", scores: ["protector", "gardener"] },
+    { value: "skip", pathValue: false, label: "求职已经很累了，没精力学习啦", scores: ["protector", "gardener"] },
     { value: "learn", pathValue: true, label: "想认真看看，至少先搞懂它们分别有什么用", scores: ["researcher", "radar"] },
     { value: "consider", pathValue: true, label: "已经报名了，主打一个骑虎难下", scores: ["engine", "koi"] },
     { value: "later", pathValue: false, label: "先把眼前的申请交了，证书以后再议", scores: ["explorer", "alchemist"] },
@@ -170,7 +170,7 @@ export function getJobTiPathSummary(responses = {}) {
       : responses.profile_competitiveness === "unsure" ? "准备重点：先梳理和呈现现有经历。"
         : "材料与面试保持基础准备顺序。",
     responses.experience_level === "limited" ? "经历支线：加入商赛、Kaggle 和课程项目打磨。" : "先打磨已有实习和项目。",
-    responses.leetcode ? "LeetCode 已加入技能准备。" : "目前不额外加入 LeetCode。",
+    responses.leetcode ? "技能补充导航已加入 Path，可按岗位选择题库、工具、竞赛或资格。" : "目前不额外加入技能补充支线。",
     responses.certificates === true || ["learn", "consider"].includes(responses.certificates) ? "先了解金融证书，再决定是否投入。" : "目前不把金融证书放进主线。",
     interviews.length ? `面试专项：${interviews.join("、")}。` : "暂时先从综合面试准备开始。",
   ];

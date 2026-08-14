@@ -2,7 +2,7 @@
 title: 项目集
 slug: portfolio.md
 order: 5
-tags: [秋招, 项目集, Portfolio]
+tags: [求职, 项目集, Portfolio]
 ---
 
 # 项目集

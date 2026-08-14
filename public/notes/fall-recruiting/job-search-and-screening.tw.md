@@ -2,7 +2,7 @@
 title: 尋找與篩選合適崗位
 slug: job-search-and-screening.md
 order: 6
-tags: [秋招, 崗位搜索, 崗位篩選, JD]
+tags: [求職, 崗位搜索, 崗位篩選, JD]
 ---
 
 <a id="concept-job-search-and-screening"></a>

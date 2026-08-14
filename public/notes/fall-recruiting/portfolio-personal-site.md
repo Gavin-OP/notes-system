@@ -2,7 +2,7 @@
 title: 项目集与个人主页
 slug: portfolio-personal-site.md
 order: 5
-tags: [秋招, 项目集, 个人主页, Portfolio]
+tags: [求职, 项目集, 个人主页, Portfolio]
 display: false
 ---
 

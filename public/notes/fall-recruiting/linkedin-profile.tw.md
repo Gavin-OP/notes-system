@@ -2,7 +2,7 @@
 title: LinkedIn
 slug: linkedin-profile.md
 order: 5
-tags: [秋招, LinkedIn, Profile]
+tags: [求職, LinkedIn, Profile]
 ---
 
 # LinkedIn

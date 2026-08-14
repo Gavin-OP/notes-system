@@ -1,26 +1,50 @@
 ---
-title: Filling Skill Gaps
+title: Skill Supplements: Choose a Role-Specific Toolkit
 slug: skill-supplement.md
 order: 3.5
-tags: [job search, skills, LeetCode, finance certificates]
+tags: [job search, skills, LeetCode, data, competitions, GitHub, professional qualifications]
 ---
 
-# Filling Skill Gaps
+# Skill Supplements: Choose a Role-Specific Toolkit
 
-Skill-building is a supporting track in your job-search Path. It can run alongside role research and application materials, but it does not need to become a universal checklist.
+Skill-building is a supporting track in your Path. Coding questions, banking interview guides, competitions, data tools, and professional qualifications can all sit here, but they are different kinds of investment—not badges that every candidate needs to collect.
 
-## Start with signals from the role
+## Identify the evidence you actually need
 
-The most useful gaps to address usually appear repeatedly in job descriptions, online tests, or interview feedback. Technical and data roles may assess algorithms or SQL, while some finance roles draw on investment, risk, or accounting knowledge. Add a branch when the signal is clear and recurring.
+| Type | What it often addresses | Evidence it can create |
+| --- | --- | --- |
+| Screening practice | A defined test or interview format | Practice record, knowledge framework, interview performance |
+| Tools and projects | Ability to solve problems with common tools | GitHub project, analysis, working code |
+| Competitions | Project and teamwork evidence when experience is limited | Deliverable, ranking, reflection, team story |
+| Professional qualifications | Structured domain learning or a formal career requirement | Exam progress, knowledge framework, qualification |
 
-## LeetCode and finance certificates solve different problems
+Look for repeated signals in the JD, assessment instructions, interview process, and real feedback. Opening a new learning track because everybody else appears to be studying it is an excellent way to practise having too many browser tabs.
 
-- **LeetCode** is useful for algorithm, SQL, and other clearly defined technical assessments.
-- **Finance certificates** are longer-term choices that need separate evaluation. CFA, FRM, and HKICPA QP cover different knowledge and career paths. Consider the roles you want, examination windows, time commitment, and eligibility before registering.
+## Screening and interview question banks
 
-You do not need to open every branch at once. Start with what is closest to your next application, assessment, or interview, then add more when real feedback points you there.
+- **LeetCode** is useful when a process clearly assesses algorithms, data structures, coding, or SQL. [LeetCode SQL 50](https://leetcode.com/studyplan/top-sql-50/) is one starting point; the role should determine whether algorithm practice belongs in your plan.
+- **Investment-banking “400 Questions”, green books, and similar guides** are third-party preparation materials for particular interview formats, not universal finance skills. Confirm the current process and use authorised publications, university resources, or employer guidance. This platform does not link to unauthorised copies.
 
-## Decide whether to keep investing
+## Data, machine learning, and project tools
 
-After some practice, revisit three questions: will the role actually use this skill, can you turn it into visible or assessable evidence, and is it crowding out more urgent applications or interview preparation? Those answers can help you continue, pause, or choose a more direct way to prepare.
+- **pandas / NumPy:** common tools for tabular data and scientific computing. Start with [pandas Getting Started](https://pandas.pydata.org/docs/getting_started/index.html) and [NumPy Learn](https://numpy.org/learn/), then apply them to a real data question.
+- **Machine-learning algorithms:** build a framework around data preparation, model choice, evaluation, and common pitfalls instead of memorising model names. The [scikit-learn User Guide](https://scikit-learn.org/stable/user_guide.html) is a useful official index.
+- **Git and GitHub:** Git records changes and supports collaboration; GitHub can present public projects, READMEs, and contribution history. [Pro Git](https://git-scm.com/book/en/v2) and [GitHub Skills](https://skills.github.com/) are first-party starting points. A green contribution chart is not a hiring guarantee; a clear, working project is usually easier to discuss.
 
+## Competitions and project evidence
+
+- **Business competitions** can build research, judgement, presentation, and teamwork evidence. Check whether the problem and deliverable relate to the target role before investing.
+- **Kaggle** supports data and machine-learning practice. Public notebooks, method notes, and reflections can become portfolio evidence. Use the official [Kaggle Competitions](https://www.kaggle.com/competitions) catalogue for current rules.
+- **Course projects** can often be improved instead of replaced. Add the problem context, method choice, validation, and a clear explanation before rushing into another activity.
+
+## Finance and professional qualifications
+
+Qualifications operate on a longer horizon. Check whether the role recognises them, whether the syllabus fills a real gap, how the exam window affects applications, and whether you meet eligibility or experience requirements.
+
+- Investment and research routes may consider **CFA**; risk routes may consider **FRM**; accounting routes may consider **HKICPA QP, CPA, or [ACCA](https://www.accaglobal.com/gb/en/qualifications/glance/acca/overview.html)**.
+- Quantitative-finance candidates may encounter the **[CQF](https://www.cqf.com/about-cqf/qualification/overview)**. Evaluate its content, cost, mathematical prerequisites, and relevance separately from short-term interview practice.
+- Use [Choosing a Finance Qualification](./finance-knowledge-certificates.md) to compare the existing certificate branches.
+
+## Make one decision at a time
+
+Ask how the target role is most likely to assess you next. Practise if a coding test is coming; build a project or enter a relevant competition if evidence is missing; investigate a qualification when the career path genuinely values it. With no clear signal, keeping time for role research, materials, and real applications is a sensible choice.

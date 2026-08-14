@@ -224,7 +224,6 @@ describe("fall recruiting constellation", () => {
       ["pilot:personal-site", "pilot:profile-preparation"],
       ["pilot:networking", "pilot:job-search"],
       ["pilot:skill-supplement", "pilot:market"],
-      ["pilot:technical-skills", "pilot:skill-supplement"],
       ["pilot:finance-skills", "pilot:skill-supplement"],
       ["pilot:certificate-cfa", "pilot:finance-skills"],
     ]);
@@ -242,23 +241,19 @@ describe("fall recruiting constellation", () => {
     );
   });
 
-  it("builds a stable non-interactive graph without cross-linking LeetCode to certificates", () => {
+  it("builds a stable non-interactive graph with a single skill-supplement overview", () => {
     const draft = buildPersonalizedPilotDraft({}, profile, new Date("2026-08-05T00:00:00Z"));
     const first = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
     const second = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
     expect(first).toEqual(second);
     expect(first.nodes.every((node) => node.draggable === false && node.connectable === false)).toBe(true);
-    expect(first.edges.some((edge) => edge.source === "pilot:technical-skills" && edge.target.includes("certificate"))).toBe(false);
+    expect(first.nodes.some((node) => node.id === "pilot:technical-skills")).toBe(false);
     expect(first.edges).toContainEqual(expect.objectContaining({
       source: "pilot:market",
       target: "pilot:skill-supplement",
       data: expect.objectContaining({ routeStyle: "midpoint-drop" }),
     }));
-    expect(first.edges).toContainEqual(expect.objectContaining({
-      source: "pilot:skill-supplement",
-      target: "pilot:technical-skills",
-    }));
-    expect(first.edges.some((edge) => edge.source === "pilot:interview-review" && ["pilot:technical-skills", "pilot:finance-skills"].includes(edge.target))).toBe(false);
+    expect(first.edges.some((edge) => edge.source === "pilot:interview-review" && edge.target === "pilot:finance-skills")).toBe(false);
     const market = first.nodes.find((node) => node.id === "pilot:market");
     const profilePreparation = first.nodes.find((node) => node.id === "pilot:profile-preparation");
     const skillSupplement = first.nodes.find((node) => node.id === "pilot:skill-supplement");
@@ -286,7 +281,6 @@ describe("fall recruiting constellation", () => {
     expect(levelById.get("pilot:market")).toBe(0);
     expect(levelById.get("pilot:skill-supplement")).toBe(0);
     expect(levelById.get("pilot:resume")).toBe(1);
-    expect(levelById.get("pilot:technical-skills")).toBe(1);
     expect(levelById.get("pilot:finance-skills")).toBe(1);
     expect(levelById.get("pilot:certificate-cfa")).toBe(2);
     expect(levelById.get("pilot:certificate-frm")).toBe(2);

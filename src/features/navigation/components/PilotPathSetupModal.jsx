@@ -371,7 +371,7 @@ function PilotPathSetupWizard({ initialProfile, pending = false, onCancel, onSub
       <div className={`pilot-path-wizard${embedded ? " pilot-path-wizard--embedded" : ""}`}>
         <header className="pilot-path-wizard__progress">
           <div className="pilot-path-wizard__progress-meta">
-            <span>调整你的秋招 Path</span>
+            <span>调整你的求职 Path</span>
             <span aria-live="polite">
               第 {currentStepIndex + 1} 题 / 共 {questions.length} 题
             </span>

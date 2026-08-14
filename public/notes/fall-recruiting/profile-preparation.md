@@ -2,7 +2,7 @@
 title: 准备简历与 Profile
 slug: profile-preparation.md
 order: 4
-tags: [秋招, 简历, Profile, 求职材料]
+tags: [求职, 简历, Profile, 求职材料]
 ---
 
 # 准备简历与 Profile

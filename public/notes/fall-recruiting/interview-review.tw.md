@@ -2,7 +2,7 @@
 title: 面試復盤
 slug: interview-review.md
 order: 11
-tags: [秋招, 面試, 復盤, 反饋]
+tags: [求職, 面試, 復盤, 反饋]
 ---
 
 # 面試復盤

@@ -2,7 +2,7 @@
 title: HKICPA QP 是否适合我
 slug: hkicpa-certificate.md
 order: 13
-tags: [秋招, 会计, HKICPA, QP]
+tags: [求职, 会计, HKICPA, QP]
 ---
 
 # HKICPA QP 是否适合我

@@ -2,7 +2,7 @@
 title: 綜合面試準備
 slug: interview-preparation.md
 order: 10
-tags: [秋招, 面試, Motivation, Behavior, Technical, STAR]
+tags: [求職, 面試, Motivation, Behavior, Technical, STAR]
 ---
 
 <a id="concept-interview-preparation"></a>

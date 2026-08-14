@@ -19,7 +19,7 @@ function SubjectOverviewPage() {
 
   return (
     <AppPageShell
-      backLabel={FULL_PRODUCT_ENABLED ? t("subjectOverview.backToDatabase", "Back to Knowledge Database") : "返回秋招学习"}
+      backLabel={FULL_PRODUCT_ENABLED ? t("subjectOverview.backToDatabase", "Back to Knowledge Database") : "返回求职学习"}
       onBack={() => navigate(FULL_PRODUCT_ENABLED ? "/subjects" : "/")}
       showSiteFooter={FULL_PRODUCT_ENABLED}
       contentWidth="wide"

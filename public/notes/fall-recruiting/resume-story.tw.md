@@ -2,7 +2,7 @@
 title: 簡歷打磨與經歷表達
 slug: resume-story.md
 order: 2
-tags: [秋招, 簡歷, STAR, LinkedIn]
+tags: [求職, 簡歷, STAR, LinkedIn]
 ---
 
 <a id="concept-resume-story"></a>

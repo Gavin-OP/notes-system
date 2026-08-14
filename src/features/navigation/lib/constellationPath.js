@@ -31,7 +31,6 @@ const INTERVIEW_CHILD_IDS = [
 ];
 
 const SKILL_CHILD_IDS = [
-  "pilot:technical-skills",
   "pilot:finance-skills",
 ];
 

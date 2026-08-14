@@ -2,7 +2,7 @@
 title: 投递与流程管理
 slug: application-communication.md
 order: 8
-tags: [秋招, 网申, 邮件沟通, 流程管理]
+tags: [求职, 网申, 邮件沟通, 流程管理]
 ---
 
 <a id="concept-application-communication"></a>

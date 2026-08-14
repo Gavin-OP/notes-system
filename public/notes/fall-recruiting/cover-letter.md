@@ -2,7 +2,7 @@
 title: Cover Letter
 slug: cover-letter.md
 order: 5
-tags: [秋招, Cover Letter, 求职信]
+tags: [求职, Cover Letter, 求职信]
 ---
 
 # Cover Letter

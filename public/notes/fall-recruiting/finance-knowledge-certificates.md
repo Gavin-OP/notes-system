@@ -2,7 +2,7 @@
 title: 金融证书怎么选
 slug: finance-knowledge-certificates.md
 order: 12
-tags: [秋招, 金融知识, CFA, HKICPA, FRM]
+tags: [求职, 金融知识, CFA, HKICPA, FRM]
 ---
 
 # 金融证书怎么选

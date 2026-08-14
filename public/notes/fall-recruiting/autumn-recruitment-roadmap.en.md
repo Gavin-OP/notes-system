@@ -20,6 +20,16 @@ Recruitment can look like one long list of deadlines. In practice, several timel
 
 Treat this as a reference rather than a universal countdown. Company career pages and university career platforms are the most reliable sources for current dates.
 
+## How to plan
+
+Start with three practical questions: how long is left before you hope to start work, what can your current energy realistically support, and how early does the target recruitment process begin? A plan grounded in time and capacity is easier to adjust than a plan built around doing everything at once.
+
+If you hope to start a job or graduate programme next year, begin checking recruitment windows now and use roughly one year as a conservative research-and-preparation horizon. Some structured programmes open far ahead of the start date and may close only a few months later. This is not a universal rule for every role, so verify the current dates on each employer's official careers site.
+
+If graduation or full-time work is still further away, use the extra runway to explore through internships, coursework, societies, or real collaborative projects. Early exposure helps you learn what the work is actually like and gradually builds evidence for later applications, instead of leaving direction, experience, and interview preparation to the final months.
+
+Energy is part of the plan too. Protect the work closest to the next real opportunity—an approaching deadline, the material you are currently improving, or an upcoming interview. Longer-term skills and optional projects can move forward during steadier periods. Your Path can expand or contract with your capacity.
+
 ## Decide what is worth pursuing
 
 Build direction from four questions: What work or environment are you willing to choose? What evidence already shows where you fit? Where could the role lead? Which gaps are realistic to close now? A role can be attractive because of the work, industry, team, culture, or location—not only its title.

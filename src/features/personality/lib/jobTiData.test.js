@@ -101,6 +101,21 @@ describe("JobTI questionnaire model", () => {
     });
   });
 
+  it("uses the legacy leetcode field to add the general skill-supplement overview", () => {
+    const profile = buildJobTiPathProfile({ leetcode: true });
+    const draft = buildPersonalizedPilotDraft({}, profile);
+
+    expect(profile.skill_branches).toEqual(["technical"]);
+    expect(draft.nodes).toEqual(expect.arrayContaining([
+      expect.objectContaining({ node_id: "pilot:skill-supplement", note_url: "/note/fall-recruiting/skill-supplement.md" }),
+    ]));
+    expect(draft.nodes.some((node) => node.node_id === "pilot:technical-skills")).toBe(false);
+    expect(draft.edges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ source: "pilot:market", target: "pilot:skill-supplement", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:skill-supplement", target: "pilot:profile-preparation", relation: "converges_to" }),
+    ]));
+  });
+
   it("keeps every finance-certificate answer visually distinct", () => {
     const question = QUIZ_ITEMS.find((item) => item.id === "certificates");
     expect(new Set(question.options.map((option) => option.value)).size).toBe(question.options.length);

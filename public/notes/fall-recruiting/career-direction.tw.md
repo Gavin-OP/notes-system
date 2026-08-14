@@ -2,7 +2,7 @@
 title: 明確方向與現實限制
 slug: career-direction.md
 order: 2
-tags: [秋招, 求職方向, 崗位定位]
+tags: [求職, 求職方向, 崗位定位]
 display: false
 ---
 

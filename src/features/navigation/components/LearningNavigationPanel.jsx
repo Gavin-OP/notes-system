@@ -1138,7 +1138,7 @@ const LearningNavigationPanel = ({
               <div className="learning-nav__pilot-summary-heading">
                 <div>
                   <span className="learning-nav__pilot-eyebrow">你的 Timeline</span>
-                  <strong>下一轮秋招</strong>
+                  <strong>下一轮求职准备</strong>
                 </div>
                 {typeof onConfigurePath === "function" ? (
                   <button
@@ -1175,7 +1175,7 @@ const LearningNavigationPanel = ({
             <div className="learning-nav__path-column">
               {hasPersonalizedPath ? (
                 isMobile
-                  ? renderSteps(personalizedSteps, "秋招准备", {
+                  ? renderSteps(personalizedSteps, "求职准备", {
                       allowRemove: pathEditMode,
                       allowEdit: false,
                       showRelation: false,

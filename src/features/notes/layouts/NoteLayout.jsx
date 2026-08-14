@@ -206,7 +206,7 @@ function normalizeCompletedNoteUrlsFromProfile(profilePayload) {
 function buildPilotLearningPathDraft() {
   return buildDefaultPilotDraft({
     path_id: "primary",
-    learning_set_name: "秋招准备 Path",
+    learning_set_name: "求职准备 Path",
     learning_set_note: "从定位、简历和岗位搜索，到沟通、面试与 Offer 复盘。",
     goal_type: "custom",
     goal_title: "准备下一轮校园招聘",
@@ -786,7 +786,7 @@ const NoteLayout = () => {
       const nextDraft = buildPersonalizedPilotDraft(learningPathDraft, profile);
       const saved = await persistLearningPathDraft(
         nextDraft,
-        "你的秋招 Path 与 Timeline 已更新。",
+        "你的求职 Path 与 Timeline 已更新。",
         "Personalized fall recruiting path",
       );
       if (saved) setPilotPathSetupOpen(false);
@@ -1609,7 +1609,7 @@ const NoteLayout = () => {
               {isMobile ? (
                 <div className="note-layout__sider-mobile-controls">
                   <div className="note-layout__sider-mobile-heading">
-                    <span>秋招准备</span>
+                    <span>求职准备</span>
                     <strong>你的 Path</strong>
                   </div>
                   <div className="note-layout__sider-mobile-actions">

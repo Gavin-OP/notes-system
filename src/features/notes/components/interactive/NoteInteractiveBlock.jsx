@@ -47,7 +47,7 @@ function CertificateComparisonLab({ id }) {
       <header className="note-interaction__header">
         <span>互动比较</span>
         <h3 id={`${id}-title`}>先判断哪些证书值得继续了解</h3>
-        <p>选择只会保存在这台设备上；最终是否加入 Path，请在“调整你的秋招 Path”中确认。</p>
+        <p>选择只会保存在这台设备上；最终是否加入 Path，请在“调整你的求职 Path”中确认。</p>
       </header>
       <div className="note-certificate-grid">
         {FALL_RECRUITING_CERTIFICATES.map((certificate) => {
