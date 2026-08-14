@@ -39,11 +39,38 @@ Look for repeated signals in the JD, assessment instructions, interview process,
 
 ## Finance and professional qualifications
 
-Qualifications operate on a longer horizon. Check whether the role recognises them, whether the syllabus fills a real gap, how the exam window affects applications, and whether you meet eligibility or experience requirements.
+Certificate names can create the feeling that everybody else has one and you are missing something. CFA, FRM, and HKICPA QP cover different knowledge, professional routes, and eligibility requirements. Start with whether the target role will use the qualification.
+
+```note-interactive
+{"type":"certificate-comparison","id":"fall-recruiting-certificate-comparison"}
+```
+
+### What are they broadly designed to cover?
+
+| Route | Main emphasis | Commonly related directions |
+| --- | --- | --- |
+| CFA | Investment analysis, valuation, asset classes, portfolio management, and ethics | Research, asset management, wealth management, and some investment roles |
+| FRM | Identifying and managing market, credit, operational, and liquidity risk | Risk management, model validation, market and credit risk, and risk consulting |
+| HKICPA QP | Accounting, financial reporting, business and professional judgement, plus practical experience | Hong Kong audit, accounting, financial reporting, and related professional services |
+
+This table describes the knowledge emphasis; it does not mean every related role requires the qualification. Current JDs, employer training routes, and official eligibility rules take priority.
+
+### Work backwards from the recruitment task
+
+Separate knowledge used on the job, content assessed during recruitment, formal licence or qualification requirements, preferred signals, and subjects you simply want to learn over the long term. If the role currently needs SQL, accounting fundamentals, industry research, client communication, or a relevant project, that evidence may be more direct. A certificate does not need to carry the entire burden of proving that you belong in finance.
+
+### Compare the full investment
+
+Look beyond the registration fee to exam levels, preparation time, testing windows, language requirements, later work experience, membership or continuing-development obligations, and the effect on applications and interviews.
+
+If you decide to study, turn the learning into role evidence: a company analysis, valuation model, risk case, financial-report analysis, or business briefing. The knowledge can support your job search before the full qualification is complete.
+
+### What to verify next
+
+Use each certificate's individual note to check relevant roles, exam structure, eligibility, experience requirements, and the next official window. Dates, fees, and policies can change, so the official provider remains authoritative. Deferring registration is also valid: you can study the most relevant modules first and revisit the full route when your direction is clearer.
 
 - Investment and research routes may consider **CFA**; risk routes may consider **FRM**; accounting routes may consider **HKICPA QP, CPA, or [ACCA](https://www.accaglobal.com/gb/en/qualifications/glance/acca/overview.html)**.
 - Quantitative-finance candidates may encounter the **[CQF](https://www.cqf.com/about-cqf/qualification/overview)**. Evaluate its content, cost, mathematical prerequisites, and relevance separately from short-term interview practice.
-- Use [Choosing a Finance Qualification](./finance-knowledge-certificates.md) to compare the existing certificate branches.
 
 ## Make one decision at a time
 

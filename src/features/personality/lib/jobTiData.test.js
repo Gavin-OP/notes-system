@@ -159,7 +159,6 @@ describe("JobTI questionnaire model", () => {
     [
       "pilot:career-exploration",
       "pilot:networking",
-      "pilot:networking-event",
       "pilot:application-batch-planning",
       "pilot:company-research",
       "pilot:resume-positioning",
@@ -168,5 +167,6 @@ describe("JobTI questionnaire model", () => {
       "pilot:kaggle-competition",
       "pilot:course-project-polish",
     ].forEach((id) => expect(ids.has(id), `${id} should exist`).toBe(true));
+    expect(ids.has("pilot:networking-event")).toBe(false);
   });
 });

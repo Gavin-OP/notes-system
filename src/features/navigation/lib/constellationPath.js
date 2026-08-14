@@ -30,10 +30,6 @@ const INTERVIEW_CHILD_IDS = [
   "pilot:interview-special-situations",
 ];
 
-const SKILL_CHILD_IDS = [
-  "pilot:finance-skills",
-];
-
 const CERTIFICATE_CHILD_IDS = [
   "pilot:certificate-cfa",
   "pilot:certificate-frm",
@@ -69,7 +65,6 @@ const EARLY_EXPERIENCE_IDS = [
 
 const SEARCH_ROUTE_GROUPS = [
   ["pilot:networking", "pilot:referral"],
-  ["pilot:networking-event"],
   ["pilot:job-board"],
   ["pilot:company-career-page"],
   ["pilot:social-media-research"],
@@ -89,7 +84,6 @@ const DIRECTORY_PARENT_IDS = new Set([
   "pilot:job-search",
   "pilot:applications",
   "pilot:skill-supplement",
-  "pilot:finance-skills",
   "pilot:interviews",
 ]);
 
@@ -223,8 +217,7 @@ export function buildConstellationElements(draft, options = {}) {
         x: branchMidpointX - skillDimensions.width / 2,
         y: mainY + 92,
       });
-      placeDirectoryChildren(SKILL_CHILD_IDS, "pilot:skill-supplement");
-      placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:finance-skills", { xOffset: 44, startY: 78, gap: 16 });
+      placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:skill-supplement", { xOffset: 44, startY: 78, gap: 16 });
     } else if (skillNode) {
       const skillAnchor = marketPosition || profilePosition;
       if (skillAnchor) {
@@ -236,8 +229,7 @@ export function buildConstellationElements(draft, options = {}) {
           x: branchMidpointX - skillDimensions.width / 2,
           y: mainY + 92,
         });
-        placeDirectoryChildren(SKILL_CHILD_IDS, "pilot:skill-supplement");
-        placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:finance-skills", { xOffset: 44, startY: 78, gap: 16 });
+        placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:skill-supplement", { xOffset: 44, startY: 78, gap: 16 });
       }
     }
   }

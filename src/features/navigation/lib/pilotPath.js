@@ -22,11 +22,10 @@ export const PROFILE_BRANCH_OPTIONS = [
 ];
 
 export const SEARCH_BRANCH_OPTIONS = [
-  { value: "networking", label: "Coffee Chat / Networking" },
-  { value: "networking_event", label: "Networking Event" },
+  { value: "networking", label: "Coffee Chat / Networking（含 Networking Event）" },
   { value: "job_board", label: "Job Board" },
   { value: "company_career_page", label: "Company Career Page" },
-  { value: "social_media_research", label: "社媒平台 / Glassdoor" },
+  { value: "social_media_research", label: "社媒平台" },
   { value: "ai_job_search", label: "用 AI 辅助找岗位" },
 ];
 
@@ -285,12 +284,9 @@ function buildPilotNodes(profile = {}) {
 
   nodes.push(pathNode("job-search", "寻找和筛选岗位", "job-search-and-screening", 6));
 
-  if (socialSearch || searchBranches.has("networking")) {
+  if (socialSearch || searchBranches.has("networking") || searchBranches.has("networking_event")) {
     nodes.push(pathNode("networking", "Coffee Chat / Networking", "coffee-chat", 7, "", { path_relation: "branch" }));
     nodes.push(pathNode("referral", "Referral", "referral", 7, "", { path_relation: "branch" }));
-  }
-  if (socialSearch || searchBranches.has("networking_event")) {
-    nodes.push(pathNode("networking-event", "Networking Event", "coffee-chat", 7, "", { path_relation: "branch" }));
   }
   if (independentSearch || searchBranches.has("job_board")) {
     nodes.push(pathNode("job-board", "Job Board", "job-board", 7, "", { path_relation: "branch" }));
@@ -299,7 +295,7 @@ function buildPilotNodes(profile = {}) {
     nodes.push(pathNode("company-career-page", "Company Career Page", "company-career-page", 7, "", { path_relation: "branch" }));
   }
   if (independentSearch || searchBranches.has("social_media_research")) {
-    nodes.push(pathNode("social-media-research", "社媒平台 / Glassdoor", "job-board", 7, "", { path_relation: "branch" }));
+    nodes.push(pathNode("social-media-research", "社媒平台", "social-media-research", 7, "", { path_relation: "branch" }));
   }
   if (independentSearch || searchBranches.has("ai_job_search")) {
     nodes.push(pathNode("ai-job-search", "用 AI 辅助找岗位", "ai-job-search", 7, "", { path_relation: "branch" }));
@@ -345,7 +341,6 @@ function buildPilotNodes(profile = {}) {
   nodes.push(pathNode("interview-review", "面试复盘", "interview-review", 11));
 
   if (profile.certificate_interest || certificateBranches.size > 0) {
-    nodes.push(pathNode("finance-skills", "金融证书怎么选", "finance-knowledge-certificates", 4, "", { path_relation: "branch" }));
     FALL_RECRUITING_CERTIFICATES.forEach((certificate) => {
       if (!certificateBranches.has(certificate.id)) return;
       nodes.push(
@@ -427,7 +422,7 @@ function buildPilotEdges(nodes) {
     connect("networking", "referral");
     searchTerminals.push("referral");
   }
-  ["networking-event", "job-board", "company-career-page", "social-media-research", "ai-job-search"].forEach((nodeId) => {
+  ["job-board", "company-career-page", "social-media-research", "ai-job-search"].forEach((nodeId) => {
     if (!nodeIds.has(`pilot:${nodeId}`)) return;
     connect("job-search", nodeId, "branches_to");
     searchTerminals.push(nodeId);
@@ -504,18 +499,14 @@ function buildPilotEdges(nodes) {
     const branchReturn = branchAnchor === "market" ? "profile-preparation" : "job-search";
     connect(branchAnchor, "skill-supplement", "branches_to");
 
-    const supplementIds = ["finance-skills"]
-      .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
-    supplementIds.forEach((nodeId) => connect("skill-supplement", nodeId, "branches_to"));
-
     const certificateIds = FALL_RECRUITING_CERTIFICATES
       .map((certificate) => `certificate-${certificate.id}`)
       .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
-    certificateIds.forEach((nodeId) => connect("finance-skills", nodeId, "branches_to"));
+    certificateIds.forEach((nodeId) => connect("skill-supplement", nodeId, "branches_to"));
 
     const terminalIds = certificateIds.length > 0
       ? certificateIds
-      : nodeIds.has("pilot:finance-skills") ? ["finance-skills"] : ["skill-supplement"];
+      : ["skill-supplement"];
     terminalIds.forEach((nodeId) => connect(nodeId, branchReturn, "converges_to"));
   }
 
@@ -567,7 +558,9 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
       ? rawProfile.application_strategy
       : "auto",
     profile_branches: (rawProfile.profile_branches || []).filter((value) => PROFILE_BRANCH_OPTIONS.some((option) => option.value === value)),
-    search_branches: (rawProfile.search_branches || []).filter((value) => SEARCH_BRANCH_OPTIONS.some((option) => option.value === value)),
+    search_branches: [...new Set((rawProfile.search_branches || []).map((value) =>
+      value === "networking_event" ? "networking" : value,
+    ))].filter((value) => SEARCH_BRANCH_OPTIONS.some((option) => option.value === value)),
     skill_branches: (rawProfile.skill_branches || []).filter((value) => SKILL_BRANCH_OPTIONS.some((option) => option.value === value)),
     certificate_branches: (rawProfile.certificate_branches || []).filter((value) =>
       FALL_RECRUITING_CERTIFICATES.some((certificate) => certificate.id === value),

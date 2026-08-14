@@ -224,8 +224,7 @@ describe("fall recruiting constellation", () => {
       ["pilot:personal-site", "pilot:profile-preparation"],
       ["pilot:networking", "pilot:job-search"],
       ["pilot:skill-supplement", "pilot:market"],
-      ["pilot:finance-skills", "pilot:skill-supplement"],
-      ["pilot:certificate-cfa", "pilot:finance-skills"],
+      ["pilot:certificate-cfa", "pilot:skill-supplement"],
     ]);
 
     parentByChild.forEach((parentId, childId) => {
@@ -253,7 +252,8 @@ describe("fall recruiting constellation", () => {
       target: "pilot:skill-supplement",
       data: expect.objectContaining({ routeStyle: "midpoint-drop" }),
     }));
-    expect(first.edges.some((edge) => edge.source === "pilot:interview-review" && edge.target === "pilot:finance-skills")).toBe(false);
+    expect(first.nodes.some((node) => node.id === "pilot:finance-skills")).toBe(false);
+    expect(first.edges.some((edge) => edge.source === "pilot:skill-supplement" && edge.target === "pilot:certificate-cfa")).toBe(true);
     const market = first.nodes.find((node) => node.id === "pilot:market");
     const profilePreparation = first.nodes.find((node) => node.id === "pilot:profile-preparation");
     const skillSupplement = first.nodes.find((node) => node.id === "pilot:skill-supplement");
@@ -281,10 +281,9 @@ describe("fall recruiting constellation", () => {
     expect(levelById.get("pilot:market")).toBe(0);
     expect(levelById.get("pilot:skill-supplement")).toBe(0);
     expect(levelById.get("pilot:resume")).toBe(1);
-    expect(levelById.get("pilot:finance-skills")).toBe(1);
-    expect(levelById.get("pilot:certificate-cfa")).toBe(2);
-    expect(levelById.get("pilot:certificate-frm")).toBe(2);
-    expect(levelById.get("pilot:certificate-hkicpa")).toBe(2);
+    expect(levelById.get("pilot:certificate-cfa")).toBe(1);
+    expect(levelById.get("pilot:certificate-frm")).toBe(1);
+    expect(levelById.get("pilot:certificate-hkicpa")).toBe(1);
   });
 
   it("keeps a prior-route lead-in and branches skills from its midpoint after the first stage", () => {
@@ -344,11 +343,25 @@ describe("fall recruiting constellation", () => {
 
     [
       "pilot:networking",
-      "pilot:networking-event",
       "pilot:job-board",
       "pilot:company-career-page",
       "pilot:social-media-research",
     ].forEach((id) => expect(ids.has(id), `${id} should be recommended`).toBe(true));
+    expect(ids.has("pilot:networking-event")).toBe(false);
+    expect(draft.nodes.find((node) => node.node_id === "pilot:social-media-research")?.note_url)
+      .toBe("/note/fall-recruiting/social-media-research.md");
+  });
+
+  it("migrates the legacy networking-event choice into the combined networking route", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      information_style: "auto",
+      search_branches: ["networking_event"],
+    });
+
+    expect(draft.metadata.personalization.search_branches).toEqual(["networking"]);
+    expect(draft.nodes.some((node) => node.node_id === "pilot:networking")).toBe(true);
+    expect(draft.nodes.some((node) => node.node_id === "pilot:networking-event")).toBe(false);
   });
 
   it("orders hybrid application routes according to the selected exploration strategy", () => {
