@@ -47,7 +47,6 @@ export const CANDIDATE_BACKGROUND_OPTIONS = [
 ];
 
 export const APPLICATION_STRATEGY_OPTIONS = [
-  { value: "auto", label: "跟随 JobTI 的默认建议" },
   { value: "batch", label: "海投 / 批量规划" },
   { value: "precision", label: "精准投递" },
   { value: "batch_then_precision", label: "先海投探索，再转向精准投递" },
@@ -221,7 +220,6 @@ function buildPilotNodes(profile = {}) {
   const independentSearch = ["independent", "balanced"].includes(informationStyle);
   const studentSearch = profile.candidate_background === "student";
   const applicationStrategy = profile.resolved_application_strategy || resolveApplicationStrategy(profile);
-  const careerDirection = profile.resolved_career_direction || resolveCareerDirection(profile);
   const hasSkillSupplement = skillBranches.has("technical")
     || profile.certificate_interest
     || certificateBranches.size > 0;
@@ -231,17 +229,6 @@ function buildPilotNodes(profile = {}) {
     pathNode("profile-preparation", "准备简历与 Profile", "profile-preparation", 4),
     pathNode("resume", "简历", "resume-story", 5, "", { path_relation: "branch" }),
   ];
-
-  if (careerDirection === "focused") {
-    nodes.push(pathNode("career-track-planning", "聚焦职业赛道", "role-market-research", 3.5, "", { path_relation: "branch" }));
-  }
-  if (careerDirection === "exploring") {
-    nodes.push(
-      pathNode("career-exploration", "探索职业方向", "role-market-research", 3.5, "", { path_relation: "branch" }),
-      pathNode("exploratory-internships", "尝试不同岗位的实习", "first-internship", 3.5, "", { path_relation: "branch" }),
-      pathNode("recruitment-event", "参加 Recruitment Event", "career-fair", 3.5, "", { path_relation: "branch" }),
-    );
-  }
 
   if (experienceBranches.has("first_internship")) {
     nodes.push(pathNode("first-internship", "如何开启第一段实习", "first-internship", 2, "", { path_relation: "branch", directory_order: 0 }));
@@ -391,17 +378,6 @@ function buildPilotEdges(nodes) {
 
   connect("market", "profile-preparation");
 
-  if (nodeIds.has("pilot:career-track-planning")) {
-    connect("market", "career-track-planning", "branches_to");
-    connect("career-track-planning", "profile-preparation", "converges_to");
-  }
-  if (nodeIds.has("pilot:career-exploration")) {
-    connect("market", "career-exploration", "branches_to");
-    connect("career-exploration", "exploratory-internships");
-    connect("exploratory-internships", "recruitment-event");
-    connect("recruitment-event", "profile-preparation", "converges_to");
-  }
-
   const profileBranchIds = ["resume", "linkedin", "cover-letter", "portfolio", "personal-site", "interview-priority", "resume-positioning"]
     .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
   profileBranchIds.forEach((nodeId) => {
@@ -456,6 +432,7 @@ function buildPilotEdges(nodes) {
     connect("jd-deep-dive", "tailored-materials");
     connect("tailored-materials", target, "converges_to");
   };
+  connect("applications", "assessments");
   if (applicationStrategy === "batch_then_precision") {
     connect("applications", "application-batch-planning", "branches_to");
     connect("application-batch-planning", "application-tracker");
@@ -476,8 +453,6 @@ function buildPilotEdges(nodes) {
     connectBatchRoute("applications", "assessments");
   } else if (hasPrecisionRoute) {
     connectPrecisionRoute("applications", "assessments");
-  } else {
-    connect("applications", "assessments");
   }
   connect("assessments", "interviews");
   const interviewBranchIds = ["hr-screening-call", ...Object.values(INTERVIEW_BRANCH_CONTENT)

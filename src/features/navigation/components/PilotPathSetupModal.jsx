@@ -517,7 +517,7 @@ export function PilotPathSettingsPanel({ initialProfile, pending = false, onClos
           <MultiChoiceGrid options={localizeOptions(SKILL_BRANCH_OPTIONS, "pilot.option")} value={profile.skill_branches} emptyLabel={t("pilot.settings.skillsEmpty")} disabled={pending} onChange={(value) => update("skill_branches", value)} />
         </section>
         <section>
-          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.applicationStrategy", "Application style")}</strong><small>{t("pilot.settings.applicationStrategyHint", "Use the JobTI default or choose a route explicitly.")}</small></div>
+          <div className="pilot-path-settings__question"><strong>{t("pilot.settings.applicationStrategy", "Application style")}</strong><small>{t("pilot.settings.applicationStrategyHint", "Choose batch planning, precision applications, or a combination of both.")}</small></div>
           <SingleChoiceGrid options={localizeOptions(APPLICATION_STRATEGY_OPTIONS, "pilot.application")} value={profile.application_strategy} disabled={pending} onChange={(value) => update("application_strategy", value)} />
         </section>
         <section>

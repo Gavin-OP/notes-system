@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildPersonalizedPilotDraft } from "./pilotPath";
+import { APPLICATION_STRATEGY_OPTIONS, buildPersonalizedPilotDraft } from "./pilotPath";
 import { buildConstellationElements, updateOptionalPathContent } from "./constellationPath";
 
 const profile = {
@@ -370,6 +370,7 @@ describe("fall recruiting constellation", () => {
       application_strategy: "batch_then_precision",
     });
     expect(batchFirst.edges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ source: "pilot:applications", target: "pilot:assessments", relation: "precedes" }),
       expect.objectContaining({ source: "pilot:applications", target: "pilot:application-batch-planning" }),
       expect.objectContaining({ source: "pilot:resume-version-management", target: "pilot:company-research" }),
       expect.objectContaining({ source: "pilot:tailored-materials", target: "pilot:assessments" }),
@@ -380,13 +381,14 @@ describe("fall recruiting constellation", () => {
       application_strategy: "precision_then_batch",
     });
     expect(precisionFirst.edges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ source: "pilot:applications", target: "pilot:assessments", relation: "precedes" }),
       expect.objectContaining({ source: "pilot:applications", target: "pilot:company-research" }),
       expect.objectContaining({ source: "pilot:tailored-materials", target: "pilot:application-batch-planning" }),
       expect.objectContaining({ source: "pilot:resume-version-management", target: "pilot:assessments" }),
     ]));
   });
 
-  it("personalizes career direction, preparation priority, and limited-experience support independently", () => {
+  it("uses career direction without adding redundant market child nodes", () => {
     const draft = buildPersonalizedPilotDraft({}, {
       ...profile,
       career_direction: "exploring",
@@ -396,9 +398,6 @@ describe("fall recruiting constellation", () => {
     const ids = new Set(draft.nodes.map((node) => node.node_id));
 
     [
-      "pilot:career-exploration",
-      "pilot:exploratory-internships",
-      "pilot:recruitment-event",
       "pilot:networking",
       "pilot:job-board",
       "pilot:application-batch-planning",
@@ -408,6 +407,8 @@ describe("fall recruiting constellation", () => {
       "pilot:kaggle-competition",
       "pilot:course-project-polish",
     ].forEach((id) => expect(ids.has(id), `${id} should exist`).toBe(true));
+    ["pilot:career-exploration", "pilot:exploratory-internships", "pilot:recruitment-event"]
+      .forEach((id) => expect(ids.has(id), `${id} should not exist`).toBe(false));
     expect(ids.has("pilot:interview-priority")).toBe(false);
 
     const competitive = buildPersonalizedPilotDraft({}, {
@@ -417,9 +418,28 @@ describe("fall recruiting constellation", () => {
       experience_level: "established",
     });
     const competitiveIds = new Set(competitive.nodes.map((node) => node.node_id));
-    expect(competitiveIds.has("pilot:career-track-planning")).toBe(true);
+    expect(competitiveIds.has("pilot:career-track-planning")).toBe(false);
     expect(competitiveIds.has("pilot:interview-priority")).toBe(true);
     expect(competitiveIds.has("pilot:company-research")).toBe(true);
     expect(competitiveIds.has("pilot:experience-building")).toBe(false);
+  });
+
+  it("keeps experience-building out of the applications-to-assessments visual backbone", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      experience_level: "limited",
+      application_strategy: "batch",
+    });
+    const elements = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+
+    expect(elements.edges.some((edge) => edge.source === "pilot:applications" && edge.target === "pilot:experience-building")).toBe(false);
+    expect(elements.edges.some((edge) => edge.source === "pilot:experience-building" && edge.target === "pilot:assessments")).toBe(false);
+    expect(draft.edges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ source: "pilot:profile-preparation", target: "pilot:experience-building", relation: "branches_to" }),
+    ]));
+  });
+
+  it("does not expose the legacy JobTI default as an application strategy choice", () => {
+    expect(APPLICATION_STRATEGY_OPTIONS.some((option) => option.value === "auto")).toBe(false);
   });
 });

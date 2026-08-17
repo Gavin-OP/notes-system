@@ -11,7 +11,6 @@ const PILOT_MAIN_ROUTE = [
   "pilot:profile-preparation",
   "pilot:job-search",
   "pilot:applications",
-  "pilot:experience-building",
   "pilot:assessments",
   "pilot:interviews",
   "pilot:interview-review",
@@ -51,11 +50,6 @@ const EXPERIENCE_BUILDING_CHILD_IDS = [
   "pilot:business-competition",
   "pilot:kaggle-competition",
   "pilot:course-project-polish",
-];
-
-const CAREER_DIRECTION_ROUTE_GROUPS = [
-  ["pilot:career-track-planning"],
-  ["pilot:career-exploration", "pilot:exploratory-internships", "pilot:recruitment-event"],
 ];
 
 const EARLY_EXPERIENCE_IDS = [
@@ -201,7 +195,6 @@ export function buildConstellationElements(draft, options = {}) {
     }
     placeDirectoryChildren(PROFILE_CHILD_IDS, "pilot:profile-preparation");
     placeDirectoryChildren(EXPERIENCE_BUILDING_CHILD_IDS, "pilot:experience-building", { xOffset: 44, startY: 78, gap: 16 });
-    placeRouteRows(CAREER_DIRECTION_ROUTE_GROUPS, "pilot:market");
     placeRouteRows(SEARCH_ROUTE_GROUPS, "pilot:job-search");
     placeRouteRows(APPLICATION_ROUTE_GROUPS, "pilot:applications");
     placeDirectoryChildren(INTERVIEW_CHILD_IDS, "pilot:interviews", { xOffset: 54, startY: 88, gap: 16 });
