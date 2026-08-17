@@ -188,6 +188,80 @@ function EvidenceMatrixLab({ id, items = [] }) {
   );
 }
 
+function RoleAnatomyLab({ id, eyebrow, title, description, dimensions = [] }) {
+  const initialState = useMemo(
+    () => Object.fromEntries(dimensions.map((dimension) => [dimension.id, []])),
+    [dimensions],
+  );
+  const [selections, setSelections] = useSavedInteractionState(id, initialState);
+  const currentSelections = { ...initialState, ...selections };
+
+  const toggleOption = (dimensionId, option) => {
+    const selected = Array.isArray(currentSelections[dimensionId])
+      ? currentSelections[dimensionId]
+      : [];
+    const next = selected.includes(option)
+      ? selected.filter((item) => item !== option)
+      : [...selected, option];
+    setSelections({ ...currentSelections, [dimensionId]: next });
+  };
+
+  const selectedDimensions = dimensions.filter(
+    (dimension) => currentSelections[dimension.id]?.length,
+  );
+
+  return (
+    <section className="note-interaction note-role-anatomy" aria-labelledby={`${id}-title`}>
+      <header className="note-interaction__header">
+        <span>{eyebrow}</span>
+        <h3 id={`${id}-title`}>{title}</h3>
+        <p>{description}</p>
+      </header>
+      <div className="note-role-anatomy__grid">
+        {dimensions.map((dimension, index) => (
+          <article key={dimension.id} className="note-role-anatomy__dimension">
+            <header>
+              <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <strong>{dimension.label}</strong>
+            </header>
+            <div role="group" aria-label={dimension.label}>
+              {dimension.options.map((option) => {
+                const isSelected = currentSelections[dimension.id]?.includes(option);
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    className={isSelected ? "is-selected" : ""}
+                    aria-pressed={isSelected}
+                    onClick={() => toggleOption(dimension.id, option)}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+          </article>
+        ))}
+      </div>
+      <div className="note-role-anatomy__summary" aria-live="polite">
+        <span>岗位轮廓</span>
+        {selectedDimensions.length ? (
+          <dl>
+            {selectedDimensions.map((dimension) => (
+              <div key={dimension.id}>
+                <dt>{dimension.label}</dt>
+                <dd>{currentSelections[dimension.id].join(" · ")}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <p>从任意一项开始点选，把抽象的 Title 慢慢还原成具体工作。</p>
+        )}
+      </div>
+    </section>
+  );
+}
+
 const PROFILE_GOALS = [
   {
     id: "public-profile",
@@ -540,6 +614,17 @@ export default function NoteInteractiveBlock({ configText }) {
   if (config.type === "certificate-comparison") return <CertificateComparisonLab id={config.id} />;
   if (config.type === "resume-focus") return <ResumeFocusLab id={config.id} roles={config.roles} />;
   if (config.type === "evidence-matrix") return <EvidenceMatrixLab id={config.id} items={config.items} />;
+  if (config.type === "role-anatomy") {
+    return (
+      <RoleAnatomyLab
+        id={config.id}
+        eyebrow={config.eyebrow}
+        title={config.title}
+        description={config.description}
+        dimensions={config.dimensions}
+      />
+    );
+  }
   if (config.type === "profile-kit") return <ProfileKitLab id={config.id} />;
   if (config.type === "offer-comparison") return <OfferComparisonLab id={config.id} />;
   if (config.type === "application-funnel") return <ApplicationFunnelLab id={config.id} />;

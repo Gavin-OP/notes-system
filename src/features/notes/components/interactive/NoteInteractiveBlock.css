@@ -261,6 +261,118 @@
   gap: 6px;
 }
 
+.note-role-anatomy__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.note-role-anatomy__dimension {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: var(--ns-radius-lg);
+  background: color-mix(in srgb, var(--ns-color-primary) 5%, var(--ns-color-surface));
+}
+
+.note-role-anatomy__dimension header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.note-role-anatomy__dimension header span {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  color: var(--ns-color-primary);
+  background: color-mix(in srgb, var(--ns-color-primary) 12%, transparent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.note-role-anatomy__dimension header strong {
+  color: var(--ns-color-text);
+  font-size: 14px;
+}
+
+.note-role-anatomy__dimension > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.note-role-anatomy__dimension button {
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: 999px;
+  color: var(--ns-color-text-secondary);
+  background: var(--ns-color-surface);
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.note-role-anatomy__dimension button:hover {
+  border-color: var(--ns-color-primary);
+  transform: translateY(-1px);
+}
+
+.note-role-anatomy__dimension button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ns-color-primary) 28%, transparent);
+  outline-offset: 2px;
+}
+
+.note-role-anatomy__dimension button.is-selected {
+  border-color: var(--ns-color-primary);
+  color: var(--ns-color-primary-contrast, #fff);
+  background: var(--ns-color-primary);
+}
+
+.note-role-anatomy__summary {
+  display: grid;
+  grid-template-columns: minmax(92px, 0.24fr) 1fr;
+  gap: 14px;
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: var(--ns-radius-lg);
+  background: color-mix(in srgb, var(--ns-color-primary) 8%, var(--ns-color-surface));
+}
+
+.note-role-anatomy__summary > span {
+  color: var(--ns-color-primary);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.note-role-anatomy__summary dl {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+}
+
+.note-role-anatomy__summary dl > div {
+  display: grid;
+  grid-template-columns: minmax(80px, 0.26fr) 1fr;
+  gap: 10px;
+}
+
+.note-role-anatomy__summary dt {
+  color: var(--ns-color-text-secondary);
+  font-weight: 700;
+}
+
+.note-role-anatomy__summary dd,
+.note-role-anatomy__summary p {
+  margin: 0;
+  color: var(--ns-color-text);
+}
+
 .note-interaction__summary {
   justify-content: space-around;
 }
@@ -684,6 +796,15 @@
     grid-template-columns: 1fr;
   }
 
+  .note-role-anatomy__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .note-role-anatomy__summary,
+  .note-role-anatomy__summary dl > div {
+    grid-template-columns: 1fr;
+  }
+
   .note-interaction__result,
   .note-interaction__summary {
     align-items: flex-start;
@@ -721,7 +842,8 @@
   .note-certificate,
   .note-certificate button,
   .note-segmented button,
-  .note-evidence-row button {
+  .note-evidence-row button,
+  .note-role-anatomy__dimension button {
     transition: none;
   }
 
