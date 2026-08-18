@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { buildDefaultPilotDraft, buildPersonalizedPilotDraft } from "../../navigation/lib/pilotPath";
 import { loadPilotPathDraft, savePilotPathDraft } from "../../navigation/lib/pilotPathStorage";
 import { advanceCareerRun, createCareerRun, restoreCareerRun, summarizeCareerRun } from "../domain/careerRun";
+import { MAX_TURNS } from "../config/gameConfig";
 import "./CareerRunPage.css";
 
 const STORAGE_KEY = "notes-system:career-run:v1";
@@ -129,7 +130,7 @@ function Intro({ savedRun, onStart, onResume }) {
 function Play({ run, showingOutcome, interactionError, onChoose, onContinue, onRestart }) {
   const event = run.currentEvent;
   const displayedCategory = showingOutcome ? run.history.at(-1)?.category : event?.category;
-  const progress = Math.min(100, Math.round((run.turn / 12) * 100));
+  const progress = Math.min(100, Math.round((run.turn / MAX_TURNS) * 100));
   return (
     <main className="career-run-shell career-run-play">
       <header className="career-run-header">

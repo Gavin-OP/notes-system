@@ -6,7 +6,8 @@ import {
   restoreCareerRun,
   summarizeCareerRun,
 } from "./careerRun";
-import { EVENT_POOL } from "../config/eventPool";
+import { CAREER_EVENT_POOL } from "../config/careerEventPool";
+import { MAX_TURNS } from "../config/gameConfig";
 
 function availableChoices(state) {
   return state.currentEvent?.choices.filter((choice) => choice.available !== false) ?? [];
@@ -37,15 +38,85 @@ describe("Career Run public behavior", () => {
     expect(state.role).toBe("graduate");
     expect(state.turn).toBe(0);
     expect(state.attributes).toEqual({
-      time: 100,
-      energy: 78,
-      confidence: 58,
-      profile: 32,
-      network: 12,
+      time: 70,
+      energy: 70,
+      confidence: 50,
+      profile: 15,
+      network: 10,
     });
     expect(state.currentEvent.id).toBe("market-crossroads");
     expect(state.currentEvent.choices.length).toBeGreaterThanOrEqual(2);
     expect(state.currentEvent.choices.length).toBeLessThanOrEqual(4);
+  });
+
+  it("runs a twenty-event recruiting season before normal closing", () => {
+    expect(MAX_TURNS).toBe(20);
+    const state = finishRun(20260818, (choices) => choices.toSorted(
+      (a, b) => (b.effects?.energy || 0) - (a.effects?.energy || 0),
+    )[0]);
+
+    expect(state.history).toHaveLength(20);
+    expect(state.stage).toBe("closing");
+  });
+
+  it("surfaces an earned interview opportunity before it can silently expire", () => {
+    const state = createCareerRun({ seed: 1953 });
+    state.turn = 8;
+    state.stage = "application";
+    state.counters.interviewLeads = 1;
+    state.opportunityAges.interview = 2;
+
+    const next = advanceCareerRun(state, "research");
+
+    expect(next.currentEvent.category).toBe("interview");
+    expect(next.currentEvent.id).toMatch(/screening|interview/);
+  });
+
+  it("keeps an Offer pending until the player accepts or declines it", () => {
+    const state = createCareerRun({ seed: 31 });
+    state.turn = 17;
+    state.currentEvent = {
+      id: "ordinary-offer",
+      choices: [],
+    };
+    state.counters.pendingOffers = 1;
+
+    const accepted = advanceCareerRun(state, "accept");
+
+    expect(accepted.counters.offers).toBeGreaterThanOrEqual(1);
+    expect(accepted.counters.acceptedOffers).toBe(1);
+    expect(accepted.counters.pendingOffers).toBe(0);
+  });
+
+  it("applies transparent pity support after repeated screening failures", () => {
+    const baseline = createCareerRun({ seed: 99 });
+    baseline.turn = 6;
+    baseline.currentEvent = { id: "dream-job-deadline", choices: [] };
+    const supported = structuredClone(baseline);
+    supported.failureStreaks.application = 6;
+
+    const first = advanceCareerRun(baseline, "direct");
+    const second = advanceCareerRun(supported, "direct");
+
+    expect(second.lastOutcome.probability - first.lastOutcome.probability).toBeCloseTo(0.18, 5);
+  });
+
+  it("resolves a developed alternative route without losing Personalized Path output", () => {
+    const state = createCareerRun({ seed: 8 });
+    state.status = "complete";
+    state.currentEvent = null;
+    state.flags.startupReady = true;
+    state.routes.startup = 82;
+    state.metrics.alternativePath = 55;
+
+    const result = summarizeCareerRun(state);
+
+    expect(result.ending.id).toBe("startup_founder");
+    expect(result.path.profile).toMatchObject({
+      profile_branches: expect.any(Array),
+      search_branches: expect.any(Array),
+    });
+    expect(result.path.signals.some((signal) => signal.includes("项目"))).toBe(true);
   });
 
   it("replays the same Events and outcomes for the same seed and choices", () => {
@@ -94,7 +165,7 @@ describe("Career Run public behavior", () => {
   });
 
   it("configures a concrete consequence for every playable Choice", () => {
-    EVENT_POOL.forEach((event) => {
+    CAREER_EVENT_POOL.forEach((event) => {
       event.choices.forEach((choice) => {
         if (choice.successModel) {
           expect(choice.success?.message, `${event.id}/${choice.id} success`).toBeTruthy();
@@ -153,5 +224,17 @@ describe("Career Run public behavior", () => {
     const reflectiveResult = summarizeCareerRun(reflectiveRun);
 
     expect(actionResult.persona.key).not.toBe(reflectiveResult.persona.key);
+  });
+
+  it("keeps seeded runs varied without making resource exhaustion the default ending", () => {
+    const endings = {};
+    for (let seed = 1; seed <= 200; seed += 1) {
+      const state = finishRun(seed, (choices, run) => choices[(seed + run.turn) % choices.length]);
+      const ending = summarizeCareerRun(state).ending.id;
+      endings[ending] = (endings[ending] || 0) + 1;
+    }
+
+    expect(Object.keys(endings).length).toBeGreaterThanOrEqual(5);
+    expect(endings.burnout || 0).toBeLessThan(60);
   });
 });

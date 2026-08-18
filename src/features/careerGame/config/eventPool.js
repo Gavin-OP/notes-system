@@ -76,8 +76,8 @@ export const EVENT_POOL = [
     id: "graduate-program-window", category: "application", stages: ["application"], baseWeight: 5,
     title: "Graduate Programme 开放申请", description: "流程很长，轮岗和训练却也很香。先研究，还是先占一个候选席位？",
     tags: ["graduate", "application"], cooldownTags: ["application"], choices: [
-      choice("research", "先看清轮岗、培养方式和往届去向", { analysis: 4 }, { effects: { time: -8, energy: -3, profile: 3 }, counters: { applications: 1 }, probabilityBonus: 0.08, successModel: "profile_screen", success: outcome("oa", "研究帮助你写出了有内容的 Motivation。", { confidence: 4 }, { interviewLeads: 1 }), failure: outcome("reject", "流程没有继续，但你更清楚自己在找什么。", { confidence: -2 }, { rejections: 1 }) }),
-      choice("apply", "先申请，项目细节可以边走边了解", { action: 4, exploration: 1 }, { effects: { time: -5, energy: -4 }, counters: { applications: 1 }, successModel: "profile_screen", success: outcome("oa", "你拿到了下一轮在线测试。", { confidence: 4 }, { interviewLeads: 1 }), failure: outcome("reject", "系统发来一封很标准的邮件。", { confidence: -3 }, { rejections: 1 }) }),
+      choice("research", "先看清轮岗、培养方式和往届去向", { analysis: 4 }, { effects: { time: -8, energy: -3, profile: 3 }, counters: { applications: 1 }, probabilityBonus: 0.08, successModel: "graduate_screen", success: outcome("oa", "研究帮助你写出了有内容的 Motivation。", { confidence: 4 }, { interviewLeads: 1 }, { flags: ["graduateTrack"] }), failure: outcome("reject", "流程没有继续，但你更清楚自己在找什么。", { confidence: -2 }, { rejections: 1 }) }),
+      choice("apply", "先申请，项目细节可以边走边了解", { action: 4, exploration: 1 }, { effects: { time: -5, energy: -4 }, counters: { applications: 1 }, successModel: "graduate_screen", success: outcome("oa", "你拿到了下一轮在线测试。", { confidence: 4 }, { interviewLeads: 1 }, { flags: ["graduateTrack"] }), failure: outcome("reject", "系统发来一封很标准的邮件。", { confidence: -3 }, { rejections: 1 }) }),
       choice("skip", "工作方式不太适合我，先不申请", { pacing: 2, analysis: 2 }, { effects: { time: -2, confidence: 1 }, consequence: "你确认轮岗安排和培养方式并不符合当前计划，于是没有为了热门项目勉强自己进入一条漫长流程。" }),
     ],
   },
@@ -139,8 +139,8 @@ export const EVENT_POOL = [
     id: "hr-screening", category: "interview", stages: ["interview"], baseWeight: 8,
     requirements: { minCounters: { interviewLeads: 1 } }, title: "HR Screening Call 来电", description: "对方想快速了解动机、经历和基本期望。目标是说清楚，不是背完整本自传。",
     tags: ["hr", "interview"], cooldownTags: ["interview"], choices: [
-      choice("prepare", "准备短版自我介绍、动机和关键经历", { expression: 4, analysis: 1 }, { effects: { time: -8, energy: -5 }, successModel: "general_interview", success: outcome("pass", "回答清楚，也留下了继续了解的空间。", { confidence: 7 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "对话没有推进，但暴露了动机表达的卡点。", { confidence: -4 }, { interviews: 1, rejections: 1 }, { failureTags: ["hr_interview"] }) }),
-      choice("natural", "放松一点，把它当作双向了解", { exploration: 2, resilience: 2, expression: 1 }, { effects: { time: -5, energy: -4 }, successModel: "general_interview", success: outcome("pass", "交流感让双方都更快判断了匹配度。", { confidence: 6 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "彼此没有对上频道，这也是筛选的一部分。", { confidence: -2 }, { interviews: 1, rejections: 1 }) }),
+      choice("prepare", "准备短版自我介绍、动机和关键经历", { expression: 4, analysis: 1 }, { effects: { time: -8, energy: -5 }, successModel: "general_interview", success: outcome("pass", "回答清楚，也留下了继续了解的空间。招聘团队邀请你进入下一轮面试。", { confidence: 7 }, { interviews: 1, interviewLeads: 1 }), failure: outcome("fail", "对话没有推进，但暴露了动机表达的卡点。", { confidence: -4 }, { interviews: 1, rejections: 1 }, { failureTags: ["hr_interview"] }) }),
+      choice("natural", "放松一点，把它当作双向了解", { exploration: 2, resilience: 2, expression: 1 }, { effects: { time: -5, energy: -4 }, successModel: "general_interview", success: outcome("pass", "交流感让双方都更快判断了匹配度。下一轮面试也随之进入日程。", { confidence: 6 }, { interviews: 1, interviewLeads: 1 }), failure: outcome("fail", "彼此没有对上频道，这也是筛选的一部分。", { confidence: -2 }, { interviews: 1, rejections: 1 }) }),
       choice("reschedule", "今天确实不在状态，礼貌申请改期", { pacing: 4, resilience: 1 }, { effects: { time: -4, energy: 8, confidence: 1 }, consequence: "你及时说明原因，并提供了几个可行时间。HR 接受了改期；清楚而礼貌地沟通，本身也是这通电话的一部分。" }),
     ],
   },
@@ -175,9 +175,9 @@ export const EVENT_POOL = [
     id: "final-round", category: "interview", stages: ["interview", "decision"], baseWeight: 8,
     requirements: { minCounters: { offerLeads: 1 } }, title: "Final Round：最后一轮面试", description: "能走到这里已经说明了很多。最后一轮仍然是双向判断，你既要回答问题，也要确认团队和岗位是否适合自己。",
     tags: ["final", "interview"], cooldownTags: ["final"], choices: [
-      choice("deep", "研究团队的真实挑战，准备深入聊聊", { analysis: 3, expression: 2 }, { effects: { time: -8, energy: -6 }, probabilityBonus: 0.1, successModel: "offer_decision", success: outcome("offer", "你拿到了 Offer。", { confidence: 12 }, { interviews: 1, offers: 1 }), failure: outcome("wait", "流程进入等待区，结果尚未落地。", { confidence: -2 }, { interviews: 1 }) }),
-      choice("authentic", "讲清真实动机，也确认彼此是否合适", { exploration: 2, resilience: 2, expression: 1 }, { effects: { time: -6, energy: -5 }, successModel: "offer_decision", success: outcome("dream", "这次匹配感是双向的：Dream Offer 到手。", { confidence: 15 }, { interviews: 1, offers: 1 }, { flags: ["dreamOffer"] }), failure: outcome("wait", "没有立即结果，但你没有把自己演成另一个人。", { confidence: -1 }, { interviews: 1 }) }),
-      choice("protect", "准备到够用就停，保留稳定状态", { pacing: 4, resilience: 2 }, { effects: { time: -4, energy: 4 }, successModel: "offer_decision", success: outcome("offer", "稳定发挥为你带来一份 Offer。", { confidence: 10 }, { interviews: 1, offers: 1 }), failure: outcome("close", "这次停在终点前，但你保住了继续前进的能量。", { confidence: -2 }, { interviews: 1, rejections: 1 }) }),
+      choice("deep", "研究团队的真实挑战，准备深入聊聊", { analysis: 3, expression: 2 }, { effects: { time: -8, energy: -6 }, probabilityBonus: 0.1, successModel: "offer_decision", success: outcome("offer", "公司发来了书面 Offer。条件确认和最终决定，留给下一步。", { confidence: 12 }, { interviews: 1, pendingOffers: 1 }), failure: outcome("wait", "流程进入等待区，结果尚未落地。", { confidence: -2 }, { interviews: 1, waitlists: 1 }) }),
+      choice("authentic", "讲清真实动机，也确认彼此是否合适", { exploration: 2, resilience: 2, expression: 1 }, { effects: { time: -6, energy: -5 }, successModel: "offer_decision", success: outcome("dream", "理想团队发来了 Offer；真正接受以前，你仍有一次认真核实的机会。", { confidence: 15 }, { interviews: 1, pendingOffers: 1 }, { flags: ["dreamOffer"] }), failure: outcome("wait", "没有立即结果，但你没有把自己演成另一个人。", { confidence: -1 }, { interviews: 1, waitlists: 1 }) }),
+      choice("protect", "准备到够用就停，保留稳定状态", { pacing: 4, resilience: 2 }, { effects: { time: -4, energy: 4 }, successModel: "offer_decision", success: outcome("offer", "稳定发挥换来了一份书面 Offer，接下来需要判断是否接受。", { confidence: 10 }, { interviews: 1, pendingOffers: 1 }), failure: outcome("close", "这次停在终点前，但你保住了继续前进的能量。", { confidence: -2 }, { interviews: 1, rejections: 1 }) }),
     ],
   },
   {
@@ -193,7 +193,7 @@ export const EVENT_POOL = [
     id: "waitlist", category: "offer", stages: ["decision"], baseWeight: 5,
     title: "公司通知你进入 Waitlist", description: "这既不是拒绝，也不是确定结果。对方没有给出明确日期，而你手上还有其他流程要继续。",
     tags: ["waitlist", "decision"], cooldownTags: ["decision"], choices: [
-      choice("follow", "礼貌确认时间线，也表达持续兴趣", { expression: 2, pacing: 2, action: 1 }, { effects: { time: -4, energy: -2 }, successModel: "offer_decision", success: outcome("offer", "一个清晰的 follow-up 让流程重新动了起来。", { confidence: 10 }, { offers: 1 }), failure: outcome("wait", "对方仍需要时间，你继续保留其他选择。", { confidence: -1 }) }),
+      choice("follow", "礼貌确认时间线，也表达持续兴趣", { expression: 2, pacing: 2, action: 1 }, { effects: { time: -4, energy: -2 }, successModel: "offer_decision", success: outcome("offer", "一个清晰的 follow-up 让流程重新动了起来，公司发来了 Offer。", { confidence: 10 }, { pendingOffers: 1 }), failure: outcome("wait", "对方仍需要时间，你继续保留其他选择。", { confidence: -1 }, { waitlists: 1 }) }),
       choice("continue", "继续申请，不让一个结果暂停全部生活", { action: 3, resilience: 3 }, { effects: { time: -6, energy: -4, confidence: 2 }, counters: { applications: 2, interviewLeads: 1 }, consequence: "你保留 Waitlist 的可能，也继续推进其他岗位。新的面试邀请让等待不再占据全部注意力。" }),
       choice("detach", "先把它放回不确定区，停止反复刷新", { pacing: 4, resilience: 2 }, { effects: { time: -3, energy: 7, confidence: 3 }, consequence: "你设定了下次跟进日期，然后不再每小时刷新邮箱。不确定仍然存在，但它暂时回到了合适的位置。" }),
     ],
@@ -203,7 +203,7 @@ export const EVENT_POOL = [
     requirements: { minCounters: { offerLeads: 1 } }, title: "一份不完美、但很真实的 Offer", description: "它解决了一些现实问题，也留下几个需要认真核实的问号。",
     tags: ["offer", "decision"], cooldownTags: ["offer"], choices: [
       choice("accept", "核实条件后接受，把它当作一个入口", { pacing: 2, action: 2 }, { effects: { time: -4, confidence: 12, energy: 4 }, counters: { offers: 1 }, consequence: "你确认了薪酬、岗位、入职时间和书面条款，随后正式接受。它不必是终身答案，但会成为下一段经历的入口。" }),
-      choice("compare", "把成长、团队、地点和生活放在一起比", { analysis: 4, pacing: 1 }, { effects: { time: -6, energy: -3, confidence: 5 }, counters: { offers: 1 }, consequence: "你把工作内容、经理、成长空间和生活成本放进同一张表，也向团队补问了几个关键问题。决定还没变简单，但依据更完整了。" }),
+      choice("compare", "把成长、团队、地点和生活放在一起比", { analysis: 4, pacing: 1 }, { requirements: { flagsAbsent: ["offerCompared"] }, effects: { time: -6, energy: -3, confidence: 5 }, flags: ["offerCompared"], consequence: "你把工作内容、经理、成长空间和生活成本放进同一张表，也向团队补问了几个关键问题。Offer 还在手里，下一次需要作出决定。" }),
       choice("decline", "它离想要的生活太远，继续寻找", { exploration: 3, resilience: 3 }, { effects: { time: -4, confidence: 2 }, flags: ["declinedOffer"], consequence: "你礼貌拒绝了这份 Offer，并保留了对方的联系方式。拒绝一个不合适的入口，也是在为真正想要的生活做选择。" }),
     ],
   },
@@ -211,16 +211,16 @@ export const EVENT_POOL = [
     id: "referral-conclusion", category: "offer", stages: ["decision"], baseWeight: 7,
     requirements: { flagsAny: ["referralPipeline"] }, title: "Referral 把你送到了最后一程", description: "关系帮你被看见，门后的表现仍然属于你自己。",
     tags: ["referral", "offer"], cooldownTags: ["offer"], choices: [
-      choice("finish", "认真完成最后沟通，也感谢帮助过你的人", { networking: 3, expression: 2, resilience: 1 }, { effects: { time: -6, energy: -4 }, probabilityBonus: 0.12, successModel: "offer_decision", success: outcome("offer", "Referral 打开门，你自己走完了后面的路。", { confidence: 14, network: 6 }, { offers: 1 }, { flags: ["referralOffer"] }), failure: outcome("close", "没有拿到 Offer，但这段关系不必随流程一起结束。", { confidence: -2, network: 3 }, { rejections: 1 }) }),
-      choice("pressure", "担心辜负推荐，于是疯狂加码准备", { expression: 2, action: 3 }, { effects: { time: -9, energy: -12 }, probabilityBonus: 0.08, successModel: "offer_decision", success: outcome("offer", "高投入换来一份 Offer，也消耗了不少能量。", { confidence: 12 }, { offers: 1 }, { flags: ["referralOffer"] }), failure: outcome("close", "推荐并不等于承诺，你无需替结果道歉。", { confidence: -5 }, { rejections: 1 }) }),
-      choice("steady", "按自己的节奏完成，不把人情变成压力", { pacing: 4, resilience: 2 }, { effects: { time: -5, energy: -3 }, successModel: "offer_decision", success: outcome("offer", "稳定发挥让这次连接结出了果实。", { confidence: 13 }, { offers: 1 }, { flags: ["referralOffer"] }), failure: outcome("close", "结果没有落地，但你守住了关系和自己。", { confidence: -1, network: 2 }) }),
+      choice("finish", "认真完成最后沟通，也感谢帮助过你的人", { networking: 3, expression: 2, resilience: 1 }, { effects: { time: -6, energy: -4 }, probabilityBonus: 0.12, successModel: "offer_decision", success: outcome("offer", "Referral 打开门，你自己走完了后面的路。书面 Offer 已经到手，接下来由你决定。", { confidence: 14, network: 6 }, { pendingOffers: 1 }, { flags: ["referralOffer"] }), failure: outcome("close", "没有拿到 Offer，但这段关系不必随流程一起结束。", { confidence: -2, network: 3 }, { rejections: 1 }) }),
+      choice("pressure", "担心辜负推荐，于是疯狂加码准备", { expression: 2, action: 3 }, { effects: { time: -9, energy: -12 }, probabilityBonus: 0.08, successModel: "offer_decision", success: outcome("offer", "高投入换来一份 Offer，也消耗了不少能量。决定以前，先把条件看完整。", { confidence: 12 }, { pendingOffers: 1 }, { flags: ["referralOffer"] }), failure: outcome("close", "推荐并不等于承诺，你无需替结果道歉。", { confidence: -5 }, { rejections: 1 }) }),
+      choice("steady", "按自己的节奏完成，不把人情变成压力", { pacing: 4, resilience: 2 }, { effects: { time: -5, energy: -3 }, successModel: "offer_decision", success: outcome("offer", "稳定发挥让这次连接结出了果实。Offer 已经发来，选择仍属于你。", { confidence: 13 }, { pendingOffers: 1 }, { flags: ["referralOffer"] }), failure: outcome("close", "结果没有落地，但你守住了关系和自己。", { confidence: -1, network: 2 }) }),
     ],
   },
   {
     id: "surprise-track", category: "offer", stages: ["decision"], baseWeight: 6,
     requirements: { flagsAny: ["unexpectedTrack"] }, title: "一个没考虑过的方向发来消息", description: "它不在最初的目标清单里，工作内容却和你在意的方式意外合拍。你需要决定是否继续了解。",
     tags: ["unexpected", "offer"], cooldownTags: ["offer"], choices: [
-      choice("explore", "认真聊完再判断，不急着替自己拒绝", { exploration: 5, analysis: 1 }, { effects: { time: -6, energy: -4 }, successModel: "offer_decision", success: outcome("offer", "这个意外方向最终给了你一份 Offer。它不是原计划，却满足了你真正看重的工作方式。", { confidence: 13 }, { offers: 1 }, { flags: ["unexpectedOffer"] }), failure: outcome("insight", "机会没有变成 Offer，但你对自己愿意尝试的方向有了新的认识。", { confidence: 2 }) }),
+      choice("explore", "认真聊完再判断，不急着替自己拒绝", { exploration: 5, analysis: 1 }, { effects: { time: -6, energy: -4 }, successModel: "offer_decision", success: outcome("offer", "这个意外方向最终给了你一份 Offer。它不是原计划，是否接受仍需要认真判断。", { confidence: 13 }, { pendingOffers: 1 }, { flags: ["unexpectedOffer"] }), failure: outcome("insight", "机会没有变成 Offer，但你对自己愿意尝试的方向有了新的认识。", { confidence: 2 }) }),
       choice("focus", "继续专注原方向，避免同时推进太多流程", { analysis: 2, pacing: 3 }, { effects: { time: -2, energy: 3, confidence: 1 }, consequence: "你感谢对方的联系，并说明这次先不继续。目标方向没有改变，手上的准备也因此保持集中。" }),
     ],
   },

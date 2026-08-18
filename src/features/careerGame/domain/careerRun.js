@@ -1,17 +1,19 @@
-import { EVENT_POOL } from "../config/eventPool";
+import { CAREER_EVENT_POOL } from "../config/careerEventPool";
 import {
   BEHAVIOR_KEYS,
   ENDING_COPY,
   GAME_VERSION,
   INITIAL_ATTRIBUTES,
+  MAX_OVERTIME_TURNS,
   MAX_TURNS,
   PERSONA_COPY,
   PERSONA_PROFILES,
+  PITY_BONUSES,
   PROBABILITY_MODELS,
   stageForTurn,
 } from "../config/gameConfig";
 
-const EVENT_BY_ID = new Map(EVENT_POOL.map((event) => [event.id, event]));
+const EVENT_BY_ID = new Map(CAREER_EVENT_POOL.map((event) => [event.id, event]));
 const ATTRIBUTE_KEYS = Object.keys(INITIAL_ATTRIBUTES);
 const PERSONA_ORDER = Object.keys(PERSONA_PROFILES);
 
@@ -30,12 +32,16 @@ function nextRandom(randomState) {
 
 function meetsRequirements(state, requirements = {}) {
   const minAttributes = requirements.minAttributes || {};
+  const maxAttributes = requirements.maxAttributes || {};
   const minCounters = requirements.minCounters || {};
   if (Object.entries(minAttributes).some(([key, value]) => (state.attributes[key] ?? 0) < value)) return false;
+  if (Object.entries(maxAttributes).some(([key, value]) => (state.attributes[key] ?? 0) > value)) return false;
   if (Object.entries(minCounters).some(([key, value]) => (state.counters[key] ?? 0) < value)) return false;
   if ((requirements.flagsAny || []).length && !requirements.flagsAny.some((flag) => state.flags[flag])) return false;
   if ((requirements.flagsAll || []).some((flag) => !state.flags[flag])) return false;
   if ((requirements.flagsAbsent || []).some((flag) => state.flags[flag])) return false;
+  if (Object.entries(requirements.minMetrics || {}).some(([key, value]) => (state.metrics?.[key] ?? 0) < value)) return false;
+  if (Object.entries(requirements.minRoutes || {}).some(([key, value]) => (state.routes?.[key] ?? 0) < value)) return false;
   return true;
 }
 
@@ -69,15 +75,30 @@ function eventWeight(event, state) {
 function selectNextEvent(state) {
   const stage = stageForTurn(state.turn);
   state.stage = stage;
-  const eligible = EVENT_POOL.filter((event) => {
+  const forcedId = state.counters.pendingOffers > 0
+    ? "ordinary-offer"
+    : state.counters.offerLeads > 0 && state.opportunityAges.final >= 2
+      ? "final-round"
+      : state.counters.interviewLeads > 0 && state.opportunityAges.interview >= 2
+        ? ["hr-screening", "technical-interview", "behavioral-interview", "group-interview"]
+          .find((id) => !state.seenEventIds.includes(id))
+        : null;
+  if (forcedId) {
+    const forced = EVENT_BY_ID.get(forcedId);
+    if (forced && meetsRequirements(state, forced.requirements)) {
+      state.currentEvent = presentEvent(forced, state);
+      return true;
+    }
+  }
+  const eligible = CAREER_EVENT_POOL.filter((event) => {
     if (state.seenEventIds.includes(event.id)) return false;
-    if (!event.stages.includes(stage)) return false;
+    if (!event.stages.includes(stage) && !(stage === "closing" && event.stages.includes("decision"))) return false;
     if (!meetsRequirements(state, event.requirements)) return false;
     return !(event.cooldownTags || []).some((tag) => (state.cooldowns[tag] || 0) > 0);
   });
   const candidates = eligible.length
     ? eligible
-    : EVENT_POOL.filter((event) => !state.seenEventIds.includes(event.id) && meetsRequirements(state, event.requirements));
+    : CAREER_EVENT_POOL.filter((event) => !state.seenEventIds.includes(event.id) && meetsRequirements(state, event.requirements));
   if (!candidates.length) return false;
 
   const weighted = candidates.map((event) => ({ event, weight: eventWeight(event, state) }));
@@ -119,6 +140,12 @@ function applyChoicePayload(state, payload = {}) {
   applyCounters(state, payload.counters);
   applyFlags(state, payload.flags);
   applyFailureTags(state, payload.failureTags);
+  Object.entries(payload.metrics || {}).forEach(([key, amount]) => {
+    state.metrics[key] = clamp((state.metrics[key] || 0) + amount);
+  });
+  Object.entries(payload.routes || {}).forEach(([key, amount]) => {
+    state.routes[key] = clamp((state.routes[key] || 0) + amount);
+  });
   state.nextTags = [...new Set([...(payload.nextTags || [])])];
 }
 
@@ -127,9 +154,11 @@ function successProbability(state, choice) {
   if (!model) return null;
   let probability = model.base + (choice.probabilityBonus || 0);
   ATTRIBUTE_KEYS.forEach((key) => {
-    if (model[key]) probability += (state.attributes[key] - 50) * model[key];
+    if (model[key]) probability += state.attributes[key] * model[key];
   });
-  return clamp(probability, 0.08, 0.92);
+  const streak = model.pity ? state.failureStreaks[model.pity] || 0 : 0;
+  const pity = (PITY_BONUSES[model.pity] || []).find(([threshold]) => streak >= threshold)?.[1] || 0;
+  return clamp(probability + pity, 0.08, model.cap || 0.92);
 }
 
 function visibleDeltas(before, after) {
@@ -144,7 +173,51 @@ function reduceCooldowns(state) {
 }
 
 function shouldComplete(state) {
-  return state.turn >= MAX_TURNS || state.attributes.time <= 0 || state.attributes.energy <= 0;
+  if (state.attributes.energy <= 0) return true;
+  if (state.turn < MAX_TURNS) return false;
+  const unresolvedPipeline = state.counters.pendingOffers > 0 || state.counters.offerLeads > 0 || state.counters.interviewLeads > 0;
+  return !unresolvedPipeline || state.turn >= MAX_OVERTIME_TURNS;
+}
+
+function normalizeState(state) {
+  state.counters = {
+    applications: 0, interviews: 0, referrals: 0, offers: 0, rejections: 0,
+    interviewLeads: 0, offerLeads: 0, pendingOffers: 0, acceptedOffers: 0,
+    declinedOffers: 0, waitlists: 0,
+    ...(state.counters || {}),
+  };
+  state.metrics = { careerMomentum: 0, alternativePath: 0, lifeSatisfaction: 50, ...(state.metrics || {}) };
+  state.routes = { startup: 0, freelance: 0, academic: 0, travel: 0, stall: 0, startupEmployee: 0, hiddenCareer: 0, ...(state.routes || {}) };
+  state.opportunityAges = { interview: 0, final: 0, ...(state.opportunityAges || {}) };
+  state.failureStreaks = { application: 0, interview: 0, final: 0, ...(state.failureStreaks || {}) };
+  return state;
+}
+
+function ageOpportunities(state) {
+  state.opportunityAges.interview = state.counters.interviewLeads > 0 ? state.opportunityAges.interview + 1 : 0;
+  state.opportunityAges.final = state.counters.offerLeads > 0 ? state.opportunityAges.final + 1 : 0;
+}
+
+function recordPipelineResolution(state, event, succeeded, choice) {
+  const model = PROBABILITY_MODELS[choice.successModel];
+  const streakKey = model?.pity;
+  if (streakKey && succeeded !== null) state.failureStreaks[streakKey] = succeeded ? 0 : state.failureStreaks[streakKey] + 1;
+  if (event.category === "interview" && event.id !== "final-round" && choice.id !== "reschedule") {
+    state.counters.interviewLeads = Math.max(0, state.counters.interviewLeads - 1);
+    state.opportunityAges.interview = 0;
+  }
+  if (event.id === "final-round") {
+    state.counters.offerLeads = Math.max(0, state.counters.offerLeads - 1);
+    state.opportunityAges.final = 0;
+  }
+  if (event.id === "ordinary-offer" && choice.id === "accept") {
+    state.counters.pendingOffers = Math.max(0, state.counters.pendingOffers - 1);
+    state.counters.acceptedOffers += 1;
+  }
+  if (event.id === "ordinary-offer" && choice.id === "decline") {
+    state.counters.pendingOffers = Math.max(0, state.counters.pendingOffers - 1);
+    state.counters.declinedOffers += 1;
+  }
 }
 
 export function createCareerRun({ seed = Date.now() } = {}) {
@@ -158,7 +231,7 @@ export function createCareerRun({ seed = Date.now() } = {}) {
     stage: "preparation",
     turn: 0,
     attributes: clone(INITIAL_ATTRIBUTES),
-    counters: { applications: 0, interviews: 0, referrals: 0, offers: 0, rejections: 0, interviewLeads: 0, offerLeads: 0 },
+    counters: {},
     behavior: Object.fromEntries(BEHAVIOR_KEYS.map((key) => [key, 0])),
     history: [],
     seenEventIds: [],
@@ -169,6 +242,7 @@ export function createCareerRun({ seed = Date.now() } = {}) {
     lastOutcome: null,
     currentEvent: null,
   };
+  normalizeState(state);
   const opening = EVENT_BY_ID.get("market-crossroads");
   state.currentEvent = presentEvent(opening, state);
   return state;
@@ -179,7 +253,7 @@ export function restoreCareerRun(savedState) {
   const event = EVENT_BY_ID.get(savedState.currentEvent.id);
   if (!event) return null;
   try {
-    const state = clone(savedState);
+    const state = normalizeState(clone(savedState));
     if (!ATTRIBUTE_KEYS.every((key) => Number.isFinite(state.attributes?.[key]))) return null;
     if (!state.counters || !state.behavior || !Array.isArray(state.history)) return null;
     state.version = GAME_VERSION;
@@ -196,6 +270,7 @@ export function advanceCareerRun(currentState, choiceId) {
     throw new Error("Career Run is not available for a Choice.");
   }
   const state = clone(currentState);
+  normalizeState(state);
   const event = EVENT_BY_ID.get(state.currentEvent.id);
   const choice = event?.choices.find((item) => item.id === choiceId);
   if (!choice) throw new Error(`Unknown Choice: ${choiceId}`);
@@ -221,9 +296,14 @@ export function advanceCareerRun(currentState, choiceId) {
   if (!selectedOutcome) throw new Error(`Choice is missing a configured outcome: ${event.id}/${choice.id}`);
   applyChoicePayload(state, selectedOutcome);
   applyFlags(state, choice.flags);
+  recordPipelineResolution(state, event, succeeded, choice);
   (event.cooldownTags || []).forEach((tag) => { state.cooldowns[tag] = 2; });
   state.seenEventIds.push(event.id);
   state.turn += 1;
+  if (state.turn % 3 === 0) applyAttributes(state, { energy: 3 });
+  if (state.metrics.lifeSatisfaction >= 70 && state.turn % 4 === 0) applyAttributes(state, { confidence: 2 });
+  if (state.metrics.lifeSatisfaction <= 25 && choice.intensity === "high") applyAttributes(state, { energy: -2 });
+  ageOpportunities(state);
   state.lastOutcome = {
     id: selectedOutcome.id,
     message: selectedOutcome.message,
@@ -245,6 +325,7 @@ export function advanceCareerRun(currentState, choiceId) {
 
   if (shouldComplete(state) || !selectNextEvent(state)) {
     state.status = "complete";
+    state.stage = state.attributes.energy <= 0 ? "burnout" : "closing";
     state.currentEvent = null;
   }
   return state;
@@ -264,15 +345,25 @@ function resolvePersona(state) {
 }
 
 function resolveEnding(state) {
-  let id = "no_offer";
-  if (state.flags.dreamOffer) id = "dream_offer";
-  else if (state.counters.offers >= 2) id = "multiple_offers";
-  else if (state.flags.referralOffer) id = "referral_success";
-  else if (state.counters.offers > 0 && state.counters.rejections >= 3) id = "late_bloomer";
-  else if (state.flags.unexpectedOffer) id = "unexpected_offer";
+  const accepted = state.counters.acceptedOffers || state.counters.offers;
+  let id = "still_searching";
+  if (state.flags.startupReady && state.routes.startup >= 70) id = "startup_founder";
+  else if (state.flags.freelanceReady && state.routes.freelance >= 60) id = "freelancer";
+  else if (state.flags.academicReady && state.routes.academic >= 60) id = "academic";
+  else if (state.flags.travelReady && state.routes.travel >= 65) id = "world_travel";
+  else if (state.routes.travel >= 35 && state.metrics.lifeSatisfaction >= 55) id = "gap_year";
+  else if (state.flags.stallReady && state.routes.stall >= 70) id = "stall_business";
+  else if (accepted > 0 && state.flags.dreamOffer) id = "dream_offer";
+  else if (accepted > 0 && state.flags.graduateTrack) id = "graduate_program";
+  else if (accepted > 0 && state.flags.unexpectedOffer) id = "unexpected_offer";
+  else if (state.flags.startupEmployeeReady && state.routes.startupEmployee >= 55) id = "startup_employee";
+  else if (accepted > 0 && state.flags.referralOffer) id = "referral_success";
+  else if (accepted >= 2) id = "multiple_offers";
+  else if (accepted > 0 && state.behavior.action >= state.behavior.analysis + 3) id = "batch_winner";
+  else if (accepted > 0 && state.behavior.analysis > state.behavior.action) id = "precision_application";
+  else if (accepted > 0) id = "steady_landing";
+  else if (state.counters.declinedOffers > 0 || state.flags.declinedOffer) id = "declined_offer";
   else if (state.attributes.energy <= 0) id = "burnout";
-  else if (state.counters.offers > 0) id = "unexpected_offer";
-  else if (state.counters.applications > 0 || state.counters.interviews > 0) id = "still_searching";
   return { id, ...ENDING_COPY[id] };
 }
 
@@ -290,6 +381,11 @@ function buildPath(state, persona) {
     profileBranches.push("linkedin", "cover_letter");
     signals.push("本局的 Profile 或简历筛选表现仍有提升空间，Path 会提前安排材料准备。");
   }
+  const alternativeProgress = Math.max(...Object.values(state.routes || {}));
+  if (alternativeProgress >= 30) {
+    profileBranches.push("portfolio", "personal_site");
+    signals.push("本局有一条项目或非传统路线持续生长，Path 会加入项目集与个人主页，帮助你保留真实成果。 ");
+  }
   if (state.attributes.network < 35 || state.behavior.networking >= 5) {
     searchBranches.push("networking");
     signals.push("人脉资源仍偏少，或你多次主动连接他人，Path 会加入 Coffee Chat / Networking。");
@@ -305,6 +401,9 @@ function buildPath(state, persona) {
     interviewBranches.push("technical");
     signals.push("Technical Interview 出现过明确卡点，Path 会加入专项准备。");
   }
+  if (state.attributes.confidence < 35 || state.metrics.lifeSatisfaction < 30) {
+    signals.push("信心或生活状态在本局明显承压。Path 会保留面试复盘主线，也提醒你把恢复当成持续求职的一部分。 ");
+  }
   if (state.failureTags.hr_interview) interviewBranches.push("hr");
   if (state.failureTags.group_interview) interviewBranches.push("group");
   if (!interviewBranches.length) interviewBranches.push("hr");
@@ -313,7 +412,7 @@ function buildPath(state, persona) {
   return {
     signals,
     profile: {
-      stage: state.counters.offers ? "offer" : state.counters.interviews ? "interviewing" : state.counters.applications ? "applying" : "materials",
+      stage: state.counters.acceptedOffers || state.counters.offers ? "offer" : state.counters.interviews ? "interviewing" : state.counters.applications ? "applying" : "materials",
       jobti_type: persona.key,
       candidate_background: "student",
       profile_branches: [...new Set(profileBranches)],
@@ -321,6 +420,10 @@ function buildPath(state, persona) {
       skill_branches: [...new Set(skillBranches)],
       interview_branches: [...new Set(interviewBranches)],
       application_strategy: state.behavior.action > state.behavior.analysis ? "batch" : "precision",
+      information_style: state.behavior.networking > state.behavior.analysis ? "social" : "independent",
+      career_direction: state.behavior.exploration > state.behavior.analysis ? "exploring" : "focused",
+      profile_competitiveness: state.attributes.profile < 45 ? "unsure" : "competitive",
+      experience_level: alternativeProgress >= 30 || state.attributes.profile >= 55 ? "established" : "limited",
       certificate_interest: false,
     },
   };

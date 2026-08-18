@@ -18,7 +18,7 @@ Tests exercise only these interfaces and the standalone route behavior.
 
 ## Acceptance criteria
 
-- [x] A run starts from the same Graduate baseline and lasts roughly 10–14 Events.
+- [x] A run starts from the same Graduate baseline and normally spans twenty Events, with up to two closing Events for unresolved recruiting opportunities.
 - [x] Event selection is deterministic for a seed but weighted by stage, Attributes, history, and resources.
 - [x] Every Event has two to four non-obviously-correct Choices.
 - [x] Choices visibly change Attributes, counters, future eligibility, and hidden behavioral dimensions.
@@ -31,7 +31,7 @@ Tests exercise only these interfaces and the standalone route behavior.
 
 ## Out of scope
 
-- Fifty fully balanced Events in the first slice
+- A cross-run Legacy or equipment system
 - Equipment, currency, combat, map movement, or progression trees
 - Backend persistence, accounts, multiplayer, or AI-generated Events
 - New career Notes
