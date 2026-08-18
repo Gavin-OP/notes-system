@@ -1,4 +1,5 @@
-import { CAREER_EVENT_POOL } from "../config/careerEventPool";
+import { CAREER_EVENT_POOL, RARE_EVENT_IDS } from "../config/careerEventPool";
+import { LEGACY_BY_ID } from "../config/legacyPool";
 import {
   BEHAVIOR_KEYS,
   ENDING_COPY,
@@ -10,6 +11,7 @@ import {
   PERSONA_PROFILES,
   PITY_BONUSES,
   PROBABILITY_MODELS,
+  RESOURCE_TUNING,
   stageForTurn,
 } from "../config/gameConfig";
 
@@ -67,6 +69,13 @@ function eventWeight(event, state) {
   if (tags.has("deadline") && state.attributes.time < 45) weight *= 1.6;
   if (tags.has("interview") && state.counters.interviewLeads > 0) weight *= 1.4;
   if (tags.has("offer") && state.counters.offerLeads > 0) weight *= 1.5;
+  if (tags.has("alternative")) weight *= Math.min(1.25, 1 + (state.behavior.exploration || 0) / 80);
+  if (event.category === "application") weight *= Math.min(1.25, 1 + (state.behavior.action || 0) / 80);
+  if (tags.has("wellbeing")) weight *= Math.min(1.25, 1 + (state.behavior.pacing || 0) / 80);
+  if (tags.has("travel")) weight *= state.modifiers.travelWeight || 1;
+  if (tags.has("freelance")) weight *= state.modifiers.freelanceWeight || 1;
+  if (tags.has("startup")) weight *= state.modifiers.startupWeight || 1;
+  if (tags.has("stall")) weight *= state.modifiers.stallWeight || 1;
   const previousCategory = state.history.at(-1)?.category;
   if (previousCategory === event.category) weight *= 0.72;
   return Math.max(0.05, weight);
@@ -114,16 +123,27 @@ function selectNextEvent(state) {
   return true;
 }
 
-function applyAttributes(state, effects = {}) {
+function tunedAmount(key, amount, tuneChoiceEffects) {
+  if (!tuneChoiceEffects) return amount;
+  if (key === "time" && amount < 0) return -Math.max(1, Math.round(Math.abs(amount) * RESOURCE_TUNING.timeCostMultiplier));
+  if (key === "energy" && amount > 0) return Math.max(1, Math.round(amount * RESOURCE_TUNING.positiveEnergyMultiplier));
+  if (key === "confidence" && amount > 0) return Math.max(1, Math.round(amount * RESOURCE_TUNING.positiveConfidenceMultiplier));
+  return amount;
+}
+
+function applyAttributes(state, effects = {}, tuneChoiceEffects = false) {
   Object.entries(effects).forEach(([key, amount]) => {
     if (!ATTRIBUTE_KEYS.includes(key)) return;
-    state.attributes[key] = clamp((state.attributes[key] || 0) + amount);
+    state.attributes[key] = clamp((state.attributes[key] || 0) + tunedAmount(key, amount, tuneChoiceEffects));
   });
 }
 
 function applyCounters(state, effects = {}) {
   Object.entries(effects).forEach(([key, amount]) => {
     state.counters[key] = Math.max(0, (state.counters[key] || 0) + amount);
+    if (key === "rejections" && amount > 0) {
+      state.attributes.confidence = clamp(state.attributes.confidence - amount * RESOURCE_TUNING.rejectionConfidenceCost);
+    }
   });
 }
 
@@ -136,7 +156,7 @@ function applyFailureTags(state, tags = []) {
 }
 
 function applyChoicePayload(state, payload = {}) {
-  applyAttributes(state, payload.effects);
+  applyAttributes(state, payload.effects, true);
   applyCounters(state, payload.counters);
   applyFlags(state, payload.flags);
   applyFailureTags(state, payload.failureTags);
@@ -158,7 +178,12 @@ function successProbability(state, choice) {
   });
   const streak = model.pity ? state.failureStreaks[model.pity] || 0 : 0;
   const pity = (PITY_BONUSES[model.pity] || []).find(([threshold]) => streak >= threshold)?.[1] || 0;
-  return clamp(probability + pity, 0.08, model.cap || 0.92);
+  const legacyBonus = choice.successModel === "network_outreach" || choice.successModel === "referral"
+    ? state.modifiers.networkingProbability || 0
+    : choice.successModel?.includes("interview") || choice.successModel === "offer_decision"
+      ? state.modifiers.interviewProbability || 0
+      : 0;
+  return clamp(probability + pity + legacyBonus, 0.08, model.cap || 0.92);
 }
 
 function visibleDeltas(before, after) {
@@ -173,7 +198,7 @@ function reduceCooldowns(state) {
 }
 
 function shouldComplete(state) {
-  if (state.attributes.energy <= 0) return true;
+  if (state.attributes.time <= 0 || state.attributes.energy <= 0) return true;
   if (state.turn < MAX_TURNS) return false;
   const unresolvedPipeline = state.counters.pendingOffers > 0 || state.counters.offerLeads > 0 || state.counters.interviewLeads > 0;
   return !unresolvedPipeline || state.turn >= MAX_OVERTIME_TURNS;
@@ -190,6 +215,18 @@ function normalizeState(state) {
   state.routes = { startup: 0, freelance: 0, academic: 0, travel: 0, stall: 0, startupEmployee: 0, hiddenCareer: 0, ...(state.routes || {}) };
   state.opportunityAges = { interview: 0, final: 0, ...(state.opportunityAges || {}) };
   state.failureStreaks = { application: 0, interview: 0, final: 0, ...(state.failureStreaks || {}) };
+  state.modifiers = { ...(state.modifiers || {}) };
+  state.restChoices = state.restChoices || 0;
+  state.minimums = {
+    energy: state.attributes?.energy ?? INITIAL_ATTRIBUTES.energy,
+    confidence: state.attributes?.confidence ?? INITIAL_ATTRIBUTES.confidence,
+    ...(state.minimums || {}),
+  };
+  state.maximums = {
+    profile: state.attributes?.profile ?? INITIAL_ATTRIBUTES.profile,
+    network: state.attributes?.network ?? INITIAL_ATTRIBUTES.network,
+    ...(state.maximums || {}),
+  };
   return state;
 }
 
@@ -220,7 +257,7 @@ function recordPipelineResolution(state, event, succeeded, choice) {
   }
 }
 
-export function createCareerRun({ seed = Date.now() } = {}) {
+export function createCareerRun({ seed = Date.now(), legacyId = null } = {}) {
   const normalizedSeed = Number(seed) >>> 0 || 1;
   const state = {
     version: GAME_VERSION,
@@ -241,8 +278,17 @@ export function createCareerRun({ seed = Date.now() } = {}) {
     flags: {},
     lastOutcome: null,
     currentEvent: null,
+    legacy: null,
   };
   normalizeState(state);
+  const legacy = LEGACY_BY_ID.get(legacyId);
+  if (legacy) {
+    state.legacy = clone(legacy);
+    state.modifiers = clone(legacy.modifiers || {});
+    applyAttributes(state, legacy.initialEffects || {});
+    state.minimums.energy = state.attributes.energy;
+    state.minimums.confidence = state.attributes.confidence;
+  }
   const opening = EVENT_BY_ID.get("market-crossroads");
   state.currentEvent = presentEvent(opening, state);
   return state;
@@ -279,6 +325,8 @@ export function advanceCareerRun(currentState, choiceId) {
   const before = clone(state.attributes);
   reduceCooldowns(state);
   applyChoicePayload(state, choice);
+  if (state.legacy?.id === "portfolio-made" && event.tags?.includes("portfolio")) applyAttributes(state, { time: state.modifiers.portfolioTimeDiscount || 0 });
+  if (state.legacy?.id === "jd-reader" && (choice.id === "research" || choice.id === "fit" || choice.id === "benchmark")) applyAttributes(state, { profile: state.modifiers.researchProfileBonus || 0 });
   Object.entries(choice.behaviorEffects || {}).forEach(([key, amount]) => {
     state.behavior[key] = (state.behavior[key] || 0) + amount;
   });
@@ -297,13 +345,24 @@ export function advanceCareerRun(currentState, choiceId) {
   applyChoicePayload(state, selectedOutcome);
   applyFlags(state, choice.flags);
   recordPipelineResolution(state, event, succeeded, choice);
+  const resourcesDepleted = state.attributes.time <= 0 || state.attributes.energy <= 0;
   (event.cooldownTags || []).forEach((tag) => { state.cooldowns[tag] = 2; });
   state.seenEventIds.push(event.id);
   state.turn += 1;
-  if (state.turn % 3 === 0) applyAttributes(state, { energy: 3 });
-  if (state.metrics.lifeSatisfaction >= 70 && state.turn % 4 === 0) applyAttributes(state, { confidence: 2 });
+  const isRestChoice = (choice.behaviorEffects?.pacing || 0) >= 3 && (choice.effects?.energy || 0) > 0;
+  if (isRestChoice && !resourcesDepleted) {
+    state.restChoices += 1;
+    if (state.restChoices === 1) applyAttributes(state, { energy: 3 });
+    else applyChoicePayload(state, { metrics: { careerMomentum: -2 } });
+  }
+  if (!resourcesDepleted && state.turn % 3 === 0) applyAttributes(state, { energy: 2 });
+  if (!resourcesDepleted && state.metrics.lifeSatisfaction >= 70) applyAttributes(state, { confidence: 1 });
   if (state.metrics.lifeSatisfaction <= 25 && choice.intensity === "high") applyAttributes(state, { energy: -2 });
   ageOpportunities(state);
+  state.minimums.energy = Math.min(state.minimums.energy, state.attributes.energy);
+  state.minimums.confidence = Math.min(state.minimums.confidence, state.attributes.confidence);
+  state.maximums.profile = Math.max(state.maximums.profile, state.attributes.profile);
+  state.maximums.network = Math.max(state.maximums.network, state.attributes.network);
   state.lastOutcome = {
     id: selectedOutcome.id,
     message: selectedOutcome.message,
@@ -371,6 +430,62 @@ function strongestBehavior(state) {
   return [...BEHAVIOR_KEYS].sort((a, b) => state.behavior[b] - state.behavior[a])[0];
 }
 
+function resolveAchievements(state, ending) {
+  const achievements = [];
+  const add = (id, title, description) => achievements.push({ id, title, description });
+  if (state.counters.applications >= 8) add("application-engine", "申请流水线", `这一局送出了 ${state.counters.applications} 份申请。`);
+  if (state.counters.interviews >= 3) add("interview-veteran", "面试老兵", `完成了 ${state.counters.interviews} 轮真实面试。`);
+  if (state.counters.referrals > 0) add("warm-connection", "不是人脉，是连接", "通过真诚交流获得了 Referral 或内部信息。 ");
+  if (state.maximums.profile >= 55) add("profile-builder", "材料终于能见人", `Profile 最高成长到 ${state.maximums.profile}。`);
+  if (state.maximums.network >= 45) add("network-builder", "职业连接开始生长", `Network 最高成长到 ${state.maximums.network}。`);
+  if (state.counters.rejections >= 3 && state.attributes.energy > 0) add("rejection-resilience", "拒信耐受训练", "经历多次拒绝后仍然完成了这一局。 ");
+  if (state.metrics.alternativePath >= 20) add("alternative-route", "主线之外还有路", "认真推进过至少一条非传统职业路线。 ");
+  if (state.restChoices >= 2) add("rest-is-strategy", "会休息也是策略", "不止一次主动把恢复放回计划。 ");
+  if (state.counters.acceptedOffers > 0) add("offer-accepted", "选择权到手", "核实条件后接受了一份 Offer。 ");
+  if (state.counters.declinedOffers > 0) add("offer-declined", "Offer 也可以拒绝", "为真正想要的工作与生活保留了判断权。 ");
+  if (state.attributes.time <= 0) add("last-minute", "时间刚好用完", "把求职季的最后一点时间也走成了信息。 ");
+  if (ending.id === "burnout") add("burnout-seen", "边界不是失败", "这一局让精力边界变得可见。下一局可以更早保护它。 ");
+  if (!achievements.length) add("first-run", "完成第一局", "你已经比开局时更清楚自己会怎样做选择。 ");
+  return achievements;
+}
+
+function unlockedLegacyIds(state, ending) {
+  const ids = [];
+  if (state.maximums.network >= 25 || state.counters.referrals > 0) ids.push("senior-contact");
+  if (state.maximums.profile >= 35) ids.push("readable-resume");
+  if (state.counters.rejections >= 3) ids.push("rejection-calm");
+  if (state.behavior.networking >= 5) ids.push("coffee-chat");
+  if (state.counters.interviews > 0) ids.push("interview-notes");
+  if (state.seenEventIds.includes("portfolio-weekend")) ids.push("portfolio-made");
+  if (state.behavior.analysis >= 5) ids.push("jd-reader");
+  if (ending.id === "burnout") ids.push("boundaries");
+  if (["gap_year", "world_travel"].includes(ending.id)) ids.push("airport-regular");
+  if (ending.id === "freelancer") ids.push("first-client");
+  if (ending.id === "startup_founder") ids.push("first-user");
+  if (ending.id === "stall_business") ids.push("stall-pass");
+  const fallback = ["senior-contact", "readable-resume", "rejection-calm", "jd-reader"];
+  fallback.forEach((id) => { if (ids.length < 3 && !ids.includes(id)) ids.push(id); });
+  return ids;
+}
+
+function selectLegacyChoices(state, ending) {
+  const eligible = unlockedLegacyIds(state, ending);
+  const offset = state.seed % eligible.length;
+  const rotated = [...eligible.slice(offset), ...eligible.slice(0, offset)].slice(0, 3);
+  return rotated.map((id) => clone(LEGACY_BY_ID.get(id))).filter(Boolean);
+}
+
+function buildRunStory(state, ending) {
+  const decisions = [];
+  if (state.counters.applications) decisions.push(`投出 ${state.counters.applications} 份申请`);
+  if (state.counters.interviews) decisions.push(`完成 ${state.counters.interviews} 轮面试`);
+  if (state.counters.referrals) decisions.push(`获得 ${state.counters.referrals} 次 Referral 或关键连接`);
+  if (state.counters.declinedOffers) decisions.push(`拒绝 ${state.counters.declinedOffers} 份不够合适的 Offer`);
+  if (state.metrics.alternativePath >= 20) decisions.push("认真走进了一条主线之外的可能");
+  const body = decisions.length ? decisions.join("，") : "尝试了不同的准备、申请与恢复方式";
+  return `你${body}。这一局走向「${ending.title}」，也留下了一条可以继续调整的求职 Path。`;
+}
+
 function buildPath(state, persona) {
   const profileBranches = [];
   const searchBranches = [];
@@ -432,11 +547,12 @@ function buildPath(state, persona) {
 export function summarizeCareerRun(state) {
   if (!state || state.status !== "complete") throw new Error("Complete the Career Run before requesting a summary.");
   const persona = resolvePersona(state);
+  const ending = resolveEnding(state);
   const orderedAttributes = [...ATTRIBUTE_KEYS].sort((a, b) => state.attributes[b] - state.attributes[a]);
   const weakestAttribute = [...ATTRIBUTE_KEYS].sort((a, b) => state.attributes[a] - state.attributes[b])[0];
+  const standoutEvent = [...state.history].reverse().find((entry) => RARE_EVENT_IDS.has(entry.eventId));
   return {
-    ending: resolveEnding(state),
-    persona,
+    ending,
     stats: {
       applications: state.counters.applications,
       interviews: state.counters.interviews,
@@ -447,6 +563,17 @@ export function summarizeCareerRun(state) {
     strongestStrategy: strongestBehavior(state),
     strength: orderedAttributes[0],
     bottleneck: weakestAttribute,
+    achievements: resolveAchievements(state, ending),
+    legacyChoices: selectLegacyChoices(state, ending),
+    unlockedLegacyIds: unlockedLegacyIds(state, ending),
+    runStory: buildRunStory(state, ending),
+    runRecord: {
+      minimumEnergy: state.minimums.energy,
+      maximumProfile: state.maximums.profile,
+      maximumNetwork: state.maximums.network,
+      lifeSatisfaction: state.metrics.lifeSatisfaction,
+      standoutEvent: standoutEvent?.eventTitle || null,
+    },
     path: buildPath(state, persona),
   };
 }

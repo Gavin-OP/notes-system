@@ -10,7 +10,7 @@ Completed
 
 ## Decision
 
-Adopt the document's progression, opportunity-consumption, pity, hidden-route, and ending ideas where they make the current run more coherent. Keep the existing eight JobTI personas and browser-local Path handoff unchanged. Defer cross-run Legacy collectibles: they add a second progression system without improving the first-run Personalized Path.
+Adopt the document's progression, opportunity-consumption, pity, hidden-route, and ending ideas where they make the current run more coherent. Keep behavioral scoring as a hidden Personalized Path input without presenting another JobTI result. Cross-run Legacy collectibles were initially deferred and subsequently added in `resource-balance-and-achievements.md` after explicit product direction.
 
 ## Public seams
 
@@ -28,7 +28,7 @@ Adopt the document's progression, opportunity-consumption, pity, hidden-route, a
 - [x] Offers are separated from the player's accept or decline decision.
 - [x] Hidden momentum, wellbeing, and alternative-route progress change future Events and Endings.
 - [x] Rare Event chains can lead to startup, freelance, academic, travel, stall, or startup-employee outcomes.
-- [x] Ending and JobTI Persona remain independently calculated.
+- [x] Ending and hidden Path Signals remain independently calculated.
 - [x] Every Ending still produces an explainable Personalized Path profile compatible with the current Learning Workspace.
 - [x] Existing version-one browser saves restore safely or fall back without a blank page.
 - [x] Domain tests, page tests, lint, and production build pass.

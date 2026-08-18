@@ -28,3 +28,5 @@ dist-ssr
 .env*
 !.env.example
 public/notes-index.json
+
+应届生开荒局_Roguelike_完整设计文档.md

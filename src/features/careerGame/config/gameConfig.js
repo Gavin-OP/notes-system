@@ -4,10 +4,17 @@ export const MAX_OVERTIME_TURNS = 22;
 
 export const INITIAL_ATTRIBUTES = Object.freeze({
   time: 70,
-  energy: 70,
-  confidence: 50,
+  energy: 60,
+  confidence: 45,
   profile: 15,
   network: 10,
+});
+
+export const RESOURCE_TUNING = Object.freeze({
+  timeCostMultiplier: 0.6,
+  positiveEnergyMultiplier: 0.7,
+  positiveConfidenceMultiplier: 0.6,
+  rejectionConfidenceCost: 2,
 });
 
 export const BEHAVIOR_KEYS = [

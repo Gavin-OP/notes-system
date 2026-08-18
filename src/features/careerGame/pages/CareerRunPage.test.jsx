@@ -7,6 +7,7 @@ import { createCareerRun } from "../domain/careerRun";
 import CareerRunPage from "./CareerRunPage";
 
 const STORAGE_KEY = "notes-system:career-run:v1";
+const LEGACY_STORAGE_KEY = "notes-system:career-run:legacy:v1";
 
 describe("Career Run resume behavior", () => {
   beforeEach(() => {
@@ -76,5 +77,65 @@ describe("Career Run resume behavior", () => {
     const attributes = screen.getByLabelText("当前属性");
     expect(attributes.querySelectorAll(".career-run-attribute-icon")).toHaveLength(5);
     expect(new Set([...attributes.querySelectorAll(".career-run-attribute-icon")].map((icon) => icon.className.baseVal)).size).toBe(5);
+  });
+
+  it("keeps the landing page focused without the Graduate illustration", () => {
+    render(
+      <MemoryRouter>
+        <CareerRunPage />
+      </MemoryRouter>,
+    );
+
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "应届生开荒局" })).toBeInTheDocument();
+  });
+
+  it("warns when Time and Energy are running low without recoloring growth attributes", async () => {
+    const user = userEvent.setup();
+    const saved = createCareerRun({ seed: 1953 });
+    saved.attributes = { ...saved.attributes, time: 30, energy: 12, confidence: 10, profile: 10, network: 10 };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+
+    render(
+      <MemoryRouter>
+        <CareerRunPage />
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "继续上次进度" }));
+
+    expect(screen.getByRole("progressbar", { name: "剩余求职时间" })).toHaveClass("is-warning");
+    expect(screen.getByRole("progressbar", { name: "继续行动的能量" })).toHaveClass("is-danger");
+    expect(screen.getByRole("progressbar", { name: "面对不确定性的底气" })).not.toHaveClass("is-warning", "is-danger");
+  });
+
+  it("shows the equipped Legacy beneath the resource it changed", async () => {
+    const user = userEvent.setup();
+    window.localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify({ equippedLegacyId: "senior-contact", unlockedIds: ["senior-contact"] }));
+
+    render(
+      <MemoryRouter>
+        <CareerRunPage />
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "开始这一局" }));
+
+    const networkMeter = screen.getByRole("progressbar", { name: "职业连接与信息来源" });
+    expect(networkMeter.closest(".career-run-attribute")).toHaveTextContent("学长的联系方式");
+    expect(networkMeter.closest(".career-run-attribute")).toHaveTextContent("Network +8");
+  });
+
+  it("does not show a fixed overall run progress bar", async () => {
+    const user = userEvent.setup();
+    render(
+      <MemoryRouter>
+        <CareerRunPage />
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "开始这一局" }));
+
+    expect(screen.queryByLabelText(/游戏进度/)).not.toBeInTheDocument();
   });
 });

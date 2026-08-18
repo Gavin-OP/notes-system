@@ -39,8 +39,8 @@ describe("Career Run public behavior", () => {
     expect(state.turn).toBe(0);
     expect(state.attributes).toEqual({
       time: 70,
-      energy: 70,
-      confidence: 50,
+      energy: 60,
+      confidence: 45,
       profile: 15,
       network: 10,
     });
@@ -86,6 +86,31 @@ describe("Career Run public behavior", () => {
     expect(accepted.counters.offers).toBeGreaterThanOrEqual(1);
     expect(accepted.counters.acceptedOffers).toBe(1);
     expect(accepted.counters.pendingOffers).toBe(0);
+  });
+
+  it("ends the run immediately when Time or Energy reaches zero", () => {
+    const noTime = createCareerRun({ seed: 12 });
+    noTime.attributes.time = 1;
+    const timeEnding = advanceCareerRun(noTime, "research");
+
+    const noEnergy = createCareerRun({ seed: 13 });
+    noEnergy.currentEvent = { id: "resume-first-draft", choices: [] };
+    noEnergy.attributes.energy = 1;
+    const energyEnding = advanceCareerRun(noEnergy, "ship");
+
+    expect(timeEnding).toMatchObject({ status: "complete", stage: "closing" });
+    expect(timeEnding.attributes.time).toBe(0);
+    expect(energyEnding).toMatchObject({ status: "complete", stage: "burnout" });
+    expect(energyEnding.attributes.energy).toBe(0);
+  });
+
+  it("applies one equipped Legacy to a new run", () => {
+    const networkRun = createCareerRun({ seed: 22, legacyId: "senior-contact" });
+    const boundaryRun = createCareerRun({ seed: 22, legacyId: "boundaries" });
+
+    expect(networkRun.attributes.network).toBeGreaterThan(createCareerRun({ seed: 22 }).attributes.network);
+    expect(boundaryRun.attributes.energy).toBeGreaterThan(createCareerRun({ seed: 22 }).attributes.energy);
+    expect(networkRun.legacy.id).toBe("senior-contact");
   });
 
   it("applies transparent pity support after repeated screening failures", () => {
@@ -177,19 +202,14 @@ describe("Career Run public behavior", () => {
     });
   });
 
-  it("resolves an Ending and Persona separately and explains its Path defaults", () => {
+  it("resolves an Ending and hidden strategy signals without returning a personality result", () => {
     const state = finishRun(4096, (choices) => {
       return choices.find((choice) => choice.behaviorEffects?.analysis) ?? choices[0];
     });
     const result = summarizeCareerRun(state);
 
     expect(result.ending).toMatchObject({ id: expect.any(String), title: expect.any(String) });
-    expect(result.persona).toMatchObject({
-      key: expect.any(String),
-      name: expect.any(String),
-      description: expect.any(String),
-    });
-    expect(result.ending.id).not.toBe(result.persona.key);
+    expect(result.persona).toBeUndefined();
     expect(result.stats).toEqual({
       applications: expect.any(Number),
       interviews: expect.any(Number),
@@ -199,12 +219,15 @@ describe("Career Run public behavior", () => {
     expect(result.path.signals.length).toBeGreaterThan(0);
     expect(result.path.profile).toMatchObject({
       stage: expect.any(String),
-      jobti_type: result.persona.key,
+      jobti_type: expect.any(String),
       candidate_background: "student",
       profile_branches: expect.any(Array),
       search_branches: expect.any(Array),
       interview_branches: expect.any(Array),
     });
+    expect(result.achievements.length).toBeGreaterThan(0);
+    expect(result.legacyChoices).toHaveLength(3);
+    expect(result.runStory).toEqual(expect.any(String));
   });
 
   it("uses behavioral trajectory, rather than Offer count alone, for Persona scoring", () => {
@@ -223,18 +246,27 @@ describe("Career Run public behavior", () => {
     const actionResult = summarizeCareerRun(actionRun);
     const reflectiveResult = summarizeCareerRun(reflectiveRun);
 
-    expect(actionResult.persona.key).not.toBe(reflectiveResult.persona.key);
+    expect(actionResult.path.profile.jobti_type).not.toBe(reflectiveResult.path.profile.jobti_type);
   });
 
   it("keeps seeded runs varied without making resource exhaustion the default ending", () => {
     const endings = {};
+    let timeExhausted = 0;
+    let energyExhausted = 0;
+    let confidencePressure = 0;
     for (let seed = 1; seed <= 200; seed += 1) {
       const state = finishRun(seed, (choices, run) => choices[(seed + run.turn) % choices.length]);
       const ending = summarizeCareerRun(state).ending.id;
       endings[ending] = (endings[ending] || 0) + 1;
+      if (state.attributes.time === 0) timeExhausted += 1;
+      if (state.attributes.energy === 0) energyExhausted += 1;
+      if (state.minimums.confidence <= 30) confidencePressure += 1;
     }
 
     expect(Object.keys(endings).length).toBeGreaterThanOrEqual(5);
     expect(endings.burnout || 0).toBeLessThan(60);
+    expect(timeExhausted).toBeGreaterThan(5);
+    expect(energyExhausted).toBeGreaterThan(5);
+    expect(confidencePressure).toBeGreaterThan(20);
   });
 });

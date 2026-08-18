@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { buildDefaultPilotDraft, buildPersonalizedPilotDraft } from "../../navigation/lib/pilotPath";
 import { loadPilotPathDraft, savePilotPathDraft } from "../../navigation/lib/pilotPathStorage";
 import { advanceCareerRun, createCareerRun, restoreCareerRun, summarizeCareerRun } from "../domain/careerRun";
-import { MAX_TURNS } from "../config/gameConfig";
+import { LEGACY_BY_ID } from "../config/legacyPool";
 import "./CareerRunPage.css";
 
 const STORAGE_KEY = "notes-system:career-run:v1";
-const ASSET_ROOT = `${String(import.meta.env.BASE_URL || "/").replace(/\/?$/, "/")}assets/career-run`;
+const LEGACY_STORAGE_KEY = "notes-system:career-run:legacy:v1";
 const ATTRIBUTE_META = {
   time: { label: "Time", description: "剩余求职时间", icon: "time" },
   energy: { label: "Energy", description: "继续行动的能量", icon: "energy" },
@@ -67,19 +67,58 @@ function persistRun(run) {
   }
 }
 
-function AttributeMeters({ attributes, compact = false }) {
+function readLegacyMeta() {
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(LEGACY_STORAGE_KEY) || "null");
+    return {
+      equippedLegacyId: LEGACY_BY_ID.has(saved?.equippedLegacyId) ? saved.equippedLegacyId : null,
+      unlockedIds: Array.isArray(saved?.unlockedIds) ? saved.unlockedIds.filter((id) => LEGACY_BY_ID.has(id)) : [],
+    };
+  } catch {
+    return { equippedLegacyId: null, unlockedIds: [] };
+  }
+}
+
+function persistLegacyMeta(meta) {
+  try { window.localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify(meta)); } catch { /* Optional browser-local progression. */ }
+}
+
+function resourceLevel(key, value) {
+  if (!["time", "energy"].includes(key)) return "normal";
+  if (value <= 15) return "danger";
+  if (value <= 35) return "warning";
+  return "normal";
+}
+
+function resourceLevelLabel(level) {
+  if (level === "danger") return "紧急";
+  if (level === "warning") return "偏低";
+  return "充足";
+}
+
+function AttributeMeters({ attributes, compact = false, legacy = null }) {
   return (
     <div className={`career-run-attributes ${compact ? "is-compact" : ""}`} aria-label="当前属性">
-      {Object.entries(ATTRIBUTE_META).map(([key, meta]) => (
-        <div className="career-run-attribute" key={key}>
-          <div className="career-run-attribute-heading">
-            <span className="career-run-attribute-label"><AttributeIcon type={meta.icon} />{meta.label}</span><strong>{attributes[key]}</strong>
+      {Object.entries(ATTRIBUTE_META).map(([key, meta]) => {
+        const level = resourceLevel(key, attributes[key]);
+        const legacyAmount = legacy?.initialEffects?.[key];
+        return (
+          <div className="career-run-attribute" key={key}>
+            <div className="career-run-attribute-heading">
+              <span className="career-run-attribute-label"><AttributeIcon type={meta.icon} />{meta.label}</span><strong>{attributes[key]}</strong>
+            </div>
+            <div className={`career-run-meter is-${level}`} role="progressbar" aria-label={meta.description} aria-valuemin="0" aria-valuemax="100" aria-valuenow={attributes[key]} aria-valuetext={`${attributes[key]}，${resourceLevelLabel(level)}`}>
+              <span style={{ width: `${attributes[key]}%` }} />
+            </div>
+            {legacyAmount ? (
+              <div className="career-run-attribute-legacy">
+                <span aria-hidden="true">◆</span>
+                <span><strong>{legacy.title}</strong><small>{meta.label} +{legacyAmount}</small></span>
+              </div>
+            ) : null}
           </div>
-          <div className="career-run-meter" role="progressbar" aria-label={meta.description} aria-valuemin="0" aria-valuemax="100" aria-valuenow={attributes[key]}>
-            <span style={{ width: `${attributes[key]}%` }} />
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -98,7 +137,7 @@ function DeltaList({ deltas }) {
   );
 }
 
-function Intro({ savedRun, onStart, onResume }) {
+function Intro({ savedRun, equippedLegacy, onStart, onResume }) {
   return (
     <main className="career-run-shell career-run-intro">
       <section className="career-run-intro-card">
@@ -117,10 +156,8 @@ function Intro({ savedRun, onStart, onResume }) {
               {savedRun ? "重新开一局" : "开始这一局"}
             </button>
           </div>
+          {equippedLegacy ? <p className="career-run-equipped-legacy">本局携带：<strong>{equippedLegacy.title}</strong> · {equippedLegacy.description}</p> : null}
           <p className="career-run-footnote">这是一个趣味互动体验，不预测真实招聘结果，也不评判你的能力。</p>
-        </div>
-        <div className="career-run-character" aria-hidden="true">
-          <img src={`${ASSET_ROOT}/jobseeker.png`} alt="" width="1024" height="1536" />
         </div>
       </section>
     </main>
@@ -130,18 +167,24 @@ function Intro({ savedRun, onStart, onResume }) {
 function Play({ run, showingOutcome, interactionError, onChoose, onContinue, onRestart }) {
   const event = run.currentEvent;
   const displayedCategory = showingOutcome ? run.history.at(-1)?.category : event?.category;
-  const progress = Math.min(100, Math.round((run.turn / MAX_TURNS) * 100));
+  const legacyHasDirectResourceEffect = Boolean(Object.keys(run.legacy?.initialEffects || {}).length);
   return (
     <main className="career-run-shell career-run-play">
       <header className="career-run-header">
         <div><span className="career-run-overline">CAREER RUN · {String(run.turn + 1).padStart(2, "0")}</span><h1>应届生开荒局</h1></div>
         <button className="career-run-text-button" type="button" onClick={onRestart}>重新开始</button>
       </header>
-      <div className="career-run-progress" aria-label={`游戏进度 ${progress}%`}><span style={{ width: `${progress}%` }} /></div>
       <div className="career-run-game-grid">
         <aside className="career-run-status-card">
           <div className="career-run-status-heading"><span>你的状态</span><small>{run.stage.toUpperCase()}</small></div>
-          <AttributeMeters attributes={run.attributes} />
+          <AttributeMeters attributes={run.attributes} legacy={run.legacy} />
+          {run.legacy && !legacyHasDirectResourceEffect ? (
+            <div className="career-run-active-legacy">
+              <span>本局道具</span>
+              <strong>{run.legacy.title}</strong>
+              <small>{run.legacy.description.replace(/^下一局/, "本局")}</small>
+            </div>
+          ) : null}
           <div className="career-run-counter-grid">
             <span><strong>{run.counters.applications}</strong>Applications</span>
             <span><strong>{run.counters.interviews}</strong>Interviews</span>
@@ -197,7 +240,7 @@ function Play({ run, showingOutcome, interactionError, onChoose, onContinue, onR
   );
 }
 
-function Result({ result, run, onRestart, onSavePath }) {
+function Result({ result, run, selectedLegacyId, onSelectLegacy, onRestart, onSavePath }) {
   return (
     <main className="career-run-shell career-run-result">
       <header className="career-run-result-hero">
@@ -208,10 +251,17 @@ function Result({ result, run, onRestart, onSavePath }) {
       </header>
 
       <section className="career-run-result-grid">
-        <article className="career-run-persona-card">
-          <span className="career-run-overline">你的求职方式更像</span>
-          <h2>{result.persona.name}</h2>
-          <p>{result.persona.description}</p>
+        <article className="career-run-story-card">
+          <span className="career-run-overline">这一局的故事</span>
+          <h2>你这样走过了这一轮</h2>
+          <p>{result.runStory}</p>
+          <div className="career-run-records">
+            <span>最低 Energy <strong>{result.runRecord.minimumEnergy}</strong></span>
+            <span>最高 Profile <strong>{result.runRecord.maximumProfile}</strong></span>
+            <span>最高 Network <strong>{result.runRecord.maximumNetwork}</strong></span>
+            <span>Life Satisfaction <strong>{result.runRecord.lifeSatisfaction}</strong></span>
+          </div>
+          {result.runRecord.standoutEvent ? <p className="career-run-standout">本局意外事件：<strong>{result.runRecord.standoutEvent}</strong></p> : null}
           <div className="career-run-strategy"><span>本局最常使用</span><strong>{BEHAVIOR_LABELS[result.strongestStrategy]}</strong></div>
         </article>
         <article className="career-run-stats-card">
@@ -223,6 +273,26 @@ function Result({ result, run, onRestart, onSavePath }) {
           <AttributeMeters attributes={run.attributes} compact />
           <p>最强项：<strong>{ATTRIBUTE_RESULT_LABELS[result.strength]}</strong> · 最容易卡住：<strong>{ATTRIBUTE_RESULT_LABELS[result.bottleneck]}</strong></p>
         </article>
+      </section>
+
+      <section className="career-run-achievement-card">
+        <div className="career-run-section-heading"><span className="career-run-overline">RUN ACHIEVEMENTS</span><h2>本局成就</h2></div>
+        <div className="career-run-achievement-grid">
+          {result.achievements.map((achievement) => (
+            <article key={achievement.id}><span aria-hidden="true">✓</span><div><strong>{achievement.title}</strong><p>{achievement.description}</p></div></article>
+          ))}
+        </div>
+      </section>
+
+      <section className="career-run-legacy-card">
+        <div><span className="career-run-overline">TAKE ONE WITH YOU</span><h2>下一局，带走一件东西</h2><p>选择一项本局解锁的经验。它会保存在当前浏览器，并在下一次新开局时生效。</p></div>
+        <div className="career-run-legacy-grid">
+          {result.legacyChoices.map((legacy) => (
+            <button className={selectedLegacyId === legacy.id ? "is-selected" : ""} key={legacy.id} type="button" onClick={() => onSelectLegacy(legacy.id)}>
+              <strong>{legacy.title}</strong><span>{legacy.description}</span><small>{selectedLegacyId === legacy.id ? "下一局已装备" : "选择并装备"}</small>
+            </button>
+          ))}
+        </div>
       </section>
 
       <section className="career-run-path-card">
@@ -246,9 +316,10 @@ export default function CareerRunPage() {
   const [screen, setScreen] = useState("intro");
   const [showingOutcome, setShowingOutcome] = useState(false);
   const [interactionError, setInteractionError] = useState("");
+  const [legacyMeta, setLegacyMeta] = useState(() => readLegacyMeta());
 
   const start = () => {
-    const next = createCareerRun({ seed: Date.now() });
+    const next = createCareerRun({ seed: Date.now(), legacyId: legacyMeta.equippedLegacyId });
     persistRun(next);
     setSavedRun(null);
     setRun(next);
@@ -270,7 +341,13 @@ export default function CareerRunPage() {
     }
   };
   const continueRun = () => {
-    if (run.status === "complete") setScreen("result");
+    if (run.status === "complete") {
+      const summary = summarizeCareerRun(run);
+      const nextMeta = { ...legacyMeta, unlockedIds: [...new Set([...legacyMeta.unlockedIds, ...summary.unlockedLegacyIds])] };
+      persistLegacyMeta(nextMeta);
+      setLegacyMeta(nextMeta);
+      setScreen("result");
+    }
     else setShowingOutcome(false);
   };
   const restart = () => {
@@ -282,6 +359,11 @@ export default function CareerRunPage() {
     setScreen("intro");
   };
   const result = screen === "result" && run ? summarizeCareerRun(run) : null;
+  const selectLegacy = (legacyId) => {
+    const nextMeta = { equippedLegacyId: legacyId, unlockedIds: [...new Set([...legacyMeta.unlockedIds, legacyId])] };
+    persistLegacyMeta(nextMeta);
+    setLegacyMeta(nextMeta);
+  };
   const savePath = () => {
     const existing = loadPilotPathDraft();
     if (existing && !window.confirm("这会用本局结果更新你当前浏览器里的求职 Path。要继续吗？")) return;
@@ -290,7 +372,7 @@ export default function CareerRunPage() {
     if (savePilotPathDraft(draft)) navigate("/note/fall-recruiting/autumn-recruitment-roadmap.md");
   };
 
-  if (screen === "intro") return <Intro savedRun={savedRun} onStart={start} onResume={resume} />;
-  if (screen === "result") return <Result result={result} run={run} onRestart={restart} onSavePath={savePath} />;
+  if (screen === "intro") return <Intro savedRun={savedRun} equippedLegacy={LEGACY_BY_ID.get(legacyMeta.equippedLegacyId)} onStart={start} onResume={resume} />;
+  if (screen === "result") return <Result result={result} run={run} selectedLegacyId={legacyMeta.equippedLegacyId} onSelectLegacy={selectLegacy} onRestart={restart} onSavePath={savePath} />;
   return <Play run={run} showingOutcome={showingOutcome} interactionError={interactionError} onChoose={choose} onContinue={continueRun} onRestart={restart} />;
 }

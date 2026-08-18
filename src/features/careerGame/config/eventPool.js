@@ -114,7 +114,7 @@ export const EVENT_POOL = [
     tags: ["career-fair", "networking"], cooldownTags: ["networking"], choices: [
       choice("target", "锁定几家公司，排到了就认真聊", { analysis: 3, networking: 3 }, { effects: { time: -8, energy: -7, network: 9, confidence: 3 }, counters: { interviewLeads: 1 }, consequence: "你和目标公司的招聘人员聊到了岗位细节，也留下了联系方式。回家时社交电量见底，但至少没有抱着一袋传单空手而归。" }),
       choice("explore", "随便走走，也给陌生方向一个机会", { exploration: 4, networking: 2 }, { effects: { time: -9, energy: -8, network: 7, confidence: 4 }, flags: ["unexpectedTrack"], consequence: "你停在一个原本不会搜索的摊位前，意外发现工作内容很合拍。目标清单里多了一条此前没想到的方向。" }),
-      choice("online", "保住社交电量，回去查官网和岗位", { pacing: 3, analysis: 2 }, { effects: { time: -5, energy: 5, profile: 2 }, consequence: "你没有勉强自己在嘈杂现场硬聊，而是记下公司名称，回去查看官网和岗位。信息拿到了，能量也保住了一些。" }),
+      choice("online", "不去现场，把公司记下来以后再查", { pacing: 3, analysis: 2 }, { effects: { energy: 3, profile: 2 }, consequence: "你没有勉强自己在嘈杂现场硬聊，而是记下公司名称，之后再查看官网和岗位。今天没有为一场没参加的活动消耗额外时间。" }),
     ],
   },
   {
