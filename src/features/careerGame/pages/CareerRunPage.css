@@ -44,6 +44,12 @@
 .career-run-attributes { display: grid; gap: 15px; }
 .career-run-attribute-heading { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 12px; color: #617087; }
 .career-run-attribute-heading strong { color: var(--career-ink); }
+.career-run-attribute-label { display: inline-flex; align-items: center; gap: 7px; }
+.career-run-attribute-icon { width: 18px; height: 18px; flex: 0 0 18px; color: #527fc8; }
+.career-run-attribute-icon.is-energy { color: #d68237; }
+.career-run-attribute-icon.is-confidence { color: #8a63cf; }
+.career-run-attribute-icon.is-profile { color: #3f9b91; }
+.career-run-attribute-icon.is-network { color: #bd657e; }
 .career-run-meter { height: 7px; overflow: hidden; border-radius: 8px; background: #e8ecf4; }
 .career-run-meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #62c3ba, #5d7bea); transition: width .3s ease; }
 .career-run-counter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 24px; }
@@ -67,6 +73,7 @@
 .career-run-choice-letter { display: grid; flex: 0 0 36px; width: 36px; height: 36px; place-items: center; border-radius: 11px; color: color-mix(in srgb, var(--event-accent) 84%, #17243a); font-weight: 800; background: var(--event-accent-soft); }
 .career-run-choices strong, .career-run-choices small { display: block; }
 .career-run-choices small { margin-top: 4px; color: #8a94a3; }
+.career-run-interaction-error { margin: 16px 0 0; color: #a54b42; font-size: 13px; line-height: 1.6; }
 .career-run-log-card h2 { margin: 8px 0 18px; font-size: 20px; }
 .career-run-log-card p { color: var(--career-muted); font-size: 14px; line-height: 1.6; }
 .career-run-log-card ol { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
@@ -74,6 +81,7 @@
 .career-run-log-card li strong, .career-run-log-card li span { display: block; }
 .career-run-log-card li strong { font-size: 13px; }
 .career-run-log-card li span { margin-top: 4px; color: #788498; font-size: 12px; line-height: 1.4; }
+.career-run-log-card li p { margin: 6px 0 0; color: #5d687b; font-size: 11px; line-height: 1.5; }
 .career-run-outcome { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
 .career-run-outcome .career-run-overline { color: var(--event-accent); }
 .career-run-outcome p { max-width: 580px; margin: 0 0 24px; color: #4e5d73; font-size: 19px; line-height: 1.8; }

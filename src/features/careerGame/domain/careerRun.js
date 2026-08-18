@@ -174,6 +174,23 @@ export function createCareerRun({ seed = Date.now() } = {}) {
   return state;
 }
 
+export function restoreCareerRun(savedState) {
+  if (!savedState || savedState.status !== "playing" || !savedState.currentEvent?.id) return null;
+  const event = EVENT_BY_ID.get(savedState.currentEvent.id);
+  if (!event) return null;
+  try {
+    const state = clone(savedState);
+    if (!ATTRIBUTE_KEYS.every((key) => Number.isFinite(state.attributes?.[key]))) return null;
+    if (!state.counters || !state.behavior || !Array.isArray(state.history)) return null;
+    state.version = GAME_VERSION;
+    state.currentEvent = presentEvent(event, state);
+    state.lastOutcome = null;
+    return state;
+  } catch {
+    return null;
+  }
+}
+
 export function advanceCareerRun(currentState, choiceId) {
   if (!currentState || currentState.status !== "playing" || !currentState.currentEvent) {
     throw new Error("Career Run is not available for a Choice.");
@@ -201,9 +218,7 @@ export function advanceCareerRun(currentState, choiceId) {
     succeeded = random.value <= probability;
     selectedOutcome = succeeded ? choice.success : choice.failure;
   }
-  if (!selectedOutcome) {
-    selectedOutcome = { id: "resolved", message: "你做出了选择，求职地图继续展开。" };
-  }
+  if (!selectedOutcome) throw new Error(`Choice is missing a configured outcome: ${event.id}/${choice.id}`);
   applyChoicePayload(state, selectedOutcome);
   applyFlags(state, choice.flags);
   (event.cooldownTags || []).forEach((tag) => { state.cooldowns[tag] = 2; });

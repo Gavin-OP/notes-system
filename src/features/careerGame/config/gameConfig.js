@@ -35,7 +35,7 @@ export const PERSONA_PROFILES = {
 };
 
 export const PERSONA_COPY = {
-  explorer: { name: "林克", description: "你会为意外出现的入口留一点地图空间。" },
+  explorer: { name: "林克", description: "你会为意外出现的机会留一点探索空间。" },
   radar: { name: "LinkedIn", description: "你习惯先读懂岗位和公司，再决定怎样出手。" },
   engine: { name: "海王", description: "机会不会自己排队，你更相信行动会创造下一步。" },
   alchemist: { name: "X团神券", description: "你擅长把真实经历翻译成别人能迅速看懂的价值。" },
@@ -46,11 +46,11 @@ export const PERSONA_COPY = {
 };
 
 export const ENDING_COPY = {
-  dream_offer: { title: "Dream Offer", description: "你把最想争取的机会推进到了终点。" },
+  dream_offer: { title: "Dream Offer", description: "你把最想争取的机会一步步推进到了 Offer。" },
   multiple_offers: { title: "Multiple Offers", description: "这一次，选择权来到了你手里。" },
   referral_success: { title: "Referral Success", description: "一次真诚连接，为你打开了原本看不见的门。" },
   late_bloomer: { title: "Late Bloomer", description: "前半程并不顺利，但你的调整终于在后半程开花。" },
-  unexpected_offer: { title: "Unexpected Offer", description: "终点不在最初的地图上，却可能是一条新路线。" },
+  unexpected_offer: { title: "Unexpected Offer", description: "结果不在最初的计划里，却可能打开一条适合你的新方向。" },
   burnout: { title: "Burnout", description: "资源耗尽让这一轮提前暂停。停下来也是重要信息。" },
   still_searching: { title: "Still Searching", description: "流程还在继续，这一轮留下了更清楚的下一步。" },
   no_offer: { title: "No Offer", description: "这轮没有 Offer，但你已经收集了下一轮会用到的线索。" },

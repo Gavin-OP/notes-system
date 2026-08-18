@@ -3,8 +3,10 @@ import { describe, expect, it } from "vitest";
 import {
   advanceCareerRun,
   createCareerRun,
+  restoreCareerRun,
   summarizeCareerRun,
 } from "./careerRun";
+import { EVENT_POOL } from "../config/eventPool";
 
 function availableChoices(state) {
   return state.currentEvent?.choices.filter((choice) => choice.available !== false) ?? [];
@@ -74,6 +76,34 @@ describe("Career Run public behavior", () => {
 
     expect(() => advanceCareerRun(state, "not-a-choice")).toThrow(/choice/i);
     expect(state).toEqual(snapshot);
+  });
+
+  it("rebuilds the current Event from config when restoring an older browser snapshot", () => {
+    const saved = createCareerRun({ seed: 1953 });
+    saved.currentEvent = {
+      id: "market-crossroads",
+      title: "stale title",
+      choices: [{ id: "removed-choice", label: "stale choice" }],
+    };
+
+    const restored = restoreCareerRun(JSON.parse(JSON.stringify(saved)));
+
+    expect(restored.currentEvent.title).toBe("求职季开始了，你打算先做什么？");
+    expect(restored.currentEvent.choices.some((choice) => choice.id === "research")).toBe(true);
+    expect(() => advanceCareerRun(restored, "research")).not.toThrow();
+  });
+
+  it("configures a concrete consequence for every playable Choice", () => {
+    EVENT_POOL.forEach((event) => {
+      event.choices.forEach((choice) => {
+        if (choice.successModel) {
+          expect(choice.success?.message, `${event.id}/${choice.id} success`).toBeTruthy();
+          expect(choice.failure?.message, `${event.id}/${choice.id} failure`).toBeTruthy();
+        } else {
+          expect(choice.outcome?.message, `${event.id}/${choice.id} outcome`).toBeTruthy();
+        }
+      });
+    });
   });
 
   it("resolves an Ending and Persona separately and explains its Path defaults", () => {
