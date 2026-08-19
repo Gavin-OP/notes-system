@@ -35,7 +35,7 @@ describe("Career Run resume behavior", () => {
     );
 
     await user.click(screen.getByRole("button", { name: "继续上次进度" }));
-    await user.click(screen.getByRole("button", { name: /先研究几份 JD/ }));
+    await user.click(screen.getByRole("button", { name: /研究几份 JD/ }));
 
     expect(screen.getByText("这次选择带来了")).toBeInTheDocument();
     expect(screen.queryByText("你做出了选择，求职地图继续展开。")).not.toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("Career Run resume behavior", () => {
     await user.click(screen.getByRole("button", { name: "继续上次进度" }));
 
     expect(screen.queryByText("旧版本开场")).not.toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /先研究几份 JD/ }));
+    await user.click(screen.getByRole("button", { name: /研究几份 JD/ }));
     expect(screen.getByText("这次选择带来了")).toBeInTheDocument();
   });
 
