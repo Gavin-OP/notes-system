@@ -8,6 +8,7 @@ import {
 } from "./careerRun";
 import { CAREER_EVENT_POOL } from "../config/careerEventPool";
 import { MAX_TURNS } from "../config/gameConfig";
+import { LEGACY_POOL } from "../config/legacyPool";
 
 function availableChoices(state) {
   return state.currentEvent?.choices.filter((choice) => choice.available !== false) ?? [];
@@ -113,6 +114,122 @@ describe("Career Run public behavior", () => {
     expect(networkRun.legacy.id).toBe("senior-contact");
   });
 
+  it("keeps the complete twenty-one-item Legacy catalog within the approved strength bands", () => {
+    expect(LEGACY_POOL).toHaveLength(21);
+    expect(LEGACY_POOL.map((legacy) => legacy.title)).toEqual(expect.arrayContaining([
+      "校友的联系方式",
+      "教授的 Meeting 邀请",
+      "超级舒服的枕头",
+      "大容量充电宝",
+      "七倍浓缩美式",
+      "“我真的投过这家公司吗？”",
+      "E人面具",
+    ]));
+    const routeWeights = LEGACY_POOL.flatMap((legacy) => Object.entries(legacy.modifiers || {})
+      .filter(([key]) => key.endsWith("Weight"))
+      .map(([, value]) => value));
+    expect(routeWeights).toEqual([1.3, 1.3, 1.3, 1.3, 1.3]);
+  });
+
+  it("fires the low-Energy power bank only once and records the underlying resource pressure", () => {
+    let state = createCareerRun({ seed: 91, legacyId: "power-bank" });
+    state.attributes.energy = 22;
+    state.currentEvent = { id: "resume-first-draft", choices: [] };
+
+    state = advanceCareerRun(state, "ship");
+    const firstEnergy = state.attributes.energy;
+    expect(state.legacyUsage.powerBankUsed).toBe(true);
+    expect(state.minimums.energy).toBeLessThanOrEqual(20);
+    expect(firstEnergy).toBeGreaterThan(20);
+
+    state.attributes.energy = 22;
+    state.currentEvent = { id: "resume-first-draft", choices: [] };
+    state.seenEventIds = state.seenEventIds.filter((id) => id !== "resume-first-draft");
+    state = advanceCareerRun(state, "ship");
+    expect(state.attributes.energy).toBeLessThan(firstEnergy);
+  });
+
+  it("applies one-shot Final Round and interview-format probability bonuses", () => {
+    const play = (legacyId, eventId, choiceId) => {
+      const state = createCareerRun({ seed: 100, legacyId });
+      state.currentEvent = { id: eventId, choices: [] };
+      state.counters.interviewLeads = 1;
+      state.counters.offerLeads = 1;
+      return advanceCareerRun(state, choiceId);
+    };
+
+    const finalBaseline = play(null, "final-round", "deep");
+    const finalBoosted = play("comfortable-pillow", "final-round", "deep");
+    const groupBaseline = play(null, "group-interview", "facilitate");
+    const groupBoosted = play("extrovert-mask", "group-interview", "facilitate");
+
+    expect(finalBoosted.lastOutcome.probability - finalBaseline.lastOutcome.probability).toBeCloseTo(0.04, 5);
+    expect(finalBoosted.attributes.energy - finalBaseline.attributes.energy).toBe(4);
+    expect(finalBoosted.legacyUsage.pillowUsed).toBe(true);
+    expect(groupBoosted.lastOutcome.probability - groupBaseline.lastOutcome.probability).toBeCloseTo(0.07, 5);
+  });
+
+  it("gives Campus Celebrity a deterministic opportunity or its Network fallback", () => {
+    const runs = [1, 1972].map((seed) => createCareerRun({
+      seed,
+      legacyId: "campus-celebrity",
+    }));
+
+    expect(runs.some((state) => state.counters.networkingOpportunities === 1)).toBe(true);
+    runs.forEach((state) => {
+      expect(state.counters.networkingOpportunities === 1 || state.attributes.network === 12).toBe(true);
+    });
+  });
+
+  it("turns the first interview failure into one review bonus for the next interview", () => {
+    let failedRun;
+    for (let seed = 1; seed < 3000 && !failedRun; seed += 1) {
+      const candidate = createCareerRun({ seed, legacyId: "interview-review" });
+      candidate.currentEvent = { id: "behavioral-interview", choices: [] };
+      candidate.counters.interviewLeads = 1;
+      const next = advanceCareerRun(candidate, "honest");
+      if (next.lastOutcome.succeeded === false) failedRun = next;
+    }
+
+    expect(failedRun).toBeTruthy();
+    expect(failedRun.legacyUsage.interviewReviewUsed).toBe(true);
+    expect(failedRun.legacyUsage.nextInterviewBonus).toBe(0.05);
+    failedRun.currentEvent = { id: "technical-interview", choices: [] };
+    failedRun.counters.interviewLeads = 1;
+    const reviewed = advanceCareerRun(failedRun, "wing");
+    expect(reviewed.legacyUsage.nextInterviewBonus).toBe(0);
+  });
+
+  it("caps the free Application Legacy at two extra Applications per run", () => {
+    let state = createCareerRun({ seed: 1972, legacyId: "application-amnesia" });
+    for (let index = 0; index < 80; index += 1) {
+      state.status = "playing";
+      state.turn = 1;
+      state.attributes.time = 100;
+      state.attributes.energy = 100;
+      state.currentEvent = { id: "dream-job-deadline", choices: [] };
+      state.seenEventIds = [];
+      state = advanceCareerRun(state, "direct");
+    }
+
+    expect(state.legacyUsage.bonusApplications).toBe(2);
+  });
+
+  it("can unlock E人面具 through two distinct Group Interview Events", () => {
+    let state = createCareerRun({ seed: 1500 });
+    state.currentEvent = { id: "group-interview", choices: [] };
+    state.counters.interviewLeads = 2;
+    state = advanceCareerRun(state, "facilitate");
+    state.currentEvent = { id: "assessment-centre-group", choices: [] };
+    state.counters.interviewLeads = Math.max(1, state.counters.interviewLeads);
+    state = advanceCareerRun(state, "coordinate");
+    state.status = "complete";
+    state.currentEvent = null;
+
+    expect(state.counters.groupInterviews).toBe(2);
+    expect(summarizeCareerRun(state).unlockedLegacyIds).toContain("extrovert-mask");
+  });
+
   it("applies transparent pity support after repeated screening failures", () => {
     const baseline = createCareerRun({ seed: 99 });
     baseline.turn = 6;
@@ -142,6 +259,39 @@ describe("Career Run public behavior", () => {
       search_branches: expect.any(Array),
     });
     expect(result.path.signals.some((signal) => signal.includes("项目"))).toBe(true);
+  });
+
+  it("grows the Content Creator story through four configured rare Events", () => {
+    const creatorEvents = ["creator-essay", "creator-readers", "creator-commission", "creator-crossroads"]
+      .map((id) => CAREER_EVENT_POOL.find((event) => event.id === id));
+
+    expect(creatorEvents.every(Boolean)).toBe(true);
+    expect(creatorEvents.every((event) => event.rarity === "rare")).toBe(true);
+    expect(creatorEvents.map((event) => event.requirements?.minRoutes?.creator || 0)).toEqual([0, 1, 2, 3]);
+  });
+
+  it("resolves Content Creator only after the player explicitly commits to the route", () => {
+    const playCreatorChoice = (state, eventId, choiceId) => {
+      const next = structuredClone(state);
+      next.currentEvent = { id: eventId, choices: [] };
+      return advanceCareerRun(next, choiceId);
+    };
+    let state = createCareerRun({ seed: 20260819 });
+    state.turn = 8;
+    state.stage = "application";
+    state.counters.rejections = 2;
+    state = playCreatorChoice(state, "creator-essay", "read-comments");
+    state = playCreatorChoice(state, "creator-readers", "keep-writing");
+    state = playCreatorChoice(state, "creator-commission", "accept-commission");
+    state = playCreatorChoice(state, "creator-crossroads", "try-creator-path");
+    state.status = "complete";
+    state.currentEvent = null;
+
+    const result = summarizeCareerRun(state);
+
+    expect(state.routes.creator).toBe(4);
+    expect(result.ending.id).toBe("content_creator");
+    expect(result.path.profile.profile_branches).toEqual(expect.arrayContaining(["portfolio", "personal_site"]));
   });
 
   it("replays the same Events and outcomes for the same seed and choices", () => {

@@ -122,7 +122,7 @@ describe("Career Run resume behavior", () => {
     await user.click(screen.getByRole("button", { name: "开始这一局" }));
 
     const networkMeter = screen.getByRole("progressbar", { name: "职业连接与信息来源" });
-    expect(networkMeter.closest(".career-run-attribute")).toHaveTextContent("学长的联系方式");
+    expect(networkMeter.closest(".career-run-attribute")).toHaveTextContent("校友的联系方式");
     expect(networkMeter.closest(".career-run-attribute")).toHaveTextContent("Network +8");
   });
 
@@ -137,5 +137,26 @@ describe("Career Run resume behavior", () => {
     await user.click(screen.getByRole("button", { name: "开始这一局" }));
 
     expect(screen.queryByLabelText(/游戏进度/)).not.toBeInTheDocument();
+  });
+
+  it("marks a rare Event without hiding its recruiting category", async () => {
+    const user = userEvent.setup();
+    const saved = createCareerRun({ seed: 1953 });
+    saved.turn = 8;
+    saved.counters.rejections = 1;
+    saved.currentEvent = { id: "creator-essay", choices: [] };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+
+    render(
+      <MemoryRouter>
+        <CareerRunPage />
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "继续上次进度" }));
+
+    expect(screen.getByText("稀有事件")).toBeInTheDocument();
+    expect(screen.getByText("PROFILE PREPARATION")).toBeInTheDocument();
+    expect(screen.getByText("一篇求职随笔意外火了").closest(".career-run-event-card")).toHaveClass("is-rare");
   });
 });

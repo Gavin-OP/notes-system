@@ -28,10 +28,10 @@ Tests exercise only these interfaces and the standalone route behavior.
 - [x] Completing the run can save a browser-local Path draft without a backend or paid API.
 - [x] The standalone page is keyboard accessible, responsive, reduced-motion aware, and independent of the Learning Workspace and JobTI questionnaire routes.
 - [x] Event content and tuning values live outside React modules.
+- [x] Each completed run offers three eligible Legacy rewards and equips at most one for the next run.
 
 ## Out of scope
 
-- A cross-run Legacy or equipment system
-- Equipment, currency, combat, map movement, or progression trees
+- Equipment beyond the single equipped Legacy, currency, combat, map movement, or progression trees
 - Backend persistence, accounts, multiplayer, or AI-generated Events
 - New career Notes

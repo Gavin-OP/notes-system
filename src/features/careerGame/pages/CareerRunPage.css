@@ -71,8 +71,12 @@
 .career-run-event-card.category-networking { --event-accent: #527fc8; --event-accent-soft: #eaf1fc; --event-surface: #f6f9fe; }
 .career-run-event-card.category-interview { --event-accent: #7c68c7; --event-accent-soft: #f0edfb; --event-surface: #faf8ff; }
 .career-run-event-card.category-offer { --event-accent: #b75c75; --event-accent-soft: #faeaf0; --event-surface: #fff8fa; }
+.career-run-event-card.is-rare { --rare-accent: #9b5de5; border-color: color-mix(in srgb, var(--event-accent) 35%, var(--rare-accent)); background: radial-gradient(circle at 92% 8%, color-mix(in srgb, var(--rare-accent) 12%, transparent), transparent 34%), linear-gradient(145deg, color-mix(in srgb, var(--event-surface) 92%, white), color-mix(in srgb, var(--rare-accent) 9%, white)); box-shadow: 0 24px 60px color-mix(in srgb, var(--rare-accent) 13%, transparent); }
+.career-run-event-card.is-rare::before { background: linear-gradient(180deg, var(--event-accent), var(--rare-accent)); }
 .career-run-card-content { position: relative; z-index: 1; box-sizing: border-box; min-height: 560px; padding: clamp(40px, 5vw, 64px); }
+.career-run-event-labels { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .career-run-category { display: inline-flex; align-items: center; min-height: 28px; padding: 0 11px; border-radius: 999px; color: color-mix(in srgb, var(--event-accent) 82%, #17243a); font-size: 11px; font-weight: 800; letter-spacing: .1em; background: var(--event-accent-soft); }
+.career-run-rarity { display: inline-flex; align-items: center; min-height: 28px; padding: 0 11px; border: 1px solid color-mix(in srgb, var(--rare-accent) 28%, white); border-radius: 999px; color: #7041ad; font-size: 11px; font-weight: 800; letter-spacing: .08em; background: color-mix(in srgb, var(--rare-accent) 10%, white); }
 .career-run-event-card h2 { max-width: 590px; margin: 20px 0 10px; font-size: clamp(30px, 3.5vw, 46px); letter-spacing: -.045em; line-height: 1.15; }
 .career-run-event-description { max-width: 590px; margin: 0 0 28px; color: #4f5d70; font-size: 17px; line-height: 1.7; }
 .career-run-choices { display: grid; gap: 12px; }

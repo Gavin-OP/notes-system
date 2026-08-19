@@ -167,6 +167,7 @@ function Intro({ savedRun, equippedLegacy, onStart, onResume }) {
 function Play({ run, showingOutcome, interactionError, onChoose, onContinue, onRestart }) {
   const event = run.currentEvent;
   const displayedCategory = showingOutcome ? run.history.at(-1)?.category : event?.category;
+  const displayedRarity = showingOutcome ? run.history.at(-1)?.rarity : event?.rarity;
   const legacyHasDirectResourceEffect = Boolean(Object.keys(run.legacy?.initialEffects || {}).length);
   return (
     <main className="career-run-shell career-run-play">
@@ -193,7 +194,7 @@ function Play({ run, showingOutcome, interactionError, onChoose, onContinue, onR
           </div>
         </aside>
 
-        <section className={`career-run-event-card category-${displayedCategory || "profile"}`}>
+        <section className={`career-run-event-card category-${displayedCategory || "profile"}${displayedRarity === "rare" ? " is-rare" : ""}`}>
           {showingOutcome ? (
             <div className="career-run-card-content career-run-outcome" aria-live="polite">
               <span className="career-run-overline">这次选择带来了</span>
@@ -206,7 +207,10 @@ function Play({ run, showingOutcome, interactionError, onChoose, onContinue, onR
             </div>
           ) : (
             <div className="career-run-card-content">
-              <span className="career-run-category">{CATEGORY_LABELS[event.category]}</span>
+              <div className="career-run-event-labels">
+                <span className="career-run-category">{CATEGORY_LABELS[event.category]}</span>
+                {event.rarity === "rare" ? <span className="career-run-rarity">稀有事件</span> : null}
+              </div>
               <h2>{event.title}</h2>
               <p className="career-run-event-description">{event.description}</p>
               <div className="career-run-choices">

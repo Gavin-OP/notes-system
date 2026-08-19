@@ -36,9 +36,12 @@ function meetsRequirements(state, requirements = {}) {
   const minAttributes = requirements.minAttributes || {};
   const maxAttributes = requirements.maxAttributes || {};
   const minCounters = requirements.minCounters || {};
+  if (Number.isFinite(requirements.minTurn) && state.turn < requirements.minTurn) return false;
   if (Object.entries(minAttributes).some(([key, value]) => (state.attributes[key] ?? 0) < value)) return false;
   if (Object.entries(maxAttributes).some(([key, value]) => (state.attributes[key] ?? 0) > value)) return false;
   if (Object.entries(minCounters).some(([key, value]) => (state.counters[key] ?? 0) < value)) return false;
+  if (Object.keys(requirements.minCountersAny || {}).length
+    && !Object.entries(requirements.minCountersAny).some(([key, value]) => (state.counters[key] ?? 0) >= value)) return false;
   if ((requirements.flagsAny || []).length && !requirements.flagsAny.some((flag) => state.flags[flag])) return false;
   if ((requirements.flagsAll || []).some((flag) => !state.flags[flag])) return false;
   if ((requirements.flagsAbsent || []).some((flag) => state.flags[flag])) return false;
@@ -53,6 +56,7 @@ function presentEvent(event, state) {
     category: event.category,
     title: event.title,
     description: event.description,
+    rarity: event.rarity || "standard",
     choices: event.choices.map((item) => ({
       ...clone(item),
       available: meetsRequirements(state, item.requirements),
@@ -76,6 +80,8 @@ function eventWeight(event, state) {
   if (tags.has("freelance")) weight *= state.modifiers.freelanceWeight || 1;
   if (tags.has("startup")) weight *= state.modifiers.startupWeight || 1;
   if (tags.has("stall")) weight *= state.modifiers.stallWeight || 1;
+  if (tags.has("academic")) weight *= state.modifiers.academicWeight || 1;
+  if (tags.has("networking") && state.counters.networkingOpportunities > 0) weight *= 1.3;
   const previousCategory = state.history.at(-1)?.category;
   if (previousCategory === event.category) weight *= 0.72;
   return Math.max(0.05, weight);
@@ -169,7 +175,7 @@ function applyChoicePayload(state, payload = {}) {
   state.nextTags = [...new Set([...(payload.nextTags || [])])];
 }
 
-function successProbability(state, choice) {
+function successProbability(state, event, choice) {
   const model = PROBABILITY_MODELS[choice.successModel];
   if (!model) return null;
   let probability = model.base + (choice.probabilityBonus || 0);
@@ -183,7 +189,18 @@ function successProbability(state, choice) {
     : choice.successModel?.includes("interview") || choice.successModel === "offer_decision"
       ? state.modifiers.interviewProbability || 0
       : 0;
-  return clamp(probability + pity + legacyBonus, 0.08, model.cap || 0.92);
+  let situationalBonus = 0;
+  if (event.id === "final-round" && !state.legacyUsage.pillowUsed) {
+    situationalBonus += state.modifiers.finalRoundProbability || 0;
+  }
+  if (event.category === "interview" && state.legacyUsage.nextInterviewBonus) {
+    situationalBonus += state.legacyUsage.nextInterviewBonus;
+  }
+  if (["behavioral-interview", "case-interview"].includes(event.id) && !state.legacyUsage.interviewerApprovalUsed) {
+    situationalBonus += state.modifiers.authenticInterviewProbability || 0;
+  }
+  if (choice.successModel === "group_interview") situationalBonus += state.modifiers.groupInterviewProbability || 0;
+  return clamp(probability + pity + legacyBonus + situationalBonus, 0.08, model.cap || 0.92);
 }
 
 function visibleDeltas(before, after) {
@@ -209,13 +226,24 @@ function normalizeState(state) {
     applications: 0, interviews: 0, referrals: 0, offers: 0, rejections: 0,
     interviewLeads: 0, offerLeads: 0, pendingOffers: 0, acceptedOffers: 0,
     declinedOffers: 0, waitlists: 0,
+    networkingOpportunities: 0, groupInterviews: 0, lowEnergyEvents: 0,
     ...(state.counters || {}),
   };
   state.metrics = { careerMomentum: 0, alternativePath: 0, lifeSatisfaction: 50, ...(state.metrics || {}) };
-  state.routes = { startup: 0, freelance: 0, academic: 0, travel: 0, stall: 0, startupEmployee: 0, hiddenCareer: 0, ...(state.routes || {}) };
+  state.routes = { startup: 0, freelance: 0, academic: 0, travel: 0, stall: 0, creator: 0, startupEmployee: 0, hiddenCareer: 0, ...(state.routes || {}) };
   state.opportunityAges = { interview: 0, final: 0, ...(state.opportunityAges || {}) };
   state.failureStreaks = { application: 0, interview: 0, final: 0, ...(state.failureStreaks || {}) };
   state.modifiers = { ...(state.modifiers || {}) };
+  state.legacyUsage = {
+    pillowUsed: false,
+    powerBankUsed: false,
+    interviewReviewUsed: false,
+    nextInterviewBonus: 0,
+    interviewerApprovalUsed: false,
+    bonusApplications: 0,
+    espressoDrains: 0,
+    ...(state.legacyUsage || {}),
+  };
   state.restChoices = state.restChoices || 0;
   state.minimums = {
     energy: state.attributes?.energy ?? INITIAL_ATTRIBUTES.energy,
@@ -288,6 +316,16 @@ export function createCareerRun({ seed = Date.now(), legacyId = null } = {}) {
     applyAttributes(state, legacy.initialEffects || {});
     state.minimums.energy = state.attributes.energy;
     state.minimums.confidence = state.attributes.confidence;
+    if (legacy.id === "campus-celebrity") {
+      const random = nextRandom(state.randomState);
+      state.randomState = random.randomState;
+      if (random.value < (state.modifiers.networkingOpportunityChance || 0)) {
+        state.counters.networkingOpportunities += 1;
+      } else {
+        applyAttributes(state, { network: state.modifiers.networkingFallback || 0 });
+      }
+      state.maximums.network = state.attributes.network;
+    }
   }
   const opening = EVENT_BY_ID.get("market-crossroads");
   state.currentEvent = presentEvent(opening, state);
@@ -324,6 +362,9 @@ export function advanceCareerRun(currentState, choiceId) {
 
   const before = clone(state.attributes);
   reduceCooldowns(state);
+  if (event.id === "final-round" && state.modifiers.finalRoundEnergy && !state.legacyUsage.pillowUsed) {
+    applyAttributes(state, { energy: state.modifiers.finalRoundEnergy });
+  }
   applyChoicePayload(state, choice);
   if (state.legacy?.id === "portfolio-made" && event.tags?.includes("portfolio")) applyAttributes(state, { time: state.modifiers.portfolioTimeDiscount || 0 });
   if (state.legacy?.id === "jd-reader" && (choice.id === "research" || choice.id === "fit" || choice.id === "benchmark")) applyAttributes(state, { profile: state.modifiers.researchProfileBonus || 0 });
@@ -332,7 +373,7 @@ export function advanceCareerRun(currentState, choiceId) {
   });
   if (choice.intensity === "high" && before.energy < 30) applyAttributes(state, { energy: -3, confidence: -1 });
 
-  const probability = successProbability(state, choice);
+  const probability = successProbability(state, event, choice);
   let selectedOutcome = choice.outcome || null;
   let succeeded = null;
   if (probability !== null) {
@@ -345,6 +386,59 @@ export function advanceCareerRun(currentState, choiceId) {
   applyChoicePayload(state, selectedOutcome);
   applyFlags(state, choice.flags);
   recordPipelineResolution(state, event, succeeded, choice);
+  if (event.id === "final-round" && state.modifiers.finalRoundEnergy && !state.legacyUsage.pillowUsed) {
+    state.legacyUsage.pillowUsed = true;
+  }
+  if (event.category === "interview" && event.id !== "final-round" && choice.id !== "reschedule") {
+    if (state.legacyUsage.nextInterviewBonus) state.legacyUsage.nextInterviewBonus = 0;
+    if (succeeded === false && state.modifiers.interviewFailureProfile && !state.legacyUsage.interviewReviewUsed) {
+      applyAttributes(state, { profile: state.modifiers.interviewFailureProfile });
+      state.legacyUsage.interviewReviewUsed = true;
+      state.legacyUsage.nextInterviewBonus = state.modifiers.nextInterviewProbability || 0;
+    }
+  }
+  if (["behavioral-interview", "case-interview"].includes(event.id)) {
+    if (succeeded && ["stories", "honest", "explore", "authentic"].includes(choice.id)) {
+      state.flags.authenticInterviewSuccess = true;
+    }
+    if (state.modifiers.authenticInterviewProbability && !state.legacyUsage.interviewerApprovalUsed) {
+      state.legacyUsage.interviewerApprovalUsed = true;
+    }
+  }
+  if (choice.successModel === "group_interview") state.counters.groupInterviews += 1;
+  if (event.id === "final-round" && choice.id === "protect") state.flags.restedBeforeFinal = true;
+  if (event.id === "rejection-wave" && choice.id === "review"
+    && Object.keys(state.failureTags).some((tag) => tag.includes("interview"))) {
+    state.flags.reviewedInterviewFailure = true;
+  }
+  if (event.category === "networking" && state.counters.networkingOpportunities > 0) {
+    state.counters.networkingOpportunities -= 1;
+  }
+  if (event.category === "application" && state.modifiers.bonusApplicationChance
+    && state.legacyUsage.bonusApplications < (state.modifiers.maxBonusApplications || 0)) {
+    const random = nextRandom(state.randomState);
+    state.randomState = random.randomState;
+    if (random.value < state.modifiers.bonusApplicationChance) {
+      state.counters.applications += 1;
+      state.legacyUsage.bonusApplications += 1;
+    }
+  }
+  const rawLowEnergy = state.attributes.energy <= 20;
+  if (rawLowEnergy) state.counters.lowEnergyEvents += 1;
+  state.minimums.energy = Math.min(state.minimums.energy, state.attributes.energy);
+  if (state.attributes.energy > 0 && state.attributes.energy <= (state.modifiers.lowEnergyThreshold || -1)
+    && !state.legacyUsage.powerBankUsed) {
+    applyAttributes(state, { energy: state.modifiers.lowEnergyRecovery || 0 });
+    state.legacyUsage.powerBankUsed = true;
+  }
+  if (state.modifiers.postEventEnergyDrainChance && state.attributes.energy > 0) {
+    const random = nextRandom(state.randomState);
+    state.randomState = random.randomState;
+    if (random.value < state.modifiers.postEventEnergyDrainChance) {
+      state.attributes.energy = Math.max(1, state.attributes.energy - (state.modifiers.postEventEnergyDrain || 0));
+      state.legacyUsage.espressoDrains += 1;
+    }
+  }
   const resourcesDepleted = state.attributes.time <= 0 || state.attributes.energy <= 0;
   (event.cooldownTags || []).forEach((tag) => { state.cooldowns[tag] = 2; });
   state.seenEventIds.push(event.id);
@@ -374,6 +468,7 @@ export function advanceCareerRun(currentState, choiceId) {
     eventId: event.id,
     eventTitle: event.title,
     category: event.category,
+    rarity: event.rarity || "standard",
     choiceId: choice.id,
     choiceLabel: choice.label,
     outcomeId: selectedOutcome.id,
@@ -406,7 +501,8 @@ function resolvePersona(state) {
 function resolveEnding(state) {
   const accepted = state.counters.acceptedOffers || state.counters.offers;
   let id = "still_searching";
-  if (state.flags.startupReady && state.routes.startup >= 70) id = "startup_founder";
+  if (state.flags.creatorReady && state.routes.creator >= 4) id = "content_creator";
+  else if (state.flags.startupReady && state.routes.startup >= 70) id = "startup_founder";
   else if (state.flags.freelanceReady && state.routes.freelance >= 60) id = "freelancer";
   else if (state.flags.academicReady && state.routes.academic >= 60) id = "academic";
   else if (state.flags.travelReady && state.routes.travel >= 65) id = "world_travel";
@@ -463,6 +559,15 @@ function unlockedLegacyIds(state, ending) {
   if (ending.id === "freelancer") ids.push("first-client");
   if (ending.id === "startup_founder") ids.push("first-user");
   if (ending.id === "stall_business") ids.push("stall-pass");
+  if (ending.id === "academic") ids.push("professor-meeting");
+  if (state.flags.restedBeforeFinal) ids.push("comfortable-pillow");
+  if (state.minimums.energy <= 15 && ending.id !== "burnout") ids.push("power-bank");
+  if (state.maximums.network >= 60) ids.push("campus-celebrity");
+  if (state.counters.lowEnergyEvents >= 3) ids.push("seven-shot-americano");
+  if (state.flags.reviewedInterviewFailure) ids.push("interview-review");
+  if (state.counters.applications >= 15) ids.push("application-amnesia");
+  if (state.flags.authenticInterviewSuccess) ids.push("interviewer-approval");
+  if (state.counters.groupInterviews >= 2) ids.push("extrovert-mask");
   const fallback = ["senior-contact", "readable-resume", "rejection-calm", "jd-reader"];
   fallback.forEach((id) => { if (ids.length < 3 && !ids.includes(id)) ids.push(id); });
   return ids;
@@ -496,7 +601,9 @@ function buildPath(state, persona) {
     profileBranches.push("linkedin", "cover_letter");
     signals.push("本局的 Profile 或简历筛选表现仍有提升空间，Path 会提前安排材料准备。");
   }
-  const alternativeProgress = Math.max(...Object.values(state.routes || {}));
+  const alternativeProgress = Math.max(
+    ...Object.entries(state.routes || {}).map(([key, value]) => key === "creator" ? value * 25 : value),
+  );
   if (alternativeProgress >= 30) {
     profileBranches.push("portfolio", "personal_site");
     signals.push("本局有一条项目或非传统路线持续生长，Path 会加入项目集与个人主页，帮助你保留真实成果。 ");

@@ -10,7 +10,7 @@ const option = (id, label, behaviorEffects, message, payload = {}) => ({
   }),
 });
 
-export const RARE_EVENT_POOL = [
+const RARE_EVENTS = [
   {
     id: "late-recruiter-message", category: "application", stages: ["application", "interview"], baseWeight: 1.2,
     title: "晚上十一点，Recruiter 突然发来消息", description: "对方问你明天是否方便快速聊聊。机会来得突然，你也不必把秒回当成职业素养。", tags: ["unexpected", "interview"],
@@ -134,6 +134,46 @@ export const RARE_EVENT_POOL = [
     ],
   },
   {
+    id: "creator-essay", category: "profile", stages: ["application", "interview", "closing"], baseWeight: 0.55,
+    requirements: { minTurn: 6, minCountersAny: { rejections: 1, interviews: 1, waitlists: 1, declinedOffers: 1 } },
+    title: "一篇求职随笔意外火了", description: "经历几轮投递、等待或拒绝以后，你把这段时间的感受写了下来。原本只是给自己留个记录，发布后却意外被很多人转发和收藏。", tags: ["creator", "alternative"],
+    choices: [
+      option("read-comments", "看看评论区，发现很多人经历过差不多的事情", { expression: 3, reflection: 2 }, "你从评论里看见了许多相似的处境。这篇文章不再只是自己的备忘录。", { effects: { time: -3, energy: -2, confidence: 5, network: 3 }, routes: { creator: 1 }, metrics: { alternativePath: 5 }, nextTags: ["creator"] }),
+      option("write-again", "趁还有感觉，再写一篇自己真正想说的", { expression: 4, action: 1 }, "你没有急着总结成功经验，而是继续写下那些仍在发生的犹豫和选择。", { effects: { time: -5, energy: -4, confidence: 4 }, routes: { creator: 1 }, metrics: { alternativePath: 7 }, nextTags: ["creator"] }),
+      option("return-to-interview", "有人看已经挺意外了，还是继续准备下一轮面试", { pacing: 2, action: 2 }, "你收好这次意外的回响，把注意力放回即将到来的面试。", { effects: { time: -2, energy: 2 }, metrics: { careerMomentum: 4 } }),
+    ],
+  },
+  {
+    id: "creator-readers", category: "networking", stages: ["application", "interview", "closing"], baseWeight: 1.45,
+    requirements: { minRoutes: { creator: 1 } },
+    title: "开始有人等你更新", description: "几天后，那篇随笔还在被转发。有人留言问“后来怎么样了？”大家感兴趣的不只是技巧，也包括一个普通人在这段过程里经历了什么。", tags: ["creator", "alternative"],
+    choices: [
+      option("keep-writing", "继续记录这一段求职生活", { expression: 3, reflection: 2 }, "新的文字让读者看见这段路并不只有结果，也让你更诚实地整理了自己的经历。", { effects: { time: -5, energy: -4, confidence: 4, network: 4 }, routes: { creator: 1 }, nextTags: ["creator"] }),
+      option("broader-stories", "写一些更完整的故事，不只围绕求职结果", { exploration: 3, expression: 3 }, "写作开始连接求职之外的生活。你第一次意识到，这可能不只是一篇经验帖。", { effects: { time: -6, energy: -5 }, routes: { creator: 1 }, metrics: { lifeSatisfaction: 5, alternativePath: 8 }, nextTags: ["creator"] }),
+      option("occasional", "偶尔写就好，主要精力仍然留给求职", { pacing: 3 }, "你没有把一次意外流量立刻变成新的 KPI，写作和求职暂时维持着舒服的距离。", { effects: { time: -2, energy: 4 }, metrics: { careerMomentum: 3 } }),
+    ],
+  },
+  {
+    id: "creator-commission", category: "application", stages: ["interview", "closing"], baseWeight: 1.6,
+    requirements: { minRoutes: { creator: 2 } },
+    title: "有编辑问你愿不愿意投稿", description: "一家媒体或内容平台看到了之前的文章，邀请你写一篇新稿。这是第一次有人明确愿意为你的文字提供正式发表机会。", tags: ["creator", "alternative"],
+    choices: [
+      option("accept-commission", "接下来，认真写一篇", { expression: 4, action: 2 }, "你完成了第一次正式投稿，也第一次收到稿费。文字从自我记录变成了真实交付。", { effects: { time: -7, energy: -6, profile: 4, confidence: 7 }, routes: { creator: 1 }, metrics: { alternativePath: 10 }, flags: ["creatorPublished"], nextTags: ["creator"] }),
+      option("keep-voice", "可以写，但我还是想保留自己的表达方式", { expression: 3, pacing: 2 }, "稿件顺利发表，你也没有为了平台风格把自己改写成另一个人。", { effects: { time: -6, energy: -5, confidence: 5 }, routes: { creator: 1 }, metrics: { lifeSatisfaction: 4 }, flags: ["creatorPublished"], nextTags: ["creator"] }),
+      option("decline-commission", "最近面试太多，这次先不接", { pacing: 3, analysis: 1 }, "你礼貌说明了情况，也保留了未来再合作的可能。当前求职流程没有因此失去节奏。", { effects: { energy: 4 }, metrics: { careerMomentum: 4 } }),
+    ],
+  },
+  {
+    id: "creator-crossroads", category: "offer", stages: ["closing"], baseWeight: 1.8,
+    requirements: { minRoutes: { creator: 3 } },
+    title: "写作开始变成一条真正存在的路", description: "后来又有人约稿，也开始有固定读者。原本只是为了消化求职情绪写下第一篇文章，现在你第一次认真想：如果继续写下去，会发生什么？", tags: ["creator", "alternative"],
+    choices: [
+      option("try-creator-path", "给自己一段时间，认真试试内容创作", { exploration: 2, expression: 3, action: 2 }, "本来只是想写点心里话，后来真的有人等你更新。你决定给这条路一次正式的尝试。", { effects: { time: -5, energy: -4, confidence: 7 }, routes: { creator: 1 }, metrics: { alternativePath: 15 }, flags: ["creatorReady"] }),
+      option("keep-both", "保留写作，同时继续找工作", { pacing: 3, expression: 1 }, "写作留下了，求职也继续。你不急着把正在生长的兴趣立刻变成唯一身份。", { effects: { time: -3, energy: -3, confidence: 4 }, routes: { creator: 1 }, metrics: { careerMomentum: 5 } }),
+      option("keep-personal", "我更喜欢它作为生活的一部分", { pacing: 4, exploration: 1 }, "你保留了写作带来的快乐，没有要求它立刻证明商业价值。", { effects: { energy: 5 }, metrics: { lifeSatisfaction: 8 } }),
+    ],
+  },
+  {
     id: "family-question", category: "offer", stages: ["application", "interview", "closing"], baseWeight: 1.4,
     title: "家里人问：所以你找到工作了吗？", description: "他们可能只是关心，但这个问题仍然精准落在你最焦虑的地方。", tags: ["wellbeing"],
     choices: [
@@ -178,3 +218,5 @@ export const RARE_EVENT_POOL = [
     ],
   },
 ];
+
+export const RARE_EVENT_POOL = RARE_EVENTS.map((event) => ({ ...event, rarity: "rare" }));

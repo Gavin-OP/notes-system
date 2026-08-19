@@ -62,6 +62,7 @@ export const PERSONA_COPY = {
 };
 
 export const ENDING_COPY = {
+  content_creator: { title: "内容创作者", description: "本来只是想写点心里话，后来真的有人等你更新。" },
   startup_founder: { title: "创业了", description: "原本只是一起做点东西，最后真的长成了一条你愿意继续负责的路。" },
   freelancer: { title: "Freelancer", description: "一次小交付带来了下一次，你开始拥有自己选择客户和项目的可能。" },
   academic: { title: "读研 / PhD", description: "真实研究经历让你确认，这条路线值得继续认真探索。" },
