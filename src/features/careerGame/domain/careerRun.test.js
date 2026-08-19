@@ -280,9 +280,9 @@ describe("Career Run public behavior", () => {
     state.turn = 8;
     state.stage = "application";
     state.counters.rejections = 2;
-    state = playCreatorChoice(state, "creator-essay", "read-comments");
-    state = playCreatorChoice(state, "creator-readers", "keep-writing");
-    state = playCreatorChoice(state, "creator-commission", "accept-commission");
+    state = playCreatorChoice(state, "creator-essay", "write-again");
+    state = playCreatorChoice(state, "creator-readers", "broader-stories");
+    state = playCreatorChoice(state, "creator-commission", "keep-voice");
     state = playCreatorChoice(state, "creator-crossroads", "try-creator-path");
     state.status = "complete";
     state.currentEvent = null;
@@ -292,6 +292,74 @@ describe("Career Run public behavior", () => {
     expect(state.routes.creator).toBe(4);
     expect(result.ending.id).toBe("content_creator");
     expect(result.path.profile.profile_branches).toEqual(expect.arrayContaining(["portfolio", "personal_site"]));
+  });
+
+  it("configures the approved second-round rare Event set", () => {
+    const rareEvents = CAREER_EVENT_POOL.filter((event) => event.rarity === "rare");
+    expect(rareEvents).toHaveLength(24);
+    expect(rareEvents.map((event) => event.title)).toEqual(expect.arrayContaining([
+      "晚上十点，HR 突然发来消息",
+      "你的专业技能吸引到了来谈合作的人",
+      "你在社交平台上发布的一篇求职随笔意外火了",
+      "因为工作日的高效努力，你提前完成了 to-do list 里的全部事项。这周六你没有任何事情要做",
+    ]));
+    expect(CAREER_EVENT_POOL.find((event) => event.id === "late-recruiter-message").choices).toHaveLength(2);
+    expect(CAREER_EVENT_POOL.find((event) => event.id === "creator-crossroads").choices.map((choice) => choice.id))
+      .toEqual(["try-creator-path", "keep-personal"]);
+  });
+
+  it("closes the startup route after a failed unilateral push without deleting earned evidence", () => {
+    const state = createCareerRun({ seed: 1500 });
+    state.currentEvent = { id: "partner-disagreement", choices: [] };
+    state.routes.startup = 40;
+    state.attributes.confidence = 30;
+    state.behavior.networking = 0;
+    state.attributes.profile = 25;
+
+    const next = advanceCareerRun(state, "push");
+
+    expect(next.lastOutcome.probability).toBeCloseTo(0.6, 5);
+    expect(next.lastOutcome.succeeded).toBe(false);
+    expect(next.flags.startupClosed).toBe(true);
+    expect(next.attributes.profile).toBeGreaterThanOrEqual(30);
+    expect(next.currentEvent?.id).not.toMatch(/friend-project|first-user|incubator-invite|partner-disagreement/);
+  });
+
+  it("changes editorial and improvised-interview probabilities with current state", () => {
+    const editorial = createCareerRun({ seed: 1500 });
+    editorial.currentEvent = { id: "creator-commission", choices: [] };
+    editorial.routes.creator = 2;
+    editorial.attributes.confidence = 35;
+    const lowConfidenceDraft = advanceCareerRun(editorial, "keep-voice");
+
+    const improvised = createCareerRun({ seed: 1500 });
+    improvised.currentEvent = { id: "unexpected-interview-question", choices: [] };
+    improvised.counters.interviewLeads = 1;
+    improvised.attributes.energy = 25;
+    improvised.behavior.expression = 0;
+    const pressuredAnswer = advanceCareerRun(improvised, "improvise");
+
+    expect(lowConfidenceDraft.lastOutcome.probability).toBeCloseTo(0.6, 5);
+    expect(pressuredAnswer.lastOutcome.probability).toBeCloseTo(0.55, 5);
+    expect(lowConfidenceDraft.history.at(-1).outcome).toBe("failure");
+    expect(pressuredAnswer.history.at(-1).outcome).toBe("failure");
+  });
+
+  it("resolves the final Creator Choice into the stronger hidden branch", () => {
+    const resolveCreator = (careerCreator, writingCreator) => {
+      const state = createCareerRun({ seed: 3 });
+      state.currentEvent = { id: "creator-crossroads", choices: [] };
+      state.routes.creator = 3;
+      state.routes.careerCreator = careerCreator;
+      state.routes.writingCreator = writingCreator;
+      const next = advanceCareerRun(state, "try-creator-path");
+      next.status = "complete";
+      next.currentEvent = null;
+      return summarizeCareerRun(next);
+    };
+
+    expect(resolveCreator(4, 1).ending.id).toBe("career_creator");
+    expect(resolveCreator(1, 4).ending.id).toBe("content_creator");
   });
 
   it("replays the same Events and outcomes for the same seed and choices", () => {
@@ -342,9 +410,11 @@ describe("Career Run public behavior", () => {
   it("configures a concrete consequence for every playable Choice", () => {
     CAREER_EVENT_POOL.forEach((event) => {
       event.choices.forEach((choice) => {
-        if (choice.successModel) {
+        if (choice.successModel || choice.probabilityRule) {
           expect(choice.success?.message, `${event.id}/${choice.id} success`).toBeTruthy();
           expect(choice.failure?.message, `${event.id}/${choice.id} failure`).toBeTruthy();
+        } else if (choice.conditionalOutcomes) {
+          expect(choice.conditionalOutcomes.every((item) => item.outcome?.message), `${event.id}/${choice.id} conditional outcomes`).toBe(true);
         } else {
           expect(choice.outcome?.message, `${event.id}/${choice.id} outcome`).toBeTruthy();
         }

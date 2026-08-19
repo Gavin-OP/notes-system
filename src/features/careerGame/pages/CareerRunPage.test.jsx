@@ -157,6 +157,6 @@ describe("Career Run resume behavior", () => {
 
     expect(screen.getByText("稀有事件")).toBeInTheDocument();
     expect(screen.getByText("PROFILE PREPARATION")).toBeInTheDocument();
-    expect(screen.getByText("一篇求职随笔意外火了").closest(".career-run-event-card")).toHaveClass("is-rare");
+    expect(screen.getByText("你在社交平台上发布的一篇求职随笔意外火了").closest(".career-run-event-card")).toHaveClass("is-rare");
   });
 });

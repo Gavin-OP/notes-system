@@ -176,6 +176,25 @@ function applyChoicePayload(state, payload = {}) {
 }
 
 function successProbability(state, event, choice) {
+  if (choice.probabilityRule) {
+    if (choice.probabilityRule === "startup_push") {
+      const lowNetworking = (state.behavior.networking || 0) < 6;
+      const lowConfidence = state.attributes.confidence < 35;
+      if (lowNetworking && lowConfidence) return 0.6;
+      if (lowNetworking || lowConfidence) return 0.7;
+      return 0.95;
+    }
+    if (choice.probabilityRule === "editorial_voice") {
+      return state.attributes.confidence < 40 ? 0.6 : 0.9;
+    }
+    if (choice.probabilityRule === "interview_improv") {
+      const lowEnergy = state.attributes.energy < 30;
+      const lowExpression = (state.behavior.expression || 0) < 6;
+      if (lowEnergy && lowExpression) return 0.55;
+      if (lowEnergy || lowExpression) return 0.7;
+      return 0.9;
+    }
+  }
   const model = PROBABILITY_MODELS[choice.successModel];
   if (!model) return null;
   let probability = model.base + (choice.probabilityBonus || 0);
@@ -230,7 +249,11 @@ function normalizeState(state) {
     ...(state.counters || {}),
   };
   state.metrics = { careerMomentum: 0, alternativePath: 0, lifeSatisfaction: 50, ...(state.metrics || {}) };
-  state.routes = { startup: 0, freelance: 0, academic: 0, travel: 0, stall: 0, creator: 0, startupEmployee: 0, hiddenCareer: 0, ...(state.routes || {}) };
+  state.routes = {
+    startup: 0, freelance: 0, academic: 0, travel: 0, stall: 0,
+    creator: 0, careerCreator: 0, writingCreator: 0,
+    startupEmployee: 0, hiddenCareer: 0, ...(state.routes || {}),
+  };
   state.opportunityAges = { interview: 0, final: 0, ...(state.opportunityAges || {}) };
   state.failureStreaks = { application: 0, interview: 0, final: 0, ...(state.failureStreaks || {}) };
   state.modifiers = { ...(state.modifiers || {}) };
@@ -374,7 +397,15 @@ export function advanceCareerRun(currentState, choiceId) {
   if (choice.intensity === "high" && before.energy < 30) applyAttributes(state, { energy: -3, confidence: -1 });
 
   const probability = successProbability(state, event, choice);
-  let selectedOutcome = choice.outcome || null;
+  const conditionalOutcome = choice.conditionalOutcomes?.find((candidate) => {
+    if (!candidate.when) return true;
+    if (candidate.when.routeGreaterThan) {
+      const [left, right] = candidate.when.routeGreaterThan;
+      return (state.routes[left] || 0) > (state.routes[right] || 0);
+    }
+    return false;
+  })?.outcome;
+  let selectedOutcome = conditionalOutcome || choice.outcome || null;
   let succeeded = null;
   if (probability !== null) {
     const random = nextRandom(state.randomState);
@@ -471,7 +502,10 @@ export function advanceCareerRun(currentState, choiceId) {
     rarity: event.rarity || "standard",
     choiceId: choice.id,
     choiceLabel: choice.label,
-    outcomeId: selectedOutcome.id,
+    outcomeId: selectedOutcome.id === "resolved"
+      ? succeeded === null ? "neutral" : succeeded ? "success" : "failure"
+      : selectedOutcome.id,
+    outcome: succeeded === null ? "neutral" : succeeded ? "success" : "failure",
     outcomeMessage: selectedOutcome.message,
     succeeded,
     deltas: state.lastOutcome.deltas,
@@ -501,7 +535,8 @@ function resolvePersona(state) {
 function resolveEnding(state) {
   const accepted = state.counters.acceptedOffers || state.counters.offers;
   let id = "still_searching";
-  if (state.flags.creatorReady && state.routes.creator >= 4) id = "content_creator";
+  if (state.flags.careerCreatorReady && state.routes.creator >= 4) id = "career_creator";
+  else if (state.flags.creatorReady && state.routes.creator >= 4) id = "content_creator";
   else if (state.flags.startupReady && state.routes.startup >= 70) id = "startup_founder";
   else if (state.flags.freelanceReady && state.routes.freelance >= 60) id = "freelancer";
   else if (state.flags.academicReady && state.routes.academic >= 60) id = "academic";
