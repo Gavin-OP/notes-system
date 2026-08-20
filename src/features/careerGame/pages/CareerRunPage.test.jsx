@@ -88,6 +88,11 @@ describe("Career Run resume behavior", () => {
 
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "应届生开荒局" })).toBeInTheDocument();
+    expect(screen.getByText("你是一名刚从学校毕业的求职者，带着有限的时间和精力进入求职季。")).toBeInTheDocument();
+    expect(screen.getByText("随机事件")).toBeInTheDocument();
+    expect(screen.getByText("属性养成")).toBeInTheDocument();
+    expect(screen.getByText("多种结局")).toBeInTheDocument();
+    expect(screen.queryByText("5–10 分钟")).not.toBeInTheDocument();
   });
 
   it("warns when Time and Energy are running low without recoloring growth attributes", async () => {

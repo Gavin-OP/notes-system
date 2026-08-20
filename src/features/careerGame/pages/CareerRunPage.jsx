@@ -144,11 +144,29 @@ function Intro({ savedRun, equippedLegacy, onStart, onResume }) {
         <div className="career-run-intro-copy">
           <span className="career-run-overline">LIGHTHOUSE · CAREER RUN</span>
           <h1>应届生开荒局</h1>
-          <p className="career-run-lead">你有一段有限的求职季，也有很多并不完美的选择。投递、准备、社交、休息——每一步都会影响之后发生的事。</p>
-          <div className="career-run-rules" aria-label="游戏说明">
-            <div><strong>5–10 分钟</strong><span>完成一轮求职过程</span></div>
-            <div><strong>没有标准答案</strong><span>只有不同资源与策略</span></div>
-            <div><strong>留在浏览器</strong><span>不调用 AI 或后端 API</span></div>
+          <p className="career-run-lead">
+            <span>你是一名刚从学校毕业的求职者，带着有限的时间和精力进入求职季。</span>
+            <span>投递、面试、Networking、拒信、意外机会和惊喜事件随机冒出。</span>
+            <span>你会选择海投，还是精准投递？</span>
+            <span>热心校友会为你带来什么帮助？</span>
+            <span>你会拿到 Dream Offer，还是在命运的安排下走上创业甚至网红的道路？</span>
+          </p>
+          <div className="career-run-rules" aria-label="玩法卖点">
+            <div>
+              <span className="career-run-rule-index" aria-hidden="true">01</span>
+              <strong>随机事件</strong>
+              <span>岗位、面试、拒信、Referral 和隐藏支线会根据你的状态随机出现</span>
+            </div>
+            <div>
+              <span className="career-run-rule-index" aria-hidden="true">02</span>
+              <strong>属性养成</strong>
+              <span>你的选择会留下痕迹。时间、精力、信心、材料和人脉会一路变化，并影响之后的事件</span>
+            </div>
+            <div>
+              <span className="career-run-rule-index" aria-hidden="true">03</span>
+              <strong>多种结局</strong>
+              <span>求职主线之外，还藏着不同的人生支线</span>
+            </div>
           </div>
           <div className="career-run-intro-actions">
             {savedRun ? <button className="career-run-primary" type="button" onClick={onResume}>继续上次进度</button> : null}
