@@ -1663,7 +1663,13 @@ const NoteLayout = () => {
                 pilotMode={!FULL_PRODUCT_ENABLED}
                 panelWidth={learningSiderWidth}
                 onTogglePathExpand={() => setLearningSiderWidth((width) => width <= 340 ? getPilotPathExpandedWidth() : PILOT_PATH_RAIL_WIDTH)}
-                onConfigurePath={() => setLearningSiderWidth(getPilotPathExpandedWidth())}
+                onConfigurePath={() => {
+                  if (isMobile) {
+                    setPilotPathSetupOpen(true);
+                    return;
+                  }
+                  setLearningSiderWidth(getPilotPathExpandedWidth());
+                }}
                 onSelect={(path) => {
                   handleNoteSelect(path);
                   if (isMobile) setCollapsed(true);

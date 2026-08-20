@@ -11,6 +11,7 @@ import {
   PERSONA_PROFILES,
   PITY_BONUSES,
   PROBABILITY_MODELS,
+  RARE_EVENT_WEIGHT_MULTIPLIER,
   RESOURCE_TUNING,
   stageForTurn,
 } from "../config/gameConfig";
@@ -66,6 +67,7 @@ function presentEvent(event, state) {
 
 function eventWeight(event, state) {
   let weight = event.baseWeight || 1;
+  if (event.rarity === "rare") weight *= RARE_EVENT_WEIGHT_MULTIPLIER;
   const tags = new Set(event.tags || []);
   if ((event.tags || []).some((tag) => state.nextTags.includes(tag))) weight *= 1.8;
   if (tags.has("networking")) weight *= 0.7 + state.attributes.network / 65;
@@ -273,6 +275,11 @@ function normalizeState(state) {
     confidence: state.attributes?.confidence ?? INITIAL_ATTRIBUTES.confidence,
     ...(state.minimums || {}),
   };
+  state.previousFailedRun = Boolean(state.previousFailedRun);
+  state.startingAttributes = {
+    ...INITIAL_ATTRIBUTES,
+    ...(state.startingAttributes || {}),
+  };
   state.maximums = {
     profile: state.attributes?.profile ?? INITIAL_ATTRIBUTES.profile,
     network: state.attributes?.network ?? INITIAL_ATTRIBUTES.network,
@@ -308,7 +315,7 @@ function recordPipelineResolution(state, event, succeeded, choice) {
   }
 }
 
-export function createCareerRun({ seed = Date.now(), legacyId = null } = {}) {
+export function createCareerRun({ seed = Date.now(), legacyId = null, previousFailedRun = false } = {}) {
   const normalizedSeed = Number(seed) >>> 0 || 1;
   const state = {
     version: GAME_VERSION,
@@ -317,6 +324,7 @@ export function createCareerRun({ seed = Date.now(), legacyId = null } = {}) {
     status: "playing",
     role: "graduate",
     stage: "preparation",
+    previousFailedRun: Boolean(previousFailedRun),
     turn: 0,
     attributes: clone(INITIAL_ATTRIBUTES),
     counters: {},
@@ -350,6 +358,7 @@ export function createCareerRun({ seed = Date.now(), legacyId = null } = {}) {
       state.maximums.network = state.attributes.network;
     }
   }
+  state.startingAttributes = clone(state.attributes);
   const opening = EVENT_BY_ID.get("market-crossroads");
   state.currentEvent = presentEvent(opening, state);
   return state;
@@ -566,17 +575,48 @@ function resolveAchievements(state, ending) {
   const add = (id, title, description) => achievements.push({ id, title, description });
   if (state.counters.applications >= 8) add("application-engine", "申请流水线", `这一局送出了 ${state.counters.applications} 份申请。`);
   if (state.counters.interviews >= 3) add("interview-veteran", "面试老兵", `完成了 ${state.counters.interviews} 轮真实面试。`);
-  if (state.counters.referrals > 0) add("warm-connection", "不是人脉，是连接", "通过真诚交流获得了 Referral 或内部信息。 ");
-  if (state.maximums.profile >= 55) add("profile-builder", "材料终于能见人", `Profile 最高成长到 ${state.maximums.profile}。`);
-  if (state.maximums.network >= 45) add("network-builder", "职业连接开始生长", `Network 最高成长到 ${state.maximums.network}。`);
-  if (state.counters.rejections >= 3 && state.attributes.energy > 0) add("rejection-resilience", "拒信耐受训练", "经历多次拒绝后仍然完成了这一局。 ");
-  if (state.metrics.alternativePath >= 20) add("alternative-route", "主线之外还有路", "认真推进过至少一条非传统职业路线。 ");
-  if (state.restChoices >= 2) add("rest-is-strategy", "会休息也是策略", "不止一次主动把恢复放回计划。 ");
-  if (state.counters.acceptedOffers > 0) add("offer-accepted", "选择权到手", "核实条件后接受了一份 Offer。 ");
-  if (state.counters.declinedOffers > 0) add("offer-declined", "Offer 也可以拒绝", "为真正想要的工作与生活保留了判断权。 ");
-  if (state.attributes.time <= 0) add("last-minute", "时间刚好用完", "把求职季的最后一点时间也走成了信息。 ");
-  if (ending.id === "burnout") add("burnout-seen", "边界不是失败", "这一局让精力边界变得可见。下一局可以更早保护它。 ");
-  if (!achievements.length) add("first-run", "完成第一局", "你已经比开局时更清楚自己会怎样做选择。 ");
+  if (state.counters.referrals > 0) add("warm-connection", "人脉就是财富", "通过真诚交流获得了 Referral 或内部信息。");
+  if (state.maximums.profile >= 55) add("profile-builder", "个人档案馆", `Profile 最高成长到 ${state.maximums.profile}。`);
+  if (state.maximums.network >= 45) add("network-builder", "社交达人", `Network 最高成长到 ${state.maximums.network}。`);
+  if (state.counters.rejections >= 3 && state.attributes.energy > 0) add("rejection-resilience", "拒信耐受训练", "经历多次拒绝后仍然完成了这一局。");
+  if (state.metrics.alternativePath >= 20) add("alternative-route", "不走寻常路", "认真推进过至少一条非传统职业路线。");
+  if (state.restChoices >= 2) add("rest-is-strategy", "会休息也是策略", "不止一次选择休息选项。");
+  if (state.counters.acceptedOffers > 0) add("offer-accepted", "上岸", "核实条件后接受了一份 Offer。");
+  if (state.counters.declinedOffers > 0) add("offer-declined", "拒绝的勇气", "听从自己的判断，拒绝了 Offer。");
+  if (ending.id === "burnout") add("burnout-seen", "燃尽了", "精力提前耗尽了。");
+
+  const earnedIncome = state.history.some((entry) => {
+    const paidChoices = new Set([
+      "paid-freelance:take",
+      "freelance-referral:accept",
+      "first-stall-day:review",
+      "first-stall-day:one-off",
+      "social-buyer:open",
+      "creator-commission:accept-commission",
+    ]);
+    if (paidChoices.has(`${entry.eventId}:${entry.choiceId}`)) return true;
+    return entry.eventId === "creator-commission" && entry.choiceId === "keep-voice" && entry.outcome === "success";
+  });
+  if (earnedIncome) add("side-income", "赚得比工资多", "通过 Freelance、摆摊或内容创作获得了实际收入或订单。");
+  if (state.minimums.energy >= 30) add("energy-manager", "电量管理大师", "整局都将 Energy 保持在相对安全的水平。");
+  const networkTransformed = state.startingAttributes.network <= 20
+    && state.maximums.network >= 55;
+  if (networkTransformed) add("network-transformation", "I人变E人", "Network 从较低水平成长到了较高水平。");
+  const stalledProcesses = state.history.filter((entry) => ["quiet", "wait"].includes(entry.outcomeId)
+    || ["waitlist", "process-cancelled"].includes(entry.eventId)).length;
+  if (state.counters.waitlists >= 2 || stalledProcesses >= 2) add("waiting-room-regular", "爱的号码牌", "多次经历长期无回复、Waitlist 或流程停滞。");
+  const profileGrewFromLow = state.startingAttributes.profile <= 25
+    && state.maximums.profile >= 55;
+  const networkGrewFromLow = state.startingAttributes.network <= 20
+    && state.maximums.network >= 55;
+  if (profileGrewFromLow || networkGrewFromLow) add("late-bloomer-growth", "低开高走", "开局 Profile 或 Network 较低，最终成长到了较高水平。");
+  if (state.counters.acceptedOffers > 0
+    && (state.counters.rejections >= 3 || state.minimums.energy <= 20 || state.attributes.time <= 15)) {
+    add("comeback-win", "打赢逆风局", "经历拒绝、低 Energy 或时间压力后仍然获得了 Offer。");
+  }
+  if (state.counters.acceptedOffers > 0 && state.counters.rejections === 0) add("green-light", "一路绿灯", "从申请到 Offer 的流程中没有经历拒绝。");
+  if (state.previousFailedRun) add("play-again", "再来一轮", "经历过失败结局后，再次完成了一局游戏。");
+  if (!achievements.length) add("first-run", "完成第一局", "你已经比开局时更清楚自己会怎样做选择。");
   return achievements;
 }
 
@@ -692,7 +732,9 @@ export function summarizeCareerRun(state) {
   const ending = resolveEnding(state);
   const orderedAttributes = [...ATTRIBUTE_KEYS].sort((a, b) => state.attributes[b] - state.attributes[a]);
   const weakestAttribute = [...ATTRIBUTE_KEYS].sort((a, b) => state.attributes[a] - state.attributes[b])[0];
-  const standoutEvent = [...state.history].reverse().find((entry) => RARE_EVENT_IDS.has(entry.eventId));
+  const rareEvents = state.history
+    .filter((entry) => RARE_EVENT_IDS.has(entry.eventId))
+    .map((entry) => entry.eventTitle);
   return {
     ending,
     stats: {
@@ -714,7 +756,7 @@ export function summarizeCareerRun(state) {
       maximumProfile: state.maximums.profile,
       maximumNetwork: state.maximums.network,
       lifeSatisfaction: state.metrics.lifeSatisfaction,
-      standoutEvent: standoutEvent?.eventTitle || null,
+      rareEvents,
     },
     path: buildPath(state, persona),
   };

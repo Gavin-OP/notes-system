@@ -124,6 +124,9 @@
 .career-run-records span { padding: 8px 10px; border-radius: 999px; color: #68758a; font-size: 11px; background: #f0f3f8; }
 .career-run-records strong { color: var(--career-ink); }
 .career-run-story-card .career-run-standout { margin: 16px 0 0; font-size: 13px; }
+.career-run-standout > span { color: var(--career-muted); font-weight: 700; }
+.career-run-standout ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 0; padding: 0; list-style: none; }
+.career-run-standout li { padding: 6px 10px; border: 1px solid rgba(135, 96, 196, .22); border-radius: 999px; background: rgba(135, 96, 196, .08); }
 .career-run-strategy { display: flex; align-items: center; justify-content: space-between; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--career-line); }
 .career-run-strategy span { color: var(--career-muted); font-size: 13px; }
 .career-run-stats-card > div { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }

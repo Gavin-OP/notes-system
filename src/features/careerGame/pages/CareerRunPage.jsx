@@ -73,9 +73,11 @@ function readLegacyMeta() {
     return {
       equippedLegacyId: LEGACY_BY_ID.has(saved?.equippedLegacyId) ? saved.equippedLegacyId : null,
       unlockedIds: Array.isArray(saved?.unlockedIds) ? saved.unlockedIds.filter((id) => LEGACY_BY_ID.has(id)) : [],
+      completedRuns: Number.isFinite(saved?.completedRuns) ? saved.completedRuns : 0,
+      hasFailedRun: Boolean(saved?.hasFailedRun),
     };
   } catch {
-    return { equippedLegacyId: null, unlockedIds: [] };
+    return { equippedLegacyId: null, unlockedIds: [], completedRuns: 0, hasFailedRun: false };
   }
 }
 
@@ -142,7 +144,6 @@ function Intro({ savedRun, equippedLegacy, onStart, onResume }) {
     <main className="career-run-shell career-run-intro">
       <section className="career-run-intro-card">
         <div className="career-run-intro-copy">
-          <span className="career-run-overline">LIGHTHOUSE · CAREER RUN</span>
           <h1>应届生开荒局</h1>
           <p className="career-run-lead">
             <span>你是一名刚从学校毕业的求职者，带着有限的时间和精力进入求职季。</span>
@@ -283,7 +284,10 @@ function Result({ result, run, selectedLegacyId, onSelectLegacy, onRestart, onSa
             <span>最高 Network <strong>{result.runRecord.maximumNetwork}</strong></span>
             <span>Life Satisfaction <strong>{result.runRecord.lifeSatisfaction}</strong></span>
           </div>
-          {result.runRecord.standoutEvent ? <p className="career-run-standout">本局意外事件：<strong>{result.runRecord.standoutEvent}</strong></p> : null}
+          {result.runRecord.rareEvents?.length ? <div className="career-run-standout">
+            <span>本局意外事件</span>
+            <ul>{result.runRecord.rareEvents.map((eventTitle, index) => <li key={`${eventTitle}-${index}`}>{eventTitle}</li>)}</ul>
+          </div> : null}
           <div className="career-run-strategy"><span>本局最常使用</span><strong>{BEHAVIOR_LABELS[result.strongestStrategy]}</strong></div>
         </article>
         <article className="career-run-stats-card">
@@ -341,7 +345,11 @@ export default function CareerRunPage() {
   const [legacyMeta, setLegacyMeta] = useState(() => readLegacyMeta());
 
   const start = () => {
-    const next = createCareerRun({ seed: Date.now(), legacyId: legacyMeta.equippedLegacyId });
+    const next = createCareerRun({
+      seed: Date.now(),
+      legacyId: legacyMeta.equippedLegacyId,
+      previousFailedRun: legacyMeta.hasFailedRun,
+    });
     persistRun(next);
     setSavedRun(null);
     setRun(next);
@@ -365,7 +373,12 @@ export default function CareerRunPage() {
   const continueRun = () => {
     if (run.status === "complete") {
       const summary = summarizeCareerRun(run);
-      const nextMeta = { ...legacyMeta, unlockedIds: [...new Set([...legacyMeta.unlockedIds, ...summary.unlockedLegacyIds])] };
+      const nextMeta = {
+        ...legacyMeta,
+        unlockedIds: [...new Set([...legacyMeta.unlockedIds, ...summary.unlockedLegacyIds])],
+        completedRuns: legacyMeta.completedRuns + 1,
+        hasFailedRun: legacyMeta.hasFailedRun || ["burnout", "still_searching"].includes(summary.ending.id),
+      };
       persistLegacyMeta(nextMeta);
       setLegacyMeta(nextMeta);
       setScreen("result");
@@ -382,7 +395,7 @@ export default function CareerRunPage() {
   };
   const result = screen === "result" && run ? summarizeCareerRun(run) : null;
   const selectLegacy = (legacyId) => {
-    const nextMeta = { equippedLegacyId: legacyId, unlockedIds: [...new Set([...legacyMeta.unlockedIds, legacyId])] };
+    const nextMeta = { ...legacyMeta, equippedLegacyId: legacyId, unlockedIds: [...new Set([...legacyMeta.unlockedIds, legacyId])] };
     persistLegacyMeta(nextMeta);
     setLegacyMeta(nextMeta);
   };

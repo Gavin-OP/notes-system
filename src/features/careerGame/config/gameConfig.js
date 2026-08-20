@@ -17,6 +17,8 @@ export const RESOURCE_TUNING = Object.freeze({
   rejectionConfidenceCost: 2,
 });
 
+export const RARE_EVENT_WEIGHT_MULTIPLIER = 0.75;
+
 export const BEHAVIOR_KEYS = [
   "exploration", "analysis", "action", "expression",
   "reflection", "resilience", "networking", "pacing",
@@ -62,26 +64,26 @@ export const PERSONA_COPY = {
 };
 
 export const ENDING_COPY = {
-  career_creator: { title: "求职博主", description: "工作还在找，关注你找工作的人已经越来越多。" },
-  content_creator: { title: "内容创作者", description: "本来只是想写点心里话，后来真的有人等你更新。" },
-  startup_founder: { title: "创业了", description: "原本只是一起做点东西，最后真的长成了一条你愿意继续负责的路。" },
-  freelancer: { title: "Freelancer", description: "一次小交付带来了下一次，你开始拥有自己选择客户和项目的可能。" },
-  academic: { title: "读研 / PhD", description: "真实研究经历让你确认，这条路线值得继续认真探索。" },
-  world_travel: { title: "先去看看世界", description: "你没有把暂停当作落后，而是为下一阶段留出一段有目标的远行。" },
-  gap_year: { title: "Gap Year", description: "这一次，恢复和重新理解自己就是正经计划。" },
-  stall_business: { title: "摆摊了", description: "一个周末实验收到了真实订单。职业道路偶尔真的会从摊位开始。" },
-  dream_offer: { title: "Dream Offer", description: "你把最想争取的机会一步步推进到了 Offer。" },
-  graduate_program: { title: "Graduate Programme 新人", description: "漫长流程走到了入职，你获得了一段有结构的职业起点。" },
-  multiple_offers: { title: "Multiple Offers", description: "这一次，选择权来到了你手里。" },
-  referral_success: { title: "Referral Success", description: "一次真诚连接，为你打开了原本看不见的门。" },
-  unexpected_offer: { title: "Unexpected Offer", description: "结果不在最初的计划里，却可能打开一条适合你的新方向。" },
-  startup_employee: { title: "Startup 冒险者", description: "你走进了一支小团队，用更大的不确定性换取更快接触真实问题。" },
-  batch_winner: { title: "海投战神", description: "你用持续行动让机会池保持流动，并从大量反馈里找到了入口。" },
-  precision_application: { title: "精准狙击", description: "你把研究和表达集中在少数真正想去的机会，最后命中了一个。" },
-  steady_landing: { title: "稳稳上岸", description: "没有戏剧性转折，你只是把每一步认真走完，然后接住了一份合适的工作。" },
-  declined_offer: { title: "拒绝 Offer 的人", description: "拿到 Offer 不代表必须接受。你为想要的工作与生活保留了判断权。" },
-  burnout: { title: "Burnout", description: "资源耗尽让这一轮提前暂停。停下来也是重要信息。" },
-  still_searching: { title: "Still Searching", description: "流程还在继续，这一轮留下了更清楚的下一步。" },
+  career_creator: { title: "求职博主", description: "工作还没找到，账号先做起来了。现在轮到 HR 刷到你。" },
+  content_creator: { title: "内容创作者", description: "求职只是你灵感来源的一部分。通过写作，你与更大的世界连接在一起。" },
+  startup_founder: { title: "创业了", description: "你的 idea 和勇气带你走上一条更有挑战的路。给别人打工，终究不如自己做老板。" },
+  freelancer: { title: "Freelancer", description: "你成为了自由职业者，开始拥有自己选择客户和项目的可能。" },
+  academic: { title: "读研 / PhD", description: "你发现自己更喜欢学术研究。未来的某一天，某个知识领域的边界将被你轻轻推动。" },
+  world_travel: { title: "先去看看世界", description: "世界很大，你的心也长出了可以高飞振翅的羽翼。" },
+  gap_year: { title: "Gap Year", description: "探索自我、放松休息、及时行乐。不管别人怎么说，这一次你选择听从自己的节奏。" },
+  stall_business: { title: "摆摊了", description: "不管是卖煎饼果子还是手工制品，你开始享受小本经营的快乐，或许，这个摊位将是更大成就的起点。" },
+  dream_offer: { title: "Dream Offer", description: "你把最想争取的机会一步步推进到了 Offer。为自己骄傲一会儿吧！" },
+  graduate_program: { title: "Graduate Programme 新人", description: "你期待着轮岗体验和结构化的培训，这是你成为行业佼佼者的起点。" },
+  multiple_offers: { title: "Multiple Offers", description: "居然拿到这么多 Offer？选择权来到了你手里！" },
+  referral_success: { title: "Referral Success", description: "一次真诚的交流，为你打开了原本看不见的门。" },
+  unexpected_offer: { title: "Unexpected Offer", description: "有时，命运会带给你惊喜。结果不在最初的计划里，你走上一条与自己很合拍的新道路。" },
+  startup_employee: { title: "Startup 冒险者", description: "你加入了一支小团队。风险与机遇并存，你们的冒险故事拉开帷幕。" },
+  batch_winner: { title: "海投战神", description: "只要投得多，总有属于你的机会。" },
+  precision_application: { title: "精准狙击", description: "你把时间和精力集中在少数真正想去的机会，也得到了自己想要的结果。" },
+  steady_landing: { title: "稳稳上岸", description: "没有戏剧性的转折，你只是把每一步认真走完，然后找到了一份合适的工作。平稳就是一种幸运。" },
+  declined_offer: { title: "拒绝 Offer 的人", description: "拿到 Offer 不代表必须接受。你更看重自己想要的工作与生活方式。" },
+  burnout: { title: "Burnout", description: "精力耗尽了。劳逸结合很重要，别在抵达终点之前燃尽自己。" },
+  still_searching: { title: "Still Searching", description: "求职之路还在继续，虽然没有得到明确的结果，这一路你也有所收获。" },
 };
 
 export function stageForTurn(turn) {

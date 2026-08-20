@@ -46,6 +46,8 @@
 }
 .embedded-constellation__header button:hover { border-color: rgba(57, 124, 143, 0.38); background: #fff; }
 .embedded-constellation__resize { width: 36px; padding: 0 !important; }
+.embedded-constellation__adjust { display: inline-flex; align-items: center; gap: 6px; }
+.embedded-constellation__adjust span { color: inherit; font-size: 12px; letter-spacing: 0; }
 
 .embedded-constellation__canvas {
   position: relative;
@@ -213,5 +215,6 @@
 @media (max-width: 767px) {
   .embedded-constellation__header { min-height: 60px; padding: 10px 12px; }
   .embedded-constellation__header strong { font-size: 14px; }
+  .embedded-constellation__header button { min-height: 44px; }
   .embedded-constellation__canvas::after { background-size: 36px 36px; }
 }

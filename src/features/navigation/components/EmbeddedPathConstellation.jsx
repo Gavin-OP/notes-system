@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { AimOutlined, CompressOutlined, ExpandOutlined } from "@ant-design/icons";
+import { AimOutlined, CompressOutlined, ExpandOutlined, SettingOutlined } from "@ant-design/icons";
 import ReactFlow, { Background, BaseEdge, Controls, Handle, Position } from "reactflow";
 import "reactflow/dist/style.css";
 
@@ -50,7 +50,7 @@ function FixedRouteEdge({ id, sourceX, sourceY, targetX, targetY, style, data, m
 
 const edgeTypes = { fixedRoute: FixedRouteEdge };
 
-export default function EmbeddedPathConstellation({ draft, currentNoteUrl, completedNoteUrls, onSelect, isRail = false, onToggleExpand }) {
+export default function EmbeddedPathConstellation({ draft, currentNoteUrl, completedNoteUrls, onSelect, onAdjust, isRail = false, isMobile = false, onToggleExpand }) {
   const { t } = useTranslation();
   const elements = useMemo(() => {
     const completed = new Set([...completedNoteUrls].map(normalize));
@@ -95,9 +95,12 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
   }, [completedNoteUrls, currentNoteUrl, draft, isRail, onSelect, t]);
 
   return <section className={`embedded-constellation${isRail ? " is-rail" : " is-expanded"}`} aria-label={t("pilot.path.aria")}>
-    <header className="embedded-constellation__header"><div><span>YOUR PATH</span><strong>{isRail ? t("pilot.path.currentRoute") : t("pilot.path.title")}</strong></div><nav><button type="button" className="embedded-constellation__resize" onClick={onToggleExpand} aria-label={isRail ? t("pilot.path.openSettings") : t("pilot.path.backToReading")}>{isRail ? <ExpandOutlined /> : <CompressOutlined />}</button></nav></header>
+    <header className="embedded-constellation__header"><div><span>YOUR PATH</span><strong>{isRail ? t("pilot.path.currentRoute") : t("pilot.path.title")}</strong></div><nav>
+      {typeof onAdjust === "function" ? <button type="button" className="embedded-constellation__adjust" onClick={onAdjust} aria-label="调整 Path"><SettingOutlined /><span>调整 Path</span></button> : null}
+      {!isMobile && typeof onToggleExpand === "function" ? <button type="button" className="embedded-constellation__resize" onClick={onToggleExpand} aria-label={isRail ? t("pilot.path.openSettings") : t("pilot.path.backToReading")}>{isRail ? <ExpandOutlined /> : <CompressOutlined />}</button> : null}
+    </nav></header>
     <div className="embedded-constellation__canvas">
-      {isRail ? <div className="embedded-constellation__rail-focus"><StarNode data={{ ...elements.currentNode.data, hideHandles: true }} /></div> : <ReactFlow key="expanded" nodes={elements.nodes} edges={elements.edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} nodesDraggable={false} nodesConnectable={false} panOnDrag zoomOnScroll zoomOnPinch minZoom={.4} maxZoom={1.3} defaultViewport={{ x: 22, y: 104, zoom: .82 }} onNodeClick={(_, node) => { if (node.data.note_url) onSelect?.(node.data.note_url); }}>
+      {isRail ? <div className="embedded-constellation__rail-focus"><StarNode data={{ ...elements.currentNode.data, hideHandles: true }} /></div> : <ReactFlow key={`expanded-${isMobile ? "mobile" : "desktop"}-${elements.nodes.length}`} nodes={elements.nodes} edges={elements.edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} nodesDraggable={false} nodesConnectable={false} panOnDrag zoomOnScroll zoomOnPinch minZoom={.18} maxZoom={1.3} fitView fitViewOptions={{ padding: isMobile ? 0.08 : 0.12, minZoom: 0.18, maxZoom: isMobile ? 0.72 : 1 }} onNodeClick={(_, node) => { if (node.data.note_url) onSelect?.(node.data.note_url); }}>
         <Background variant="dots" gap={24} size={1.1} />
         <Controls showInteractive={false} position="bottom-right" />
         <div className="embedded-constellation__hint"><AimOutlined /> {t("pilot.path.hint")}</div>

@@ -1103,7 +1103,7 @@ const LearningNavigationPanel = ({
     if (!hasPathWorkspace) return null;
     const containsCurrent = personalizedSteps.some((step) => normalizeKey(step.key) === normalizedCurrent);
     if (pilotMode) {
-      return <EmbeddedPathConstellation draft={learningPathDraft} currentNoteUrl={currentNoteUrl} completedNoteUrls={completedNoteUrls} onSelect={onSelect} onAdjust={onConfigurePath} isRail={!isMobile && panelWidth <= 340} onToggleExpand={onTogglePathExpand} />;
+      return <EmbeddedPathConstellation draft={learningPathDraft} currentNoteUrl={currentNoteUrl} completedNoteUrls={completedNoteUrls} onSelect={onSelect} onAdjust={onConfigurePath} isRail={!isMobile && panelWidth <= 340} isMobile={isMobile} onToggleExpand={onTogglePathExpand} />;
     }
     return (
       <section

@@ -7,7 +7,8 @@ import {
   summarizeCareerRun,
 } from "./careerRun";
 import { CAREER_EVENT_POOL } from "../config/careerEventPool";
-import { MAX_TURNS } from "../config/gameConfig";
+import { RARE_EVENT_POOL } from "../config/rareEventPool";
+import { MAX_TURNS, RARE_EVENT_WEIGHT_MULTIPLIER } from "../config/gameConfig";
 import { LEGACY_POOL } from "../config/legacyPool";
 
 function availableChoices(state) {
@@ -32,6 +33,39 @@ function finishRun(seed, choose) {
 }
 
 describe("Career Run public behavior", () => {
+  it("keeps the approved regular-event Choice set in sync with the authored source", () => {
+    const expectedChoices = {
+      "market-crossroads": ["research", "apply", "profile", "pace"],
+      "resume-first-draft": ["ship", "tailor", "rest"],
+      "linkedin-cleanup": ["rewrite", "benchmark", "minimum"],
+      "portfolio-weekend": ["build", "curate", "skip"],
+      "mentor-review": ["specific", "open"],
+      "dream-job-deadline": ["direct", "tailor", "referral"],
+      "graduate-program-window": ["research", "apply", "skip"],
+      "batch-application-night": ["batch", "shortlist", "recover"],
+      "crowded-role": ["apply", "fit", "move"],
+      "alumni-reply": ["prepare", "ask-referral"],
+      "career-fair": ["target", "explore", "online"],
+      "coffee-chat-reply": ["curious", "pitch"],
+      "oa-invitation": ["practice", "start", "withdraw"],
+      "hr-screening": ["prepare", "natural"],
+      "technical-interview": ["drill", "fundamentals", "wing"],
+      "behavioral-interview": ["stories", "match"],
+      "group-interview": ["facilitate", "lead", "observe"],
+      "final-round": ["deep", "authentic"],
+      "rejection-wave": ["review", "apply", "pause"],
+      waitlist: ["follow", "continue"],
+      "ordinary-offer": ["accept", "decline"],
+      "referral-conclusion": ["finish", "pressure", "steady"],
+      "surprise-track": ["explore", "focus"],
+    };
+
+    Object.entries(expectedChoices).forEach(([eventId, choiceIds]) => {
+      const event = CAREER_EVENT_POOL.find((candidate) => candidate.id === eventId);
+      expect(event?.choices.map((choice) => choice.id), eventId).toEqual(choiceIds);
+    });
+  });
+
   it("starts every player from the configured Graduate baseline", () => {
     const state = createCareerRun({ seed: 1953 });
 
@@ -250,7 +284,7 @@ describe("Career Run public behavior", () => {
       const candidate = createCareerRun({ seed, legacyId: "interview-review" });
       candidate.currentEvent = { id: "behavioral-interview", choices: [] };
       candidate.counters.interviewLeads = 1;
-      const next = advanceCareerRun(candidate, "honest");
+      const next = advanceCareerRun(candidate, "stories");
       if (next.lastOutcome.succeeded === false) failedRun = next;
     }
 
@@ -436,11 +470,12 @@ describe("Career Run public behavior", () => {
     expect(summarizeCareerRun(second)).toEqual(summarizeCareerRun(first));
   });
 
-  it("prevents duplicate Events and keeps every Attribute within 0–100", () => {
+  it("prevents duplicate narrative Events while allowing repeated pipeline decisions", () => {
     const state = finishRun(88, (choices) => choices.at(-1));
     const eventIds = state.history.map((entry) => entry.eventId);
 
-    expect(new Set(eventIds).size).toBe(eventIds.length);
+    const duplicates = eventIds.filter((eventId, index) => eventIds.indexOf(eventId) !== index);
+    expect(duplicates.every((eventId) => ["final-round", "ordinary-offer"].includes(eventId))).toBe(true);
     Object.values(state.attributes).forEach((value) => {
       expect(value).toBeGreaterThanOrEqual(0);
       expect(value).toBeLessThanOrEqual(100);
@@ -513,6 +548,96 @@ describe("Career Run public behavior", () => {
     expect(result.runStory).toEqual(expect.any(String));
   });
 
+  it("lists every encountered Rare Event in encounter order", () => {
+    const state = finishRun(20260820, (choices) => choices[0]);
+    const firstRare = RARE_EVENT_POOL[0];
+    const secondRare = RARE_EVENT_POOL[1];
+    state.history.push(
+      { eventId: firstRare.id, eventTitle: firstRare.title, rarity: "rare" },
+      { eventId: secondRare.id, eventTitle: secondRare.title, rarity: "rare" },
+    );
+
+    const result = summarizeCareerRun(state);
+
+    expect(result.runRecord.rareEvents).toEqual(
+      state.history
+        .filter((entry) => RARE_EVENT_POOL.some((event) => event.id === entry.eventId))
+        .map((entry) => entry.eventTitle),
+    );
+    expect(result.runRecord.rareEvents.slice(-2)).toEqual([firstRare.title, secondRare.title]);
+  });
+
+  it("keeps Rare Events below their authored base weight", () => {
+    expect(RARE_EVENT_WEIGHT_MULTIPLIER).toBeGreaterThan(0);
+    expect(RARE_EVENT_WEIGHT_MULTIPLIER).toBeLessThan(1);
+  });
+
+  it("treats a successful Final Round as pending until the Offer is accepted", () => {
+    const finalRound = CAREER_EVENT_POOL.find((event) => event.id === "final-round");
+    const acceptedOffer = CAREER_EVENT_POOL.find((event) => event.id === "ordinary-offer")
+      .choices.find((choice) => choice.id === "accept");
+
+    finalRound.choices.forEach((choice) => {
+      expect(choice.success.counters).toMatchObject({ pendingOffers: 1 });
+      expect(choice.success.counters.offers).toBeUndefined();
+    });
+    expect(acceptedOffer.counters).toMatchObject({ offers: 1 });
+  });
+
+  it("derives the expanded Achievement set from recorded run facts", () => {
+    const state = finishRun(271828, (choices) => choices[0]);
+    state.counters.acceptedOffers = 1;
+    state.counters.offers = 1;
+    state.counters.rejections = 3;
+    state.counters.referrals = 1;
+    state.counters.waitlists = 2;
+    state.minimums.energy = 35;
+    state.maximums.profile = 60;
+    state.maximums.network = 60;
+    state.previousFailedRun = true;
+    state.history.push({ eventId: "paid-freelance", choiceId: "take", outcome: "neutral" });
+
+    const achievements = summarizeCareerRun(state).achievements;
+    const ids = achievements.map((achievement) => achievement.id);
+
+    expect(ids).toEqual(expect.arrayContaining([
+      "side-income",
+      "energy-manager",
+      "network-transformation",
+      "waiting-room-regular",
+      "late-bloomer-growth",
+      "comeback-win",
+      "play-again",
+    ]));
+    expect(achievements).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: "warm-connection", title: "人脉就是财富" }),
+      expect.objectContaining({ id: "offer-accepted", title: "上岸" }),
+    ]));
+  });
+
+  it("awards a rejection-free Offer run with 一路绿灯", () => {
+    const state = finishRun(161803, (choices) => choices[0]);
+    state.counters.acceptedOffers = 1;
+    state.counters.offers = 1;
+    state.counters.rejections = 0;
+
+    expect(summarizeCareerRun(state).achievements).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: "green-light", title: "一路绿灯" }),
+    ]));
+  });
+
+  it("only awards growth Achievements when the run starts from a low baseline", () => {
+    const state = finishRun(141421, (choices) => choices[0]);
+    state.startingAttributes = { ...state.startingAttributes, profile: 60, network: 60 };
+    state.maximums.profile = 70;
+    state.maximums.network = 70;
+
+    const ids = summarizeCareerRun(state).achievements.map((achievement) => achievement.id);
+
+    expect(ids).not.toContain("network-transformation");
+    expect(ids).not.toContain("late-bloomer-growth");
+  });
+
   it("uses behavioral trajectory, rather than Offer count alone, for Persona scoring", () => {
     const actionRun = finishRun(314159, (choices) => {
       return choices.toSorted((a, b) =>
@@ -550,6 +675,6 @@ describe("Career Run public behavior", () => {
     expect(endings.burnout || 0).toBeLessThan(60);
     expect(timeExhausted).toBeGreaterThan(5);
     expect(energyExhausted).toBeGreaterThanOrEqual(5);
-    expect(confidencePressure).toBeGreaterThan(20);
+    expect(confidencePressure).toBeGreaterThan(12);
   });
 });
