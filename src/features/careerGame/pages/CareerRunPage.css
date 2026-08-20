@@ -112,12 +112,16 @@
 .career-run-deltas .is-negative { color: #aa574c; background: #fbeae6; }
 
 .career-run-result { padding: clamp(28px, 5vw, 72px) clamp(18px, 5vw, 80px); }
-.career-run-result-hero, .career-run-result-grid, .career-run-achievement-card, .career-run-legacy-card, .career-run-path-card, .career-run-result-actions { max-width: 1120px; margin-left: auto; margin-right: auto; }
+.career-run-result-hero, .career-run-result-grid, .career-run-achievement-card, .career-run-legacy-card, .career-run-result-actions { max-width: 1120px; margin-left: auto; margin-right: auto; }
 .career-run-result-hero { padding: 40px 0; text-align: center; }
 .career-run-result-hero > p:first-of-type { margin: 18px 0 2px; color: #6e7a8e; }
 .career-run-result-hero h1 { margin: 0 0 18px; font-size: clamp(48px, 9vw, 92px); letter-spacing: -.065em; }
+.career-run-result-hero h1 > span { display: inline-block; transform-origin: 50% 100%; }
+.career-run-result-hero.is-discovering h1 > span { animation: career-ending-character-fall .82s cubic-bezier(.55,.02,.78,.48) calc(var(--career-fall-index) * 55ms) both; }
+.career-run-result-hero.is-discovering .career-run-lead { animation: career-ending-copy-fade .24s ease both; }
+.career-run-result-hero > .career-meta-trigger { text-align: left; }
 .career-run-result-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; }
-.career-run-result-grid article, .career-run-path-card { padding: clamp(24px, 4vw, 40px); border: 1px solid rgba(255,255,255,.94); border-radius: 24px; background: var(--career-paper); box-shadow: 0 18px 48px rgba(39, 56, 91, .08); }
+.career-run-result-grid article { padding: clamp(24px, 4vw, 40px); border: 1px solid rgba(255,255,255,.94); border-radius: 24px; background: var(--career-paper); box-shadow: 0 18px 48px rgba(39, 56, 91, .08); }
 .career-run-story-card h2 { margin: 14px 0 8px; font-size: 32px; }
 .career-run-story-card > p { color: #59667a; font-size: 17px; line-height: 1.7; }
 .career-run-records { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
@@ -148,11 +152,18 @@
 .career-run-legacy-grid strong, .career-run-legacy-grid span, .career-run-legacy-grid small { display: block; }
 .career-run-legacy-grid span { margin-top: 10px; color: #647087; font-size: 13px; line-height: 1.5; }
 .career-run-legacy-grid small { margin-top: 16px; color: #5472cf; font-weight: 700; }
-.career-run-path-card { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; margin-top: 18px; border-color: rgba(79,126,232,.24); background: linear-gradient(135deg, rgba(255,255,255,.94), rgba(235,240,255,.94)); }
-.career-run-path-card h2 { margin: 10px 0; font-size: clamp(28px, 4vw, 40px); }
-.career-run-path-card p { color: #59667a; }
-.career-run-path-card ul { margin: 20px 0 0; padding-left: 20px; color: #4f5e75; line-height: 1.7; }
-.career-run-result-actions { display: flex; justify-content: center; margin-top: 22px; }
+.career-run-result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 22px; }
+.career-run-result-actions > .career-meta-trigger { flex: 1 0 100%; order: 2; width: 100%; margin-top: 6px; text-align: left; }
+.career-run-meta-discover { min-height: 48px; padding: 0 22px; border: 1px solid #273449; border-radius: 13px; color: #f4f7f9; background: #172131; font-weight: 750; cursor: pointer; transition: transform .18s ease, background .18s ease; }
+.career-run-meta-discover:hover { transform: translateY(-2px); background: #202d40; }
+.career-run-meta-loading { align-self: center; color: #69758a; font-size: 13px; }
+
+@keyframes career-ending-character-fall {
+  0% { opacity: 1; transform: translateY(0) rotate(0); }
+  28% { transform: translateY(7px) rotate(calc((var(--career-fall-index) - 3) * .6deg)); }
+  100% { opacity: 0; transform: translateY(140px) rotate(calc((var(--career-fall-index) - 3) * 5deg)); }
+}
+@keyframes career-ending-copy-fade { to { opacity: 0; transform: translateY(12px); } }
 
 @media (max-width: 1050px) {
   .career-run-game-grid { grid-template-columns: 220px minmax(0, 1fr); }
@@ -185,8 +196,6 @@
   .career-run-achievement-grid, .career-run-legacy-grid { grid-template-columns: 1fr; }
   .career-run-final-attributes { grid-column: auto; }
   .career-run-attributes.is-compact { grid-template-columns: 1fr 1fr; }
-  .career-run-path-card { grid-template-columns: 1fr; }
-  .career-run-path-card .career-run-primary { width: 100%; }
 }
 @media (max-width: 390px) {
   .career-run-card-content { padding-inline: 24px 19px; }

@@ -17,7 +17,9 @@ export const RESOURCE_TUNING = Object.freeze({
   rejectionConfidenceCost: 2,
 });
 
-export const RARE_EVENT_WEIGHT_MULTIPLIER = 0.75;
+export const RARE_EVENT_WEIGHT_MULTIPLIER = 0.18;
+export const MAX_RARE_EVENTS_PER_RUN = 4;
+export const MIN_ORDINARY_EVENTS_BETWEEN_RARE = 4;
 
 export const BEHAVIOR_KEYS = [
   "exploration", "analysis", "action", "expression",

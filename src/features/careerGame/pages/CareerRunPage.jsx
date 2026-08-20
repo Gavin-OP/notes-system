@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { buildDefaultPilotDraft, buildPersonalizedPilotDraft } from "../../navigation/lib/pilotPath";
 import { loadPilotPathDraft, savePilotPathDraft } from "../../navigation/lib/pilotPathStorage";
+import CareerPathMetaReveal from "../components/CareerPathMetaReveal";
 import { advanceCareerRun, createCareerRun, restoreCareerRun, summarizeCareerRun } from "../domain/careerRun";
+import { buildCareerPathRevealObservations } from "../domain/careerPathReveal";
 import { LEGACY_BY_ID } from "../config/legacyPool";
 import "./CareerRunPage.css";
 
@@ -75,9 +77,10 @@ function readLegacyMeta() {
       unlockedIds: Array.isArray(saved?.unlockedIds) ? saved.unlockedIds.filter((id) => LEGACY_BY_ID.has(id)) : [],
       completedRuns: Number.isFinite(saved?.completedRuns) ? saved.completedRuns : 0,
       hasFailedRun: Boolean(saved?.hasFailedRun),
+      pathRevealDiscovered: Boolean(saved?.pathRevealDiscovered),
     };
   } catch {
-    return { equippedLegacyId: null, unlockedIds: [], completedRuns: 0, hasFailedRun: false };
+    return { equippedLegacyId: null, unlockedIds: [], completedRuns: 0, hasFailedRun: false, pathRevealDiscovered: false };
   }
 }
 
@@ -263,14 +266,47 @@ function Play({ run, showingOutcome, interactionError, onChoose, onContinue, onR
   );
 }
 
-function Result({ result, run, selectedLegacyId, onSelectLegacy, onRestart, onSavePath }) {
+export function CareerRunResult({ result, run, pathDraft, selectedLegacyId, pathRevealDiscovered, onPathRevealDiscovered, onSelectLegacy, onRestart, onSavePath }) {
+  const pathObservations = buildCareerPathRevealObservations({ run, result, pathDraft });
+  const [discoveryState, setDiscoveryState] = useState(pathRevealDiscovered ? "remembered" : "idle");
+  const heroRef = useRef(null);
+  const timersRef = useRef([]);
+
+  useEffect(() => () => timersRef.current.forEach(window.clearTimeout), []);
+
+  const discoverPath = () => {
+    if (discoveryState !== "idle") return;
+    heroRef.current?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) {
+      setDiscoveryState("revealed");
+      onPathRevealDiscovered();
+      return;
+    }
+    setDiscoveryState("scrolling");
+    timersRef.current.push(window.setTimeout(() => setDiscoveryState("falling"), 520));
+    timersRef.current.push(window.setTimeout(() => {
+      setDiscoveryState("revealed");
+      onPathRevealDiscovered();
+    }, 1700));
+  };
+
+  const titleIsFalling = discoveryState === "falling";
   return (
     <main className="career-run-shell career-run-result">
-      <header className="career-run-result-hero">
+      <header ref={heroRef} className={`career-run-result-hero${titleIsFalling ? " is-discovering" : ""}`}>
         <span className="career-run-overline">RUN COMPLETE</span>
         <p>这一轮求职发生了什么？</p>
-        <h1>{result.ending.title}</h1>
-        <p className="career-run-lead">{result.ending.description}</p>
+        {discoveryState === "revealed" ? (
+          <CareerPathMetaReveal observations={pathObservations} pathNodeCount={pathDraft?.nodes?.length || 0} onEnterWorkspace={onSavePath} materializing />
+        ) : (
+          <>
+            <h1 aria-label={result.ending.title}>{Array.from(result.ending.title).map((character, index) => (
+              <span key={`${character}-${index}`} style={{ "--career-fall-index": index }}>{character === " " ? "\u00a0" : character}</span>
+            ))}</h1>
+            <p className="career-run-lead">{result.ending.description}</p>
+          </>
+        )}
       </header>
 
       <section className="career-run-result-grid">
@@ -321,16 +357,14 @@ function Result({ result, run, selectedLegacyId, onSelectLegacy, onRestart, onSa
         </div>
       </section>
 
-      <section className="career-run-path-card">
-        <div>
-          <span className="career-run-overline">YOUR PERSONALIZED CAREER PATH</span>
-          <h2>把这一局的线索，变成下一步</h2>
-          <p>Path 只使用本局真实选择和卡点生成，你之后仍然可以随时修改。</p>
-          <ul>{result.path.signals.map((signal) => <li key={signal}>{signal}</li>)}</ul>
-        </div>
-        <button className="career-run-primary" type="button" onClick={onSavePath}>生成并查看我的 Path</button>
-      </section>
-      <div className="career-run-result-actions"><button className="career-run-secondary" type="button" onClick={onRestart}>再开一局</button></div>
+      <div className="career-run-result-actions">
+        <button className="career-run-secondary" type="button" onClick={onRestart}>再开一局</button>
+        {discoveryState === "idle" ? <button className="career-run-meta-discover" type="button" onClick={discoverPath}>等等，好像还有东西……</button> : null}
+        {discoveryState === "scrolling" || discoveryState === "falling" ? <span className="career-run-meta-loading" role="status">结局好像发生了变化……</span> : null}
+        {discoveryState === "remembered" ? (
+          <CareerPathMetaReveal observations={pathObservations} pathNodeCount={pathDraft?.nodes?.length || 0} onEnterWorkspace={onSavePath} />
+        ) : null}
+      </div>
     </main>
   );
 }
@@ -394,20 +428,26 @@ export default function CareerRunPage() {
     setScreen("intro");
   };
   const result = screen === "result" && run ? summarizeCareerRun(run) : null;
+  const existingPathDraft = result ? loadPilotPathDraft() : null;
+  const proposedPathDraft = result
+    ? buildPersonalizedPilotDraft(existingPathDraft || buildDefaultPilotDraft(), { ...result.path.profile, setup_complete: true })
+    : null;
   const selectLegacy = (legacyId) => {
     const nextMeta = { ...legacyMeta, equippedLegacyId: legacyId, unlockedIds: [...new Set([...legacyMeta.unlockedIds, legacyId])] };
     persistLegacyMeta(nextMeta);
     setLegacyMeta(nextMeta);
   };
+  const rememberPathReveal = () => {
+    const nextMeta = { ...legacyMeta, pathRevealDiscovered: true };
+    persistLegacyMeta(nextMeta);
+    setLegacyMeta(nextMeta);
+  };
   const savePath = () => {
-    const existing = loadPilotPathDraft();
-    if (existing && !window.confirm("这会用本局结果更新你当前浏览器里的求职 Path。要继续吗？")) return;
-    const source = existing || buildDefaultPilotDraft();
-    const draft = buildPersonalizedPilotDraft(source, { ...result.path.profile, setup_complete: true });
-    if (savePilotPathDraft(draft)) navigate("/note/fall-recruiting/autumn-recruitment-roadmap.md");
+    if (existingPathDraft && !window.confirm("这会用本局结果更新你当前浏览器里的求职 Path。要继续吗？")) return;
+    if (savePilotPathDraft(proposedPathDraft)) navigate("/note/fall-recruiting/autumn-recruitment-roadmap.md");
   };
 
   if (screen === "intro") return <Intro savedRun={savedRun} equippedLegacy={LEGACY_BY_ID.get(legacyMeta.equippedLegacyId)} onStart={start} onResume={resume} />;
-  if (screen === "result") return <Result result={result} run={run} selectedLegacyId={legacyMeta.equippedLegacyId} onSelectLegacy={selectLegacy} onRestart={restart} onSavePath={savePath} />;
+  if (screen === "result") return <CareerRunResult result={result} run={run} pathDraft={proposedPathDraft} selectedLegacyId={legacyMeta.equippedLegacyId} pathRevealDiscovered={legacyMeta.pathRevealDiscovered} onPathRevealDiscovered={rememberPathReveal} onSelectLegacy={selectLegacy} onRestart={restart} onSavePath={savePath} />;
   return <Play run={run} showingOutcome={showingOutcome} interactionError={interactionError} onChoose={choose} onContinue={continueRun} onRestart={restart} />;
 }

@@ -6,7 +6,9 @@ import {
   GAME_VERSION,
   INITIAL_ATTRIBUTES,
   MAX_OVERTIME_TURNS,
+  MAX_RARE_EVENTS_PER_RUN,
   MAX_TURNS,
+  MIN_ORDINARY_EVENTS_BETWEEN_RARE,
   PERSONA_COPY,
   PERSONA_PROFILES,
   PITY_BONUSES,
@@ -86,7 +88,18 @@ function eventWeight(event, state) {
   if (tags.has("networking") && state.counters.networkingOpportunities > 0) weight *= 1.3;
   const previousCategory = state.history.at(-1)?.category;
   if (previousCategory === event.category) weight *= 0.72;
-  return Math.max(0.05, weight);
+  return Math.max(event.rarity === "rare" ? 0.001 : 0.05, weight);
+}
+
+function rareEventFitsRunRhythm(event, state) {
+  if (event.rarity !== "rare") return true;
+  const rareIndexes = state.history
+    .map((entry, index) => entry.rarity === "rare" ? index : -1)
+    .filter((index) => index >= 0);
+  if (rareIndexes.length >= MAX_RARE_EVENTS_PER_RUN) return false;
+  const lastRareIndex = rareIndexes.at(-1);
+  if (!Number.isFinite(lastRareIndex)) return true;
+  return state.history.length - lastRareIndex - 1 >= MIN_ORDINARY_EVENTS_BETWEEN_RARE;
 }
 
 function selectNextEvent(state) {
@@ -107,16 +120,22 @@ function selectNextEvent(state) {
       return true;
     }
   }
-  const eligible = CAREER_EVENT_POOL.filter((event) => {
+  const stageEligible = CAREER_EVENT_POOL.filter((event) => {
     if (state.seenEventIds.includes(event.id)) return false;
     if (!event.stages.includes(stage) && !(stage === "closing" && event.stages.includes("decision"))) return false;
     if (!meetsRequirements(state, event.requirements)) return false;
-    return !(event.cooldownTags || []).some((tag) => (state.cooldowns[tag] || 0) > 0);
+    if (!rareEventFitsRunRhythm(event, state)) return false;
+    return true;
   });
-  const candidates = eligible.length
-    ? eligible
-    : CAREER_EVENT_POOL.filter((event) => !state.seenEventIds.includes(event.id) && meetsRequirements(state, event.requirements));
-  if (!candidates.length) return false;
+  const eligible = stageEligible.filter((event) =>
+    !(event.cooldownTags || []).some((tag) => (state.cooldowns[tag] || 0) > 0));
+  const recentEventIds = new Set(state.history.slice(-5).map((entry) => entry.eventId));
+  const hasOrdinaryEligible = eligible.some((event) => event.rarity !== "rare");
+  const ordinaryFallback = CAREER_EVENT_POOL.filter((event) => event.rarity !== "rare"
+    && meetsRequirements(state, event.requirements)
+    && !recentEventIds.has(event.id));
+  const candidates = hasOrdinaryEligible ? eligible : [...eligible, ...ordinaryFallback];
+  if (!candidates.length || candidates.every((event) => event.rarity === "rare")) return false;
 
   const weighted = candidates.map((event) => ({ event, weight: eventWeight(event, state) }));
   const total = weighted.reduce((sum, item) => sum + item.weight, 0);

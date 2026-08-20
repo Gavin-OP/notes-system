@@ -8,7 +8,7 @@ import {
 } from "./careerRun";
 import { CAREER_EVENT_POOL } from "../config/careerEventPool";
 import { RARE_EVENT_POOL } from "../config/rareEventPool";
-import { MAX_TURNS, RARE_EVENT_WEIGHT_MULTIPLIER } from "../config/gameConfig";
+import { MAX_OVERTIME_TURNS, MAX_TURNS, RARE_EVENT_WEIGHT_MULTIPLIER } from "../config/gameConfig";
 import { LEGACY_POOL } from "../config/legacyPool";
 
 function availableChoices(state) {
@@ -147,13 +147,14 @@ describe("Career Run public behavior", () => {
     expect(standardEvents.find((event) => event.id === "assessment-centre-group")).toBeTruthy();
   });
 
-  it("runs a twenty-event recruiting season before normal closing", () => {
+  it("runs a full recruiting season before normal or pipeline closing", () => {
     expect(MAX_TURNS).toBe(20);
     const state = finishRun(20260818, (choices) => choices.toSorted(
       (a, b) => (b.effects?.energy || 0) - (a.effects?.energy || 0),
     )[0]);
 
-    expect(state.history).toHaveLength(20);
+    expect(state.history.length).toBeGreaterThanOrEqual(20);
+    expect(state.history.length).toBeLessThanOrEqual(MAX_OVERTIME_TURNS);
     expect(state.stage).toBe("closing");
   });
 
@@ -470,12 +471,17 @@ describe("Career Run public behavior", () => {
     expect(summarizeCareerRun(second)).toEqual(summarizeCareerRun(first));
   });
 
-  it("prevents duplicate narrative Events while allowing repeated pipeline decisions", () => {
+  it("spaces repeated fallback Events and allows repeated pipeline decisions", () => {
     const state = finishRun(88, (choices) => choices.at(-1));
     const eventIds = state.history.map((entry) => entry.eventId);
 
-    const duplicates = eventIds.filter((eventId, index) => eventIds.indexOf(eventId) !== index);
-    expect(duplicates.every((eventId) => ["final-round", "ordinary-offer"].includes(eventId))).toBe(true);
+    eventIds.forEach((eventId, index) => {
+      if (index === 0) return;
+      const previousIndex = eventIds.lastIndexOf(eventId, index - 1);
+      if (previousIndex >= 0 && !["final-round", "ordinary-offer"].includes(eventId)) {
+        expect(index - previousIndex).toBeGreaterThan(5);
+      }
+    });
     Object.values(state.attributes).forEach((value) => {
       expect(value).toBeGreaterThanOrEqual(0);
       expect(value).toBeLessThanOrEqual(100);

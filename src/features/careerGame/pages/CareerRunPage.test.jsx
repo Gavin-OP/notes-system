@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createCareerRun } from "../domain/careerRun";
-import CareerRunPage from "./CareerRunPage";
+import CareerRunPage, { CareerRunResult } from "./CareerRunPage";
 
 const STORAGE_KEY = "notes-system:career-run:v1";
 const LEGACY_STORAGE_KEY = "notes-system:career-run:legacy:v1";
@@ -163,5 +163,55 @@ describe("Career Run resume behavior", () => {
     expect(screen.getByText("稀有事件")).toBeInTheDocument();
     expect(screen.getByText("PROFILE PREPARATION")).toBeInTheDocument();
     expect(screen.getByText("你在社交平台上发布的一篇求职随笔意外火了").closest(".career-run-event-card")).toHaveClass("is-rare");
+  });
+});
+
+describe("Career Run hidden Path discovery", () => {
+  afterEach(() => {
+    cleanup();
+    vi.unstubAllGlobals();
+  });
+
+  const result = {
+    ending: { id: "freelancer", title: "Freelancer", description: "你开始选择自己的项目。" },
+    runStory: "这一局留下了一些新的可能。",
+    runRecord: { minimumEnergy: 25, maximumProfile: 45, maximumNetwork: 30, lifeSatisfaction: 4, rareEvents: [] },
+    strongestStrategy: "exploration",
+    strength: "profile",
+    bottleneck: "network",
+    stats: { applications: 4, interviews: 1, referrals: 0, offers: 0 },
+    achievements: [],
+    legacyChoices: [],
+  };
+  const run = {
+    attributes: { time: 20, energy: 25, confidence: 40, profile: 45, network: 30 },
+    startingAttributes: { confidence: 45 },
+    counters: { applications: 4, interviews: 1, referrals: 0, offers: 0, acceptedOffers: 0 },
+    behavior: { exploration: 5, analysis: 2, action: 3 },
+    failureTags: {},
+    minimums: { energy: 25 },
+  };
+  const pathDraft = { nodes: [
+    { node_id: "pilot:profile-preparation", title: "准备简历与 Profile" },
+    { node_id: "pilot:job-search", title: "寻找和筛选岗位" },
+  ] };
+
+  it("keeps the gateway absent until the first footer discovery action replaces the ending", async () => {
+    vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: true })));
+    const user = userEvent.setup();
+    const onPathRevealDiscovered = vi.fn();
+    render(<CareerRunResult result={result} run={run} pathDraft={pathDraft} selectedLegacyId={null} pathRevealDiscovered={false} onPathRevealDiscovered={onPathRevealDiscovered} onSelectLegacy={() => {}} onRestart={() => {}} onSavePath={() => {}} />);
+
+    expect(screen.queryByText("你发现了通往现实求职道路的入口")).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "等等，好像还有东西……" }));
+
+    expect(screen.getByText("你发现了通往现实求职道路的入口")).toBeInTheDocument();
+    expect(onPathRevealDiscovered).toHaveBeenCalledTimes(1);
+  });
+
+  it("places an already discovered gateway below the replay action", () => {
+    render(<CareerRunResult result={result} run={run} pathDraft={pathDraft} selectedLegacyId={null} pathRevealDiscovered onPathRevealDiscovered={() => {}} onSelectLegacy={() => {}} onRestart={() => {}} onSavePath={() => {}} />);
+    const actions = screen.getByRole("button", { name: "再开一局" }).closest(".career-run-result-actions");
+    expect(actions).toHaveTextContent("你发现了通往现实求职道路的入口");
   });
 });
