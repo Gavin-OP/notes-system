@@ -4,6 +4,7 @@ import {
   ACHIEVEMENT_THRESHOLDS,
   BEHAVIOR_KEYS,
   ENDING_COPY,
+  FIRST_RUN_RARE_EVENT_TURN,
   GAME_VERSION,
   INITIAL_ATTRIBUTES,
   MAX_OVERTIME_TURNS,
@@ -58,13 +59,22 @@ function meetsRequirements(state, requirements = {}) {
   return true;
 }
 
-function presentEvent(event, state) {
+function presentEvent(event, state, { applyIncident = true, incidentDeltas: storedIncidentDeltas = null } = {}) {
+  const incidentDeltas = applyIncident
+    ? applyIncidentEffects(state, event)
+    : clone(storedIncidentDeltas || {});
+  state.minimums.energy = Math.min(state.minimums.energy, state.attributes.energy);
+  state.minimums.confidence = Math.min(state.minimums.confidence, state.attributes.confidence);
+  state.maximums.profile = Math.max(state.maximums.profile, state.attributes.profile);
+  state.maximums.network = Math.max(state.maximums.network, state.attributes.network);
   return {
     id: event.id,
     category: event.category,
     title: event.title,
     description: event.description,
     rarity: event.rarity || "standard",
+    incidentApplied: true,
+    incidentDeltas,
     choices: event.choices.map((item) => ({
       ...clone(item),
       available: meetsRequirements(state, item.requirements),
@@ -112,6 +122,10 @@ function rareEventFitsRunRhythm(event, state) {
   const rareIndexes = state.history
     .map((entry, index) => entry.rarity === "rare" ? index : -1)
     .filter((index) => index >= 0);
+  if (state.firstRunRareEventMode) {
+    if (rareIndexes.length >= 1) return false;
+    if (state.turn < FIRST_RUN_RARE_EVENT_TURN) return false;
+  }
   if (rareIndexes.length >= MAX_RARE_EVENTS_PER_RUN) return false;
   const lastRareIndex = rareIndexes.at(-1);
   if (!Number.isFinite(lastRareIndex)) return true;
@@ -144,7 +158,10 @@ function selectNextEvent(state) {
         ? ["hr-screening", "technical-interview", "behavioral-interview", "group-interview"]
           .find((id) => !state.seenEventIds.includes(id))
         : null;
-  if (forcedId) {
+  const firstRunRareDue = state.firstRunRareEventMode
+    && !state.history.some((entry) => entry.rarity === "rare")
+    && state.turn >= FIRST_RUN_RARE_EVENT_TURN;
+  if (forcedId && !firstRunRareDue) {
     const forced = EVENT_BY_ID.get(forcedId);
     if (forced && meetsRequirements(state, forced.requirements)) {
       state.currentEvent = presentEvent(forced, state);
@@ -161,6 +178,22 @@ function selectNextEvent(state) {
   });
   const eligible = stageEligible.filter((event) =>
     !(event.cooldownTags || []).some((tag) => (state.cooldowns[tag] || 0) > 0));
+  const firstRunRareCandidates = firstRunRareDue
+    ? eligible.filter((event) => event.rarity === "rare")
+    : [];
+  if (firstRunRareCandidates.length) {
+    const weightedRare = firstRunRareCandidates.map((event) => ({ event, weight: eventWeight(event, state) }));
+    const totalRareWeight = weightedRare.reduce((sum, item) => sum + item.weight, 0);
+    const random = nextRandom(state.randomState);
+    state.randomState = random.randomState;
+    let rareCursor = random.value * totalRareWeight;
+    const selectedRare = weightedRare.find((item) => {
+      rareCursor -= item.weight;
+      return rareCursor <= 0;
+    })?.event || weightedRare.at(-1).event;
+    state.currentEvent = presentEvent(selectedRare, state);
+    return true;
+  }
   const hasOrdinaryEligible = eligible.some((event) => event.rarity !== "rare");
   const ordinaryFallback = CAREER_EVENT_POOL.filter((event) => event.rarity !== "rare"
     && eventCanAppear(event, state)
@@ -216,6 +249,7 @@ function applyIncidentEffects(state, event) {
     Object.entries(configuredEffects).map(([key, amount]) => [key, resolveIncidentAmount(state, amount)]),
   );
   applyAttributes(state, effects);
+  return effects;
 }
 
 function applyCounters(state, effects = {}) {
@@ -356,6 +390,7 @@ function normalizeState(state) {
     ...(state.minimums || {}),
   };
   state.previousFailedRun = Boolean(state.previousFailedRun);
+  state.firstRunRareEventMode = Boolean(state.firstRunRareEventMode);
   state.startingAttributes = {
     ...INITIAL_ATTRIBUTES,
     ...(state.startingAttributes || {}),
@@ -395,7 +430,7 @@ function recordPipelineResolution(state, event, succeeded, choice) {
   }
 }
 
-export function createCareerRun({ seed = Date.now(), legacyId = null, previousFailedRun = false } = {}) {
+export function createCareerRun({ seed = Date.now(), legacyId = null, previousFailedRun = false, firstRun = false } = {}) {
   const normalizedSeed = Number(seed) >>> 0 || 1;
   const state = {
     version: GAME_VERSION,
@@ -405,6 +440,7 @@ export function createCareerRun({ seed = Date.now(), legacyId = null, previousFa
     role: "graduate",
     stage: "preparation",
     previousFailedRun: Boolean(previousFailedRun),
+    firstRunRareEventMode: Boolean(firstRun),
     turn: 0,
     attributes: clone(INITIAL_ATTRIBUTES),
     counters: {},
@@ -453,7 +489,14 @@ export function restoreCareerRun(savedState) {
     if (!ATTRIBUTE_KEYS.every((key) => Number.isFinite(state.attributes?.[key]))) return null;
     if (!state.counters || !state.behavior || !Array.isArray(state.history)) return null;
     state.version = GAME_VERSION;
-    state.currentEvent = presentEvent(event, state);
+    if (savedState.currentEvent.incidentApplied) {
+      state.currentEvent = presentEvent(event, state, {
+        applyIncident: false,
+        incidentDeltas: savedState.currentEvent.incidentDeltas,
+      });
+    } else {
+      state.currentEvent = presentEvent(event, state);
+    }
     state.lastOutcome = null;
     return state;
   } catch {
@@ -474,7 +517,6 @@ export function advanceCareerRun(currentState, choiceId) {
 
   const before = clone(state.attributes);
   reduceCooldowns(state);
-  applyIncidentEffects(state, event);
   if (event.id === "final-round" && state.modifiers.finalRoundEnergy && !state.legacyUsage.pillowUsed) {
     applyAttributes(state, { energy: state.modifiers.finalRoundEnergy });
   }
@@ -602,6 +644,7 @@ export function advanceCareerRun(currentState, choiceId) {
     outcomeMessage: selectedOutcome.message,
     succeeded,
     deltas: state.lastOutcome.deltas,
+    incidentDeltas: clone(state.currentEvent.incidentDeltas || {}),
   });
 
   if (shouldComplete(state) || !selectNextEvent(state)) {

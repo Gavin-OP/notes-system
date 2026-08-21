@@ -181,15 +181,6 @@ const CORE_EVENT_POOL = [
     ],
   },
   {
-    id: "assessment-centre-group", category: "interview", stages: ["interview"], baseWeight: 4,
-    requirements: { minCounters: { interviewLeads: 1 } }, title: "Assessment Centre：小组任务开始", description: "你们需要在有限时间里读材料、形成方案，再一起向评审陈述。被看见很重要，让团队真的完成任务也很重要。",
-    tags: ["group", "assessment-centre", "interview"], cooldownTags: ["interview"], choices: [
-      choice("coordinate", "先确认目标和分工，再补上讨论缺口", { networking: 3, analysis: 2 }, { effects: { time: -8, energy: -7 }, successModel: "group_interview", success: outcome("pass", "你让信息、分工和时间重新对齐，小组在截止前交出了完整方案。", { confidence: 7, network: 3 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "方案完成了，但你的贡献没有被评审充分看见。", { confidence: -3 }, { interviews: 1, rejections: 1 }, { failureTags: ["group_interview"] }) }),
-      choice("present", "主动承担陈述，把大家的观点连成主线", { expression: 3, action: 2 }, { effects: { time: -7, energy: -8 }, successModel: "group_interview", success: outcome("pass", "你的陈述没有抢走团队成果，反而让每个人的贡献更容易被理解。", { confidence: 8 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "表达很有气势，但方案中的几处逻辑没有来得及补齐。", { confidence: -4 }, { interviews: 1, rejections: 1 }, { failureTags: ["group_interview"] }) }),
-      choice("support", "观察团队最缺什么，在关键位置补位", { analysis: 3, pacing: 2 }, { effects: { time: -7, energy: -5 }, successModel: "group_interview", success: outcome("pass", "你没有占据最多发言时间，但在几次关键节点让团队继续向前。", { confidence: 6, network: 2 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "补位很有价值，只是评审能观察到的证据还不够清楚。", { confidence: -2 }, { interviews: 1, rejections: 1 }, { failureTags: ["group_interview"] }) }),
-    ],
-  },
-  {
     id: "final-round", category: "interview", stages: ["interview", "decision"], baseWeight: 8,
     requirements: { minCounters: { offerLeads: 1 } }, title: "披荆斩棘，你终于来到了终面现场", description: "能走到这里已经说明了很多。最后一轮仍然是双向选择，你既要回答问题，也要确认团队和岗位是否适合自己。",
     tags: ["final", "interview"], cooldownTags: ["final"], choices: [

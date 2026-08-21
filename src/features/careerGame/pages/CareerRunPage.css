@@ -87,6 +87,9 @@
 .career-run-rarity { display: inline-flex; align-items: center; min-height: 28px; padding: 0 11px; border: 1px solid color-mix(in srgb, var(--rare-accent) 28%, white); border-radius: 999px; color: #7041ad; font-size: 11px; font-weight: 800; letter-spacing: .08em; background: color-mix(in srgb, var(--rare-accent) 10%, white); }
 .career-run-event-card h2 { max-width: 590px; margin: 20px 0 10px; font-size: clamp(30px, 3.5vw, 46px); letter-spacing: -.045em; line-height: 1.15; }
 .career-run-event-description { max-width: 590px; margin: 0 0 28px; color: #4f5d70; font-size: 17px; line-height: 1.7; }
+.career-run-incident-deltas { max-width: 590px; margin: -10px 0 24px; padding: 14px 16px; border: 1px solid color-mix(in srgb, var(--event-accent) 18%, white); border-radius: 14px; background: color-mix(in srgb, var(--event-accent-soft) 62%, white); }
+.career-run-incident-deltas > small { display: block; margin-bottom: 9px; color: #647184; font-size: 12px; font-weight: 700; }
+.career-run-incident-deltas .career-run-deltas { margin-bottom: 0; }
 .career-run-choices { display: grid; gap: 12px; }
 .career-run-choices button { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 11px 14px; border: 1px solid color-mix(in srgb, var(--event-accent) 20%, #d8dee8); border-radius: 15px; text-align: left; color: var(--career-ink); background: rgba(255, 255, 255, .82); box-shadow: 0 6px 16px rgba(50, 59, 76, .05); cursor: pointer; transition: border-color .16s ease, background .16s ease, transform .16s ease; }
 .career-run-choices button:hover:not(:disabled) { border-color: color-mix(in srgb, var(--event-accent) 60%, white); background: white; transform: translateX(3px); }

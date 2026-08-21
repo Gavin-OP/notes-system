@@ -191,6 +191,12 @@ function Play({ run, showingOutcome, interactionError, onChoose, onContinue, onR
   const displayedCategory = showingOutcome ? run.history.at(-1)?.category : event?.category;
   const displayedRarity = showingOutcome ? run.history.at(-1)?.rarity : event?.rarity;
   const legacyHasDirectResourceEffect = Boolean(Object.keys(run.legacy?.initialEffects || {}).length);
+  const displayedAttributes = showingOutcome && event?.incidentApplied
+    ? Object.fromEntries(Object.entries(run.attributes).map(([key, value]) => [
+      key,
+      Math.max(0, Math.min(100, value - (event.incidentDeltas?.[key] || 0))),
+    ]))
+    : run.attributes;
   return (
     <main className="career-run-shell career-run-play">
       <header className="career-run-header">
@@ -200,7 +206,7 @@ function Play({ run, showingOutcome, interactionError, onChoose, onContinue, onR
       <div className="career-run-game-grid">
         <aside className="career-run-status-card">
           <div className="career-run-status-heading"><span>你的状态</span><small>{run.stage.toUpperCase()}</small></div>
-          <AttributeMeters attributes={run.attributes} legacy={run.legacy} />
+          <AttributeMeters attributes={displayedAttributes} legacy={run.legacy} />
           {run.legacy && !legacyHasDirectResourceEffect ? (
             <div className="career-run-active-legacy">
               <span>本局道具</span>
@@ -235,6 +241,12 @@ function Play({ run, showingOutcome, interactionError, onChoose, onContinue, onR
               </div>
               <h2>{event.title}</h2>
               <p className="career-run-event-description">{event.description}</p>
+              {Object.keys(event.incidentDeltas || {}).length ? (
+                <div className="career-run-incident-deltas" aria-live="polite">
+                  <small>这件事已经影响了你的状态</small>
+                  <DeltaList deltas={event.incidentDeltas} />
+                </div>
+              ) : null}
               <div className="career-run-choices">
                 {event.choices.map((choice, index) => (
                   <button key={choice.id} type="button" disabled={!choice.available} onClick={() => onChoose(choice.id)}>
@@ -383,6 +395,7 @@ export default function CareerRunPage() {
       seed: Date.now(),
       legacyId: legacyMeta.equippedLegacyId,
       previousFailedRun: legacyMeta.hasFailedRun,
+      firstRun: legacyMeta.completedRuns === 0,
     });
     persistRun(next);
     setSavedRun(null);

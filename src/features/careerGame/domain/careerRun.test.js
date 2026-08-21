@@ -122,7 +122,7 @@ describe("Career Run public behavior", () => {
     expect(recovery.probabilityBonus).toBeUndefined();
   });
 
-  it("keeps the approved standard recruiting Event journey and the existing Assessment Centre", () => {
+  it("keeps the approved standard recruiting Event journey", () => {
     const standardEvents = CAREER_EVENT_POOL.filter((event) => event.rarity !== "rare");
     const documentedTitles = [
       "求职季开始了。打开电脑，第一件事你打算做什么？",
@@ -151,7 +151,7 @@ describe("Career Run public behavior", () => {
     ];
 
     expect(standardEvents.map((event) => event.title)).toEqual(expect.arrayContaining(documentedTitles));
-    expect(standardEvents.find((event) => event.id === "assessment-centre-group")).toBeTruthy();
+    expect(standardEvents.find((event) => event.id === "assessment-centre-group")).toBeUndefined();
   });
 
   it("runs a full recruiting season before normal or pipeline closing", () => {
@@ -320,14 +320,14 @@ describe("Career Run public behavior", () => {
     expect(state.legacyUsage.bonusApplications).toBe(2);
   });
 
-  it("can unlock E人面具 through two distinct Group Interview Events", () => {
+  it("can unlock E人面具 through two Group Interview experiences", () => {
     let state = createCareerRun({ seed: 1500 });
     state.currentEvent = { id: "group-interview", choices: [] };
     state.counters.interviewLeads = 2;
     state = advanceCareerRun(state, "facilitate");
-    state.currentEvent = { id: "assessment-centre-group", choices: [] };
+    state.currentEvent = { id: "group-interview", choices: [] };
     state.counters.interviewLeads = Math.max(1, state.counters.interviewLeads);
-    state = advanceCareerRun(state, "coordinate");
+    state = advanceCareerRun(state, "lead");
     state.status = "complete";
     state.currentEvent = null;
 

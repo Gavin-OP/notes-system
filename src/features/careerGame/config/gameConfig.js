@@ -27,11 +27,12 @@ export const ACHIEVEMENT_THRESHOLDS = Object.freeze({
   developedNetwork: 55,
 });
 
-export const RARE_EVENT_WEIGHT_MULTIPLIER = 0.18;
+export const RARE_EVENT_WEIGHT_MULTIPLIER = 0.42;
 export const RARE_ROUTE_CONTINUATION_WEIGHT_MULTIPLIER = 0.72;
 export const MAX_RARE_EVENTS_PER_RUN = 4;
 export const MIN_ORDINARY_EVENTS_BETWEEN_RARE = 4;
 export const MIN_ORDINARY_EVENTS_BETWEEN_RARE_CONTINUATIONS = 1;
+export const FIRST_RUN_RARE_EVENT_TURN = 4;
 
 export const BEHAVIOR_KEYS = [
   "exploration", "analysis", "action", "expression",
