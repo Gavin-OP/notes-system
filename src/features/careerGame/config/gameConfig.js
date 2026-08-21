@@ -17,9 +17,21 @@ export const RESOURCE_TUNING = Object.freeze({
   rejectionConfidenceCost: 2,
 });
 
+export const STRATEGY_TUNING = Object.freeze({
+  interviewPreparationBonusPerChoice: 0.03,
+  interviewPreparationBonusCap: 0.09,
+});
+
+export const ACHIEVEMENT_THRESHOLDS = Object.freeze({
+  developedProfile: 70,
+  developedNetwork: 55,
+});
+
 export const RARE_EVENT_WEIGHT_MULTIPLIER = 0.18;
+export const RARE_ROUTE_CONTINUATION_WEIGHT_MULTIPLIER = 0.72;
 export const MAX_RARE_EVENTS_PER_RUN = 4;
 export const MIN_ORDINARY_EVENTS_BETWEEN_RARE = 4;
+export const MIN_ORDINARY_EVENTS_BETWEEN_RARE_CONTINUATIONS = 1;
 
 export const BEHAVIOR_KEYS = [
   "exploration", "analysis", "action", "expression",
@@ -87,6 +99,14 @@ export const ENDING_COPY = {
   burnout: { title: "Burnout", description: "精力耗尽了。劳逸结合很重要，别在抵达终点之前燃尽自己。" },
   still_searching: { title: "Still Searching", description: "求职之路还在继续，虽然没有得到明确的结果，这一路你也有所收获。" },
 };
+
+export const STILL_SEARCHING_VARIANTS = Object.freeze({
+  active_pipeline: "这一局结束时，还有申请或面试流程正在向前走。结果尚未落地，不等于这些机会已经消失。",
+  screening_gap: "你送出了不少申请，面试入口却还没有完全打开。下一步更值得检查岗位匹配、简历证据和材料版本。",
+  interview_conversion: "你已经多次走进面试，真正的卡点出现在最后几步。下一轮可以把复盘、表达和专项面试准备做得更具体。",
+  prepared_not_exposed: "你的材料已经比开局完整很多，只是送到市场里的机会还不够多。准备成果需要更多真实申请来验证。",
+  continuing: "求职之路还在继续。虽然这一局没有得到明确结果，你已经留下了可以带进下一轮的判断和经验。",
+});
 
 export function stageForTurn(turn) {
   if (turn < 5) return "preparation";

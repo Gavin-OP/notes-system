@@ -83,8 +83,18 @@ export const EVENT_POOL = [
     id: "batch-application-night", category: "application", stages: ["application"], baseWeight: 6,
     title: "收藏的岗位越来越多，今晚投哪些？", description: "你已经收藏了一批岗位，其中几份很快就要关闭申请入口。精力有限，今晚怎样安排投递？",
     tags: ["batch", "application"], cooldownTags: ["batch"], choices: [
-      choice("batch", "集中把这一批投完，并做统一记录", { action: 5, resilience: 1 }, { effects: { time: -10, energy: -10, confidence: 2 }, counters: { applications: 4, interviewLeads: 1 }, consequence: "你完成了一大批申请，也把岗位、进度补进 Tracker。今晚很累，但你很有成就感。" }),
-      choice("shortlist", "先投快要截止的那些岗位，尽可能把投递材料写好", { analysis: 4, pacing: 1 }, { effects: { time: -7, energy: -6, profile: 2 }, counters: { applications: 2, interviewLeads: 1 }, consequence: "你为每个投递的岗位都写好了 Cover Letter。你相信你准备的材料足够充分，也赶上了最紧急的 ddl。" }),
+      choice("batch", "集中把这一批投完，并做统一记录", { action: 5, resilience: 1 }, {
+        effects: { time: -10, energy: -10, confidence: 2 }, counters: { applications: 4 },
+        probabilityBonus: -0.08, successModel: "profile_screen",
+        success: outcome("screen", "四份申请里有一份顺利通过筛选。批量投递扩大了机会面，Tracker 也让后续流程没有失控。", {}, { interviewLeads: 1 }),
+        failure: outcome("quiet", "四份申请暂时都没有进入下一轮。申请量增加了，但通用材料没有准确回应每一份 JD。", { confidence: -2 }, { rejections: 1 }),
+      }),
+      choice("shortlist", "先投快要截止的那些岗位，尽可能把投递材料写好", { analysis: 4, pacing: 1 }, {
+        effects: { time: -7, energy: -6, profile: 2 }, counters: { applications: 2 },
+        probabilityBonus: 0.1, successModel: "profile_screen",
+        success: outcome("screen", "你为两份申请分别调整了材料，其中一份很快进入下一轮。", {}, { interviewLeads: 1 }),
+        failure: outcome("quiet", "这次投入没有立刻换来面试，但两版材料留下了可以复用的岗位证据。", { profile: 2 }, { rejections: 1 }),
+      }),
       choice("recover", "关掉网页，明天带着清醒的大脑再投", { pacing: 4, resilience: 2 }, { effects: { time: -4, energy: 11, confidence: 2 }, consequence: "你记下最临近的截止日期，然后准时休息。第二天再打开收藏夹时，判断岗位的速度反而更快。" }),
     ],
   },
@@ -135,7 +145,7 @@ export const EVENT_POOL = [
     id: "hr-screening", category: "interview", stages: ["interview"], baseWeight: 8,
     requirements: { minCounters: { interviewLeads: 1 } }, title: "HR 来电，这是一次 Screening Call", description: "对方想快速了解你的申请动机、经历和基本期望。",
     tags: ["hr", "interview"], cooldownTags: ["interview"], choices: [
-      choice("prepare", "准备短版自我介绍、动机和关键经历", { expression: 4, analysis: 1 }, { effects: { time: -8, energy: -5 }, successModel: "general_interview", success: outcome("pass", "回答清楚，也留下了继续了解的空间。招聘团队邀请你进入下一轮面试。", { confidence: 7 }, { interviews: 1, interviewLeads: 1 }), failure: outcome("fail", "对话没有推进，或许你和这个岗位没有那么合适。", { confidence: -4 }, { interviews: 1, rejections: 1 }, { failureTags: ["hr_interview"] }) }),
+      choice("prepare", "准备短版自我介绍、动机和关键经历", { expression: 4, analysis: 1 }, { effects: { time: -8, energy: -5 }, strategyEffects: { interviewPreparation: 1 }, successModel: "general_interview", success: outcome("pass", "回答清楚，也留下了继续了解的空间。招聘团队邀请你进入下一轮面试。", { confidence: 7 }, { interviews: 1, interviewLeads: 1 }), failure: outcome("fail", "对话没有推进，或许你和这个岗位没有那么合适。", { confidence: -4 }, { interviews: 1, rejections: 1 }, { failureTags: ["hr_interview"] }) }),
       choice("natural", "放松一点，把它当作双向了解", { exploration: 2, resilience: 2, expression: 1 }, { effects: { time: -5, energy: -4 }, successModel: "general_interview", success: outcome("pass", "交流感让双方都更快判断了匹配度。下一轮面试也随之进入日程。", { confidence: 6 }, { interviews: 1, interviewLeads: 1 }), failure: outcome("fail", "或许是彼此没有对上频道，或许下次还是要多准备一下。", { confidence: -2 }, { interviews: 1, rejections: 1 }) }),
     ],
   },
@@ -143,8 +153,8 @@ export const EVENT_POOL = [
     id: "technical-interview", category: "interview", stages: ["interview"], baseWeight: 7,
     requirements: { minCounters: { interviewLeads: 1 } }, title: "收到了一场 Technical Interview 邀请，就在下周", description: "面试可能会问到专业知识或让你现场解题。面试官不只看最终答案，也会观察你怎样拆解陌生问题。",
     tags: ["technical", "interview"], cooldownTags: ["interview"], choices: [
-      choice("drill", "刷高频题，并练习把思路说出来", { reflection: 3, action: 2 }, { effects: { time: -10, energy: -8, profile: 4 }, probabilityBonus: 0.12, successModel: "technical_interview", success: outcome("pass", "功夫不负有心人，你的流畅作答让面试官频频点头。", { confidence: 8 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "有些知识点没接住，但你的练习已经为下一次面试铺了路。", { confidence: -5 }, { interviews: 1, rejections: 1 }, { failureTags: ["technical_interview"] }) }),
-      choice("fundamentals", "复习基础知识，确保能够应对题库以外的灵活问题", { analysis: 2, reflection: 3, pacing: 1 }, { effects: { time: -9, energy: -6, profile: 5 }, successModel: "technical_interview", success: outcome("pass", "扎实的基础让你轻松应对各种灵活问题。", { confidence: 7 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "理解更扎实了，作答速度仍需要更多练习。", { confidence: -3, profile: 2 }, { interviews: 1, rejections: 1 }, { failureTags: ["technical_interview"] }) }),
+      choice("drill", "刷高频题，并练习把思路说出来", { reflection: 3, action: 2 }, { effects: { time: -10, energy: -8, profile: 4 }, strategyEffects: { interviewPreparation: 1 }, probabilityBonus: 0.12, successModel: "technical_interview", success: outcome("pass", "功夫不负有心人，你的流畅作答让面试官频频点头。", { confidence: 8 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "有些知识点没接住，但你的练习已经为下一次面试铺了路。", { confidence: -5 }, { interviews: 1, rejections: 1 }, { failureTags: ["technical_interview"] }) }),
+      choice("fundamentals", "复习基础知识，确保能够应对题库以外的灵活问题", { analysis: 2, reflection: 3, pacing: 1 }, { effects: { time: -9, energy: -6, profile: 5 }, strategyEffects: { interviewPreparation: 1 }, successModel: "technical_interview", success: outcome("pass", "扎实的基础让你轻松应对各种灵活问题。", { confidence: 7 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "理解更扎实了，作答速度仍需要更多练习。", { confidence: -3, profile: 2 }, { interviews: 1, rejections: 1 }, { failureTags: ["technical_interview"] }) }),
       choice("wing", "头脑清醒才是关键，这周需要多休息，而不是在脑海里塞满知识点", { pacing: 4, resilience: 2 }, { effects: { time: -4, energy: 8 }, successModel: "technical_interview", success: outcome("pass", "你的大脑为了回报你对它的照顾，在面试时运转得飞快。", { confidence: 9 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "面试官的问题打了你个措手不及。看来下次还是要多花些时间准备。", { confidence: -5 }, { interviews: 1, rejections: 1 }, { failureTags: ["technical_interview"] }) }),
     ],
   },
@@ -152,8 +162,8 @@ export const EVENT_POOL = [
     id: "behavioral-interview", category: "interview", stages: ["interview"], baseWeight: 7,
     requirements: { minCounters: { interviewLeads: 1 } }, title: "Behavioral Question 问到你“曾经的一次失败经历”，要怎么讲呢？", description: "你有几段真实经历可以使用，但需要决定哪一段最能说明自己的行动与成长。",
     tags: ["behavioral", "interview"], cooldownTags: ["interview"], choices: [
-      choice("stories", "讲一个真实故事，说清楚前因后果和从中学到了什么", { expression: 3, reflection: 3 }, { effects: { time: -8, energy: -5 }, probabilityBonus: 0.1, successModel: "general_interview", success: outcome("pass", "真实的故事有细节，也有说服力，面试官被打动了。", { confidence: 7, profile: 2 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "故事很真实，但没能体现出岗位所需的能力。", { confidence: -3 }, { interviews: 1, rejections: 1 }, { failureTags: ["behavioral_interview"] }) }),
-      choice("match", "围绕岗位所需能力，挑最匹配的故事来讲", { analysis: 3, expression: 3 }, { effects: { time: -9, energy: -6 }, successModel: "general_interview", success: outcome("pass", "你的证据和岗位要求完美匹配，面试官觉得你就是他们想要的人。", { confidence: 7 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "逻辑很完整，但真实感还可以更多一点。", { confidence: -2 }, { interviews: 1, rejections: 1 }) }),
+      choice("stories", "讲一个真实故事，说清楚前因后果和从中学到了什么", { expression: 3, reflection: 3 }, { effects: { time: -8, energy: -5 }, strategyEffects: { interviewPreparation: 1 }, probabilityBonus: 0.1, successModel: "general_interview", success: outcome("pass", "真实的故事有细节，也有说服力，面试官被打动了。", { confidence: 7, profile: 2 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "故事很真实，但没能体现出岗位所需的能力。", { confidence: -3 }, { interviews: 1, rejections: 1 }, { failureTags: ["behavioral_interview"] }) }),
+      choice("match", "围绕岗位所需能力，挑最匹配的故事来讲", { analysis: 3, expression: 3 }, { effects: { time: -9, energy: -6 }, strategyEffects: { interviewPreparation: 1 }, successModel: "general_interview", success: outcome("pass", "你的证据和岗位要求完美匹配，面试官觉得你就是他们想要的人。", { confidence: 7 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "逻辑很完整，但真实感还可以更多一点。", { confidence: -2 }, { interviews: 1, rejections: 1 }) }),
     ],
   },
   {
@@ -178,7 +188,7 @@ export const EVENT_POOL = [
     id: "final-round", category: "interview", stages: ["interview", "decision"], baseWeight: 8,
     requirements: { minCounters: { offerLeads: 1 } }, title: "披荆斩棘，你终于来到了终面现场", description: "能走到这里已经说明了很多。最后一轮仍然是双向选择，你既要回答问题，也要确认团队和岗位是否适合自己。",
     tags: ["final", "interview"], cooldownTags: ["final"], choices: [
-      choice("deep", "查找资料，了解团队目前面临的真实挑战，准备深入聊聊", { analysis: 3, expression: 2 }, { effects: { time: -8, energy: -6 }, probabilityBonus: 0.1, successModel: "offer_decision", success: outcome("offer", "公司正需要你这种能够解决实际问题的人。书面 Offer 很快发来，恭喜！", { confidence: 12 }, { interviews: 1, pendingOffers: 1 }), failure: outcome("wait", "或许是公司正在进行横向比较，你进入了 Waitlist，结果尚未落地。", { confidence: -2 }, { interviews: 1, waitlists: 1 }) }),
+      choice("deep", "查找资料，了解团队目前面临的真实挑战，准备深入聊聊", { analysis: 3, expression: 2 }, { effects: { time: -8, energy: -6 }, strategyEffects: { interviewPreparation: 1 }, probabilityBonus: 0.1, successModel: "offer_decision", success: outcome("offer", "公司正需要你这种能够解决实际问题的人。书面 Offer 很快发来，恭喜！", { confidence: 12 }, { interviews: 1, pendingOffers: 1 }), failure: outcome("wait", "或许是公司正在进行横向比较，你进入了 Waitlist，结果尚未落地。", { confidence: -2 }, { interviews: 1, waitlists: 1 }) }),
       choice("authentic", "重点放在动机上，也确认彼此是否合适", { exploration: 2, resilience: 2, expression: 1 }, { effects: { time: -6, energy: -5 }, successModel: "offer_decision", success: outcome("dream", "理想的工作发来了 Offer，你拥有了属于自己的双向奔赴。", { confidence: 15 }, { interviews: 1, pendingOffers: 1 }, { flags: ["dreamOffer"] }), failure: outcome("wait", "或许是公司正在进行横向比较，你进入了 Waitlist，但你不后悔进行了真诚的沟通。", { confidence: -1 }, { interviews: 1, waitlists: 1 }) }),
     ],
   },

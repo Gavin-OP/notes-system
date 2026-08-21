@@ -341,6 +341,41 @@ describe("Career Run public behavior", () => {
     expect(second.lastOutcome.probability - first.lastOutcome.probability).toBeCloseTo(0.18, 5);
   });
 
+  it("gives the four core strategies different leverage without bypassing their pipeline stage", () => {
+    const play = (eventId, choiceId, setup = () => {}) => {
+      const state = createCareerRun({ seed: 4242 });
+      state.currentEvent = { id: eventId, choices: [] };
+      setup(state);
+      return advanceCareerRun(state, choiceId);
+    };
+
+    const batch = play("batch-application-night", "batch");
+    const tailored = play("batch-application-night", "shortlist");
+    expect(batch.counters.applications).toBe(4);
+    expect(tailored.counters.applications).toBe(2);
+    expect(batch.attributes.energy).toBeLessThan(tailored.attributes.energy);
+    expect(batch.lastOutcome.probability).toBeLessThan(tailored.lastOutcome.probability);
+
+    const lowNetwork = play("alumni-reply", "ask-referral", (state) => { state.attributes.network = 10; });
+    const developedNetwork = play("alumni-reply", "ask-referral", (state) => { state.attributes.network = 60; });
+    expect(developedNetwork.lastOutcome.probability).toBeGreaterThan(lowNetwork.lastOutcome.probability);
+
+    const weakProfile = play("dream-job-deadline", "direct", (state) => { state.attributes.profile = 15; });
+    const developedProfile = play("dream-job-deadline", "direct", (state) => { state.attributes.profile = 70; });
+    expect(developedProfile.lastOutcome.probability).toBeGreaterThan(weakProfile.lastOutcome.probability);
+
+    const unprepared = play("technical-interview", "wing", (state) => {
+      state.counters.interviewLeads = 1;
+      state.strategyProgress = { interviewPreparation: 0 };
+    });
+    const practiced = play("technical-interview", "wing", (state) => {
+      state.counters.interviewLeads = 1;
+      state.strategyProgress = { interviewPreparation: 2 };
+    });
+    expect(practiced.lastOutcome.probability - unprepared.lastOutcome.probability).toBeCloseTo(0.06, 5);
+    expect(practiced.counters.applications).toBe(unprepared.counters.applications);
+  });
+
   it("resolves a developed alternative route without losing Personalized Path output", () => {
     const state = createCareerRun({ seed: 8 });
     state.status = "complete";
@@ -366,6 +401,37 @@ describe("Career Run public behavior", () => {
     expect(creatorEvents.every(Boolean)).toBe(true);
     expect(creatorEvents.every((event) => event.rarity === "rare")).toBe(true);
     expect(creatorEvents.map((event) => event.requirements?.minRoutes?.creator || 0)).toEqual([0, 1, 2, 3]);
+  });
+
+  it("keeps a hidden-route opener scarce while allowing an earned continuation after one ordinary Event", () => {
+    let continuationSeen = false;
+    let openerSeen = false;
+
+    for (let seed = 1; seed <= 3000 && !continuationSeen; seed += 1) {
+      const continuing = createCareerRun({ seed });
+      continuing.turn = 8;
+      continuing.stage = "application";
+      continuing.routes.creator = 1;
+      continuing.nextTags = ["creator"];
+      continuing.history = [{ eventId: "creator-essay", rarity: "rare", category: "profile" }];
+      continuing.seenEventIds = ["creator-essay"];
+      continuing.currentEvent = { id: "mentor-review", choices: [] };
+      const continued = advanceCareerRun(continuing, "specific");
+      continuationSeen ||= continued.currentEvent?.id === "creator-readers";
+
+      const opening = createCareerRun({ seed });
+      opening.turn = 8;
+      opening.stage = "application";
+      opening.counters.rejections = 1;
+      opening.history = [{ eventId: "late-recruiter-message", rarity: "rare", category: "application" }];
+      opening.seenEventIds = ["late-recruiter-message"];
+      opening.currentEvent = { id: "mentor-review", choices: [] };
+      const next = advanceCareerRun(opening, "specific");
+      openerSeen ||= next.currentEvent?.id === "creator-essay";
+    }
+
+    expect(continuationSeen).toBe(true);
+    expect(openerSeen).toBe(false);
   });
 
   it("resolves Content Creator only after the player explicitly commits to the route", () => {
@@ -554,6 +620,33 @@ describe("Career Run public behavior", () => {
     expect(result.runStory).toEqual(expect.any(String));
   });
 
+  it("explains distinct Still Searching journeys from the completed run evidence", () => {
+    const summarizeVariant = (setup) => {
+      const state = createCareerRun({ seed: 8080 });
+      state.status = "complete";
+      state.currentEvent = null;
+      setup(state);
+      return summarizeCareerRun(state).ending;
+    };
+
+    expect(summarizeVariant((state) => { state.counters.interviewLeads = 1; })).toMatchObject({
+      id: "still_searching", variant: "active_pipeline",
+    });
+    expect(summarizeVariant((state) => { state.counters.applications = 10; })).toMatchObject({
+      id: "still_searching", variant: "screening_gap",
+    });
+    expect(summarizeVariant((state) => { state.counters.interviews = 4; })).toMatchObject({
+      id: "still_searching", variant: "interview_conversion",
+    });
+    expect(summarizeVariant((state) => {
+      state.counters.applications = 2;
+      state.maximums.profile = 75;
+    })).toMatchObject({ id: "still_searching", variant: "prepared_not_exposed" });
+    expect(summarizeVariant(() => {})).toMatchObject({
+      id: "still_searching", variant: "continuing",
+    });
+  });
+
   it("lists every encountered Rare Event in encounter order", () => {
     const state = finishRun(20260820, (choices) => choices[0]);
     const firstRare = RARE_EVENT_POOL[0];
@@ -598,7 +691,7 @@ describe("Career Run public behavior", () => {
     state.counters.referrals = 1;
     state.counters.waitlists = 2;
     state.minimums.energy = 35;
-    state.maximums.profile = 60;
+    state.maximums.profile = 75;
     state.maximums.network = 60;
     state.previousFailedRun = true;
     state.history.push({ eventId: "paid-freelance", choiceId: "take", outcome: "neutral" });
@@ -618,6 +711,23 @@ describe("Career Run public behavior", () => {
     expect(achievements).toEqual(expect.arrayContaining([
       expect.objectContaining({ id: "warm-connection", title: "人脉就是财富" }),
       expect.objectContaining({ id: "offer-accepted", title: "上岸" }),
+    ]));
+  });
+
+  it("reserves Profile growth Achievements for a clearly developed Profile", () => {
+    const achievementIdsAt = (maximumProfile) => {
+      const state = createCareerRun({ seed: 70 });
+      state.status = "complete";
+      state.currentEvent = null;
+      state.maximums.profile = maximumProfile;
+      return summarizeCareerRun(state).achievements.map((achievement) => achievement.id);
+    };
+
+    expect(achievementIdsAt(69)).not.toContain("profile-builder");
+    expect(achievementIdsAt(69)).not.toContain("late-bloomer-growth");
+    expect(achievementIdsAt(70)).toEqual(expect.arrayContaining([
+      "profile-builder",
+      "late-bloomer-growth",
     ]));
   });
 

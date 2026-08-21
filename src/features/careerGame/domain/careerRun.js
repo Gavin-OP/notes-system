@@ -1,6 +1,7 @@
 import { CAREER_EVENT_POOL, RARE_EVENT_IDS } from "../config/careerEventPool";
 import { LEGACY_BY_ID } from "../config/legacyPool";
 import {
+  ACHIEVEMENT_THRESHOLDS,
   BEHAVIOR_KEYS,
   ENDING_COPY,
   GAME_VERSION,
@@ -9,12 +10,16 @@ import {
   MAX_RARE_EVENTS_PER_RUN,
   MAX_TURNS,
   MIN_ORDINARY_EVENTS_BETWEEN_RARE,
+  MIN_ORDINARY_EVENTS_BETWEEN_RARE_CONTINUATIONS,
   PERSONA_COPY,
   PERSONA_PROFILES,
   PITY_BONUSES,
   PROBABILITY_MODELS,
   RARE_EVENT_WEIGHT_MULTIPLIER,
+  RARE_ROUTE_CONTINUATION_WEIGHT_MULTIPLIER,
   RESOURCE_TUNING,
+  STILL_SEARCHING_VARIANTS,
+  STRATEGY_TUNING,
   stageForTurn,
 } from "../config/gameConfig";
 
@@ -67,9 +72,20 @@ function presentEvent(event, state) {
   };
 }
 
+function isRareRouteContinuation(event, state) {
+  const routeRequirements = Object.entries(event.requirements?.minRoutes || {});
+  return event.rarity === "rare"
+    && routeRequirements.length > 0
+    && routeRequirements.every(([key, value]) => (state.routes?.[key] ?? 0) >= value);
+}
+
 function eventWeight(event, state) {
   let weight = event.baseWeight || 1;
-  if (event.rarity === "rare") weight *= RARE_EVENT_WEIGHT_MULTIPLIER;
+  if (event.rarity === "rare") {
+    weight *= isRareRouteContinuation(event, state)
+      ? RARE_ROUTE_CONTINUATION_WEIGHT_MULTIPLIER
+      : RARE_EVENT_WEIGHT_MULTIPLIER;
+  }
   const tags = new Set(event.tags || []);
   if ((event.tags || []).some((tag) => state.nextTags.includes(tag))) weight *= 1.8;
   if (tags.has("networking")) weight *= 0.7 + state.attributes.network / 65;
@@ -99,7 +115,10 @@ function rareEventFitsRunRhythm(event, state) {
   if (rareIndexes.length >= MAX_RARE_EVENTS_PER_RUN) return false;
   const lastRareIndex = rareIndexes.at(-1);
   if (!Number.isFinite(lastRareIndex)) return true;
-  return state.history.length - lastRareIndex - 1 >= MIN_ORDINARY_EVENTS_BETWEEN_RARE;
+  const minimumSpacing = isRareRouteContinuation(event, state)
+    ? MIN_ORDINARY_EVENTS_BETWEEN_RARE_CONTINUATIONS
+    : MIN_ORDINARY_EVENTS_BETWEEN_RARE;
+  return state.history.length - lastRareIndex - 1 >= minimumSpacing;
 }
 
 function selectNextEvent(state) {
@@ -230,6 +249,13 @@ function successProbability(state, event, choice) {
       ? state.modifiers.interviewProbability || 0
       : 0;
   let situationalBonus = 0;
+  if (event.category === "interview") {
+    situationalBonus += Math.min(
+      STRATEGY_TUNING.interviewPreparationBonusCap,
+      (state.strategyProgress?.interviewPreparation || 0)
+        * STRATEGY_TUNING.interviewPreparationBonusPerChoice,
+    );
+  }
   if (event.id === "final-round" && !state.legacyUsage.pillowUsed) {
     situationalBonus += state.modifiers.finalRoundProbability || 0;
   }
@@ -270,6 +296,7 @@ function normalizeState(state) {
     ...(state.counters || {}),
   };
   state.metrics = { careerMomentum: 0, alternativePath: 0, lifeSatisfaction: 50, ...(state.metrics || {}) };
+  state.strategyProgress = { interviewPreparation: 0, ...(state.strategyProgress || {}) };
   state.routes = {
     startup: 0, freelance: 0, academic: 0, travel: 0, stall: 0,
     creator: 0, careerCreator: 0, writingCreator: 0,
@@ -443,6 +470,9 @@ export function advanceCareerRun(currentState, choiceId) {
   }
   if (!selectedOutcome) throw new Error(`Choice is missing a configured outcome: ${event.id}/${choice.id}`);
   applyChoicePayload(state, selectedOutcome);
+  Object.entries(choice.strategyEffects || {}).forEach(([key, amount]) => {
+    state.strategyProgress[key] = Math.max(0, (state.strategyProgress[key] || 0) + amount);
+  });
   applyFlags(state, choice.flags);
   recordPipelineResolution(state, event, succeeded, choice);
   if (event.id === "final-round" && state.modifiers.finalRoundEnergy && !state.legacyUsage.pillowUsed) {
@@ -582,7 +612,26 @@ function resolveEnding(state) {
   else if (accepted > 0) id = "steady_landing";
   else if (state.counters.declinedOffers > 0 || state.flags.declinedOffer) id = "declined_offer";
   else if (state.attributes.energy <= 0) id = "burnout";
-  return { id, ...ENDING_COPY[id] };
+  if (id !== "still_searching") return { id, ...ENDING_COPY[id] };
+
+  const hasActivePipeline = state.counters.pendingOffers > 0
+    || state.counters.offerLeads > 0
+    || state.counters.interviewLeads > 0;
+  const variant = hasActivePipeline
+    ? "active_pipeline"
+    : state.counters.interviews >= 3
+      ? "interview_conversion"
+      : state.counters.applications >= 8 && state.counters.interviews <= 1
+        ? "screening_gap"
+        : state.maximums.profile >= 70 && state.counters.applications < 4
+          ? "prepared_not_exposed"
+          : "continuing";
+  return {
+    id,
+    ...ENDING_COPY[id],
+    variant,
+    description: STILL_SEARCHING_VARIANTS[variant],
+  };
 }
 
 function strongestBehavior(state) {
@@ -595,7 +644,7 @@ function resolveAchievements(state, ending) {
   if (state.counters.applications >= 8) add("application-engine", "申请流水线", `这一局送出了 ${state.counters.applications} 份申请。`);
   if (state.counters.interviews >= 3) add("interview-veteran", "面试老兵", `完成了 ${state.counters.interviews} 轮真实面试。`);
   if (state.counters.referrals > 0) add("warm-connection", "人脉就是财富", "通过真诚交流获得了 Referral 或内部信息。");
-  if (state.maximums.profile >= 55) add("profile-builder", "个人档案馆", `Profile 最高成长到 ${state.maximums.profile}。`);
+  if (state.maximums.profile >= ACHIEVEMENT_THRESHOLDS.developedProfile) add("profile-builder", "个人档案馆", `Profile 最高成长到 ${state.maximums.profile}。`);
   if (state.maximums.network >= 45) add("network-builder", "社交达人", `Network 最高成长到 ${state.maximums.network}。`);
   if (state.counters.rejections >= 3 && state.attributes.energy > 0) add("rejection-resilience", "拒信耐受训练", "经历多次拒绝后仍然完成了这一局。");
   if (state.metrics.alternativePath >= 20) add("alternative-route", "不走寻常路", "认真推进过至少一条非传统职业路线。");
@@ -625,9 +674,9 @@ function resolveAchievements(state, ending) {
     || ["waitlist", "process-cancelled"].includes(entry.eventId)).length;
   if (state.counters.waitlists >= 2 || stalledProcesses >= 2) add("waiting-room-regular", "爱的号码牌", "多次经历长期无回复、Waitlist 或流程停滞。");
   const profileGrewFromLow = state.startingAttributes.profile <= 25
-    && state.maximums.profile >= 55;
+    && state.maximums.profile >= ACHIEVEMENT_THRESHOLDS.developedProfile;
   const networkGrewFromLow = state.startingAttributes.network <= 20
-    && state.maximums.network >= 55;
+    && state.maximums.network >= ACHIEVEMENT_THRESHOLDS.developedNetwork;
   if (profileGrewFromLow || networkGrewFromLow) add("late-bloomer-growth", "低开高走", "开局 Profile 或 Network 较低，最终成长到了较高水平。");
   if (state.counters.acceptedOffers > 0
     && (state.counters.rejections >= 3 || state.minimums.energy <= 20 || state.attributes.time <= 15)) {
