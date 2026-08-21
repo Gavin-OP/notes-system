@@ -58,6 +58,13 @@ describe("Career Run public behavior", () => {
       "ordinary-offer": ["accept", "decline"],
       "referral-conclusion": ["finish", "pressure", "steady"],
       "surprise-track": ["explore", "focus"],
+      "group-interview-linkedin": ["coffee-chat", "withdraw", "focus"],
+      "direction-doubt": ["broaden", "industry-chat", "continue"],
+      "wrong-resume-version": ["correct", "leave"],
+      "instant-rejection": ["inspect", "keep-applying", "self-doubt"],
+      "networking-silence": ["rewrite", "known-contacts", "profile-focus"],
+      "group-interruption": ["wait-turn", "reclaim"],
+      "great-interview-rejection": ["accept", "request-feedback", "self-doubt"],
     };
 
     Object.entries(expectedChoices).forEach(([eventId, choiceIds]) => {
@@ -460,16 +467,93 @@ describe("Career Run public behavior", () => {
 
   it("configures the approved second-round rare Event set", () => {
     const rareEvents = CAREER_EVENT_POOL.filter((event) => event.rarity === "rare");
-    expect(rareEvents).toHaveLength(24);
+    expect(rareEvents).toHaveLength(18);
     expect(rareEvents.map((event) => event.title)).toEqual(expect.arrayContaining([
-      "晚上十点，HR 突然发来消息",
       "你的专业技能吸引到了来谈合作的人",
       "你在社交平台上发布的一篇求职随笔意外火了",
-      "因为工作日的高效努力，你提前完成了 to-do list 里的全部事项。这周六你没有任何事情要做",
+    ]));
+    expect(rareEvents.map((event) => event.id)).not.toEqual(expect.arrayContaining([
+      "late-recruiter-message",
+      "family-question",
+      "classmate-offer",
+      "unexpected-interview-question",
+      "process-cancelled",
+      "blank-saturday",
     ]));
     expect(CAREER_EVENT_POOL.find((event) => event.id === "late-recruiter-message").choices).toHaveLength(2);
     expect(CAREER_EVENT_POOL.find((event) => event.id === "creator-crossroads").choices.map((choice) => choice.id))
       .toEqual(["try-creator-path", "keep-personal"]);
+  });
+
+  it("applies seeded incident effects before the player's response effects", () => {
+    const play = (seed, eventId, choiceId, turn = 6) => {
+      const state = createCareerRun({ seed });
+      state.turn = turn;
+      state.currentEvent = { id: eventId, choices: [] };
+      return advanceCareerRun(state, choiceId);
+    };
+
+    const first = play(20260821, "instant-rejection", "inspect");
+    const repeated = play(20260821, "instant-rejection", "inspect");
+
+    expect(first.lastOutcome.deltas).toEqual(repeated.lastOutcome.deltas);
+    expect(first.lastOutcome.deltas.time).toBeLessThan(0);
+    expect(first.lastOutcome.deltas.confidence).toBeLessThan(-2);
+    expect(first.lastOutcome.deltas.profile).toBe(4);
+    expect(first.counters.rejections).toBe(1);
+  });
+
+  it("uses a later incident profile for repeated interview pressure", () => {
+    const early = createCareerRun({ seed: 88 });
+    early.turn = 7;
+    early.counters.interviewLeads = 1;
+    early.currentEvent = { id: "group-interruption", choices: [] };
+
+    const late = structuredClone(early);
+    late.turn = 14;
+
+    const earlyResult = advanceCareerRun(early, "wait-turn");
+    const lateResult = advanceCareerRun(late, "wait-turn");
+
+    expect(earlyResult.lastOutcome.deltas.confidence)
+      .toBeGreaterThan(lateResult.lastOutcome.deltas.confidence);
+    expect(lateResult.lastOutcome.deltas.energy)
+      .toBeLessThan(earlyResult.lastOutcome.deltas.energy);
+  });
+
+  it("configures recurring ordinary recruiting events with finite caps", () => {
+    const repeatableEvents = [
+      "instant-rejection",
+      "networking-silence",
+      "group-interruption",
+      "great-interview-rejection",
+      "batch-application-night",
+      "oa-invitation",
+      "technical-interview",
+      "behavioral-interview",
+      "group-interview",
+    ];
+
+    repeatableEvents.forEach((eventId) => {
+      const event = CAREER_EVENT_POOL.find((candidate) => candidate.id === eventId);
+      expect(event?.rarity ?? "standard", eventId).toBe("standard");
+      expect(event?.repeatable?.maxOccurrences, eventId).toBe(2);
+    });
+  });
+
+  it("ends the run as Pause the Search when Confidence is depleted", () => {
+    const state = createCareerRun({ seed: 1953 });
+    state.attributes.confidence = 2;
+    state.currentEvent = { id: "family-question", choices: [] };
+
+    const completed = advanceCareerRun(state, "spiral");
+    const result = summarizeCareerRun(completed);
+
+    expect(completed.status).toBe("complete");
+    expect(completed.attributes.time).toBeGreaterThan(0);
+    expect(completed.attributes.energy).toBeGreaterThan(0);
+    expect(result.ending.id).toBe("paused_search");
+    expect(result.ending.title).toBe("暂时退出求职季");
   });
 
   it("closes the startup route after a failed unilateral push without deleting earned evidence", () => {

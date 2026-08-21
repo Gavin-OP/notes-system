@@ -97,6 +97,7 @@ export const ENDING_COPY = {
   steady_landing: { title: "稳稳上岸", description: "没有戏剧性的转折，你只是把每一步认真走完，然后找到了一份合适的工作。平稳就是一种幸运。" },
   declined_offer: { title: "拒绝 Offer 的人", description: "拿到 Offer 不代表必须接受。你更看重自己想要的工作与生活方式。" },
   burnout: { title: "Burnout", description: "精力耗尽了。劳逸结合很重要，别在抵达终点之前燃尽自己。" },
+  paused_search: { title: "暂时退出求职季", description: "你没有耗尽时间，也还有继续行动的精力，只是在连续反馈之后决定暂时离开求职流程。停下来并不等于失败，恢复信心以后，路仍然可以继续。" },
   still_searching: { title: "Still Searching", description: "求职之路还在继续，虽然没有得到明确的结果，这一路你也有所收获。" },
 };
 

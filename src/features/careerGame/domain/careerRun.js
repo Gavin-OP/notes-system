@@ -121,9 +121,21 @@ function rareEventFitsRunRhythm(event, state) {
   return state.history.length - lastRareIndex - 1 >= minimumSpacing;
 }
 
+function eventOccurrenceCount(state, eventId) {
+  return state.history.filter((entry) => entry.eventId === eventId).length;
+}
+
+function eventCanAppear(event, state) {
+  const occurrences = eventOccurrenceCount(state, event.id);
+  if (occurrences === 0) return true;
+  if (event.rarity === "rare") return false;
+  return occurrences < (event.repeatable?.maxOccurrences || 1);
+}
+
 function selectNextEvent(state) {
   const stage = stageForTurn(state.turn);
   state.stage = stage;
+  const recentEventIds = new Set(state.history.slice(-5).map((entry) => entry.eventId));
   const forcedId = state.counters.pendingOffers > 0
     ? "ordinary-offer"
     : state.counters.offerLeads > 0 && state.opportunityAges.final >= 2
@@ -140,7 +152,8 @@ function selectNextEvent(state) {
     }
   }
   const stageEligible = CAREER_EVENT_POOL.filter((event) => {
-    if (state.seenEventIds.includes(event.id)) return false;
+    if (!eventCanAppear(event, state)) return false;
+    if (recentEventIds.has(event.id)) return false;
     if (!event.stages.includes(stage) && !(stage === "closing" && event.stages.includes("decision"))) return false;
     if (!meetsRequirements(state, event.requirements)) return false;
     if (!rareEventFitsRunRhythm(event, state)) return false;
@@ -148,9 +161,9 @@ function selectNextEvent(state) {
   });
   const eligible = stageEligible.filter((event) =>
     !(event.cooldownTags || []).some((tag) => (state.cooldowns[tag] || 0) > 0));
-  const recentEventIds = new Set(state.history.slice(-5).map((entry) => entry.eventId));
   const hasOrdinaryEligible = eligible.some((event) => event.rarity !== "rare");
   const ordinaryFallback = CAREER_EVENT_POOL.filter((event) => event.rarity !== "rare"
+    && eventCanAppear(event, state)
     && meetsRequirements(state, event.requirements)
     && !recentEventIds.has(event.id));
   const candidates = hasOrdinaryEligible ? eligible : [...eligible, ...ordinaryFallback];
@@ -182,6 +195,27 @@ function applyAttributes(state, effects = {}, tuneChoiceEffects = false) {
     if (!ATTRIBUTE_KEYS.includes(key)) return;
     state.attributes[key] = clamp((state.attributes[key] || 0) + tunedAmount(key, amount, tuneChoiceEffects));
   });
+}
+
+function resolveIncidentAmount(state, configuredAmount) {
+  if (Number.isFinite(configuredAmount)) return configuredAmount;
+  const min = Math.ceil(configuredAmount?.min ?? 0);
+  const max = Math.floor(configuredAmount?.max ?? min);
+  if (max <= min) return min;
+  const random = nextRandom(state.randomState);
+  state.randomState = random.randomState;
+  return min + Math.floor(random.value * (max - min + 1));
+}
+
+function applyIncidentEffects(state, event) {
+  const lateEffects = Number.isFinite(event.lateFromTurn) && state.turn >= event.lateFromTurn
+    ? event.lateIncidentEffects || {}
+    : {};
+  const configuredEffects = { ...(event.incidentEffects || {}), ...lateEffects };
+  const effects = Object.fromEntries(
+    Object.entries(configuredEffects).map(([key, amount]) => [key, resolveIncidentAmount(state, amount)]),
+  );
+  applyAttributes(state, effects);
 }
 
 function applyCounters(state, effects = {}) {
@@ -281,7 +315,7 @@ function reduceCooldowns(state) {
 }
 
 function shouldComplete(state) {
-  if (state.attributes.time <= 0 || state.attributes.energy <= 0) return true;
+  if (state.attributes.time <= 0 || state.attributes.energy <= 0 || state.attributes.confidence <= 0) return true;
   if (state.turn < MAX_TURNS) return false;
   const unresolvedPipeline = state.counters.pendingOffers > 0 || state.counters.offerLeads > 0 || state.counters.interviewLeads > 0;
   return !unresolvedPipeline || state.turn >= MAX_OVERTIME_TURNS;
@@ -440,6 +474,7 @@ export function advanceCareerRun(currentState, choiceId) {
 
   const before = clone(state.attributes);
   reduceCooldowns(state);
+  applyIncidentEffects(state, event);
   if (event.id === "final-round" && state.modifiers.finalRoundEnergy && !state.legacyUsage.pillowUsed) {
     applyAttributes(state, { energy: state.modifiers.finalRoundEnergy });
   }
@@ -571,7 +606,11 @@ export function advanceCareerRun(currentState, choiceId) {
 
   if (shouldComplete(state) || !selectNextEvent(state)) {
     state.status = "complete";
-    state.stage = state.attributes.energy <= 0 ? "burnout" : "closing";
+    state.stage = state.attributes.energy <= 0
+      ? "burnout"
+      : state.attributes.confidence <= 0
+        ? "paused"
+        : "closing";
     state.currentEvent = null;
   }
   return state;
@@ -612,6 +651,7 @@ function resolveEnding(state) {
   else if (accepted > 0) id = "steady_landing";
   else if (state.counters.declinedOffers > 0 || state.flags.declinedOffer) id = "declined_offer";
   else if (state.attributes.energy <= 0) id = "burnout";
+  else if (state.attributes.confidence <= 0) id = "paused_search";
   if (id !== "still_searching") return { id, ...ENDING_COPY[id] };
 
   const hasActivePipeline = state.counters.pendingOffers > 0

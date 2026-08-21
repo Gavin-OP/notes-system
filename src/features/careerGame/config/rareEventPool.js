@@ -12,14 +12,6 @@ const option = (id, label, behaviorEffects, message, payload = {}) => ({
 
 const RARE_EVENTS = [
   {
-    id: "late-recruiter-message", category: "application", stages: ["application", "interview"], baseWeight: 1.2,
-    title: "晚上十点，HR 突然发来消息", description: "对方问你明天是否方便快速聊聊。机会来得突然，可是已经很晚了。", tags: ["unexpected", "interview"],
-    choices: [
-      option("reply", "立刻确认收到，并约一个自己能准备好的时间", { pacing: 2, expression: 2 }, "你礼貌确认了时间。第二天的沟通没有仓促开场。", { effects: { time: -2, confidence: 3 }, counters: { interviewLeads: 1 }, metrics: { careerMomentum: 5 } }),
-      option("tomorrow", "时间太晚了，明天再回复吧", { pacing: 3, resilience: 1 }, "第二天醒来以后，你整理好状态回复了对方。机会还在那里，昨晚也没有因此少睡几个小时。", { effects: { energy: 3, confidence: 1 }, counters: { interviewLeads: 1 }, metrics: { careerMomentum: 3 } }),
-    ],
-  },
-  {
     id: "friend-project", category: "networking", stages: ["preparation", "application"], baseWeight: 1.4,
     requirements: { flagsAbsent: ["startupClosed"] },
     title: "朋友问：要不要一起做个有意思的东西？", description: "想法还很粗糙，但它可能成为一个项目、一个产品，也可能只是一个周末实验。", tags: ["startup", "alternative"],
@@ -186,53 +178,6 @@ const RARE_EVENTS = [
         ],
       }),
       option("keep-personal", "我更喜欢它作为生活的一部分，而不是事业", { pacing: 4, exploration: 1 }, "你保留了写作带来的快乐，没有要求它立刻证明商业价值。", { effects: { energy: 5 }, metrics: { lifeSatisfaction: 8 } }),
-    ],
-  },
-  {
-    id: "family-question", category: "offer", stages: ["application", "interview", "closing"], baseWeight: 1.4,
-    title: "家里人问：所以你找到工作了吗？", description: "他们可能只是关心，但这个问题仍然精准落在你最焦虑的地方。", tags: ["wellbeing"],
-    choices: [
-      option("explain", "说说流程正在怎样推进，也说明现在需要什么支持", { expression: 2, resilience: 2 }, "家里未必完全理解招聘流程，但对话不再只剩一句追问。", { effects: { confidence: 3, energy: 2 }, metrics: { lifeSatisfaction: 6 } }),
-      option("boundary", "告诉他们有结果会主动说，今天先不聊", { pacing: 3, resilience: 1 }, "你结束了这场不合时宜的更新会，也守住了今晚的状态。", { effects: { energy: 5, confidence: 2 }, metrics: { lifeSatisfaction: 5 } }),
-      option("spiral", "开始怀疑自己是不是落后了", { reflection: 1 }, "你刷了很久别人的进度，最后只得到一晚更差的睡眠。", { effects: { energy: -7, confidence: -7 }, metrics: { lifeSatisfaction: -9 } }),
-    ],
-  },
-  {
-    id: "classmate-offer", category: "offer", stages: ["application", "interview", "closing"], baseWeight: 1.2,
-    title: "同学在朋友圈宣布拿到 Offer", description: "你真心替对方高兴，但焦虑不由得涌上心头。", tags: ["wellbeing"],
-    choices: [
-      option("congratulate", "认真祝贺，然后回到自己的节奏", { resilience: 3, pacing: 2 }, "别人的好消息没有抢走你的机会。你关掉群聊，继续做今天计划里的事。", { effects: { confidence: 3, energy: 2 }, metrics: { lifeSatisfaction: 5 } }),
-      option("learn", "祝贺后问问流程里有哪些值得准备的地方", { networking: 2, reflection: 2 }, "同学分享了几条具体经验，你也没有把交流变成比较。", { effects: { network: 4, profile: 2, confidence: 2 }, metrics: { careerMomentum: 3 } }),
-      option("compare", "默默打开招聘软件，焦虑地再投一批", { action: 3 }, "申请数增加了，今晚的精力却被比较感提前用完。", { effects: { time: -6, energy: -8, confidence: -4 }, counters: { applications: 3 }, metrics: { lifeSatisfaction: -7 } }),
-    ],
-  },
-  {
-    id: "unexpected-interview-question", category: "interview", stages: ["interview"], baseWeight: 1.7,
-    requirements: { minCounters: { interviewLeads: 1 } }, title: "面试官问了一个你完全没准备过的问题", description: "大脑短暂空白。你可以诚实思考，也可以根据即时反应快速作出回答。", tags: ["interview", "unexpected"],
-    choices: [
-      option("think", "承认需要想一下，再把思路一步步说出来", { resilience: 2, analysis: 2 }, "你没有立刻给出漂亮答案，却让面试官看见了真实的思考过程。", { effects: { confidence: 5 }, counters: { interviews: 1, offerLeads: 1 }, metrics: { careerMomentum: 5 } }),
-      option("improvise", "快速开个头，边讲边让大脑飞速运转", { expression: 2, exploration: 2 }, null, {
-        probabilityRule: "interview_improv",
-        success: resolved("你的快速反应能力让你接住了这个问题。讲到一半时思路逐渐清晰，你顺利把陌生问题接回了自己的经验。", { confidence: 4, profile: 2 }, { counters: { interviews: 1, offerLeads: 1 }, metrics: { careerMomentum: 4 } }),
-        failure: resolved("你开头说得很快，后面的思路却没有及时跟上。几次追问以后，答案越来越散，这一轮最终没能继续推进。", { confidence: -4 }, { counters: { interviews: 1, rejections: 1 }, metrics: { lifeSatisfaction: -2 }, failureTags: ["behavioral_interview"] }),
-      }),
-    ],
-  },
-  {
-    id: "process-cancelled", category: "offer", stages: ["interview", "closing"], baseWeight: 1.2,
-    requirements: { minCounters: { interviews: 1 } }, title: "流程走了一半，公司说岗位取消了", description: "不是你的表现出了问题，而是 HC、预算或团队安排改变了。但它就这样降临在你头上。", tags: ["rejection", "unexpected"],
-    choices: [
-      option("respond", "感谢通知，询问能否保留未来联系", { resilience: 3, networking: 1 }, "抓住每一次可用的机会，万一公司因此记住了你呢？", { effects: { confidence: -1, network: 3 }, counters: { rejections: 1 }, metrics: { lifeSatisfaction: -2 } }),
-      option("pause", "默默消化这个结果，明天继续投递新的公司", { pacing: 3, resilience: 2 }, "你允许失望存在，也没有把公司的变化解释成自己的失败。", { effects: { energy: 7, confidence: 2 }, counters: { rejections: 1 }, metrics: { lifeSatisfaction: 4 } }),
-    ],
-  },
-  {
-    id: "blank-saturday", category: "profile", stages: ["preparation", "application", "interview"], baseWeight: 1.5,
-    title: "因为工作日的高效努力，你提前完成了 to-do list 里的全部事项。这周六你没有任何事情要做", description: "没有测试、没有面试、也没有必须今天投的岗位。这段空白要怎样使用？", tags: ["wellbeing", "reflection"],
-    choices: [
-      option("rest", "真正放松休息一天", { pacing: 4, resilience: 2 }, "你睡到自然醒、吃了顿美食、出门走了走。你感到自己焕然一新。", { effects: { energy: 15, confidence: 4 }, metrics: { lifeSatisfaction: 12 } }),
-      option("review", "轻量复盘最近的流程", { reflection: 4, pacing: 2 }, "你在简历中找到两个能改的小问题，也准时关掉了文档。", { effects: { energy: 5, profile: 4, confidence: 3 }, metrics: { careerMomentum: 3, lifeSatisfaction: 5 } }),
-      option("grind", "难得有空，把收藏夹里的岗位全部投完", { action: 4 }, "流程推进了一大截，但下一个休息日何时才会到来？", { effects: { time: -8, energy: -12 }, counters: { applications: 4, interviewLeads: 1 }, metrics: { careerMomentum: 4, lifeSatisfaction: -8 } }),
     ],
   },
 ];

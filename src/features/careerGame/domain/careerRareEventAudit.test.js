@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 
-import { advanceCareerRun, createCareerRun } from "./careerRun";
+import { advanceCareerRun, createCareerRun, summarizeCareerRun } from "./careerRun";
 
 const balancedSeed = (index) => Math.imul(index + 1, 2654435761) >>> 0 || 1;
 
@@ -8,6 +8,7 @@ it("keeps Rare Events occasional across a thousand complete runs", () => {
   const counts = [];
   const turns = [];
   const adjacentRarePairs = [];
+  const endings = [];
   for (let index = 0; index < 1000; index += 1) {
     const seed = balancedSeed(index);
     let state = createCareerRun({ seed });
@@ -19,6 +20,7 @@ it("keeps Rare Events occasional across a thousand complete runs", () => {
     counts.push(rareFlags.filter(Boolean).length);
     turns.push(state.history.length);
     adjacentRarePairs.push(rareFlags.slice(1).filter((isRare, position) => isRare && rareFlags[position]).length);
+    endings.push(summarizeCareerRun(state).ending.id);
   }
   counts.sort((a, b) => a - b);
   turns.sort((a, b) => a - b);
@@ -39,9 +41,10 @@ it("keeps Rare Events occasional across a thousand complete runs", () => {
     turnP50: percentile(turns, .5),
     turnP90: percentile(turns, .9),
     turnMax: turns.at(-1),
+    pausedSearchRate: endings.filter((ending) => ending === "paused_search").length / endings.length,
   };
   expect(audit.runs).toBe(1000);
-  expect(audit.rareMean).toBeGreaterThan(0.45);
+  expect(audit.rareMean).toBeGreaterThanOrEqual(0.3);
   expect(audit.rareMean).toBeLessThanOrEqual(1.4);
   expect(audit.rareP50).toBeLessThanOrEqual(1);
   expect(audit.rareP90).toBeLessThanOrEqual(2);
@@ -49,4 +52,6 @@ it("keeps Rare Events occasional across a thousand complete runs", () => {
   expect(audit.threePlusRate).toBeLessThanOrEqual(0.03);
   expect(audit.adjacentRareRunRate).toBe(0);
   expect(audit.noRareRate).toBeGreaterThan(0.1);
+  expect(audit.pausedSearchRate).toBeGreaterThan(0.01);
+  expect(audit.pausedSearchRate).toBeLessThan(0.35);
 }, 30000);

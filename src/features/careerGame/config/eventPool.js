@@ -14,7 +14,7 @@ const choice = (id, label, behaviorEffects, options = {}) => {
   };
 };
 
-export const EVENT_POOL = [
+const CORE_EVENT_POOL = [
   {
     id: "market-crossroads", category: "profile", stages: ["preparation"], baseWeight: 1,
     title: "求职季开始了。打开电脑，第一件事你打算做什么？", description: "岗位、材料和时间线都需要梳理，但今天只需要选一件最值得推进的事。",
@@ -81,6 +81,7 @@ export const EVENT_POOL = [
   },
   {
     id: "batch-application-night", category: "application", stages: ["application"], baseWeight: 6,
+    repeatable: { maxOccurrences: 2 },
     title: "收藏的岗位越来越多，今晚投哪些？", description: "你已经收藏了一批岗位，其中几份很快就要关闭申请入口。精力有限，今晚怎样安排投递？",
     tags: ["batch", "application"], cooldownTags: ["batch"], choices: [
       choice("batch", "集中把这一批投完，并做统一记录", { action: 5, resilience: 1 }, {
@@ -134,6 +135,7 @@ export const EVENT_POOL = [
   },
   {
     id: "oa-invitation", category: "application", stages: ["application", "interview"], baseWeight: 7,
+    repeatable: { maxOccurrences: 2 },
     requirements: { minCounters: { applications: 1 } }, title: "你收到了一份在线测试邀请", description: "包含性格测试和简短的 video interview，完成期限就在几天之后。你需要决定是否准备，以及准备到什么程度。",
     tags: ["assessment", "deadline"], cooldownTags: ["assessment"], choices: [
       choice("practice", "在网上查找攻略，熟悉题型，练习几遍之后再去做测试", { analysis: 3, reflection: 2 }, { effects: { time: -8, energy: -7 }, probabilityBonus: 0.12, successModel: "profile_screen", success: outcome("pass", "用心的准备让你更熟悉网测的节奏，恭喜，下一轮见。", { confidence: 5 }, { interviewLeads: 1 }), failure: outcome("fail", "虽然没有过线，也是为下一次的网测做铺垫。", { confidence: -3 }, { rejections: 1 }, { failureTags: ["online_test"] }) }),
@@ -151,6 +153,7 @@ export const EVENT_POOL = [
   },
   {
     id: "technical-interview", category: "interview", stages: ["interview"], baseWeight: 7,
+    repeatable: { maxOccurrences: 2 },
     requirements: { minCounters: { interviewLeads: 1 } }, title: "收到了一场 Technical Interview 邀请，就在下周", description: "面试可能会问到专业知识或让你现场解题。面试官不只看最终答案，也会观察你怎样拆解陌生问题。",
     tags: ["technical", "interview"], cooldownTags: ["interview"], choices: [
       choice("drill", "刷高频题，并练习把思路说出来", { reflection: 3, action: 2 }, { effects: { time: -10, energy: -8, profile: 4 }, strategyEffects: { interviewPreparation: 1 }, probabilityBonus: 0.12, successModel: "technical_interview", success: outcome("pass", "功夫不负有心人，你的流畅作答让面试官频频点头。", { confidence: 8 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "有些知识点没接住，但你的练习已经为下一次面试铺了路。", { confidence: -5 }, { interviews: 1, rejections: 1 }, { failureTags: ["technical_interview"] }) }),
@@ -160,6 +163,7 @@ export const EVENT_POOL = [
   },
   {
     id: "behavioral-interview", category: "interview", stages: ["interview"], baseWeight: 7,
+    repeatable: { maxOccurrences: 2 },
     requirements: { minCounters: { interviewLeads: 1 } }, title: "Behavioral Question 问到你“曾经的一次失败经历”，要怎么讲呢？", description: "你有几段真实经历可以使用，但需要决定哪一段最能说明自己的行动与成长。",
     tags: ["behavioral", "interview"], cooldownTags: ["interview"], choices: [
       choice("stories", "讲一个真实故事，说清楚前因后果和从中学到了什么", { expression: 3, reflection: 3 }, { effects: { time: -8, energy: -5 }, strategyEffects: { interviewPreparation: 1 }, probabilityBonus: 0.1, successModel: "general_interview", success: outcome("pass", "真实的故事有细节，也有说服力，面试官被打动了。", { confidence: 7, profile: 2 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "故事很真实，但没能体现出岗位所需的能力。", { confidence: -3 }, { interviews: 1, rejections: 1 }, { failureTags: ["behavioral_interview"] }) }),
@@ -168,6 +172,7 @@ export const EVENT_POOL = [
   },
   {
     id: "group-interview", category: "interview", stages: ["interview"], baseWeight: 5,
+    repeatable: { maxOccurrences: 2 },
     requirements: { minCounters: { interviewLeads: 1 } }, title: "你参加了一场 Group Interview，总共八个人围着一张桌子坐下", description: "同组的人都很优秀，也很会说。真正的任务不是抢到最多台词，而是一起把讨论推进下去。",
     tags: ["group", "interview"], cooldownTags: ["interview"], choices: [
       choice("facilitate", "你充当领导者的角色，梳理讨论、邀请他人，推动大家做决定", { networking: 3, analysis: 2, expression: 1 }, { effects: { time: -7, energy: -7 }, successModel: "group_interview", success: outcome("pass", "你让团队更像团队，而不只是轮流发言。你的领导力得到了认可。", { confidence: 8, network: 3 }, { interviews: 1, offerLeads: 1 }), failure: outcome("fail", "群面表现的评判角度很多，这次的失败不意味着你实力不足。你对群面的经验更丰富了。", { confidence: -3 }, { interviews: 1, rejections: 1 }, { failureTags: ["group_interview"] }) }),
@@ -235,3 +240,6 @@ export const EVENT_POOL = [
     ],
   },
 ];
+
+export const EVENT_POOL = [...CORE_EVENT_POOL, ...STANDARD_EVENT_ADDITIONS];
+import { STANDARD_EVENT_ADDITIONS } from "./standardEventAdditions";
