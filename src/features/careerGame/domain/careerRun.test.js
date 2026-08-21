@@ -155,12 +155,12 @@ describe("Career Run public behavior", () => {
   });
 
   it("runs a full recruiting season before normal or pipeline closing", () => {
-    expect(MAX_TURNS).toBe(20);
+    expect(MAX_TURNS).toBe(25);
     const state = finishRun(20260818, (choices) => choices.toSorted(
       (a, b) => (b.effects?.energy || 0) - (a.effects?.energy || 0),
     )[0]);
 
-    expect(state.history.length).toBeGreaterThanOrEqual(20);
+    expect(state.history.length).toBeGreaterThanOrEqual(25);
     expect(state.history.length).toBeLessThanOrEqual(MAX_OVERTIME_TURNS);
     expect(state.stage).toBe("closing");
   });
@@ -440,6 +440,49 @@ describe("Career Run public behavior", () => {
 
     expect(continuationSeen).toBe(true);
     expect(openerSeen).toBe(false);
+  });
+
+  it("does not charge an earned hidden-route continuation against the global Rare Event cap", () => {
+    let continuationSeen = false;
+
+    for (let seed = 1; seed <= 3000 && !continuationSeen; seed += 1) {
+      const continuing = createCareerRun({ seed });
+      continuing.turn = 12;
+      continuing.stage = "interview";
+      continuing.routes.creator = 1;
+      continuing.nextTags = ["creator"];
+      continuing.history = [
+        { eventId: "friend-project", rarity: "rare", category: "networking" },
+        { eventId: "paid-freelance", rarity: "rare", category: "application" },
+        { eventId: "professor-research", rarity: "rare", category: "networking" },
+        { eventId: "creator-essay", rarity: "rare", category: "profile" },
+        { eventId: "market-crossroads", rarity: "standard", category: "profile" },
+      ];
+      continuing.seenEventIds = continuing.history.map((entry) => entry.eventId);
+      continuing.currentEvent = { id: "mentor-review", choices: [] };
+      const continued = advanceCareerRun(continuing, "specific");
+      continuationSeen ||= continued.currentEvent?.id === "creator-readers";
+    }
+
+    expect(continuationSeen).toBe(true);
+  });
+
+  it("gives a first browser run exactly one rare route opener while allowing earned continuations", () => {
+    const rareEventById = new Map(RARE_EVENT_POOL.map((event) => [event.id, event]));
+
+    for (let seed = 1; seed <= 100; seed += 1) {
+      let state = createCareerRun({ seed, firstRun: true });
+      while (state.status === "playing") {
+        const choices = availableChoices(state);
+        const choice = choices.toSorted((a, b) => (b.effects?.energy || 0) - (a.effects?.energy || 0))[0];
+        state = advanceCareerRun(state, choice.id);
+      }
+      const openerCount = state.history.filter((entry) => {
+        const event = rareEventById.get(entry.eventId);
+        return event && Object.keys(event.requirements?.minRoutes || {}).length === 0;
+      }).length;
+      expect(openerCount).toBe(1);
+    }
   });
 
   it("resolves Content Creator only after the player explicitly commits to the route", () => {

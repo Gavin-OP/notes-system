@@ -90,6 +90,15 @@ function isRareRouteContinuation(event, state) {
     && routeRequirements.every(([key, value]) => (state.routes?.[key] ?? 0) >= value);
 }
 
+function isRareRouteContinuationDefinition(event) {
+  return event?.rarity === "rare"
+    && Object.keys(event.requirements?.minRoutes || {}).length > 0;
+}
+
+function isRareRouteContinuationHistoryEntry(entry) {
+  return isRareRouteContinuationDefinition(EVENT_BY_ID.get(entry.eventId));
+}
+
 function eventWeight(event, state) {
   let weight = event.baseWeight || 1;
   if (event.rarity === "rare") {
@@ -120,14 +129,18 @@ function eventWeight(event, state) {
 
 function rareEventFitsRunRhythm(event, state) {
   if (event.rarity !== "rare") return true;
+  const isContinuation = isRareRouteContinuationDefinition(event);
   const rareIndexes = state.history
     .map((entry, index) => entry.rarity === "rare" ? index : -1)
     .filter((index) => index >= 0);
+  const openerIndexes = state.history
+    .map((entry, index) => entry.rarity === "rare" && !isRareRouteContinuationHistoryEntry(entry) ? index : -1)
+    .filter((index) => index >= 0);
   if (state.firstRunRareEventMode) {
-    if (rareIndexes.length >= 1) return false;
-    if (state.turn < FIRST_RUN_RARE_EVENT_TURN) return false;
+    if (!isContinuation && openerIndexes.length >= 1) return false;
+    if (!isContinuation && state.turn < FIRST_RUN_RARE_EVENT_TURN) return false;
   }
-  if (rareIndexes.length >= MAX_RARE_EVENTS_PER_RUN) return false;
+  if (!isContinuation && openerIndexes.length >= MAX_RARE_EVENTS_PER_RUN) return false;
   const lastRareIndex = rareIndexes.at(-1);
   if (!Number.isFinite(lastRareIndex)) return true;
   const minimumSpacing = isRareRouteContinuation(event, state)
@@ -160,7 +173,7 @@ function selectNextEvent(state) {
           .find((id) => !state.seenEventIds.includes(id))
         : null;
   const firstRunRareDue = state.firstRunRareEventMode
-    && !state.history.some((entry) => entry.rarity === "rare")
+    && !state.history.some((entry) => entry.rarity === "rare" && !isRareRouteContinuationHistoryEntry(entry))
     && state.turn >= FIRST_RUN_RARE_EVENT_TURN;
   if (forcedId && !firstRunRareDue) {
     const forced = EVENT_BY_ID.get(forcedId);
@@ -180,7 +193,7 @@ function selectNextEvent(state) {
   const eligible = stageEligible.filter((event) =>
     !(event.cooldownTags || []).some((tag) => (state.cooldowns[tag] || 0) > 0));
   const firstRunRareCandidates = firstRunRareDue
-    ? eligible.filter((event) => event.rarity === "rare")
+    ? eligible.filter((event) => event.rarity === "rare" && !isRareRouteContinuationDefinition(event))
     : [];
   if (firstRunRareCandidates.length) {
     const weightedRare = firstRunRareCandidates.map((event) => ({ event, weight: eventWeight(event, state) }));

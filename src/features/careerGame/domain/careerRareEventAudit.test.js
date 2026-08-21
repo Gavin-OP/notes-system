@@ -1,6 +1,11 @@
 import { expect, it } from "vitest";
 
 import { advanceCareerRun, createCareerRun, summarizeCareerRun } from "./careerRun";
+import { CAREER_EVENT_POOL } from "../config/careerEventPool";
+
+const eventById = new Map(CAREER_EVENT_POOL.map((event) => [event.id, event]));
+const isRareOpener = (entry) => entry.rarity === "rare"
+  && Object.keys(eventById.get(entry.eventId)?.requirements?.minRoutes || {}).length === 0;
 
 const balancedSeed = (index) => Math.imul(index + 1, 2654435761) >>> 0 || 1;
 
@@ -16,7 +21,7 @@ it("keeps Rare Events occasional across a thousand complete runs", () => {
       const choices = state.currentEvent.choices.filter((choice) => choice.available !== false);
       state = advanceCareerRun(state, choices[(seed + state.turn) % choices.length].id);
     }
-    const rareFlags = state.history.map((entry) => entry.rarity === "rare");
+    const rareFlags = state.history.map(isRareOpener);
     counts.push(rareFlags.filter(Boolean).length);
     turns.push(state.history.length);
     adjacentRarePairs.push(rareFlags.slice(1).filter((isRare, position) => isRare && rareFlags[position]).length);

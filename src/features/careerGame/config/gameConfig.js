@@ -1,7 +1,7 @@
 export const GAME_VERSION = 2;
-export const MAX_TURNS = 20;
-export const MAX_OVERTIME_TURNS = 22;
-export const TURN_TIME_COST = 5;
+export const MAX_TURNS = 25;
+export const MAX_OVERTIME_TURNS = 25;
+export const TURN_TIME_COST = 4;
 
 export const INITIAL_ATTRIBUTES = Object.freeze({
   time: 100,
@@ -28,7 +28,7 @@ export const ACHIEVEMENT_THRESHOLDS = Object.freeze({
 });
 
 export const RARE_EVENT_WEIGHT_MULTIPLIER = 0.42;
-export const RARE_ROUTE_CONTINUATION_WEIGHT_MULTIPLIER = 0.72;
+export const RARE_ROUTE_CONTINUATION_WEIGHT_MULTIPLIER = 1.6;
 export const MAX_RARE_EVENTS_PER_RUN = 4;
 export const MIN_ORDINARY_EVENTS_BETWEEN_RARE = 4;
 export const MIN_ORDINARY_EVENTS_BETWEEN_RARE_CONTINUATIONS = 1;
@@ -111,8 +111,8 @@ export const STILL_SEARCHING_VARIANTS = Object.freeze({
 });
 
 export function stageForTurn(turn) {
-  if (turn < 5) return "preparation";
-  if (turn < 11) return "application";
-  if (turn < 16) return "interview";
+  if (turn < 6) return "preparation";
+  if (turn < 14) return "application";
+  if (turn < 20) return "interview";
   return "closing";
 }

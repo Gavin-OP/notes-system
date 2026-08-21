@@ -142,7 +142,7 @@ const RARE_EVENTS = [
     ],
   },
   {
-    id: "creator-readers", category: "networking", stages: ["application", "interview", "closing"], baseWeight: 1.45,
+    id: "creator-readers", category: "networking", stages: ["application", "interview", "closing"], baseWeight: 4.2,
     requirements: { minRoutes: { creator: 1 } },
     title: "再次打开社交平台，有人在等你这个“求职博主”的更新", description: "几天后，那篇随笔还在被转发。有人留言问“后来怎么样了？”大家感兴趣的不只是技巧，也包括一个普通人在这段过程里经历了什么。", tags: ["creator", "alternative"],
     choices: [
@@ -152,7 +152,7 @@ const RARE_EVENTS = [
     ],
   },
   {
-    id: "creator-commission", category: "application", stages: ["interview", "closing"], baseWeight: 1.6,
+    id: "creator-commission", category: "application", stages: ["interview", "closing"], baseWeight: 4.2,
     requirements: { minRoutes: { creator: 2 } },
     title: "社交平台的私信里，有编辑问你愿不愿意投稿", description: "一家媒体或内容平台看到了之前的文章，邀请你写一篇新稿。这是第一次有人明确愿意为你的文字提供正式发表机会。", tags: ["creator", "alternative"],
     choices: [
@@ -166,7 +166,7 @@ const RARE_EVENTS = [
     ],
   },
   {
-    id: "creator-crossroads", category: "offer", stages: ["closing"], baseWeight: 1.8,
+    id: "creator-crossroads", category: "offer", stages: ["closing"], baseWeight: 4.2,
     requirements: { minRoutes: { creator: 3 } },
     title: "写作开始变成你生活中重要的一部分", description: "后来，又有人向你约稿，你也开始有固定读者。原本只是为了消化求职情绪写下第一篇文章，现在你开始认真考虑：如果继续写下去，会发生什么？", tags: ["creator", "alternative"],
     choices: [
