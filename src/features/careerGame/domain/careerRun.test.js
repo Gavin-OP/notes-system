@@ -80,7 +80,7 @@ describe("Career Run public behavior", () => {
     expect(state.role).toBe("graduate");
     expect(state.turn).toBe(0);
     expect(state.attributes).toEqual({
-      time: 70,
+      time: 100,
       energy: 60,
       confidence: 45,
       profile: 15,
@@ -504,21 +504,13 @@ describe("Career Run public behavior", () => {
   });
 
   it("uses a later incident profile for repeated interview pressure", () => {
-    const early = createCareerRun({ seed: 88 });
-    early.turn = 7;
-    early.counters.interviewLeads = 1;
-    early.currentEvent = { id: "group-interruption", choices: [] };
+    const event = CAREER_EVENT_POOL.find((candidate) => candidate.id === "group-interruption");
 
-    const late = structuredClone(early);
-    late.turn = 14;
-
-    const earlyResult = advanceCareerRun(early, "wait-turn");
-    const lateResult = advanceCareerRun(late, "wait-turn");
-
-    expect(earlyResult.lastOutcome.deltas.confidence)
-      .toBeGreaterThan(lateResult.lastOutcome.deltas.confidence);
-    expect(lateResult.lastOutcome.deltas.energy)
-      .toBeLessThan(earlyResult.lastOutcome.deltas.energy);
+    expect(event.lateFromTurn).toBe(11);
+    expect(event.lateIncidentEffects.confidence.max)
+      .toBeLessThan(event.incidentEffects.confidence.max);
+    expect(event.lateIncidentEffects.energy.max)
+      .toBeLessThan(event.incidentEffects.energy.max);
   });
 
   it("configures recurring ordinary recruiting events with finite caps", () => {

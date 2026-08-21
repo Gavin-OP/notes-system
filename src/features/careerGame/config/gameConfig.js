@@ -1,9 +1,10 @@
 export const GAME_VERSION = 2;
 export const MAX_TURNS = 20;
 export const MAX_OVERTIME_TURNS = 22;
+export const TURN_TIME_COST = 5;
 
 export const INITIAL_ATTRIBUTES = Object.freeze({
-  time: 70,
+  time: 100,
   energy: 60,
   confidence: 45,
   profile: 15,
@@ -11,7 +12,6 @@ export const INITIAL_ATTRIBUTES = Object.freeze({
 });
 
 export const RESOURCE_TUNING = Object.freeze({
-  timeCostMultiplier: 0.6,
   positiveEnergyMultiplier: 0.7,
   positiveConfidenceMultiplier: 0.6,
   rejectionConfidenceCost: 2,

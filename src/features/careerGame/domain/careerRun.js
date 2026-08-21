@@ -21,6 +21,7 @@ import {
   RESOURCE_TUNING,
   STILL_SEARCHING_VARIANTS,
   STRATEGY_TUNING,
+  TURN_TIME_COST,
   stageForTurn,
 } from "../config/gameConfig";
 
@@ -217,7 +218,7 @@ function selectNextEvent(state) {
 
 function tunedAmount(key, amount, tuneChoiceEffects) {
   if (!tuneChoiceEffects) return amount;
-  if (key === "time" && amount < 0) return -Math.max(1, Math.round(Math.abs(amount) * RESOURCE_TUNING.timeCostMultiplier));
+  if (key === "time") return 0;
   if (key === "energy" && amount > 0) return Math.max(1, Math.round(amount * RESOURCE_TUNING.positiveEnergyMultiplier));
   if (key === "confidence" && amount > 0) return Math.max(1, Math.round(amount * RESOURCE_TUNING.positiveConfidenceMultiplier));
   return amount;
@@ -517,6 +518,7 @@ export function advanceCareerRun(currentState, choiceId) {
 
   const before = clone(state.attributes);
   reduceCooldowns(state);
+  applyAttributes(state, { time: -TURN_TIME_COST });
   if (event.id === "final-round" && state.modifiers.finalRoundEnergy && !state.legacyUsage.pillowUsed) {
     applyAttributes(state, { energy: state.modifiers.finalRoundEnergy });
   }
