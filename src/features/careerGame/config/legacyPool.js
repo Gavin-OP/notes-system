@@ -4,7 +4,7 @@ export const LEGACY_POOL = [
   { id: "rejection-calm", title: "被拒绝十次以后产生的奇怪平静", description: "初始 Confidence +8", initialEffects: { confidence: 8 } },
   { id: "coffee-chat", title: "Coffee Chat 经验", description: "Networking 成功率 +4%", modifiers: { networkingProbability: 0.04 } },
   { id: "interview-notes", title: "超详细的面经", description: "Interview 成功率 +4%", modifiers: { interviewProbability: 0.04 } },
-  { id: "portfolio-made", title: "第一个作品集", description: "作品集事件少消耗 2 Time", modifiers: { portfolioTimeDiscount: 2 } },
+  { id: "portfolio-made", title: "第一个作品集", description: "作品集事件少消耗 2 Energy", modifiers: { portfolioEnergyDiscount: 2 } },
   { id: "jd-reader", title: "我知道 JD 在写什么了", description: "研究岗位时额外 Profile +2", modifiers: { researchProfileBonus: 2 } },
   { id: "boundaries", title: "边界感", description: "初始 Energy +5", initialEffects: { energy: 5 } },
   { id: "airport-regular", title: "机场熟客", description: "旅行路线事件抽取权重 ×1.30", modifiers: { travelWeight: 1.3 } },

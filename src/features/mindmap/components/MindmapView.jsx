@@ -188,7 +188,7 @@ const MindmapView = ({ subjectId }) => {
   }, []);
 
   useEffect(() => {
-    if (!location.state?.mindmapConcept) return;
+    if (!FULL_PRODUCT_ENABLED || !location.state?.mindmapConcept) return;
     setSelectedConcept(normalizeConceptPayload(location.state.mindmapConcept));
     setConceptModalOpen(true);
   }, [location.state]);
@@ -309,6 +309,7 @@ const MindmapView = ({ subjectId }) => {
   }, []);
   
   const handleConceptClick = useCallback((rawConcept = {}) => {
+    if (!FULL_PRODUCT_ENABLED) return;
     const concept = normalizeConceptPayload(rawConcept);
     if (!concept.label && !concept.id) return;
     setSelectedConcept(concept);
@@ -347,7 +348,7 @@ const MindmapView = ({ subjectId }) => {
   // Handle node click - open concept action modal (only for concept nodes)
   const onNodeClick = useCallback(
     (event, node) => {
-      if (node.type !== "conceptNode") return;
+      if (!FULL_PRODUCT_ENABLED || node.type !== "conceptNode") return;
       handleConceptClick({
         id: node.id,
         label: node.data?.label,
@@ -493,12 +494,14 @@ const MindmapView = ({ subjectId }) => {
       {/* Render the selected mindmap view */}
       {renderMindmapContent()}
 
-      <ConceptReviewModal
-        open={conceptModalOpen}
-        concept={selectedConcept}
-        onClose={handleCloseConceptModal}
-        onGoToNotes={handleGoToNotes}
-      />
+      {FULL_PRODUCT_ENABLED ? (
+        <ConceptReviewModal
+          open={conceptModalOpen}
+          concept={selectedConcept}
+          onClose={handleCloseConceptModal}
+          onGoToNotes={handleGoToNotes}
+        />
+      ) : null}
     </div>
   );
 };

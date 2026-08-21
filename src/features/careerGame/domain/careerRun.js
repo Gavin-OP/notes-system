@@ -427,6 +427,7 @@ function recordPipelineResolution(state, event, succeeded, choice) {
   }
   if (event.id === "ordinary-offer" && choice.id === "decline") {
     state.counters.pendingOffers = Math.max(0, state.counters.pendingOffers - 1);
+    state.counters.offers = Math.max(0, state.counters.offers - 1);
     state.counters.declinedOffers += 1;
   }
 }
@@ -523,7 +524,7 @@ export function advanceCareerRun(currentState, choiceId) {
     applyAttributes(state, { energy: state.modifiers.finalRoundEnergy });
   }
   applyChoicePayload(state, choice);
-  if (state.legacy?.id === "portfolio-made" && event.tags?.includes("portfolio")) applyAttributes(state, { time: state.modifiers.portfolioTimeDiscount || 0 });
+  if (state.legacy?.id === "portfolio-made" && event.tags?.includes("portfolio")) applyAttributes(state, { energy: state.modifiers.portfolioEnergyDiscount || 0 });
   if (state.legacy?.id === "jd-reader" && (choice.id === "research" || choice.id === "fit" || choice.id === "benchmark")) applyAttributes(state, { profile: state.modifiers.researchProfileBonus || 0 });
   Object.entries(choice.behaviorEffects || {}).forEach(([key, amount]) => {
     state.behavior[key] = (state.behavior[key] || 0) + amount;
@@ -549,6 +550,8 @@ export function advanceCareerRun(currentState, choiceId) {
   }
   if (!selectedOutcome) throw new Error(`Choice is missing a configured outcome: ${event.id}/${choice.id}`);
   applyChoicePayload(state, selectedOutcome);
+  const issuedOffers = Math.max(0, selectedOutcome.counters?.pendingOffers || 0);
+  if (issuedOffers > 0) state.counters.offers += issuedOffers;
   Object.entries(choice.strategyEffects || {}).forEach(([key, amount]) => {
     state.strategyProgress[key] = Math.max(0, (state.strategyProgress[key] || 0) + amount);
   });
@@ -675,7 +678,7 @@ function resolvePersona(state) {
 }
 
 function resolveEnding(state) {
-  const accepted = state.counters.acceptedOffers || state.counters.offers;
+  const accepted = state.counters.offers;
   let id = "still_searching";
   if (state.flags.careerCreatorReady && state.routes.creator >= 4) id = "career_creator";
   else if (state.flags.creatorReady && state.routes.creator >= 4) id = "content_creator";

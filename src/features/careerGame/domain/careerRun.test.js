@@ -178,7 +178,7 @@ describe("Career Run public behavior", () => {
     expect(next.currentEvent.id).toMatch(/screening|interview/);
   });
 
-  it("keeps an Offer pending until the player accepts or declines it", () => {
+  it("counts a written Offer while keeping acceptance as a separate decision", () => {
     const state = createCareerRun({ seed: 31 });
     state.turn = 17;
     state.currentEvent = {
@@ -186,10 +186,11 @@ describe("Career Run public behavior", () => {
       choices: [],
     };
     state.counters.pendingOffers = 1;
+    state.counters.offers = 1;
 
     const accepted = advanceCareerRun(state, "accept");
 
-    expect(accepted.counters.offers).toBeGreaterThanOrEqual(1);
+    expect(accepted.counters.offers).toBe(1);
     expect(accepted.counters.acceptedOffers).toBe(1);
     expect(accepted.counters.pendingOffers).toBe(0);
   });
@@ -747,16 +748,26 @@ describe("Career Run public behavior", () => {
     expect(RARE_EVENT_WEIGHT_MULTIPLIER).toBeLessThan(1);
   });
 
-  it("treats a successful Final Round as pending until the Offer is accepted", () => {
+  it("configures a successful Final Round as a written pending Offer", () => {
     const finalRound = CAREER_EVENT_POOL.find((event) => event.id === "final-round");
-    const acceptedOffer = CAREER_EVENT_POOL.find((event) => event.id === "ordinary-offer")
-      .choices.find((choice) => choice.id === "accept");
-
     finalRound.choices.forEach((choice) => {
       expect(choice.success.counters).toMatchObject({ pendingOffers: 1 });
       expect(choice.success.counters.offers).toBeUndefined();
     });
-    expect(acceptedOffer.counters).toMatchObject({ offers: 1 });
+  });
+
+  it("increments Offers immediately when the Final Round produces a written Offer", () => {
+    const state = createCareerRun({ seed: 100 });
+    state.currentEvent = { id: "final-round", choices: [] };
+    state.counters.offerLeads = 1;
+    state.attributes.profile = 100;
+    state.attributes.confidence = 100;
+
+    const result = advanceCareerRun(state, "deep");
+
+    expect(result.lastOutcome.id).toBe("offer");
+    expect(result.counters.offers).toBe(1);
+    expect(result.counters.pendingOffers).toBe(1);
   });
 
   it("derives the expanded Achievement set from recorded run facts", () => {

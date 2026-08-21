@@ -209,7 +209,7 @@ const CORE_EVENT_POOL = [
     id: "ordinary-offer", category: "offer", stages: ["decision"], baseWeight: 6,
     requirements: { minCounters: { offerLeads: 1 } }, title: "一份不完美、但可以接受的 Offer", description: "Offer 终于到达，但要不要接受它，你还要再认真想一想。",
     tags: ["offer", "decision"], cooldownTags: ["offer"], choices: [
-      choice("accept", "核实条件后接受，虽然不是 Dream Offer，但也可以作为职业的起点", { pacing: 2, action: 2 }, { effects: { time: -4, confidence: 12, energy: 4 }, counters: { offers: 1 }, consequence: "你确认了薪酬、岗位、入职时间和书面条款，随后正式接受。它不必是终身答案，但会成为下一段经历的跳板。" }),
+      choice("accept", "核实条件后接受，虽然不是 Dream Offer，但也可以作为职业的起点", { pacing: 2, action: 2 }, { effects: { time: -4, confidence: 12, energy: 4 }, consequence: "你确认了薪酬、岗位、入职时间和书面条款，随后正式接受。它不必是终身答案，但会成为下一段经历的跳板。" }),
       choice("decline", "它离想要的生活太远，继续寻找", { exploration: 3, resilience: 3 }, { effects: { time: -4, confidence: 2 }, flags: ["declinedOffer"], consequence: "你礼貌拒绝了这份 Offer，并保留了对方的联系方式。拒绝一个不合适的入口，也是在为真正想要的生活做选择。" }),
     ],
   },
