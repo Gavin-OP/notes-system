@@ -39,7 +39,6 @@ const PROFILE_CHILD_IDS = [
   "pilot:cover-letter",
   "pilot:portfolio",
   "pilot:personal-site",
-  "pilot:interview-priority",
   "pilot:resume-positioning",
   "pilot:experience-building",
 ];

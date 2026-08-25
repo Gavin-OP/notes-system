@@ -425,7 +425,7 @@ describe("fall recruiting constellation", () => {
     });
     const competitiveIds = new Set(competitive.nodes.map((node) => node.node_id));
     expect(competitiveIds.has("pilot:career-track-planning")).toBe(false);
-    expect(competitiveIds.has("pilot:interview-priority")).toBe(true);
+    expect(competitiveIds.has("pilot:interview-priority")).toBe(false);
     expect(competitiveIds.has("pilot:company-research")).toBe(true);
     expect(competitiveIds.has("pilot:experience-building")).toBe(false);
   });

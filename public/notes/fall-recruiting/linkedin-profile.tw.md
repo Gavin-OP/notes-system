@@ -4,63 +4,71 @@ slug: linkedin-profile.md
 order: 5
 tags: [求職, LinkedIn, Profile]
 ---
-
 # LinkedIn
 
-LinkedIn 像一張可以繼續展開的簡歷：招聘者能先看懂你的方向，再沿着經歷、項目和動態認識你。它也會影響崗位推薦和別人搜索到你的方式。LinkedIn 官方説明，推薦會參考 Headline、About、Experience、Education 與地點偏好，因此主頁內容越清楚，平台越容易理解你在找什麼。
+LinkedIn 是你的動態專業檔案，一份不斷展開的職業故事。它能幫助招聘者快速了解你的方向，並深入查看你的經歷、項目和動態。你的主頁也會影響平台推薦的職位，以及他人找到你的方式。LinkedIn 的演算法會參考 Headline、About、Experience、Education 和地點偏好。清晰的主頁能幫助平台理解你的目標，從而吸引更匹配的機會。
 
-## 先把第一屏説清楚
+## 讓第一屏一目了然
 
-陌生人點進主頁時，最先看到的是頭像、Headline、當前經歷、學校、地區和聯繫方式。這裏不需要塞滿關鍵詞，只要能回答“你是誰、擅長什麼、正在靠近什麼方向”。
+當他人訪問你的主頁時，首先看到的是頭像、Headline、當前經歷、教育背景、地點和聯繫方式。這「10秒印象」無需堆砌關鍵詞，只需清晰回答：「你是誰、擅長什麼、目標方向是什麼？」
 
-Headline 可以採用這樣的結構：
+**小貼士：**
+*   **專業頭像：** 如果你覺得舒服，放一張清晰、專業的頭像。
+*   **自訂 URL：** 把你的 LinkedIn 網址改成容易分享的自訂連結（例如 `linkedin.com/in/你的名字`）。
 
-> 當前身份｜目標方向｜最有證據的能力或領域
+Headline 可以採用以下結構，讓你的目標方向和核心能力一目了然：
 
-例如，與其只寫 “Master’s Student”，不如寫成 “Data Science Master’s Student｜Product Analytics｜SQL & Experimentation”。目標還沒完全確定時，也可以寫較寬的能力方向，不必假裝已經擁有某個職位。
+> 當前身份｜目標方向｜核心技能或專長
 
-## About 寫成一段能繼續聊下去的介紹
+例如，與其只寫 “Master’s Student”，不如寫成 “Data Science Master’s Student｜Product Analytics｜SQL & Experimentation”。如果目標尚未完全確定，寫一個更寬泛的能力方向也完全可以，不必假裝擁有某個職位。
 
-About 可以比簡歷多一點語氣和上下文：
+## About：一段能引出對話的自我介紹
 
-- 你目前關注哪些問題或崗位方向；
-- 哪些經歷讓你形成了這些興趣；
-- 你能帶來的能力與工作方式；
-- 希望認識怎樣的團隊、項目或同行。
+About 部分可以比簡歷更具對話性，提供更多背景資訊，像一段能引出後續交流的開場白。在這裡，你可以：
 
-讀完後，別人最好能想到一個自然的開場問題。相比一串 “passionate、hard-working、team player”，一個具體場景更容易讓人記住你。
+*   闡述你目前關注的問題或職位方向。
+*   分享哪些經歷塑造了你的興趣和目標。
+*   突出你的核心能力和工作方式。
+*   表達你希望結識的團隊、項目或同行。
 
-## Experience 和 Projects 補充上下文
+理想情況下，讀者看完後能自然地想到一個開場問題。一個具體的故事或場景，遠比「passionate、hard-working、team player」等通用形容詞更令人印象深刻。
 
-每段經歷先用一句話説明業務或項目背景，再寫個人行動、方法和結果。與簡歷相比，LinkedIn 可以保留更多上下文、相關鏈接和媒體，但公司、日期、職位和結果口徑需要互相對得上。
+## Experience 和 Projects：補充背景和成果
 
-學生經歷同樣可以使用 Projects、Courses、Volunteer Experience、Organizations、Languages 等板塊。LinkedIn 的官方 Profile Sections 也支持 Featured、Projects、Licenses & Certifications、Publications 和 Recommendations；只選真正幫助別人理解你的部分就好。
+對於每段經歷或項目，先用一句話說明業務或項目背景，然後詳細描述你採取的行動、使用的方法/工具以及取得的成果。與簡歷相比，LinkedIn 可以添加更多背景資訊、相關連結和媒體（如圖片、影片、文件），讓你的工作成果更直觀。請務必確保公司名稱、日期、職位和成果數據與你的簡歷保持一致。
 
-## Skills 要和證據連起來
+學生經歷同樣可以透過 Projects、Courses、Volunteer Experience、Organizations 和 Languages 等板塊展示。LinkedIn 官方的 Profile Sections 還支援 Featured、Licenses & Certifications、Publications 和 Recommendations；只選擇那些真正有助於他人理解你的部分即可。
 
-技能列表不是越長越好。優先保留目標 JD 中常出現、同時又能在 Experience 或 Projects 中找到證據的技能。LinkedIn 允許把技能關聯到具體經歷，這會比孤零零的一串標籤更可信。
+## Skills：用證據支撐你的能力
 
-可以檢查三個問題：
+技能列表不在於長，而在于有說服力。優先保留目標職位描述中常見，且能在你的經歷或項目中找到具體證據的技能。LinkedIn 允許你將技能關聯到具體經歷，這比孤立的標籤更具可信度。
 
-- 這項技能在哪段經歷裏用過？
-- 如果面試官追問，我能講清過程嗎？
-- 它是否仍然服務於當前方向？
+你可以用這三個問題來審視你的技能列表：
 
-## 用主頁支持崗位搜索與 Networking
+*   這項技能在哪段經歷中使用過？我能舉出具體例子嗎？
+*   如果面試官追問，我能清晰地闡述過程和細節嗎？
+*   這項技能是否仍與我當前的目標方向一致？
 
-保存幾組不同的職位關鍵詞和相近崗位名，並開啓 Job Alert。搜索團隊成員時，可以從共同學校、相似專業、相近職業轉向或共同興趣切入。發送連接邀請時，簡單交代共同點和具體來意，通常比一段很長的自我介紹更容易回應。
+## 提升主頁的發現度與 Networking 效率
 
-Open to Work 的可見範圍、公開主頁、聯繫方式和動態通知都可以單獨設置。開始大幅更新前，可以先檢查是否希望把每次改動廣播給所有聯繫人。
+*   **關鍵詞優化：** 在 Headline、About 和 Experience 中自然地融入目標職位常見的關鍵詞，這有助於招聘者和平台演算法找到你。
+*   **職位提醒：** 設定 Job Alert，保存幾組不同的職位關鍵詞和相近職位名，讓系統為你篩選機會。
+*   **建立連結：** 搜尋團隊成員時，可以從共同學校、相似專業、相近職業轉型或共同興趣切入。發送連結邀請時，簡單說明共同點和具體來意，通常比冗長的自我介紹更容易獲得回應。請記住，Networking 是建立關係，而非一次性的求職請求。
+*   **保持聯繫：** 每次交流後，記錄下你學到的內容。在後續互動中，分享相關更新，保持真誠的關係。
+
+## 管理你的隱私設定和通知
+
+你可以獨立管理「Open to Work」的能見度、公開主頁、聯繫方式和動態通知。在大幅更新主頁前，請檢查是否希望將每次改動廣播給所有聯繫人，以避免不必要的打擾。確保你的主頁可被發現，同時不洩露你希望保持私密的資訊。
 
 ## 從陌生人視角做最後檢查
 
-退出登錄或使用無痕窗口打開公開主頁，看看：
+登出或使用無痕視窗打開你的公開主頁，像一位初次訪問的招聘者或同行那樣審視它：
 
-- 第一屏能否快速看懂方向；
-- 時間、公司與簡歷是否一致；
-- Featured 和項目鏈接是否有效；
-- 公開郵箱是否仍在使用；
-- 舊經歷是否擠掉了更相關的信息；
-- 中英文內容是否混亂或重複。
+*   **第一屏：** 你的方向和核心價值是否一目了然？
+*   **一致性：** 時間、公司、職位描述與簡歷是否一致？
+*   **連結有效性：** Featured 和項目連結是否都有效？
+*   **聯繫方式：** 公開郵箱是否仍在正常使用？
+*   **資訊密度：** 舊經歷是否掩蓋了更相關、更重要的資訊？
+*   **語言清晰：** 中英文內容是否存在混淆或重複？
 
-LinkedIn 官方的 [Profile 指南](https://www.linkedin.com/help/linkedin/answer/a554351/how-do-i-create-a-good-linkedin-profile-) 和 [可添加的 Profile Sections](https://www.linkedin.com/help/linkedin/answer/a540837/adding-sections-to-your-profile) 會隨平台功能更新，找不到某個入口時可以回到官方説明確認。
+LinkedIn 官方的 [Profile 指南](https://www.linkedin.com/help/linkedin/answer/a554351/how-do-i-create-a-good-linkedin-profile-) 和 [可添加的 Profile Sections](https://www.linkedin.com/help/linkedin/answer/a540837/add-sections-to-your-profile) 會隨平台功能更新。如果找不到某个入口，請查閱官方說明。

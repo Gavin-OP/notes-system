@@ -254,9 +254,6 @@ function buildPilotNodes(profile = {}) {
     nodes.push(pathNode("personal-site", "个人主页", "personal-site", 5, "", { path_relation: "branch" }));
   }
 
-  if (profile.profile_competitiveness === "competitive") {
-    nodes.push(pathNode("interview-priority", "提前准备面试", "interview-preparation", 5, "", { path_relation: "branch" }));
-  }
   if (profile.profile_competitiveness === "unsure") {
     nodes.push(pathNode("resume-positioning", "梳理与包装简历证据", "resume-story", 5, "", { path_relation: "branch" }));
   }
@@ -378,7 +375,7 @@ function buildPilotEdges(nodes) {
 
   connect("market", "profile-preparation");
 
-  const profileBranchIds = ["resume", "linkedin", "cover-letter", "portfolio", "personal-site", "interview-priority", "resume-positioning"]
+  const profileBranchIds = ["resume", "linkedin", "cover-letter", "portfolio", "personal-site", "resume-positioning"]
     .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
   profileBranchIds.forEach((nodeId) => {
     connect("profile-preparation", nodeId, "branches_to");
