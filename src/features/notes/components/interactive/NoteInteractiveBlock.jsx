@@ -193,6 +193,79 @@ function StarFrameworkLab({ id, eyebrow, title, description, steps = [] }) {
   );
 }
 
+function ResumeChecklistLab({
+  id,
+  eyebrow,
+  title,
+  description,
+  items = [],
+  progressLabel,
+  inProgressMessage,
+  completedMessage,
+  resetLabel,
+}) {
+  const [savedCheckedIds, setSavedCheckedIds] = useSavedInteractionState(id, []);
+  const checkedIds = Array.isArray(savedCheckedIds) ? savedCheckedIds : [];
+  const checked = new Set(checkedIds);
+  const completedCount = items.filter((item) => checked.has(item.id)).length;
+  const progress = items.length ? Math.round((completedCount / items.length) * 100) : 0;
+  const isComplete = items.length > 0 && completedCount === items.length;
+
+  const toggle = (itemId) => {
+    const next = checked.has(itemId)
+      ? checkedIds.filter((currentId) => currentId !== itemId)
+      : [...checkedIds, itemId];
+    setSavedCheckedIds(next);
+  };
+
+  return (
+    <section className="note-interaction note-resume-checklist" aria-labelledby={`${id}-title`}>
+      <header className="note-interaction__header">
+        <span>{eyebrow}</span>
+        <h3 id={`${id}-title`}>{title}</h3>
+        <p>{description}</p>
+      </header>
+
+      <div className="note-resume-checklist__progress" aria-live="polite">
+        <div>
+          <strong>{progressLabel}</strong>
+          <span>{completedCount} / {items.length}</span>
+        </div>
+        <div
+          className="note-resume-checklist__track"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax={items.length}
+          aria-valuenow={completedCount}
+          aria-label={progressLabel}
+        >
+          <span style={{ transform: `scaleX(${progress / 100})` }} />
+        </div>
+        <p>{isComplete ? completedMessage : inProgressMessage}</p>
+        {completedCount > 0 ? (
+          <button type="button" onClick={() => setSavedCheckedIds([])}>{resetLabel}</button>
+        ) : null}
+      </div>
+
+      <div className="note-resume-checklist__items">
+        {items.map((item) => {
+          const isChecked = checked.has(item.id);
+          return (
+            <label key={item.id} className={isChecked ? "is-checked" : ""}>
+              <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={() => toggle(item.id)}
+              />
+              <span>{item.text}</span>
+            </label>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 const EVIDENCE_STATES = [
   { id: "evidence", label: "已有证据" },
   { id: "gap", label: "需要补强" },
@@ -685,6 +758,21 @@ export default function NoteInteractiveBlock({ configText }) {
         title={config.title}
         description={config.description}
         steps={config.steps}
+      />
+    );
+  }
+  if (config.type === "resume-checklist") {
+    return (
+      <ResumeChecklistLab
+        id={config.id}
+        eyebrow={config.eyebrow}
+        title={config.title}
+        description={config.description}
+        items={config.items}
+        progressLabel={config.progressLabel}
+        inProgressMessage={config.inProgressMessage}
+        completedMessage={config.completedMessage}
+        resetLabel={config.resetLabel}
       />
     );
   }

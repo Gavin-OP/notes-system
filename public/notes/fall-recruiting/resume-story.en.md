@@ -79,12 +79,6 @@ A professional resume is as much about presentation as it is about content.
 
 Before sending your resume, use this checklist for a quick review:
 
--   [ ] Does the beginning quickly present the core evidence most needed for the target role?
--   [ ] Does each experience clearly distinguish between team achievements and your individual contributions?
--   [ ] Is every number clearly sourced, explainable, and provided with necessary context?
--   [ ] Can you concisely and naturally explain each core experience, inviting follow-up questions?
--   [ ] Are dates and facts consistent across your resume, LinkedIn, and self-introduction?
--   [ ] Are the filename, dates, formatting, contact information, and version all correct?
--   [ ] Is the resume ATS-friendly, avoiding complex charts and unconventional fonts?
--   [ ] Has it been exported as a PDF (unless otherwise requested)?
-}
+```note-interactive
+{"type":"resume-checklist","id":"fall-recruiting-resume-checklist-en","eyebrow":"Before you send","title":"Confirm that your resume is ready, one item at a time","description":"Select an entire row to tick it off. Your progress is saved in this browser, so you can continue later.","progressLabel":"Review progress","inProgressMessage":"You do not need to finish everything at once. Use the remaining items to guide your next revision.","completedMessage":"Review complete. Before sending, confirm the role, company, and file version one last time.","resetLabel":"Review again","items":[{"id":"evidence","text":"Does the opening quickly present the core evidence most relevant to the target role?"},{"id":"contribution","text":"Does each experience distinguish team achievements from your individual contribution?"},{"id":"metrics","text":"Is every number clearly sourced, explainable, and supported by enough context?"},{"id":"story","text":"Can you explain each core experience naturally and invite useful follow-up questions?"},{"id":"consistency","text":"Are dates and facts consistent across your resume, LinkedIn, and introduction?"},{"id":"details","text":"Are the filename, dates, formatting, contact details, and version correct?"},{"id":"ats","text":"Is the resume ATS-friendly, without complex charts or unconventional fonts?"},{"id":"pdf","text":"Has it been exported as a PDF unless another format was requested?"}]}
+```

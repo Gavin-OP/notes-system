@@ -354,6 +354,7 @@
 
 .note-star-framework__detail-heading > div {
   display: flex;
+  min-width: 0;
   flex-direction: column;
   gap: 4px;
 }
@@ -381,6 +382,7 @@
 
 .note-star-framework__detail-grid > div,
 .note-star-framework__detail-grid aside {
+  min-width: 0;
   padding: 14px;
   border-radius: 14px;
   background: color-mix(in srgb, var(--ns-color-bg-container) 88%, transparent);
@@ -395,13 +397,153 @@
 
 .note-star-framework__detail-grid li,
 .note-star-framework__detail-grid p {
+  max-width: 100%;
   color: var(--ns-color-text-secondary);
   font-size: 12px;
   line-height: 1.6;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  word-break: normal;
 }
 
 .note-star-framework__detail-grid p {
   margin: 10px 0 0;
+}
+
+.note-resume-checklist__progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 9px 16px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 16px 18px;
+  border: 1px solid color-mix(in srgb, var(--ns-color-primary) 20%, var(--ns-color-border-secondary));
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--ns-color-primary-bg) 64%, var(--ns-color-bg-container));
+}
+
+.note-resume-checklist__progress > div:first-child {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.note-resume-checklist__progress strong {
+  color: var(--ns-color-text);
+  font-size: 13px;
+}
+
+.note-resume-checklist__progress > div:first-child span {
+  color: var(--ns-color-primary);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 750;
+}
+
+.note-resume-checklist__track {
+  position: relative;
+  overflow: hidden;
+  grid-column: 1;
+  height: 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ns-color-primary) 12%, var(--ns-color-bg-container));
+}
+
+.note-resume-checklist__track > span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--ns-color-primary);
+  transform-origin: left center;
+  transition: transform 220ms ease-out;
+}
+
+.note-resume-checklist__progress p {
+  grid-column: 1;
+  margin: 0;
+  color: var(--ns-color-text-secondary);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.note-resume-checklist__progress button {
+  grid-row: 1 / span 3;
+  grid-column: 2;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--ns-color-primary-border);
+  border-radius: 999px;
+  background: var(--ns-color-bg-container);
+  color: var(--ns-color-primary);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.note-resume-checklist__progress button:hover {
+  background: var(--ns-color-primary-bg-hover);
+}
+
+.note-resume-checklist__progress button:focus-visible,
+.note-resume-checklist__items input:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 3px;
+}
+
+.note-resume-checklist__items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.note-resume-checklist__items label {
+  display: grid;
+  min-width: 0;
+  min-height: 64px;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--ns-color-bg-container) 92%, var(--ns-color-primary-bg));
+  color: var(--ns-color-text-secondary);
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.note-resume-checklist__items label:hover {
+  border-color: var(--ns-color-primary-border);
+}
+
+.note-resume-checklist__items label:has(input:focus-visible) {
+  outline: var(--ns-focus-ring);
+  outline-offset: 3px;
+}
+
+.note-resume-checklist__items label.is-checked {
+  border-color: var(--ns-color-primary);
+  background: var(--ns-color-primary-bg);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ns-color-primary) 44%, transparent);
+  color: var(--ns-color-text);
+}
+
+.note-resume-checklist__items input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--ns-color-primary);
+  cursor: pointer;
+}
+
+.note-resume-checklist__items label > span {
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .note-evidence-matrix {
@@ -983,8 +1125,19 @@
   }
 
   .note-star-framework__steps,
-  .note-star-framework__detail-grid {
+  .note-star-framework__detail-grid,
+  .note-resume-checklist__items {
     grid-template-columns: 1fr;
+  }
+
+  .note-resume-checklist__progress {
+    grid-template-columns: 1fr;
+  }
+
+  .note-resume-checklist__progress button {
+    grid-row: auto;
+    grid-column: 1;
+    justify-self: start;
   }
 
   .note-star-framework__steps::before {
@@ -1043,6 +1196,11 @@
   }
 
   .note-star-framework__steps button {
+    transition: none;
+  }
+
+  .note-resume-checklist__track > span,
+  .note-resume-checklist__items label {
     transition: none;
   }
 
