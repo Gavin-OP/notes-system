@@ -48,6 +48,7 @@
 .embedded-constellation__resize { width: 36px; padding: 0 !important; }
 .embedded-constellation__progress {
   margin-left: auto;
+  margin-right: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -276,12 +277,14 @@
 .embedded-constellation__canvas .react-flow__controls-button { color: #40594f; background: rgba(255, 255, 252, 0.94); }
 
 .embedded-constellation-rail {
+  box-sizing: border-box;
   position: fixed;
   left: 0;
   top: 50%;
   z-index: 40;
-  width: 116px;
-  min-height: 156px;
+  width: 104px;
+  height: 208px;
+  min-height: 208px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -290,7 +293,7 @@
   padding: 18px 14px 18px 8px;
   border: 1px solid rgba(255, 255, 255, 0.9);
   border-left: 0;
-  border-radius: 0 90px 90px 0;
+  border-radius: 0 104px 104px 0;
   color: #253830;
   text-align: center;
   background: rgba(244, 246, 242, 0.94);

@@ -71,10 +71,16 @@ function FixedRouteEdge({ id, sourceX, sourceY, targetX, targetY, style, data, m
   const isBranch = data?.relation === "branches_to";
   const routeSourceX = Number.isFinite(data?.customSourceX) ? data.customSourceX : sourceX;
   const routeSourceY = Number.isFinite(data?.customSourceY) ? data.customSourceY : sourceY;
+  const routeTargetX = Number.isFinite(data?.customTargetX) ? data.customTargetX : targetX;
+  const routeTargetY = Number.isFinite(data?.customTargetY) ? data.customTargetY : targetY;
   const busY = Number.isFinite(data?.busY) ? data.busY : routeSourceY + Math.max(28, (targetY - routeSourceY) / 2);
   const endpointGap = 10;
   const directoryTrunkX = targetX - 20;
-  const path = data?.routeStyle === "midpoint-drop"
+  const path = data?.routeStyle === "family-enter"
+    ? `M ${routeSourceX} ${routeSourceY + endpointGap} V ${(routeSourceY + routeTargetY) / 2} H ${routeTargetX} V ${routeTargetY - endpointGap}`
+    : data?.routeStyle === "family-between"
+    ? `M ${routeSourceX + endpointGap} ${routeSourceY} L ${routeTargetX - endpointGap} ${routeTargetY}`
+    : data?.routeStyle === "midpoint-drop"
     ? `M ${routeSourceX} ${routeSourceY + endpointGap} V ${targetY - endpointGap}`
     : data?.routeStyle === "directory"
     ? `M ${directoryTrunkX} ${routeSourceY + endpointGap} V ${targetY} H ${targetX - endpointGap}`
@@ -147,6 +153,7 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
       edges,
       currentNode: viewportNode,
       completedCount,
+      totalCount: nodes.length,
       progressPercent,
       mainRouteY: mainRouteNode
         ? mainRouteNode.position.y + (mainRouteNode.data.nodeHeight || 0) / 2
@@ -192,7 +199,7 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
     <header className="embedded-constellation__header"><div><span>YOUR PATH</span><strong>{t("pilot.path.title")}</strong></div>
       <div className="embedded-constellation__progress">
         <div style={{ "--path-progress": `${elements.progressPercent}%` }}><strong>{elements.progressPercent}%</strong></div>
-        <span>{t("learningPath.completed")}<b>{elements.completedCount} / {elements.nodes.length}</b></span>
+        <span>{t("learningPath.completed")}<b>{elements.completedCount} / {elements.totalCount}</b></span>
       </div>
       <nav>
       {!isMobile && typeof onToggleExpand === "function" ? <button type="button" className="embedded-constellation__resize" onClick={onToggleExpand} aria-label={t("pilot.path.backToReading")}><CompressOutlined /></button> : null}

@@ -465,6 +465,15 @@ describe("fall recruiting constellation", () => {
       "route-family:application-precision",
     ]));
     expect(elements.groups.some((group) => group.data.nodeIds.includes("pilot:ai-job-search"))).toBe(false);
+    const socialEntry = elements.edges.find((edge) => edge.source === "pilot:job-search" && edge.target === "pilot:networking");
+    const duplicateSocialEntry = elements.edges.find((edge) => edge.source === "pilot:job-search" && edge.target === "pilot:referral");
+    const familySequence = elements.edges.find((edge) => edge.source === "pilot:resume-version-management" && edge.target === "pilot:company-research");
+    expect(socialEntry).toEqual(expect.objectContaining({
+      hidden: false,
+      data: expect.objectContaining({ routeStyle: "family-enter" }),
+    }));
+    expect(duplicateSocialEntry.hidden).toBe(true);
+    expect(familySequence.data.routeStyle).toBe("family-between");
   });
 
   it("does not expose the legacy JobTI default as an application strategy choice", () => {

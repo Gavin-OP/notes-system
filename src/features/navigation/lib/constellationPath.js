@@ -279,6 +279,13 @@ export function buildConstellationElements(draft, options = {}) {
       focusable: false,
     }];
   });
+  const routeFamilyByNodeId = new Map();
+  const routeGroupByFamilyId = new Map();
+  routeGroups.forEach((group) => {
+    const familyId = group.id.replace(/^route-family:/, "");
+    routeGroupByFamilyId.set(familyId, group);
+    group.data.nodeIds.forEach((nodeId) => routeFamilyByNodeId.set(nodeId, familyId));
+  });
 
   return {
     groups: routeGroups,
@@ -323,6 +330,21 @@ export function buildConstellationElements(draft, options = {}) {
       const marketPosition = positions.get("pilot:market");
       const profilePosition = positions.get("pilot:profile-preparation");
       const marketDimensions = dimensions.get("pilot:market");
+      const sourceFamilyId = routeFamilyByNodeId.get(edge.source);
+      const targetFamilyId = routeFamilyByNodeId.get(edge.target);
+      const sourceFamily = sourceFamilyId ? routeGroupByFamilyId.get(sourceFamilyId) : null;
+      const targetFamily = targetFamilyId ? routeGroupByFamilyId.get(targetFamilyId) : null;
+      const entersFamily = Boolean(targetFamily && !sourceFamilyId && relation === "branches_to");
+      const connectsFamilies = Boolean(sourceFamily && targetFamily && sourceFamilyId !== targetFamilyId);
+      const staysInsideFamily = Boolean(sourceFamilyId && sourceFamilyId === targetFamilyId);
+      const isPrimaryFamilyEntry = entersFamily && targetFamily.data.nodeIds[0] === edge.target;
+      const hideFamilyEdge = staysInsideFamily || (entersFamily && !isPrimaryFamilyEntry);
+      const sourceFamilyCenterY = sourceFamily
+        ? sourceFamily.position.y + sourceFamily.style.height / 2
+        : undefined;
+      const targetFamilyCenterY = targetFamily
+        ? targetFamily.position.y + targetFamily.style.height / 2
+        : undefined;
       return {
         id: edge.edge_id,
         source: edge.source,
@@ -332,22 +354,42 @@ export function buildConstellationElements(draft, options = {}) {
         type: "fixedRoute",
         animated: false,
         selectable: false,
-        hidden: isInterviewReturn,
+        hidden: isInterviewReturn || hideFamilyEdge,
         data: {
           relation,
-          routeStyle: isSkillMidpointBranch ? "midpoint-drop" : isDirectoryBranch || isExperienceMidpointBranch ? "directory" : undefined,
-          customSourceX: isExperienceMidpointBranch
+          routeStyle: connectsFamilies
+            ? "family-between"
+            : entersFamily
+              ? "family-enter"
+              : isSkillMidpointBranch
+                ? "midpoint-drop"
+                : isDirectoryBranch || isExperienceMidpointBranch ? "directory" : undefined,
+          customSourceX: connectsFamilies
+            ? sourceFamily.position.x + sourceFamily.style.width
+            : isExperienceMidpointBranch
             ? positions.get(edge.target)?.x - 20
             : isSkillMidpointBranch
             ? marketPosition && profilePosition
               ? (marketPosition.x + marketDimensions.width + profilePosition.x) / 2
               : sourcePosition?.x - PRIOR_PATH_LENGTH / 2
             : undefined,
-          customSourceY: isExperienceMidpointBranch
+          customSourceY: connectsFamilies
+            ? sourceFamilyCenterY
+            : isExperienceMidpointBranch
             ? sourcePosition?.y + sourceDimensions.height / 2
             : isSkillMidpointBranch
             ? sourcePosition?.y + sourceDimensions.height / 2
             : undefined,
+          customTargetX: connectsFamilies
+            ? targetFamily.position.x
+            : entersFamily
+              ? targetFamily.position.x + targetFamily.style.width / 2
+              : undefined,
+          customTargetY: connectsFamilies
+            ? targetFamilyCenterY
+            : entersFamily
+              ? targetFamily.position.y
+              : undefined,
           busY: relation === "branches_to" && sourcePosition
             ? sourcePosition.y + sourceDimensions.height + 34
             : undefined,

@@ -361,11 +361,11 @@
   outline-offset: 3px;
 }
 
-.note-layout__pilot-rail-action--previous { left: 38px; top: -137px; }
-.note-layout__pilot-rail-action--theme { left: 96px; top: -84px; }
-.note-layout__pilot-rail-action--language { left: 125px; top: 0; }
-.note-layout__pilot-rail-action--disclaimer { left: 96px; top: 84px; }
-.note-layout__pilot-rail-action--next { left: 38px; top: 137px; }
+.note-layout__pilot-rail-action--previous { left: 46px; top: -141px; }
+.note-layout__pilot-rail-action--theme { left: 120px; top: -87px; }
+.note-layout__pilot-rail-action--language { left: 148px; top: 0; }
+.note-layout__pilot-rail-action--disclaimer { left: 120px; top: 87px; }
+.note-layout__pilot-rail-action--next { left: 46px; top: 141px; }
 
 .note-layout__content-wrapper--mobile {
   padding: 0 var(--ns-space-3) var(--ns-space-3);
@@ -471,7 +471,7 @@
 
 .note-layout--pilot .note-layout__content {
   width: 100%;
-  padding: 34px clamp(32px, 4vw, 64px) 120px;
+  padding: 28px clamp(28px, 3vw, 48px) 120px;
   border-color: rgba(255, 255, 255, 0.86);
   border-radius: 34px;
   background: rgba(255, 255, 255, 0.7);
@@ -513,7 +513,7 @@
 }
 
 .note-layout--pilot .markdown-body > :not(.note-interaction):not(.markdown-table):not(table):not(pre):not(.markdown-image-crop-shell) {
-  max-width: 980px;
+  max-width: 1180px;
 }
 
 .note-layout--pilot .markdown-body h3 {
