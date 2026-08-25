@@ -15,6 +15,9 @@ function resolveMainRouteFocus(nodes, edges, nodeId) {
   const nodeById = new Map(nodes.map((node) => [node.id, node]));
   const requested = nodeById.get(nodeId);
   if (!requested || requested.data.hierarchyLevel === 0) return requested || null;
+  if (requested.data.mainParentId && nodeById.has(requested.data.mainParentId)) {
+    return nodeById.get(requested.data.mainParentId);
+  }
 
   const incomingByTarget = new Map();
   edges.forEach((edge) => {
@@ -61,7 +64,11 @@ function StarNode({ data }) {
 
 function RouteGroupNode({ data }) {
   return <div className={`path-route-family path-route-family--tone-${data.tone}`}>
+    <Handle id="family-target-top" type="target" position={Position.Top} isConnectable={false} />
+    <Handle id="family-target-left" type="target" position={Position.Left} isConnectable={false} />
     <span>{data.localizedTitle || data.title}</span>
+    <Handle id="family-source-right" type="source" position={Position.Right} isConnectable={false} />
+    <Handle id="family-source-bottom" type="source" position={Position.Bottom} isConnectable={false} />
   </div>;
 }
 
@@ -74,12 +81,14 @@ function FixedRouteEdge({ id, sourceX, sourceY, targetX, targetY, style, data, m
   const routeTargetX = Number.isFinite(data?.customTargetX) ? data.customTargetX : targetX;
   const routeTargetY = Number.isFinite(data?.customTargetY) ? data.customTargetY : targetY;
   const busY = Number.isFinite(data?.busY) ? data.busY : routeSourceY + Math.max(28, (targetY - routeSourceY) / 2);
-  const endpointGap = 10;
+  const endpointGap = Number.isFinite(data?.endpointGap) ? data.endpointGap : 10;
   const directoryTrunkX = targetX - 20;
-  const path = data?.routeStyle === "family-enter"
+  const path = data?.routeStyle === "family-directory"
+    ? `M ${routeTargetX - 20} ${routeSourceY + endpointGap} V ${routeTargetY} H ${routeTargetX - endpointGap}`
+    : data?.routeStyle === "family-stack"
     ? `M ${routeSourceX} ${routeSourceY + endpointGap} V ${(routeSourceY + routeTargetY) / 2} H ${routeTargetX} V ${routeTargetY - endpointGap}`
-    : data?.routeStyle === "family-between"
-    ? `M ${routeSourceX + endpointGap} ${routeSourceY} L ${routeTargetX - endpointGap} ${routeTargetY}`
+    : data?.routeStyle === "family-exit"
+    ? `M ${routeSourceX + endpointGap} ${routeSourceY} H ${(routeSourceX + routeTargetX) / 2} V ${routeTargetY} H ${routeTargetX - endpointGap}`
     : data?.routeStyle === "midpoint-drop"
     ? `M ${routeSourceX} ${routeSourceY + endpointGap} V ${targetY - endpointGap}`
     : data?.routeStyle === "directory"
@@ -130,9 +139,10 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
         localizedTitle: t(group.data.titleKey, group.data.title),
       },
     }));
+    const visualNodes = [...groups, ...nodes];
     const edges = built.edges.map((edge) => {
-      const source = nodes.find((node) => node.id === edge.source);
-      const target = nodes.find((node) => node.id === edge.target);
+      const source = visualNodes.find((node) => node.id === edge.source);
+      const target = visualNodes.find((node) => node.id === edge.target);
       const active = currentOrder >= 0 && (target?.data?.metadata?.estimated_order ?? Infinity) <= currentOrder;
       const isBranch = edge.data?.relation === "branches_to" || edge.data?.relation === "converges_to";
       const relationClass = edge.data?.relation === "converges_to"
@@ -140,7 +150,7 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
         : edge.data?.routeStyle === "midpoint-drop"
           ? "is-midpoint-route"
           : edge.data?.relation === "branches_to" ? "is-branches-route" : "";
-      return { ...edge, className: `${active ? "is-travelled " : ""}${isBranch ? "is-branch-route" : "is-main-route"} ${relationClass}`.trim(), animated: false, style: { "--edge-index": source?.data?.index || 0, "--route-color": `var(--stage-${target?.data?.tone || 0})` } };
+      return { ...edge, className: `${active ? "is-travelled " : ""}${isBranch ? "is-branch-route" : "is-main-route"} ${relationClass}`.trim(), animated: false, style: { "--edge-index": source?.data?.index || 0, "--route-color": `var(--stage-${target?.data?.tone || target?.data?.visualToneLevel || 0})` } };
     });
     const completedCount = nodes.filter((node) => node.data.isComplete).length;
     const progressPercent = nodes.length > 0 ? Math.round((completedCount / nodes.length) * 100) : 0;
@@ -149,7 +159,7 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
     const viewportNode = requestedNode || resolveMainRouteFocus(nodes, edges, currentOrFallback?.id) || currentOrFallback;
     const mainRouteNode = nodes.find((node) => node.data.hierarchyLevel === 0) || viewportNode;
     return {
-      nodes: [...groups, ...nodes],
+      nodes: visualNodes,
       edges,
       currentNode: viewportNode,
       completedCount,

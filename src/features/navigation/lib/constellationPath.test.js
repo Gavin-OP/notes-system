@@ -465,15 +465,49 @@ describe("fall recruiting constellation", () => {
       "route-family:application-precision",
     ]));
     expect(elements.groups.some((group) => group.data.nodeIds.includes("pilot:ai-job-search"))).toBe(false);
-    const socialEntry = elements.edges.find((edge) => edge.source === "pilot:job-search" && edge.target === "pilot:networking");
-    const duplicateSocialEntry = elements.edges.find((edge) => edge.source === "pilot:job-search" && edge.target === "pilot:referral");
-    const familySequence = elements.edges.find((edge) => edge.source === "pilot:resume-version-management" && edge.target === "pilot:company-research");
+    const socialEntry = elements.edges.find((edge) => edge.source === "pilot:job-search" && edge.target === "route-family:search-social");
+    const familySequence = elements.edges.find((edge) => edge.source === "route-family:application-batch" && edge.target === "route-family:application-precision");
     expect(socialEntry).toEqual(expect.objectContaining({
       hidden: false,
-      data: expect.objectContaining({ routeStyle: "family-enter" }),
+      sourceHandle: "branch-source",
+      targetHandle: "family-target-left",
+      data: expect.objectContaining({ routeStyle: "family-directory", endpointGap: 10 }),
     }));
-    expect(duplicateSocialEntry.hidden).toBe(true);
-    expect(familySequence.data.routeStyle).toBe("family-between");
+    expect(familySequence).toEqual(expect.objectContaining({
+      sourceHandle: "family-source-bottom",
+      targetHandle: "family-target-top",
+      data: expect.objectContaining({ routeStyle: "family-stack", endpointGap: 10 }),
+    }));
+    expect(elements.edges.some((edge) => (
+      edge.source === "pilot:networking" || edge.target === "pilot:networking"
+      || edge.source === "pilot:referral" || edge.target === "pilot:referral"
+    ))).toBe(false);
+
+    elements.groups.forEach((group) => {
+      const members = group.data.nodeIds.map((id) => elements.nodes.find((node) => node.id === id));
+      const gaps = members.slice(1).map((node, index) => (
+        node.position.y - (members[index].position.y + members[index].style.minHeight)
+      ));
+      expect(new Set(gaps).size).toBeLessThanOrEqual(1);
+    });
+
+    const stackedFamilies = [
+      "route-family:application-batch",
+      "route-family:application-precision",
+    ].map((id) => elements.groups.find((group) => group.id === id));
+    expect(new Set(stackedFamilies.map((group) => group.position.x)).size).toBe(1);
+    expect(stackedFamilies[1].position.y - (stackedFamilies[0].position.y + stackedFamilies[0].style.height)).toBe(34);
+  });
+
+  it("gives every visible branch route a gap at both node boundaries", () => {
+    const draft = buildPersonalizedPilotDraft({}, profile);
+    const elements = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+    const branchEdges = elements.edges.filter((edge) => !edge.hidden && edge.data.relation === "branches_to");
+
+    expect(branchEdges.length).toBeGreaterThan(0);
+    branchEdges.forEach((edge) => {
+      expect(edge.data.endpointGap, edge.id).toBe(10);
+    });
   });
 
   it("does not expose the legacy JobTI default as an application strategy choice", () => {
