@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkSlug from "remark-slug";
 import rehypeRaw from "rehype-raw";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 
@@ -29,10 +30,31 @@ const themeCssMap = {
 
 const MARKDOWN_REMARK_PLUGINS = [remarkGfm, remarkMath, remarkHighlightMark, remarkSlug];
 
-const MARKDOWN_HTML_ALLOWLIST = {
-  ALLOWED_TAGS: ["a", "br", "span", "sub", "sup", "kbd", "strong", "em", "b", "i"],
-  ALLOWED_ATTR: ["id", "name", "href", "title", "class"],
-  ALLOW_DATA_ATTR: false,
+const MARKDOWN_SANITIZE_SCHEMA = {
+  ...defaultSchema,
+  clobber: [],
+  tagNames: Array.from(new Set([
+    ...(defaultSchema.tagNames || []),
+    "span",
+    "sub",
+    "sup",
+    "kbd",
+    "mark",
+  ])),
+  attributes: {
+    ...defaultSchema.attributes,
+    "*": Array.from(new Set([
+      ...(defaultSchema.attributes?.["*"] || []),
+      "id",
+      "className",
+    ])),
+    a: Array.from(new Set([
+      ...(defaultSchema.attributes?.a || []),
+      "id",
+      "name",
+      "className",
+    ])),
+  },
 };
 
 function normalizeTranslatedMarkdown(content) {
@@ -40,10 +62,6 @@ function normalizeTranslatedMarkdown(content) {
     .replace(/\\\*\\\*/g, "**")
     .replace(/\*\*\s*(<a\b[^>]*>[\s\S]*?<\/a>)\s*\*\*/g, "<strong>$1</strong>")
     .replace(/__\s*(<a\b[^>]*>[\s\S]*?<\/a>)\s*__/g, "<strong>$1</strong>");
-}
-
-function sanitizeMarkdownContent(content) {
-  return DOMPurify.sanitize(normalizeTranslatedMarkdown(content), MARKDOWN_HTML_ALLOWLIST);
 }
 
 function MermaidDiagram({ chart }) {
@@ -367,7 +385,12 @@ const MarkdownContent = memo(function MarkdownContent({
   return (
     <ReactMarkdown
       remarkPlugins={MARKDOWN_REMARK_PLUGINS}
-      rehypePlugins={[rehypeRaw, [rehypeKatex, { strict: false }], rehypeHighlight]}
+      rehypePlugins={[
+        rehypeRaw,
+        [rehypeSanitize, MARKDOWN_SANITIZE_SCHEMA],
+        [rehypeKatex, { strict: false }],
+        rehypeHighlight,
+      ]}
       components={components}
     >
       {content}
@@ -400,7 +423,7 @@ const MarkdownRenderer = ({
   const noteDirectory = useSelector(
     (state) => state.currentNote.meta?.directory,
   );
-  const safeContent = useMemo(() => sanitizeMarkdownContent(content), [content]);
+  const normalizedContent = useMemo(() => normalizeTranslatedMarkdown(content), [content]);
 
   const confirmedQuotes = useMemo(
     () => (Array.isArray(noteQuotes) ? noteQuotes.filter((quote) => quote?.selected_text || quote?.selectedText) : []),
@@ -821,6 +844,15 @@ const MarkdownRenderer = ({
       h5: (props) => <HeadingWithCopy level={5} {...props} />,
       h6: (props) => <HeadingWithCopy level={6} {...props} />,
 
+      blockquote({ node: _nodeIgnored, children, className = "", ...props }) {
+        const quoteClassName = ["markdown-blockquote", className].filter(Boolean).join(" ");
+        return (
+          <blockquote className={quoteClassName} {...props}>
+            {children}
+          </blockquote>
+        );
+      },
+
       // relative image path
       img({ node: _nodeIgnored, src, style, width: _ignoredWidth, height: _ignoredHeight, ...props }) {
         let finalSrc = src;
@@ -890,7 +922,7 @@ const MarkdownRenderer = ({
       onPointerDownCapture={handleSelectionPointerDownCapture}
       onMouseUp={handleSelectionMouseUp}
     >
-      <MarkdownContent content={safeContent} components={components} />
+      <MarkdownContent content={normalizedContent} components={components} />
       {activeQuoteDetail ? (
         <div className="note-quote-popover" role="dialog" aria-label="Saved personal note">
           <div className="note-quote-popover__header">

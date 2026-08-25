@@ -99,8 +99,8 @@ function ResumeFocusLab({ id, roles = [] }) {
     <section className="note-interaction" aria-labelledby={`${id}-title`}>
       <header className="note-interaction__header">
         <span>版本对比</span>
-        <h3 id={`${id}-title`}>同一段经历，不同岗位先展示什么？</h3>
-        <p>切换岗位方向，看看简历前 1/3 和 bullet 应该优先呈现的证据。</p>
+        <h3 id={`${id}-title`}>申请不同的岗位时，挑选最有说服力的经历，调整讲述它的方式</h3>
+        <p>切换可能的岗位方向，看看该如何呈现你拥有的证据。</p>
       </header>
       <div className="note-segmented" role="group" aria-label="选择岗位方向">
         {roles.map((role) => (
@@ -117,13 +117,13 @@ function ResumeFocusLab({ id, roles = [] }) {
       </div>
       <div className="note-resume-preview" aria-live="polite">
         <div>
-          <span>前 1/3 优先出现</span>
+          <span>优先选择</span>
           <strong>{activeRole.lead}</strong>
         </div>
         <ul>
           {activeRole.emphasis.map((item) => <li key={item}>{item}</li>)}
         </ul>
-        <p><strong>不要改动事实：</strong>{activeRole.caution}</p>
+        <p><strong>Tips：</strong>{activeRole.caution}</p>
       </div>
     </section>
   );

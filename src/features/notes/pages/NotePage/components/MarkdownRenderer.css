@@ -291,6 +291,22 @@
   font-size: 0.9rem;
 }
 
+.markdown-body .markdown-blockquote {
+  margin: 24px 0;
+  padding: 16px 20px;
+  border-left: 3px solid color-mix(in srgb, currentColor 42%, transparent);
+  border-radius: 0 14px 14px 0;
+  background: color-mix(in srgb, currentColor 5%, transparent);
+}
+
+.markdown-body .markdown-blockquote > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body .markdown-blockquote > :last-child {
+  margin-bottom: 0;
+}
+
 .note-quote-popover p {
   margin: 0;
   font-size: 0.95rem;
