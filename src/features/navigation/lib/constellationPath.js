@@ -187,7 +187,7 @@ export function buildConstellationElements(draft, options = {}) {
       let experienceY = mainY + 127;
       EARLY_EXPERIENCE_IDS.filter((id) => draftNodes.some((node) => node.node_id === id)).forEach((id) => {
         const childDimensions = dimensions.get(id);
-        positions.set(id, { x: experienceMidpointX - childDimensions.width / 2, y: experienceY });
+        positions.set(id, { x: experienceMidpointX + 20, y: experienceY });
         experienceY += childDimensions.height + 16;
       });
     }
@@ -236,15 +236,15 @@ export function buildConstellationElements(draft, options = {}) {
 
   const hierarchyLevels = new Map(
     draftNodes
-      .filter((node) => PILOT_MAIN_ROUTE.includes(node.node_id) || node.node_id === "pilot:skill-supplement")
+      .filter((node) => PILOT_MAIN_ROUTE.includes(node.node_id))
       .map((node) => [node.node_id, 0]),
   );
   for (let pass = 0; pass < draftNodes.length; pass += 1) {
     draftEdges.forEach((edge) => {
-      if (edge.relation !== "branches_to" || !hierarchyLevels.has(edge.source)) return;
-      const nextLevel = edge.target === "pilot:skill-supplement"
-        ? 0
-        : Math.min(2, hierarchyLevels.get(edge.source) + 1);
+      if (!hierarchyLevels.has(edge.source) || PILOT_MAIN_ROUTE.includes(edge.target)) return;
+      const sourceLevel = hierarchyLevels.get(edge.source);
+      if (edge.relation !== "branches_to" && !(sourceLevel > 0 && edge.relation === "precedes")) return;
+      const nextLevel = Math.min(3, sourceLevel + 1);
       if (!hierarchyLevels.has(edge.target) || hierarchyLevels.get(edge.target) > nextLevel) {
         hierarchyLevels.set(edge.target, nextLevel);
       }
@@ -302,9 +302,9 @@ export function buildConstellationElements(draft, options = {}) {
         hidden: isInterviewReturn,
         data: {
           relation,
-          routeStyle: isSkillMidpointBranch || isExperienceMidpointBranch ? "midpoint-drop" : isDirectoryBranch ? "directory" : undefined,
+          routeStyle: isSkillMidpointBranch ? "midpoint-drop" : isDirectoryBranch || isExperienceMidpointBranch ? "directory" : undefined,
           customSourceX: isExperienceMidpointBranch
-            ? positions.get(edge.target)?.x + dimensions.get(edge.target).width / 2
+            ? positions.get(edge.target)?.x - 20
             : isSkillMidpointBranch
             ? marketPosition && profilePosition
               ? (marketPosition.x + marketDimensions.width + profilePosition.x) / 2

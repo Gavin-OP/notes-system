@@ -194,8 +194,14 @@ describe("fall recruiting constellation", () => {
     });
 
     const earlyEdges = edges.filter((edge) => ["pilot:first-internship", "pilot:transition-first-internship"].includes(edge.target));
-    expect(earlyEdges.every((edge) => edge.data.routeStyle === "midpoint-drop")).toBe(true);
+    expect(earlyEdges.every((edge) => edge.data.routeStyle === "directory")).toBe(true);
     expect(new Set(earlyEdges.map((edge) => edge.data.customSourceX)).size).toBe(1);
+    const earlyNodes = ["pilot:first-internship", "pilot:transition-first-internship"]
+      .map((id) => nodes.find((node) => node.id === id));
+    expect(new Set(earlyNodes.map((node) => node.position.x)).size).toBe(1);
+    expect(earlyNodes.map((node) => node.position.y)).toEqual(
+      [...earlyNodes.map((node) => node.position.y)].sort((a, b) => a - b),
+    );
 
     const screening = nodes.find((node) => node.id === "pilot:hr-screening-call");
     const hrInterview = nodes.find((node) => node.id === "pilot:interview-hr");
@@ -279,11 +285,11 @@ describe("fall recruiting constellation", () => {
     const levelById = new Map(nodes.map((node) => [node.id, node.data.hierarchyLevel]));
 
     expect(levelById.get("pilot:market")).toBe(0);
-    expect(levelById.get("pilot:skill-supplement")).toBe(0);
+    expect(levelById.get("pilot:skill-supplement")).toBe(1);
     expect(levelById.get("pilot:resume")).toBe(1);
-    expect(levelById.get("pilot:certificate-cfa")).toBe(1);
-    expect(levelById.get("pilot:certificate-frm")).toBe(1);
-    expect(levelById.get("pilot:certificate-hkicpa")).toBe(1);
+    expect(levelById.get("pilot:certificate-cfa")).toBe(2);
+    expect(levelById.get("pilot:certificate-frm")).toBe(2);
+    expect(levelById.get("pilot:certificate-hkicpa")).toBe(2);
   });
 
   it("keeps a prior-route lead-in and branches skills from its midpoint after the first stage", () => {
