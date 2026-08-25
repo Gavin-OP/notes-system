@@ -315,8 +315,57 @@
 }
 
 .note-layout--pilot-path-compact .note-layout__content-wrapper {
-  padding-left: 128px;
+  padding-left: 176px;
 }
+
+.note-layout__pilot-rail-controls {
+  position: fixed;
+  z-index: 42;
+  top: 50%;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.note-layout__pilot-rail-action.ant-btn {
+  position: absolute;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--ns-color-text) 10%, transparent);
+  color: var(--ns-color-text-secondary);
+  background: color-mix(in srgb, var(--ns-color-bg-container) 92%, transparent);
+  box-shadow: 0 12px 34px color-mix(in srgb, var(--ns-color-text) 10%, transparent);
+  backdrop-filter: blur(20px) saturate(110%);
+  -webkit-backdrop-filter: blur(20px) saturate(110%);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.note-layout__pilot-rail-action.ant-btn:not(:disabled):hover {
+  border-color: color-mix(in srgb, #3d7f6b 38%, transparent);
+  color: #3d7f6b;
+  background: var(--ns-color-bg-container);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.note-layout__pilot-rail-action.ant-btn:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 3px;
+}
+
+.note-layout__pilot-rail-action--previous { left: 38px; top: -137px; }
+.note-layout__pilot-rail-action--theme { left: 96px; top: -84px; }
+.note-layout__pilot-rail-action--language { left: 125px; top: 0; }
+.note-layout__pilot-rail-action--disclaimer { left: 96px; top: 84px; }
+.note-layout__pilot-rail-action--next { left: 38px; top: 137px; }
 
 .note-layout__content-wrapper--mobile {
   padding: 0 var(--ns-space-3) var(--ns-space-3);
@@ -806,6 +855,12 @@
     transition: none;
   }
 
+  .note-layout__pilot-rail-action.ant-btn,
+  .note-layout__pilot-rail-action.ant-btn:not(:disabled):hover {
+    transition: none;
+    transform: translate(-50%, -50%);
+  }
+
   .note-layout__sider-collapse-btn:active,
   .note-layout__left-sider-collapsed-trigger:active {
     transform: none;
@@ -824,6 +879,12 @@
   .note-layout--pilot .note-layout__content {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+  }
+
+  .note-layout__pilot-rail-action.ant-btn {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--ns-color-bg-container);
   }
 }
 

@@ -337,6 +337,8 @@ const LearningNavigationPanel = ({
   onConfigurePath,
   panelWidth = 520,
   onTogglePathExpand,
+  pathFocusNodeId = "",
+  pathViewportResetToken = 0,
 }) => {
   const { t } = useTranslation();
   const [editLibraryTab, setEditLibraryTab] = useState("subject");
@@ -1103,7 +1105,7 @@ const LearningNavigationPanel = ({
     if (!hasPathWorkspace) return null;
     const containsCurrent = personalizedSteps.some((step) => normalizeKey(step.key) === normalizedCurrent);
     if (pilotMode) {
-      return <EmbeddedPathConstellation draft={learningPathDraft} currentNoteUrl={currentNoteUrl} completedNoteUrls={completedNoteUrls} onSelect={onSelect} isRail={!isMobile && panelWidth <= 340} isMobile={isMobile} onToggleExpand={onTogglePathExpand} />;
+      return <EmbeddedPathConstellation draft={learningPathDraft} currentNoteUrl={currentNoteUrl} completedNoteUrls={completedNoteUrls} onSelect={onSelect} isRail={!isMobile && panelWidth <= 340} isMobile={isMobile} onToggleExpand={onTogglePathExpand} focusNodeId={pathFocusNodeId} viewportResetToken={pathViewportResetToken} />;
     }
     return (
       <section

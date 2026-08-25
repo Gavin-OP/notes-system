@@ -23,6 +23,8 @@ import {
   InfoCircleOutlined,
   MoonOutlined,
   SunOutlined,
+  UpOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
 
 import LearningNavigationPanel from "../../navigation/components/LearningNavigationPanel";
@@ -329,6 +331,44 @@ function normalizeQuizEvaluation(payload) {
   };
 }
 
+const PILOT_STAGE_FOCUS_NODE = {
+  getting_started: "pilot:getting-started",
+  materials: "pilot:profile-preparation",
+  applying: "pilot:applications",
+  interviewing: "pilot:interviews",
+  offer: "pilot:offer",
+};
+
+const PILOT_PROFILE_FALLBACK_FOCUS = {
+  candidate_background: "pilot:job-search",
+  experience_branches: "pilot:getting-started",
+  experience_level: "pilot:profile-preparation",
+  profile_branches: "pilot:profile-preparation",
+  search_branches: "pilot:job-search",
+  information_style: "pilot:job-search",
+  skill_branches: "pilot:skill-supplement",
+  application_strategy: "pilot:applications",
+  certificate_branches: "pilot:skill-supplement",
+  interview_branches: "pilot:interviews",
+};
+
+function resolvePilotPathUpdateFocus(previousDraft, nextDraft, nextProfile) {
+  const previousProfile = previousDraft?.metadata?.personalization || {};
+  const changedField = Object.keys(nextProfile || {}).find((key) => (
+    key !== "setup_complete"
+      && JSON.stringify(previousProfile[key]) !== JSON.stringify(nextProfile[key])
+  ));
+  const nextNodeIds = new Set((nextDraft?.nodes || []).map((node) => node.node_id));
+  if (changedField === "stage") {
+    return PILOT_STAGE_FOCUS_NODE[nextProfile.stage] || "";
+  }
+  const previousNodeIds = new Set((previousDraft?.nodes || []).map((node) => node.node_id));
+  const addedNode = (nextDraft?.nodes || []).find((node) => !previousNodeIds.has(node.node_id));
+  if (addedNode) return addedNode.node_id;
+  const fallback = PILOT_PROFILE_FALLBACK_FOCUS[changedField] || "";
+  return nextNodeIds.has(fallback) ? fallback : "";
+}
+
 const NoteLayout = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -395,6 +435,7 @@ const NoteLayout = () => {
   const [completedNoteUrls, setCompletedNoteUrls] = useState(new Set());
   const [learningPathDraft, setLearningPathDraft] = useState(null);
   const [learningPathPending, setLearningPathPending] = useState(false);
+  const [pathViewportRequest, setPathViewportRequest] = useState({ nodeId: "", token: 0 });
   const pathSetupHandledRef = useRef(false);
   const [pathEditMode, setPathEditMode] = useState(false);
   const [learningSiderWidth, setLearningSiderWidth] = useState(() => FULL_PRODUCT_ENABLED ? LEARNING_SIDER_MIN_WIDTH : getPilotPathExpandedWidth());
@@ -785,11 +826,15 @@ const NoteLayout = () => {
     setLearningPathPending(true);
     try {
       const nextDraft = buildPersonalizedPilotDraft(learningPathDraft, profile);
+      const focusNodeId = resolvePilotPathUpdateFocus(learningPathDraft, nextDraft, profile);
       const saved = await persistLearningPathDraft(
         nextDraft,
         "你的求职 Path 与 Timeline 已更新。",
         "Personalized fall recruiting path",
       );
+      if (saved) {
+        setPathViewportRequest((current) => ({ nodeId: focusNodeId, token: current.token + 1 }));
+      }
       return saved;
     } finally {
       setLearningPathPending(false);
@@ -1666,6 +1711,8 @@ const NoteLayout = () => {
                 pilotMode={!FULL_PRODUCT_ENABLED}
                 panelWidth={learningSiderWidth}
                 onTogglePathExpand={() => setLearningSiderWidth((width) => width <= 340 ? getPilotPathExpandedWidth() : PILOT_PATH_RAIL_WIDTH)}
+                pathFocusNodeId={pathViewportRequest.nodeId}
+                pathViewportResetToken={pathViewportRequest.token}
                 onConfigurePath={undefined}
                 onSelect={(path) => {
                   handleNoteSelect(path);
@@ -1699,18 +1746,71 @@ const NoteLayout = () => {
           </button>
         ) : null}
         {pilotPathCompact ? (
-          <EmbeddedPathConstellation
-            draft={learningPathDraft}
-            currentNoteUrl={`${currentNoteUrlNormalized}${location.hash || ""}`}
-            completedNoteUrls={completedNoteUrls}
-            onSelect={handleNoteSelect}
-            isRail
-            onToggleExpand={() => {
-              setCollapsed(false);
-              setShowMenu(true);
-              setLearningSiderWidth(getPilotPathExpandedWidth());
-            }}
-          />
+          <>
+            <EmbeddedPathConstellation
+              draft={learningPathDraft}
+              currentNoteUrl={`${currentNoteUrlNormalized}${location.hash || ""}`}
+              completedNoteUrls={completedNoteUrls}
+              onSelect={handleNoteSelect}
+              isRail
+              onToggleExpand={() => {
+                setCollapsed(false);
+                setShowMenu(true);
+                setPathViewportRequest((current) => ({ nodeId: "", token: current.token + 1 }));
+                setLearningSiderWidth(getPilotPathExpandedWidth());
+              }}
+            />
+            <nav className="note-layout__pilot-rail-controls" aria-label={t("note.navigation.controls")}>
+              <Tooltip title={t("note.navigation.previous")} placement="right">
+                <Button
+                  shape="circle"
+                  className="note-layout__pilot-rail-action note-layout__pilot-rail-action--previous"
+                  icon={<UpOutlined />}
+                  disabled={!adjacentPilotNotes.previous}
+                  onClick={() => handleNoteSelect(adjacentPilotNotes.previous?.note_url)}
+                  aria-label={t("note.navigation.previous")}
+                />
+              </Tooltip>
+              <Tooltip title={preferenceTheme === "dark" ? t("note.toolbar.lightMode") : t("note.toolbar.darkMode")} placement="right">
+                <Button
+                  shape="circle"
+                  className="note-layout__pilot-rail-action note-layout__pilot-rail-action--theme"
+                  icon={preferenceTheme === "dark" ? <SunOutlined /> : <MoonOutlined />}
+                  onClick={() => dispatch(setTheme(preferenceTheme === "dark" ? "light" : "dark"))}
+                  aria-label={preferenceTheme === "dark" ? t("note.toolbar.lightMode") : t("note.toolbar.darkMode")}
+                />
+              </Tooltip>
+              <Dropdown menu={{ items: pilotLanguageItems, selectable: true, selectedKeys: [language] }} trigger={["click"]} placement="bottomLeft">
+                <Tooltip title={t("home.languageSelector")} placement="right">
+                  <Button
+                    shape="circle"
+                    className="note-layout__pilot-rail-action note-layout__pilot-rail-action--language"
+                    icon={<GlobalOutlined />}
+                    aria-label={t("home.languageSelector")}
+                  />
+                </Tooltip>
+              </Dropdown>
+              <Tooltip title={t("note.toolbar.disclaimer", "Disclaimer")} placement="right">
+                <Button
+                  shape="circle"
+                  className="note-layout__pilot-rail-action note-layout__pilot-rail-action--disclaimer"
+                  icon={<InfoCircleOutlined />}
+                  onClick={() => navigate("/disclaimer")}
+                  aria-label={t("note.toolbar.disclaimer", "Disclaimer")}
+                />
+              </Tooltip>
+              <Tooltip title={t("note.navigation.next")} placement="right">
+                <Button
+                  shape="circle"
+                  className="note-layout__pilot-rail-action note-layout__pilot-rail-action--next"
+                  icon={<DownOutlined />}
+                  disabled={!adjacentPilotNotes.next}
+                  onClick={() => handleNoteSelect(adjacentPilotNotes.next?.note_url)}
+                  aria-label={t("note.navigation.next")}
+                />
+              </Tooltip>
+            </nav>
+          </>
         ) : null}
 
         <Layout
@@ -1753,7 +1853,7 @@ const NoteLayout = () => {
                   items={breadcrumbItems}
                   className={`note-layout__breadcrumb ${isMobile ? "note-layout__breadcrumb--mobile" : ""}`}
                 />
-                {!FULL_PRODUCT_ENABLED ? (
+                {!FULL_PRODUCT_ENABLED && (!pilotPathCompact || isMobile) ? (
                   <div className="note-layout__breadcrumb-tools" aria-label={t("note.navigation.controls")}>
                     <Button
                       className="note-layout__adjacent-note-btn"

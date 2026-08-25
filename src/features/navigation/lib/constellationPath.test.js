@@ -15,12 +15,13 @@ const profile = {
 };
 
 describe("fall recruiting constellation", () => {
-  it("builds editable search routes from behavior, student status, and explicit social choices", () => {
+  it("builds editable search families, student routes, and an explicitly selected AI route", () => {
     const draft = buildPersonalizedPilotDraft({}, {
       ...profile,
       jobti_type: "radar",
       candidate_background: "student",
-      search_branches: ["networking"],
+      information_style: "balanced",
+      search_branches: ["networking", "ai_job_search"],
       application_strategy: "auto",
     });
     const ids = new Set(draft.nodes.map((node) => node.node_id));
@@ -41,7 +42,7 @@ describe("fall recruiting constellation", () => {
 
     expect(draft.edges).toEqual(expect.arrayContaining([
       expect.objectContaining({ source: "pilot:job-search", target: "pilot:networking", relation: "branches_to" }),
-      expect.objectContaining({ source: "pilot:networking", target: "pilot:referral", relation: "precedes" }),
+      expect.objectContaining({ source: "pilot:job-search", target: "pilot:referral", relation: "branches_to" }),
       expect.objectContaining({ source: "pilot:job-search", target: "pilot:job-board", relation: "branches_to" }),
       expect.objectContaining({ source: "pilot:job-search", target: "pilot:company-career-page", relation: "branches_to" }),
       expect.objectContaining({ source: "pilot:job-search", target: "pilot:ai-job-search", relation: "branches_to" }),
@@ -58,7 +59,7 @@ describe("fall recruiting constellation", () => {
     expect(draft.metadata.personalization.resolved_application_strategy).toBe("precision");
 
     const elements = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
-    const searchChannels = ["pilot:job-board", "pilot:company-career-page", "pilot:ai-job-search"]
+    const searchChannels = ["pilot:job-board", "pilot:company-career-page", "pilot:social-media-research"]
       .map((id) => elements.nodes.find((node) => node.id === id));
     expect(new Set(searchChannels.map((node) => node.position.x)).size).toBe(1);
     expect(searchChannels.map((node) => node.position.y)).toEqual(
@@ -394,9 +395,11 @@ describe("fall recruiting constellation", () => {
     ]));
   });
 
-  it("uses career direction without adding redundant market child nodes", () => {
+  it("does not let legacy career-direction or competitiveness fields alter the Path", () => {
     const draft = buildPersonalizedPilotDraft({}, {
       ...profile,
+      information_style: "core",
+      search_branches: [],
       career_direction: "exploring",
       profile_competitiveness: "unsure",
       experience_level: "limited",
@@ -404,18 +407,15 @@ describe("fall recruiting constellation", () => {
     const ids = new Set(draft.nodes.map((node) => node.node_id));
 
     [
-      "pilot:networking",
-      "pilot:job-board",
-      "pilot:application-batch-planning",
-      "pilot:resume-positioning",
       "pilot:experience-building",
       "pilot:business-competition",
       "pilot:kaggle-competition",
       "pilot:course-project-polish",
     ].forEach((id) => expect(ids.has(id), `${id} should exist`).toBe(true));
-    ["pilot:career-exploration", "pilot:exploratory-internships", "pilot:recruitment-event"]
+    ["pilot:resume-positioning", "pilot:career-exploration", "pilot:exploratory-internships", "pilot:recruitment-event"]
       .forEach((id) => expect(ids.has(id), `${id} should not exist`).toBe(false));
-    expect(ids.has("pilot:interview-priority")).toBe(false);
+    expect(ids.has("pilot:networking")).toBe(false);
+    expect(ids.has("pilot:job-board")).toBe(false);
 
     const competitive = buildPersonalizedPilotDraft({}, {
       ...profile,
@@ -426,7 +426,7 @@ describe("fall recruiting constellation", () => {
     const competitiveIds = new Set(competitive.nodes.map((node) => node.node_id));
     expect(competitiveIds.has("pilot:career-track-planning")).toBe(false);
     expect(competitiveIds.has("pilot:interview-priority")).toBe(false);
-    expect(competitiveIds.has("pilot:company-research")).toBe(true);
+    expect(competitiveIds.has("pilot:company-research")).toBe(false);
     expect(competitiveIds.has("pilot:experience-building")).toBe(false);
   });
 
@@ -443,6 +443,28 @@ describe("fall recruiting constellation", () => {
     expect(draft.edges).toEqual(expect.arrayContaining([
       expect.objectContaining({ source: "pilot:profile-preparation", target: "pilot:experience-building", relation: "branches_to" }),
     ]));
+    expect(elements.edges
+      .filter((edge) => edge.source === "pilot:experience-building")
+      .every((edge) => edge.data.routeStyle === "directory"))
+      .toBe(true);
+  });
+
+  it("groups search and application route families without attaching AI search to a family", () => {
+    const draft = buildPersonalizedPilotDraft({}, {
+      ...profile,
+      information_style: "balanced",
+      search_branches: ["ai_job_search"],
+      application_strategy: "batch_then_precision",
+    });
+    const elements = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
+
+    expect(elements.groups.map((group) => group.id)).toEqual(expect.arrayContaining([
+      "route-family:search-social",
+      "route-family:search-independent",
+      "route-family:application-batch",
+      "route-family:application-precision",
+    ]));
+    expect(elements.groups.some((group) => group.data.nodeIds.includes("pilot:ai-job-search"))).toBe(false);
   });
 
   it("does not expose the legacy JobTI default as an application strategy choice", () => {

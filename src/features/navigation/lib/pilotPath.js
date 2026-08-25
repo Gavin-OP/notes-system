@@ -30,7 +30,6 @@ export const SEARCH_BRANCH_OPTIONS = [
 ];
 
 export const INFORMATION_STYLE_OPTIONS = [
-  { value: "auto", label: "跟随 JobTI 的默认建议" },
   { value: "social", label: "更喜欢直接与人交流" },
   { value: "independent", label: "更喜欢自己查找和整理信息" },
   { value: "balanced", label: "两种方式都想尝试" },
@@ -51,18 +50,6 @@ export const APPLICATION_STRATEGY_OPTIONS = [
   { value: "precision", label: "精准投递" },
   { value: "batch_then_precision", label: "先海投探索，再转向精准投递" },
   { value: "precision_then_batch", label: "先打磨最想投的岗位，再扩大投递" },
-];
-
-export const CAREER_DIRECTION_OPTIONS = [
-  { value: "auto", label: "暂时沿用基础路线" },
-  { value: "focused", label: "方向比较清晰，想重点攻克一个赛道" },
-  { value: "exploring", label: "还在探索，想多了解不同可能" },
-];
-
-export const PROFILE_COMPETITIVENESS_OPTIONS = [
-  { value: "neutral", label: "暂时不调整准备重点" },
-  { value: "competitive", label: "已有多段相关经历或较强学业表现" },
-  { value: "unsure", label: "相关经历较少，或不确定材料是否有竞争力" },
 ];
 
 export const EXPERIENCE_LEVEL_OPTIONS = [
@@ -184,8 +171,6 @@ function resolveApplicationStrategy(profile = {}) {
   if (["batch", "precision", "batch_then_precision", "precision_then_batch"].includes(profile.application_strategy)) {
     return profile.application_strategy;
   }
-  if (profile.career_direction === "exploring") return "batch";
-  if (profile.career_direction === "focused") return "precision";
   if (profile.jobti_type === "engine") return "batch";
   if (["radar", "alchemist"].includes(profile.jobti_type)) return "precision";
   return "core";
@@ -195,15 +180,6 @@ function resolveInformationStyle(profile = {}) {
   if (["social", "independent", "balanced"].includes(profile.information_style)) {
     return profile.information_style;
   }
-  if (profile.career_direction === "exploring") return "balanced";
-  if (profile.career_direction === "focused") return "independent";
-  if (["explorer", "koi"].includes(profile.jobti_type)) return "social";
-  if (["radar", "researcher"].includes(profile.jobti_type)) return "independent";
-  return "core";
-}
-
-function resolveCareerDirection(profile = {}) {
-  if (["focused", "exploring"].includes(profile.career_direction)) return profile.career_direction;
   return "core";
 }
 
@@ -254,9 +230,6 @@ function buildPilotNodes(profile = {}) {
     nodes.push(pathNode("personal-site", "个人主页", "personal-site", 5, "", { path_relation: "branch" }));
   }
 
-  if (profile.profile_competitiveness === "unsure") {
-    nodes.push(pathNode("resume-positioning", "梳理与包装简历证据", "resume-story", 5, "", { path_relation: "branch" }));
-  }
   if (profile.experience_level === "limited") {
     nodes.push(
       pathNode("experience-building", "补充可展示的经历", "first-internship", 5, "", { path_relation: "branch" }),
@@ -269,25 +242,25 @@ function buildPilotNodes(profile = {}) {
   nodes.push(pathNode("job-search", "寻找和筛选岗位", "job-search-and-screening", 6));
 
   if (socialSearch || searchBranches.has("networking") || searchBranches.has("networking_event")) {
-    nodes.push(pathNode("networking", "Coffee Chat / Networking", "coffee-chat", 7, "", { path_relation: "branch" }));
-    nodes.push(pathNode("referral", "Referral", "referral", 7, "", { path_relation: "branch" }));
+    nodes.push(pathNode("networking", "Coffee Chat / Networking", "coffee-chat", 7, "", { path_relation: "branch", route_family: "search-social" }));
+    nodes.push(pathNode("referral", "Referral", "referral", 7, "", { path_relation: "branch", route_family: "search-social" }));
   }
   if (independentSearch || searchBranches.has("job_board")) {
-    nodes.push(pathNode("job-board", "Job Board", "job-board", 7, "", { path_relation: "branch" }));
+    nodes.push(pathNode("job-board", "Job Board", "job-board", 7, "", { path_relation: "branch", route_family: "search-independent" }));
   }
   if (independentSearch || searchBranches.has("company_career_page")) {
-    nodes.push(pathNode("company-career-page", "Company Career Page", "company-career-page", 7, "", { path_relation: "branch" }));
+    nodes.push(pathNode("company-career-page", "Company Career Page", "company-career-page", 7, "", { path_relation: "branch", route_family: "search-independent" }));
   }
   if (independentSearch || searchBranches.has("social_media_research")) {
-    nodes.push(pathNode("social-media-research", "社媒平台", "social-media-research", 7, "", { path_relation: "branch" }));
+    nodes.push(pathNode("social-media-research", "社媒平台", "social-media-research", 7, "", { path_relation: "branch", route_family: "search-independent" }));
   }
-  if (independentSearch || searchBranches.has("ai_job_search")) {
+  if (searchBranches.has("ai_job_search")) {
     nodes.push(pathNode("ai-job-search", "用 AI 辅助找岗位", "ai-job-search", 7, "", { path_relation: "branch" }));
   }
   if (studentSearch) {
-    nodes.push(pathNode("campus-recruiting", "Campus Recruiting", "campus-recruiting", 7, "", { path_relation: "branch" }));
-    nodes.push(pathNode("career-fair", "Career Fair", "career-fair", 7, "", { path_relation: "branch" }));
-    nodes.push(pathNode("alumni-networking", "Alumni Networking", "alumni-networking", 7, "", { path_relation: "branch" }));
+    nodes.push(pathNode("campus-recruiting", "Campus Recruiting", "campus-recruiting", 7, "", { path_relation: "branch", route_family: "search-campus" }));
+    nodes.push(pathNode("career-fair", "Career Fair", "career-fair", 7, "", { path_relation: "branch", route_family: "search-campus" }));
+    nodes.push(pathNode("alumni-networking", "Alumni Networking", "alumni-networking", 7, "", { path_relation: "branch", route_family: "search-campus" }));
   }
 
   nodes.push(
@@ -298,16 +271,16 @@ function buildPilotNodes(profile = {}) {
 
   if (["batch", "batch_then_precision", "precision_then_batch"].includes(applicationStrategy)) {
     nodes.push(
-      pathNode("application-batch-planning", "Application Batch Planning", "application-batch-planning", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
-      pathNode("application-tracker", "Application Tracker", "application-tracker", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
-      pathNode("resume-version-management", "Resume Version Management", "resume-version-management", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
+      pathNode("application-batch-planning", "Application Batch Planning", "application-batch-planning", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy, route_family: "application-batch" }),
+      pathNode("application-tracker", "Application Tracker", "application-tracker", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy, route_family: "application-batch" }),
+      pathNode("resume-version-management", "Resume Version Management", "resume-version-management", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy, route_family: "application-batch" }),
     );
   }
   if (["precision", "batch_then_precision", "precision_then_batch"].includes(applicationStrategy)) {
     nodes.push(
-      pathNode("company-research", "Company Research", "company-research", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
-      pathNode("jd-deep-dive", "JD Deep Dive", "jd-deep-dive", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
-      pathNode("tailored-materials", "Tailored Resume / Cover Letter", "tailored-materials", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy }),
+      pathNode("company-research", "Company Research", "company-research", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy, route_family: "application-precision" }),
+      pathNode("jd-deep-dive", "JD Deep Dive", "jd-deep-dive", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy, route_family: "application-precision" }),
+      pathNode("tailored-materials", "Tailored Resume / Cover Letter", "tailored-materials", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy, route_family: "application-precision" }),
     );
   }
 
@@ -375,7 +348,7 @@ function buildPilotEdges(nodes) {
 
   connect("market", "profile-preparation");
 
-  const profileBranchIds = ["resume", "linkedin", "cover-letter", "portfolio", "personal-site", "resume-positioning"]
+  const profileBranchIds = ["resume", "linkedin", "cover-letter", "portfolio", "personal-site"]
     .filter((nodeId) => nodeIds.has(`pilot:${nodeId}`));
   profileBranchIds.forEach((nodeId) => {
     connect("profile-preparation", nodeId, "branches_to");
@@ -392,7 +365,8 @@ function buildPilotEdges(nodes) {
   const searchTerminals = [];
   if (nodeIds.has("pilot:networking")) {
     connect("job-search", "networking", "branches_to");
-    connect("networking", "referral");
+    connect("job-search", "referral", "branches_to");
+    searchTerminals.push("networking");
     searchTerminals.push("referral");
   }
   ["job-board", "company-career-page", "social-media-research", "ai-job-search"].forEach((nodeId) => {
@@ -510,13 +484,7 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
     jobti_type: typeof rawProfile.jobti_type === "string" ? rawProfile.jobti_type : "",
     information_style: INFORMATION_STYLE_OPTIONS.some((option) => option.value === rawProfile.information_style)
       ? rawProfile.information_style
-      : "auto",
-    career_direction: CAREER_DIRECTION_OPTIONS.some((option) => option.value === rawProfile.career_direction)
-      ? rawProfile.career_direction
-      : "auto",
-    profile_competitiveness: PROFILE_COMPETITIVENESS_OPTIONS.some((option) => option.value === rawProfile.profile_competitiveness)
-      ? rawProfile.profile_competitiveness
-      : "neutral",
+      : "core",
     experience_level: EXPERIENCE_LEVEL_OPTIONS.some((option) => option.value === rawProfile.experience_level)
       ? rawProfile.experience_level
       : "established",
@@ -545,7 +513,6 @@ export function buildPersonalizedPilotDraft(draft = {}, rawProfile = {}, now = n
   };
   profile.resolved_application_strategy = resolveApplicationStrategy(profile);
   profile.resolved_information_style = resolveInformationStyle(profile);
-  profile.resolved_career_direction = resolveCareerDirection(profile);
   const focusNodeId = STAGE_FOCUS_NODE[profile.stage];
   const nodes = buildPilotNodes(profile).map((node) => ({
     ...node,
@@ -592,9 +559,7 @@ export function buildDefaultPilotDraft(draft = {}, now = new Date()) {
       interview_branches: [],
       jobti_type: "",
       candidate_background: "other",
-      information_style: "auto",
-      career_direction: "auto",
-      profile_competitiveness: "neutral",
+      information_style: "core",
       experience_level: "established",
       experience_branches: ["first_internship", "transition_first_internship"],
       application_strategy: "auto",

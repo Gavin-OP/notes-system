@@ -39,7 +39,6 @@ const PROFILE_CHILD_IDS = [
   "pilot:cover-letter",
   "pilot:portfolio",
   "pilot:personal-site",
-  "pilot:resume-positioning",
   "pilot:experience-building",
 ];
 
@@ -56,9 +55,7 @@ const EARLY_EXPERIENCE_IDS = [
 
 const SEARCH_ROUTE_GROUPS = [
   ["pilot:networking", "pilot:referral"],
-  ["pilot:job-board"],
-  ["pilot:company-career-page"],
-  ["pilot:social-media-research"],
+  ["pilot:job-board", "pilot:company-career-page", "pilot:social-media-research"],
   ["pilot:ai-job-search"],
   ["pilot:campus-recruiting", "pilot:career-fair", "pilot:alumni-networking"],
 ];
@@ -70,6 +67,7 @@ const APPLICATION_ROUTE_GROUPS = [
 
 const DIRECTORY_PARENT_IDS = new Set([
   "pilot:profile-preparation",
+  "pilot:experience-building",
   "pilot:getting-started",
   "pilot:market",
   "pilot:job-search",
@@ -77,6 +75,14 @@ const DIRECTORY_PARENT_IDS = new Set([
   "pilot:skill-supplement",
   "pilot:interviews",
 ]);
+
+const ROUTE_FAMILY_DEFINITIONS = [
+  { id: "search-social", title: "沟通获取信息", titleKey: "pilot.family.searchSocial", tone: 1, nodeIds: ["pilot:networking", "pilot:referral"] },
+  { id: "search-independent", title: "自主查找信息", titleKey: "pilot.family.searchIndependent", tone: 1, nodeIds: ["pilot:job-board", "pilot:company-career-page", "pilot:social-media-research"] },
+  { id: "search-campus", title: "校园招聘", titleKey: "pilot.family.searchCampus", tone: 1, nodeIds: ["pilot:campus-recruiting", "pilot:career-fair", "pilot:alumni-networking"] },
+  { id: "application-batch", title: "批量投递", titleKey: "pilot.family.applicationBatch", tone: 2, nodeIds: ["pilot:application-batch-planning", "pilot:application-tracker", "pilot:resume-version-management"] },
+  { id: "application-precision", title: "精准投递", titleKey: "pilot.family.applicationPrecision", tone: 2, nodeIds: ["pilot:company-research", "pilot:jd-deep-dive", "pilot:tailored-materials"] },
+];
 
 const OPTIONAL_FIELD_BY_VALUE = {
   linkedin: "profile_branches",
@@ -160,22 +166,22 @@ export function buildConstellationElements(draft, options = {}) {
           childY += dimensions.get(id).height + gap;
         });
     };
-    const placeRouteRows = (groups, parentId, { xOffset = 44, startY = 127, rowGap = 16, columnGap = 34 } = {}) => {
+    const placeRouteFamilies = (groups, parentId, { xOffset = 44, startY = 127, itemGap = 14, familyGap = 42 } = {}) => {
       const parent = positions.get(parentId);
       if (!parent) return;
-      let rowY = parent.y + startY;
+      let familyX = parent.x + xOffset;
       groups.forEach((group) => {
         const visible = group.filter((id) => draftNodes.some((node) => node.node_id === id));
         if (visible.length === 0) return;
-        let childX = parent.x + xOffset;
-        let rowHeight = 0;
+        let childY = parent.y + startY;
+        let familyWidth = 0;
         visible.forEach((id) => {
-          positions.set(id, { x: childX, y: rowY });
+          positions.set(id, { x: familyX, y: childY });
           const childDimensions = dimensions.get(id);
-          childX += childDimensions.width + columnGap;
-          rowHeight = Math.max(rowHeight, childDimensions.height);
+          childY += childDimensions.height + itemGap;
+          familyWidth = Math.max(familyWidth, childDimensions.width);
         });
-        rowY += rowHeight + rowGap;
+        familyX += familyWidth + familyGap;
       });
     };
     const gettingStartedPosition = positions.get("pilot:getting-started");
@@ -192,8 +198,12 @@ export function buildConstellationElements(draft, options = {}) {
     }
     placeDirectoryChildren(PROFILE_CHILD_IDS, "pilot:profile-preparation");
     placeDirectoryChildren(EXPERIENCE_BUILDING_CHILD_IDS, "pilot:experience-building", { xOffset: 48, startY: 83, gap: 14 });
-    placeRouteRows(SEARCH_ROUTE_GROUPS, "pilot:job-search");
-    placeRouteRows(APPLICATION_ROUTE_GROUPS, "pilot:applications");
+    placeRouteFamilies(SEARCH_ROUTE_GROUPS, "pilot:job-search");
+    const applicationStrategy = draft?.metadata?.personalization?.resolved_application_strategy;
+    const applicationGroups = applicationStrategy === "precision_then_batch"
+      ? [...APPLICATION_ROUTE_GROUPS].reverse()
+      : APPLICATION_ROUTE_GROUPS;
+    placeRouteFamilies(applicationGroups, "pilot:applications");
     placeDirectoryChildren(INTERVIEW_CHILD_IDS, "pilot:interviews", { xOffset: 48, startY: 127, gap: 14 });
 
     const skillNode = draftNodes.find((node) => node.node_id === "pilot:skill-supplement");
@@ -250,7 +260,28 @@ export function buildConstellationElements(draft, options = {}) {
     });
   }
 
+  const routeGroups = ROUTE_FAMILY_DEFINITIONS.flatMap((family) => {
+    const visibleIds = family.nodeIds.filter((id) => positions.has(id));
+    if (visibleIds.length < 2) return [];
+    const left = Math.min(...visibleIds.map((id) => positions.get(id).x));
+    const top = Math.min(...visibleIds.map((id) => positions.get(id).y));
+    const right = Math.max(...visibleIds.map((id) => positions.get(id).x + dimensions.get(id).width));
+    const bottom = Math.max(...visibleIds.map((id) => positions.get(id).y + dimensions.get(id).height));
+    return [{
+      id: `route-family:${family.id}`,
+      type: "routeGroup",
+      position: { x: left - 20, y: top - 38 },
+      style: { width: right - left + 40, height: bottom - top + 58, zIndex: 0 },
+      data: { title: family.title, titleKey: family.titleKey, tone: family.tone, nodeIds: visibleIds },
+      draggable: false,
+      connectable: false,
+      selectable: false,
+      focusable: false,
+    }];
+  });
+
   return {
+    groups: routeGroups,
     nodes: draftNodes.map((node) => {
       const nodeDimensions = dimensions.get(node.node_id);
       const customPoint = positions.get(node.node_id);
@@ -261,12 +292,15 @@ export function buildConstellationElements(draft, options = {}) {
         id: node.node_id,
         type: "constellation",
         position: { x: point.x - nodeDimensions.width / 2, y: point.y - nodeDimensions.height / 2 },
-        style: { width: nodeDimensions.width, minHeight: nodeDimensions.height },
+        style: { width: nodeDimensions.width, minHeight: nodeDimensions.height, zIndex: 2 },
         data: {
           ...node,
           compact,
           hasPriorPath: hasPriorPath && node.node_id === firstVisibleMainId,
           hierarchyLevel: hierarchyLevels.get(node.node_id) ?? (node.metadata?.path_relation === "branch" ? 1 : 0),
+          visualToneLevel: node.metadata?.route_family
+            ? ROUTE_FAMILY_DEFINITIONS.find((family) => family.id === node.metadata.route_family)?.tone
+            : undefined,
           nodeWidth: nodeDimensions.width,
           nodeHeight: nodeDimensions.height,
         },

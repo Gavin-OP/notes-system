@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import EmbeddedPathConstellation from "./EmbeddedPathConstellation";
 
 vi.mock("reactflow", () => ({
-  default: ({ children, fitView }) => <div data-testid="path-flow" data-fit-view={String(Boolean(fitView))}>{children}</div>,
+  default: ({ children, fitView, onInit }) => <div data-testid="path-flow" data-fit-view={String(Boolean(fitView))} data-custom-viewport={String(typeof onInit === "function")}>{children}</div>,
   Background: () => null,
   BaseEdge: () => null,
   Controls: () => null,
@@ -37,7 +37,7 @@ const draft = {
 };
 
 describe("Embedded Path constellation", () => {
-  it("fits the complete graph without a duplicate Path adjustment action", () => {
+  it("uses the deterministic Path viewport without a duplicate adjustment action", () => {
     render(
       <EmbeddedPathConstellation
         draft={draft}
@@ -47,7 +47,8 @@ describe("Embedded Path constellation", () => {
       />,
     );
 
-    expect(screen.getByTestId("path-flow")).toHaveAttribute("data-fit-view", "true");
+    expect(screen.getByTestId("path-flow")).toHaveAttribute("data-fit-view", "false");
+    expect(screen.getByTestId("path-flow")).toHaveAttribute("data-custom-viewport", "true");
     expect(screen.queryByRole("button", { name: "调整 Path" })).not.toBeInTheDocument();
   });
 
