@@ -1,10 +1,16 @@
 .note-interaction {
-  margin: 24px 0;
-  padding: 22px;
-  border: 1px solid var(--ns-color-border);
-  border-radius: var(--ns-radius-lg);
-  background: var(--ns-color-bg-container);
-  box-shadow: var(--ns-shadow-sm);
+  --ns-color-primary: #3d7f6b;
+  --ns-color-primary-bg: #eef4f0;
+  --ns-color-primary-bg-hover: #e5eee9;
+  --ns-color-primary-border: #a9c3b8;
+  --ns-color-primary-contrast: #fff;
+  --ns-color-text-on-primary: #fff;
+  margin: 38px 0;
+  padding: 28px;
+  border: 1px solid color-mix(in srgb, #60776d 20%, var(--ns-color-border));
+  border-radius: 28px;
+  background: color-mix(in srgb, #f5f3ed 82%, var(--ns-color-bg-container));
+  box-shadow: 0 18px 48px rgba(48, 64, 56, 0.07), inset 0 1px rgba(255, 255, 255, 0.85);
   color: var(--ns-color-text);
 }
 
@@ -269,10 +275,12 @@
 
 .note-role-anatomy__dimension {
   min-width: 0;
-  padding: 16px;
-  border: 1px solid var(--ns-color-border-secondary);
-  border-radius: var(--ns-radius-lg);
-  background: color-mix(in srgb, var(--ns-color-primary) 5%, var(--ns-color-surface));
+  min-height: 150px;
+  padding: 22px;
+  border: 1px solid rgba(96, 119, 109, 0.16);
+  border-radius: 24px;
+  background: rgba(249, 250, 247, 0.88);
+  box-shadow: 0 10px 30px rgba(48, 64, 56, 0.05);
 }
 
 .note-role-anatomy__dimension header {
@@ -285,9 +293,9 @@
 .note-role-anatomy__dimension header span {
   display: inline-grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
   color: var(--ns-color-primary);
   background: color-mix(in srgb, var(--ns-color-primary) 12%, transparent);
   font-size: 11px;
@@ -297,7 +305,7 @@
 
 .note-role-anatomy__dimension header strong {
   color: var(--ns-color-text);
-  font-size: 14px;
+  font-size: 17px;
 }
 
 .note-role-anatomy__dimension > div {
@@ -337,10 +345,10 @@
   display: grid;
   grid-template-columns: minmax(92px, 0.24fr) 1fr;
   gap: 14px;
-  margin-top: 14px;
-  padding: 16px;
-  border-radius: var(--ns-radius-lg);
-  background: color-mix(in srgb, var(--ns-color-primary) 8%, var(--ns-color-surface));
+  margin-top: 12px;
+  padding: 24px;
+  border-radius: 24px;
+  background: #eaf1ed;
 }
 
 .note-role-anatomy__summary > span {

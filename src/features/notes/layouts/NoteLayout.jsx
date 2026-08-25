@@ -27,6 +27,7 @@ import {
 } from "@ant-design/icons";
 
 import LearningNavigationPanel from "../../navigation/components/LearningNavigationPanel";
+import EmbeddedPathConstellation from "../../navigation/components/EmbeddedPathConstellation";
 import LearningPathControls from "../../navigation/components/LearningPathControls";
 import PilotPathSetupModal, { PilotPathSettingsPanel } from "../../navigation/components/PilotPathSetupModal";
 import { sortPathNodesCanonically } from "../../navigation/lib/learningPathUtils";
@@ -86,7 +87,7 @@ const { Sider, Content } = Layout;
 const LEARNING_SIDER_MIN_WIDTH = FULL_PRODUCT_ENABLED ? 350 : 260;
 const LEARNING_SIDER_MAX_WIDTH = FULL_PRODUCT_ENABLED ? 960 : 1180;
 const PILOT_PATH_RAIL_WIDTH = 280;
-const getPilotPathExpandedWidth = () => typeof window === "undefined" ? 920 : Math.min(LEARNING_SIDER_MAX_WIDTH, Math.round(window.innerWidth * .72));
+const getPilotPathExpandedWidth = () => typeof window === "undefined" ? 920 : Math.min(LEARNING_SIDER_MAX_WIDTH, Math.round(window.innerWidth * .62));
 const LEARNING_SIDER_NEARBY_MIN_WIDTH = 520;
 const PILOT_LOCAL_ONLY = !FULL_PRODUCT_ENABLED && !PILOT_BACKEND_ENABLED;
 
@@ -400,6 +401,8 @@ const NoteLayout = () => {
   const [pathEditMode, setPathEditMode] = useState(false);
   const [learningSiderWidth, setLearningSiderWidth] = useState(() => FULL_PRODUCT_ENABLED ? LEARNING_SIDER_MIN_WIDTH : getPilotPathExpandedWidth());
   const pilotPathExpanded = !FULL_PRODUCT_ENABLED && !isMobile && learningSiderWidth > 340;
+  const pilotPathCompact = !FULL_PRODUCT_ENABLED && !isMobile && !pilotPathExpanded;
+  const effectiveSiderCollapsed = collapsed || pilotPathCompact;
   const [canonicalGraph, setCanonicalGraph] = useState(null);
   const [noteQuotes, setNoteQuotes] = useState([]);
   const [completeNotePending, setCompleteNotePending] = useState(false);
@@ -418,8 +421,9 @@ const NoteLayout = () => {
     pathSetupHandledRef.current = true;
     setCollapsed(false);
     setShowMenu(true);
+    if (!isMobile) setLearningSiderWidth(getPilotPathExpandedWidth());
     if (!learningPathDraft?.metadata?.personalization?.setup_complete) setPilotPathSetupOpen(true);
-  }, [learningPathDraft, location.search]);
+  }, [isMobile, learningPathDraft, location.search]);
   const narrationAudioRef = useRef(null);
   const narrationAudioUrlsRef = useRef([]);
   const narrationChunkIndexRef = useRef(0);
@@ -1546,7 +1550,9 @@ const NoteLayout = () => {
 
   return (
     <Layout
-      className={`note-layout ${immersiveMode ? "note-layout--immersive" : ""} ${
+      className={`note-layout ${!FULL_PRODUCT_ENABLED ? "note-layout--pilot" : ""} ${
+        pilotPathExpanded ? "note-layout--pilot-path-expanded" : ""
+      } ${pilotPathCompact ? "note-layout--pilot-path-compact" : ""} ${immersiveMode ? "note-layout--immersive" : ""} ${
         collapsed ? "note-layout--sider-collapsed" : ""
       }`}
       style={{
@@ -1601,7 +1607,7 @@ const NoteLayout = () => {
             pathEditMode ? "note-layout__sider--path-editing" : ""
           } ${!FULL_PRODUCT_ENABLED ? "note-layout__sider--pilot" : ""} ${learningSiderWidth >= LEARNING_SIDER_NEARBY_MIN_WIDTH ? "note-layout__sider--wide" : ""}`}
           collapsible
-          collapsed={collapsed}
+          collapsed={effectiveSiderCollapsed}
           trigger={null}
         >
           {showMenu && (
@@ -1663,13 +1669,7 @@ const NoteLayout = () => {
                 pilotMode={!FULL_PRODUCT_ENABLED}
                 panelWidth={learningSiderWidth}
                 onTogglePathExpand={() => setLearningSiderWidth((width) => width <= 340 ? getPilotPathExpandedWidth() : PILOT_PATH_RAIL_WIDTH)}
-                onConfigurePath={() => {
-                  if (isMobile) {
-                    setPilotPathSetupOpen(true);
-                    return;
-                  }
-                  setLearningSiderWidth(getPilotPathExpandedWidth());
-                }}
+                onConfigurePath={() => setPilotPathSetupOpen(true)}
                 onSelect={(path) => {
                   handleNoteSelect(path);
                   if (isMobile) setCollapsed(true);
@@ -1687,7 +1687,7 @@ const NoteLayout = () => {
             />
           ) : null}
         </Sider>
-        {!isMobile && collapsed ? (
+        {!isMobile && collapsed && FULL_PRODUCT_ENABLED ? (
           <button
             type="button"
             className="note-layout__left-sider-collapsed-trigger"
@@ -1700,6 +1700,20 @@ const NoteLayout = () => {
           >
             <MenuUnfoldOutlined />
           </button>
+        ) : null}
+        {pilotPathCompact ? (
+          <EmbeddedPathConstellation
+            draft={learningPathDraft}
+            currentNoteUrl={`${currentNoteUrlNormalized}${location.hash || ""}`}
+            completedNoteUrls={completedNoteUrls}
+            onSelect={handleNoteSelect}
+            isRail
+            onToggleExpand={() => {
+              setCollapsed(false);
+              setShowMenu(true);
+              setLearningSiderWidth(getPilotPathExpandedWidth());
+            }}
+          />
         ) : null}
 
         <Layout
@@ -1968,7 +1982,7 @@ const NoteLayout = () => {
           {renderAssistantWorkspace(true)}
         </Modal>
       ) : null}
-      {!FULL_PRODUCT_ENABLED && !pilotPathExpanded ? (
+      {!FULL_PRODUCT_ENABLED ? (
         <PilotPathSetupModal
           open={pilotPathSetupOpen}
           initialProfile={learningPathDraft?.metadata?.personalization || {}}

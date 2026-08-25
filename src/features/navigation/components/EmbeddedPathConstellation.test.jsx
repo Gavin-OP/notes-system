@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
@@ -54,5 +54,26 @@ describe("Embedded Path constellation", () => {
     expect(screen.getByTestId("path-flow")).toHaveAttribute("data-fit-view", "true");
     await user.click(screen.getByRole("button", { name: "调整 Path" }));
     expect(onAdjust).toHaveBeenCalledTimes(1);
+  });
+
+  it("collapses into a current-node affordance that restores the complete Path", async () => {
+    cleanup();
+    const onToggleExpand = vi.fn();
+    const user = userEvent.setup();
+
+    render(
+      <EmbeddedPathConstellation
+        draft={draft}
+        currentNoteUrl="/note/fall-recruiting/getting-started.md"
+        completedNoteUrls={new Set()}
+        isRail
+        onToggleExpand={onToggleExpand}
+      />,
+    );
+
+    expect(screen.queryByTestId("path-flow")).not.toBeInTheDocument();
+    expect(screen.getByText("刚开始准备求职")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "pilot.path.openSettings" }));
+    expect(onToggleExpand).toHaveBeenCalledTimes(1);
   });
 });

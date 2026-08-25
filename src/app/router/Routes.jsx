@@ -38,6 +38,9 @@ const JobSeekerPersonalityTypesPage = lazy(() =>
   import("../../features/personality/pages/JobSeekerPersonalityTypesPage"),
 );
 const CareerRunPage = lazy(() => import("../../features/careerGame/pages/CareerRunPage"));
+const LearningWorkspacePrototype = lazy(() =>
+  import("../../features/notes/prototypes/LearningWorkspacePrototype"),
+);
 const AdminAuthRoot = lazy(() =>
   import("../../features/admin/auth/AdminAuthProvider").then((module) => ({ default: module.AdminAuthRoot })),
 );
@@ -248,6 +251,11 @@ function RoutesWithTracking() {
         <Route path="job-seeker-personality" element={<JobSeekerPersonalityPage />} />
         <Route path="job-seeker-personality/types" element={<JobSeekerPersonalityTypesPage />} />
         <Route path="career-run" element={<CareerRunPage />} />
+
+        {/* Throwaway design study. It is intentionally unavailable in production builds. */}
+        {import.meta.env.DEV ? (
+          <Route path="prototype/learning-workspace" element={<LearningWorkspacePrototype />} />
+        ) : null}
 
         {/* Search */}
         {FULL_PRODUCT_ENABLED ? <Route path="search" element={<SearchResultsPage />} /> : null}

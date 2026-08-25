@@ -1,12 +1,12 @@
 .embedded-constellation {
-  --path-ink: #253c48;
-  --path-muted: #6d818b;
-  --path-track: #77a7b5;
-  --stage-0: #4d91df;
-  --stage-1: #4fa66f;
-  --stage-2: #ef914a;
-  --stage-3: #74ad63;
-  --stage-4: #7053b6;
+  --path-ink: #26342f;
+  --path-muted: #75817c;
+  --path-track: #7d978e;
+  --stage-0: #56736a;
+  --stage-1: #5d9872;
+  --stage-2: #b18152;
+  --stage-3: #7f9165;
+  --stage-4: #79667f;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   width: 100%;
@@ -14,7 +14,7 @@
   min-height: 0;
   overflow: hidden;
   color: var(--path-ink);
-  background: #f3f6f7;
+  background: rgb(239 242 240 / 0.88);
 }
 
 .embedded-constellation__header {
@@ -23,46 +23,86 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 68px;
-  padding: 12px 18px;
-  border-bottom: 1px solid rgba(59, 86, 99, 0.1);
-  background: rgba(250, 252, 252, 0.9);
-  backdrop-filter: blur(16px);
+  min-height: 104px;
+  padding: 22px 30px;
+  border-bottom: 1px solid rgba(65, 78, 71, 0.1);
+  background: rgba(239, 242, 240, 0.88);
+  backdrop-filter: blur(20px) saturate(115%);
 }
 
-.embedded-constellation__header > div { display: grid; gap: 2px; }
-.embedded-constellation__header span { color: #82939b; font-size: 9px; font-weight: 700; letter-spacing: 0.18em; }
-.embedded-constellation__header strong { font-size: 16px; letter-spacing: -0.02em; }
+.embedded-constellation__header > div:first-child { display: grid; gap: 7px; }
+.embedded-constellation__header span { color: #7d8ba1; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; }
+.embedded-constellation__header strong { font-size: 25px; font-weight: 650; letter-spacing: -0.04em; }
 .embedded-constellation__header nav { display: flex; align-items: center; gap: 8px; }
 .embedded-constellation__header button {
   min-height: 36px;
   padding: 0 12px;
-  border: 1px solid rgba(63, 91, 104, 0.14);
+  border: 1px solid rgba(65, 82, 74, 0.14);
   border-radius: 12px;
-  color: #35515e;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 5px 14px rgba(48, 70, 82, 0.06);
+  color: #395349;
+  background: rgba(255, 255, 252, 0.82);
+  box-shadow: 0 5px 14px rgba(47, 61, 54, 0.06);
   cursor: pointer;
 }
-.embedded-constellation__header button:hover { border-color: rgba(57, 124, 143, 0.38); background: #fff; }
+.embedded-constellation__header button:hover { border-color: rgba(61, 127, 107, 0.4); background: #fff; }
 .embedded-constellation__resize { width: 36px; padding: 0 !important; }
 .embedded-constellation__adjust { display: inline-flex; align-items: center; gap: 6px; }
 .embedded-constellation__adjust span { color: inherit; font-size: 12px; letter-spacing: 0; }
+
+.embedded-constellation__progress {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.embedded-constellation__progress > div {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(#3d7f6b var(--path-progress), #d8ddda 0);
+}
+.embedded-constellation__progress > div::after {
+  position: absolute;
+  inset: 6px;
+  border-radius: inherit;
+  background: #f4f4f0;
+  content: "";
+}
+.embedded-constellation__progress strong {
+  position: relative;
+  z-index: 1;
+  color: #304c43;
+  font-size: 11px;
+}
+.embedded-constellation__progress > span {
+  display: grid;
+  gap: 2px;
+  color: #7e8984;
+  font-size: 9px;
+  letter-spacing: 0;
+}
+.embedded-constellation__progress b { color: #344b43; font-size: 10px; }
 
 .embedded-constellation__canvas {
   position: relative;
   min-height: 0;
   overflow: hidden;
-  background: #f7f9fc;
+  background:
+    linear-gradient(120deg, rgba(218, 228, 224, 0.42), transparent 38%),
+    linear-gradient(300deg, rgba(229, 226, 217, 0.32), transparent 42%),
+    rgb(239 242 240 / 0.88);
 }
 .embedded-constellation__canvas::after {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.6;
-  background-image: radial-gradient(circle, rgba(111, 130, 151, 0.18) 1px, transparent 1.2px);
-  background-size: 20px 20px;
+  opacity: 1;
+  background-image: radial-gradient(circle, rgba(75, 95, 87, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
   content: "";
 }
 .embedded-constellation__canvas .react-flow { z-index: 2; }
@@ -71,7 +111,6 @@
   animation: path-view-materialize 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
   transform-origin: left center;
 }
-.embedded-constellation__canvas .react-flow__background { opacity: 0.3; }
 .embedded-constellation.is-rail .embedded-constellation__canvas::before {
   position: absolute;
   z-index: 0;
@@ -94,7 +133,6 @@
   padding: 20px;
 }
 .embedded-constellation__rail-focus .path-star-node { z-index: 4; width: min(190px, calc(100% - 28px)); }
-.embedded-constellation__rail-focus .path-star-node::after { z-index: 0; background: #fff; }
 .embedded-constellation__rail-focus .path-star-node__button { position: relative; z-index: 1; }
 .embedded-constellation__rail-focus .react-flow__handle { display: none; }
 .embedded-constellation__rail-focus .path-star-node.has-prior-path::before { display: none; }
@@ -106,25 +144,13 @@
   --platform: #49a9b9;
   position: relative;
   width: 100%;
-  min-height: 48px;
+  min-height: 92px;
   isolation: isolate;
   color: var(--path-ink);
   cursor: pointer;
-  animation: path-platform-enter 180ms ease-out both;
+  animation: path-platform-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: min(calc(var(--star-index) * 12ms), 120ms);
   transition: transform 100ms ease-out;
-}
-.path-star-node::after {
-  position: absolute;
-  border-radius: 15px;
-  content: "";
-}
-.path-star-node::after {
-  z-index: -1;
-  inset: 0;
-  border: 1px solid #d9e0e8;
-  background: #fff;
-  box-shadow: 0 3px 10px rgba(43, 62, 81, 0.08);
 }
 .path-star-node.has-prior-path::before {
   position: absolute;
@@ -138,12 +164,18 @@
   content: "";
   transform: translateY(-50%);
 }
-.path-star-node:hover { transform: translateY(-1px); }
+.path-star-node:hover { transform: translateY(-3px); }
 .path-star-node.is-current { transform: none; }
-.path-star-node.is-current::after { border-color: #3f7fd5; background: #3f7fd5; box-shadow: 0 5px 14px rgba(63, 127, 213, 0.2); }
-.path-star-node.is-complete::after { border-color: #a9d8c1; background: #eef8f2; }
-.path-star-node.is-branch { min-height: 42px; }
-.path-star-node.is-content-planned::after { border-style: dashed; background: #f8fafb; }
+.path-star-node.is-current::after {
+  position: absolute;
+  z-index: -1;
+  inset: -9px;
+  border: 1px solid rgba(61, 127, 107, 0.16);
+  border-radius: 30px;
+  content: "";
+}
+.path-star-node.is-branch { min-height: 48px; }
+.path-star-node.is-content-planned .path-star-node__button { border-style: dashed; background: #f8fafb; }
 .path-star-node.is-content-planned .path-star-node__button { cursor: default; opacity: 0.82; }
 .path-star-node.is-content-planned:hover { transform: none; }
 .path-star-node--tone-0 { --platform: var(--stage-0); }
@@ -158,63 +190,121 @@
   gap: 9px;
   width: 100%;
   min-height: inherit;
-  padding: 8px 12px;
-  border: 0;
-  border-radius: 15px;
+  padding: 18px;
+  border: 1px solid rgba(130, 150, 177, 0.18);
+  border-radius: 24px;
   color: inherit;
   text-align: left;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 14px 36px rgba(52, 78, 114, 0.09), inset 0 1px rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(18px) saturate(112%);
+  -webkit-backdrop-filter: blur(18px) saturate(112%);
   cursor: pointer;
 }
-.path-star-node__button:focus-visible { outline: 3px solid rgba(47, 134, 155, 0.36); outline-offset: 3px; }
-.path-star-node.is-current .path-star-node__button { color: #fff; }
-.path-star-node__orb { width: 9px; height: 9px; flex: 0 0 9px; border-radius: 50%; background: var(--platform); box-shadow: 0 0 0 3px color-mix(in srgb, var(--platform) 13%, transparent); }
-.path-star-node.is-current .path-star-node__orb {
-  background: var(--platform);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.88), 0 0 0 6px color-mix(in srgb, var(--platform) 28%, transparent);
+.path-star-node__button:focus-visible { outline: 3px solid rgba(61, 127, 107, 0.3); outline-offset: 3px; }
+.path-star-node.is-current .path-star-node__button { border-color: rgba(61, 127, 107, 0.5); box-shadow: 0 18px 50px rgba(44, 91, 77, 0.13); }
+.path-star-node.is-complete .path-star-node__button { border-color: rgba(74, 170, 147, 0.28); }
+.path-star-node.is-branch .path-star-node__button { padding: 10px 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.72); box-shadow: 0 8px 24px rgba(52, 78, 114, 0.07); }
+.path-star-node.is-current .path-star-node__button { color: var(--path-ink); }
+.path-star-node__copy { min-width: 0; display: grid; gap: 6px; }
+.path-star-node.is-branch .path-star-node__copy { gap: 1px; }
+.path-star-node__eyebrow {
+  color: #92a0b3;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
 }
-.path-star-node__copy { min-width: 0; display: grid; gap: 1px; }
+.path-star-node.is-current .path-star-node__eyebrow,
+.path-star-node.is-complete .path-star-node__eyebrow { color: #3d7f6b; }
 .path-star-node strong {
   display: block;
   overflow: visible;
-  font-size: 12px;
-  line-height: 1.38;
+  font-size: 15px;
+  line-height: 1.32;
   overflow-wrap: anywhere;
   text-overflow: clip;
   white-space: normal;
 }
-.path-star-node small { color: #6f8293; font-size: 9px; }
-.path-star-node.is-current small { color: rgba(255,255,255,.78); }
-.path-star-node .react-flow__handle { width: 5px; height: 5px; border: 0; background: #7499a5; }
+.path-star-node.is-branch strong { font-size: 11px; }
+.path-star-node small { margin-top: 7px; color: #8895a8; font-size: 10px; }
+.path-star-node.is-current small { color: #3d7f6b; }
+.path-star-node .react-flow__handle { width: 1px; height: 1px; border: 0; background: transparent; opacity: 0; }
 
-.embedded-constellation__canvas .react-flow__edge-path { stroke: #c2ccd7; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.embedded-constellation__canvas .react-flow__edge.is-main-route .react-flow__edge-path { stroke: #b8c4d0; stroke-width: 2; }
-.embedded-constellation__canvas .react-flow__edge.is-branch-route .react-flow__edge-path { stroke: #aebbc8; stroke-width: 1.6; stroke-dasharray: 4 5; }
+.embedded-constellation__canvas .react-flow__edge-path { stroke: #a8b8c8; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.embedded-constellation__canvas .react-flow__edge.is-main-route .react-flow__edge-path { stroke: #aab5b1; stroke-width: 2; }
+.embedded-constellation__canvas .react-flow__edge.is-branch-route .react-flow__edge-path { stroke: #a8b8c8; stroke-width: 1.25; stroke-dasharray: none; }
 .embedded-constellation__canvas .react-flow__edge.is-midpoint-route .react-flow__edge-path {
   stroke: #91a9b4;
   stroke-width: 2;
   stroke-dasharray: none;
 }
 .embedded-constellation__canvas .react-flow__edge.is-converges-route { display: none; }
-.embedded-constellation__canvas .react-flow__edge.is-travelled .react-flow__edge-path { stroke: #78a6df; }
+.embedded-constellation__canvas .react-flow__edge.is-travelled .react-flow__edge-path { stroke: #3d7f6b; }
 .embedded-constellation__hint { position: absolute; z-index: 6; left: 16px; bottom: 16px; display: flex; align-items: center; gap: 7px; padding: 7px 11px; border: 1px solid rgba(70, 99, 112, 0.1); border-radius: 999px; color: #667c86; background: rgba(255, 255, 255, 0.78); font-size: 10px; pointer-events: none; backdrop-filter: blur(10px); }
 .embedded-constellation__canvas .react-flow__controls { overflow: hidden; border: 1px solid rgba(57, 86, 99, 0.12); border-radius: 12px; box-shadow: 0 8px 22px rgba(52, 74, 84, 0.1); }
-.embedded-constellation__canvas .react-flow__controls-button { color: #3c5d69; background: rgba(255, 255, 255, 0.92); }
+.embedded-constellation__canvas .react-flow__controls-button { color: #40594f; background: rgba(255, 255, 252, 0.94); }
+
+.embedded-constellation-rail {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  z-index: 40;
+  width: 116px;
+  min-height: 156px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 18px 14px 18px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-left: 0;
+  border-radius: 0 90px 90px 0;
+  color: #253830;
+  text-align: center;
+  background: rgba(244, 246, 242, 0.94);
+  box-shadow: 0 24px 70px rgba(44, 66, 57, 0.18), inset 0 1px rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(24px) saturate(115%);
+  -webkit-backdrop-filter: blur(24px) saturate(115%);
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
+}
+.embedded-constellation-rail::after {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  width: 18px;
+  height: 2px;
+  background: #78968b;
+  content: "";
+}
+.embedded-constellation-rail:hover { transform: translateY(-50%) scale(1.035); box-shadow: 0 30px 80px rgba(44, 66, 57, 0.23); }
+.embedded-constellation-rail:focus-visible { outline: 3px solid rgba(61, 127, 107, 0.28); outline-offset: 3px; }
+.embedded-constellation-rail > span { color: #3d7f6b; font-size: 9px; font-weight: 760; letter-spacing: 0.12em; }
+.embedded-constellation-rail strong { font-size: 14px; line-height: 1.3; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+.embedded-constellation-rail small { color: #75827c; font-size: 9px; }
 
 @keyframes path-platform-enter { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes path-view-materialize { from { opacity: 0.35; transform: scale(0.985); } to { opacity: 1; transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) { .path-star-node, .embedded-constellation.is-expanded .embedded-constellation__canvas > .react-flow, .embedded-constellation__rail-focus { animation: none; transition: none; } }
 
-[data-theme="dark"] .embedded-constellation { --path-ink: #e6eef1; --path-muted: #9db0b9; background: #1a242a; }
-[data-theme="dark"] .embedded-constellation__header { background: rgba(27, 39, 45, 0.94); }
-[data-theme="dark"] .embedded-constellation__canvas { background: linear-gradient(145deg, #1d2a31, #172127); }
-[data-theme="dark"] .path-star-node::after { background: #2a3941; }
+[data-theme="dark"] .embedded-constellation { --path-ink: #e6eeea; --path-muted: #9daaa4; background: #1c2420; }
+[data-theme="dark"] .embedded-constellation__header { background: rgba(29, 38, 34, 0.94); }
+[data-theme="dark"] .embedded-constellation__canvas { background: #19211e; }
+[data-theme="dark"] .path-star-node__button { border-color: rgba(255, 255, 255, 0.1); background: #293630; }
 [data-theme="dark"] .path-star-node__button { color: #edf4f6; }
 [data-theme="dark"] .path-star-node small { color: #b1c3ca; }
+[data-theme="dark"] .embedded-constellation-rail { color: #eff5f1; border-color: rgba(255,255,255,.1); background: rgba(35, 46, 41, .96); }
 
 @media (max-width: 767px) {
   .embedded-constellation__header { min-height: 60px; padding: 10px 12px; }
   .embedded-constellation__header strong { font-size: 14px; }
   .embedded-constellation__header button { min-height: 44px; }
   .embedded-constellation__canvas::after { background-size: 36px 36px; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .embedded-constellation__header,
+  .embedded-constellation-rail { backdrop-filter: none; -webkit-backdrop-filter: none; }
 }

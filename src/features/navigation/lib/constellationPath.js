@@ -2,8 +2,6 @@ import dagre from "dagre";
 
 import { buildPersonalizedPilotDraft } from "./pilotPath";
 
-const NODE_WIDTH = 176;
-const NODE_HEIGHT = 54;
 const PRIOR_PATH_LENGTH = 120;
 const PILOT_MAIN_ROUTE = [
   "pilot:getting-started",
@@ -107,18 +105,18 @@ export function buildConstellationElements(draft, options = {}) {
   );
   const getDimensions = (node) => {
     const isBranch = node.metadata?.path_relation === "branch";
-    const minimum = compact ? (isBranch ? 142 : 162) : (isBranch ? 156 : NODE_WIDTH);
-    const maximum = compact ? 258 : 292;
-    const contentWidth = measureTitle(node.title) + 58;
+    const minimum = compact ? (isBranch ? 142 : 162) : (isBranch ? 168 : 196);
+    const maximum = compact ? 258 : minimum;
+    const contentWidth = measureTitle(node.title) + (isBranch ? 28 : 36);
     const width = Math.round(Math.max(minimum, Math.min(maximum, contentWidth)));
     const lineCapacity = Math.max(1, width - 54);
     const lines = Math.max(1, Math.ceil(measureTitle(node.title) / lineCapacity));
-    const height = Math.max(compact ? 46 : NODE_HEIGHT, 22 + lines * 18);
+    const height = Math.max(compact ? 46 : (isBranch ? 48 : 92), (isBranch ? 20 : 42) + lines * 19);
     return { width, height };
   };
   const graph = new dagre.graphlib.Graph();
   graph.setDefaultEdgeLabel(() => ({}));
-  graph.setGraph({ rankdir: horizontal ? "LR" : "TB", ranksep: compact ? 58 : 82, nodesep: compact ? 14 : 34, edgesep: 12, marginx: 28, marginy: 30 });
+  graph.setGraph({ rankdir: horizontal ? "LR" : "TB", ranksep: compact ? 58 : 96, nodesep: compact ? 14 : 38, edgesep: 14, marginx: 34, marginy: 36 });
 
   const draftNodes = Array.isArray(draft?.nodes) ? draft.nodes : [];
   const draftEdges = Array.isArray(draft?.edges) ? draft.edges : [];
@@ -134,7 +132,7 @@ export function buildConstellationElements(draft, options = {}) {
   if (horizontal && draftNodes.some((node) => node.metadata?.pilot_official_path)) {
     const mainIds = PILOT_MAIN_ROUTE.filter((id) => draftNodes.some((node) => node.node_id === id));
     const startX = hasPriorPath ? 164 : 44;
-    const mainY = 168;
+    const mainY = 154;
     let cursorX = startX;
     mainIds.forEach((id) => {
       positions.set(id, { x: cursorX, y: mainY });
@@ -150,10 +148,10 @@ export function buildConstellationElements(draft, options = {}) {
           ? Math.max(0, ...APPLICATION_ROUTE_GROUPS.map((route) => route.filter((nodeId) => draftNodes.some((node) => node.node_id === nodeId)).length))
           : 0;
       const routeSpace = routeDepth > 0 ? routeDepth * 190 + 70 : 0;
-      cursorX += width + Math.max(routeSpace, hasEarlyExperience ? 420 : hasSkillBranch ? 350 : branchCount === 0 ? 64 : Math.min(240, 92 + branchCount * 24));
+      cursorX += width + Math.max(routeSpace, hasEarlyExperience ? 440 : hasSkillBranch ? 370 : branchCount === 0 ? 76 : Math.min(260, 108 + branchCount * 26));
     });
 
-    const placeDirectoryChildren = (ids, parentId, { xOffset = 44, startY = 88, gap = 16 } = {}) => {
+    const placeDirectoryChildren = (ids, parentId, { xOffset = 44, startY = 127, gap = 14 } = {}) => {
       const parent = positions.get(parentId);
       if (!parent) return;
       let childY = parent.y + startY;
@@ -163,7 +161,7 @@ export function buildConstellationElements(draft, options = {}) {
           childY += dimensions.get(id).height + gap;
         });
     };
-    const placeRouteRows = (groups, parentId, { xOffset = 44, startY = 92, rowGap = 18, columnGap = 34 } = {}) => {
+    const placeRouteRows = (groups, parentId, { xOffset = 44, startY = 127, rowGap = 16, columnGap = 34 } = {}) => {
       const parent = positions.get(parentId);
       if (!parent) return;
       let rowY = parent.y + startY;
@@ -186,7 +184,7 @@ export function buildConstellationElements(draft, options = {}) {
     if (gettingStartedPosition && marketPositionForExperience) {
       const startDimensions = dimensions.get("pilot:getting-started");
       const experienceMidpointX = (gettingStartedPosition.x + startDimensions.width + marketPositionForExperience.x) / 2;
-      let experienceY = mainY + 92;
+      let experienceY = mainY + 127;
       EARLY_EXPERIENCE_IDS.filter((id) => draftNodes.some((node) => node.node_id === id)).forEach((id) => {
         const childDimensions = dimensions.get(id);
         positions.set(id, { x: experienceMidpointX - childDimensions.width / 2, y: experienceY });
@@ -194,10 +192,10 @@ export function buildConstellationElements(draft, options = {}) {
       });
     }
     placeDirectoryChildren(PROFILE_CHILD_IDS, "pilot:profile-preparation");
-    placeDirectoryChildren(EXPERIENCE_BUILDING_CHILD_IDS, "pilot:experience-building", { xOffset: 44, startY: 78, gap: 16 });
+    placeDirectoryChildren(EXPERIENCE_BUILDING_CHILD_IDS, "pilot:experience-building", { xOffset: 44, startY: 83, gap: 14 });
     placeRouteRows(SEARCH_ROUTE_GROUPS, "pilot:job-search");
     placeRouteRows(APPLICATION_ROUTE_GROUPS, "pilot:applications");
-    placeDirectoryChildren(INTERVIEW_CHILD_IDS, "pilot:interviews", { xOffset: 54, startY: 88, gap: 16 });
+    placeDirectoryChildren(INTERVIEW_CHILD_IDS, "pilot:interviews", { xOffset: 54, startY: 127, gap: 14 });
 
     const skillNode = draftNodes.find((node) => node.node_id === "pilot:skill-supplement");
     const marketPosition = positions.get("pilot:market");
@@ -208,9 +206,9 @@ export function buildConstellationElements(draft, options = {}) {
       const branchMidpointX = (marketPosition.x + marketDimensions.width + profilePosition.x) / 2;
       positions.set("pilot:skill-supplement", {
         x: branchMidpointX - skillDimensions.width / 2,
-        y: mainY + 92,
+        y: mainY + 127,
       });
-      placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:skill-supplement", { xOffset: 44, startY: 78, gap: 16 });
+      placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:skill-supplement", { xOffset: 44, startY: 83, gap: 14 });
     } else if (skillNode) {
       const skillAnchor = marketPosition || profilePosition;
       if (skillAnchor) {
@@ -220,9 +218,9 @@ export function buildConstellationElements(draft, options = {}) {
           : skillAnchor.x + dimensions.get(firstVisibleMainId).width / 2;
         positions.set("pilot:skill-supplement", {
           x: branchMidpointX - skillDimensions.width / 2,
-          y: mainY + 92,
+          y: mainY + 127,
         });
-        placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:skill-supplement", { xOffset: 44, startY: 78, gap: 16 });
+        placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:skill-supplement", { xOffset: 44, startY: 83, gap: 14 });
       }
     }
   }
