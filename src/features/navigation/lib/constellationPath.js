@@ -151,7 +151,7 @@ export function buildConstellationElements(draft, options = {}) {
       cursorX += width + Math.max(routeSpace, hasEarlyExperience ? 440 : hasSkillBranch ? 370 : branchCount === 0 ? 76 : Math.min(260, 108 + branchCount * 26));
     });
 
-    const placeDirectoryChildren = (ids, parentId, { xOffset = 44, startY = 127, gap = 14 } = {}) => {
+    const placeDirectoryChildren = (ids, parentId, { xOffset = 48, startY = 127, gap = 14 } = {}) => {
       const parent = positions.get(parentId);
       if (!parent) return;
       let childY = parent.y + startY;
@@ -192,10 +192,10 @@ export function buildConstellationElements(draft, options = {}) {
       });
     }
     placeDirectoryChildren(PROFILE_CHILD_IDS, "pilot:profile-preparation");
-    placeDirectoryChildren(EXPERIENCE_BUILDING_CHILD_IDS, "pilot:experience-building", { xOffset: 44, startY: 83, gap: 14 });
+    placeDirectoryChildren(EXPERIENCE_BUILDING_CHILD_IDS, "pilot:experience-building", { xOffset: 48, startY: 83, gap: 14 });
     placeRouteRows(SEARCH_ROUTE_GROUPS, "pilot:job-search");
     placeRouteRows(APPLICATION_ROUTE_GROUPS, "pilot:applications");
-    placeDirectoryChildren(INTERVIEW_CHILD_IDS, "pilot:interviews", { xOffset: 54, startY: 127, gap: 14 });
+    placeDirectoryChildren(INTERVIEW_CHILD_IDS, "pilot:interviews", { xOffset: 48, startY: 127, gap: 14 });
 
     const skillNode = draftNodes.find((node) => node.node_id === "pilot:skill-supplement");
     const marketPosition = positions.get("pilot:market");
@@ -208,7 +208,7 @@ export function buildConstellationElements(draft, options = {}) {
         x: branchMidpointX - skillDimensions.width / 2,
         y: mainY + 127,
       });
-      placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:skill-supplement", { xOffset: 44, startY: 83, gap: 14 });
+      placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:skill-supplement", { xOffset: 48, startY: 83, gap: 14 });
     } else if (skillNode) {
       const skillAnchor = marketPosition || profilePosition;
       if (skillAnchor) {
@@ -220,7 +220,7 @@ export function buildConstellationElements(draft, options = {}) {
           x: branchMidpointX - skillDimensions.width / 2,
           y: mainY + 127,
         });
-        placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:skill-supplement", { xOffset: 44, startY: 83, gap: 14 });
+        placeDirectoryChildren(CERTIFICATE_CHILD_IDS, "pilot:skill-supplement", { xOffset: 48, startY: 83, gap: 14 });
       }
     }
   }

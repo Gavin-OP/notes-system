@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { AimOutlined, CompressOutlined, SettingOutlined } from "@ant-design/icons";
+import { AimOutlined, CompressOutlined } from "@ant-design/icons";
 import ReactFlow, { BaseEdge, Controls, Handle, Position } from "reactflow";
 import "reactflow/dist/style.css";
 
@@ -40,20 +40,21 @@ function FixedRouteEdge({ id, sourceX, sourceY, targetX, targetY, style, data, m
   const routeSourceX = Number.isFinite(data?.customSourceX) ? data.customSourceX : sourceX;
   const routeSourceY = Number.isFinite(data?.customSourceY) ? data.customSourceY : sourceY;
   const busY = Number.isFinite(data?.busY) ? data.busY : routeSourceY + Math.max(28, (targetY - routeSourceY) / 2);
-  const directoryTrunkX = targetX - 28;
+  const endpointGap = 10;
+  const directoryTrunkX = targetX - 20;
   const path = data?.routeStyle === "midpoint-drop"
-    ? `M ${routeSourceX} ${routeSourceY} V ${targetY}`
+    ? `M ${routeSourceX} ${routeSourceY + endpointGap} V ${targetY - endpointGap}`
     : data?.routeStyle === "directory"
-    ? `M ${routeSourceX} ${routeSourceY} V ${busY} H ${directoryTrunkX} V ${targetY} H ${targetX}`
+    ? `M ${directoryTrunkX} ${routeSourceY + endpointGap} V ${targetY} H ${targetX - endpointGap}`
     : isBranch
-      ? `M ${routeSourceX} ${routeSourceY} V ${busY} H ${targetX} V ${targetY}`
-      : `M ${routeSourceX} ${routeSourceY} L ${targetX} ${targetY}`;
+      ? `M ${routeSourceX} ${routeSourceY + endpointGap} V ${busY} H ${targetX} V ${targetY - endpointGap}`
+      : `M ${routeSourceX + endpointGap} ${routeSourceY} L ${targetX - endpointGap} ${targetY}`;
   return <BaseEdge id={id} path={path} style={style} markerEnd={markerEnd} />;
 }
 
 const edgeTypes = { fixedRoute: FixedRouteEdge };
 
-export default function EmbeddedPathConstellation({ draft, currentNoteUrl, completedNoteUrls, onSelect, onAdjust, isRail = false, isMobile = false, onToggleExpand }) {
+export default function EmbeddedPathConstellation({ draft, currentNoteUrl, completedNoteUrls, onSelect, isRail = false, isMobile = false, onToggleExpand }) {
   const { t } = useTranslation();
   const elements = useMemo(() => {
     const completed = new Set([...completedNoteUrls].map(normalize));
@@ -97,12 +98,18 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
     });
     const completedCount = nodes.filter((node) => node.data.isComplete).length;
     const progressPercent = nodes.length > 0 ? Math.round((completedCount / nodes.length) * 100) : 0;
+    const viewportNode = nodes.find((node) => node.data.isCurrent) || nodes[0];
     return {
       nodes,
       edges,
-      currentNode: nodes.find((node) => node.data.isCurrent) || nodes[0],
+      currentNode: viewportNode,
       completedCount,
       progressPercent,
+      initialViewport: {
+        x: viewportNode ? 44 - viewportNode.position.x : 0,
+        y: viewportNode ? 48 - viewportNode.position.y : 0,
+        zoom: 1,
+      },
     };
   }, [completedNoteUrls, currentNoteUrl, draft, isRail, onSelect, t]);
 
@@ -128,7 +135,6 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
         <span>{t("learningPath.completed")}<b>{elements.completedCount} / {elements.nodes.length}</b></span>
       </div>
       <nav>
-      {typeof onAdjust === "function" ? <button type="button" className="embedded-constellation__adjust" onClick={onAdjust} aria-label="调整 Path"><SettingOutlined /><span>调整 Path</span></button> : null}
       {!isMobile && typeof onToggleExpand === "function" ? <button type="button" className="embedded-constellation__resize" onClick={onToggleExpand} aria-label={t("pilot.path.backToReading")}><CompressOutlined /></button> : null}
     </nav></header>
     <div className="embedded-constellation__canvas">
@@ -145,12 +151,13 @@ export default function EmbeddedPathConstellation({ draft, currentNoteUrl, compl
         zoomOnPinch
         minZoom={.18}
         maxZoom={1.3}
-        fitView
+        fitView={isMobile}
+        defaultViewport={elements.initialViewport}
         fitViewOptions={{
           nodes: elements.currentNode ? [elements.currentNode] : undefined,
-          padding: isMobile ? 1.25 : 1.8,
+          padding: isMobile ? 1.25 : 1,
           minZoom: isMobile ? 0.58 : 0.68,
-          maxZoom: isMobile ? 0.76 : 0.86,
+          maxZoom: isMobile ? 0.76 : 1,
         }}
         onNodeClick={(_, node) => { if (node.data.note_url) onSelect?.(node.data.note_url); }}
       >

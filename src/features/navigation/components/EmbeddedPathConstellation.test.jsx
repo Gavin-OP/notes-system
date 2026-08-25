@@ -37,23 +37,18 @@ const draft = {
 };
 
 describe("Embedded Path constellation", () => {
-  it("fits the complete graph and exposes Path adjustment on mobile", async () => {
-    const onAdjust = vi.fn();
-    const user = userEvent.setup();
-
+  it("fits the complete graph without a duplicate Path adjustment action", () => {
     render(
       <EmbeddedPathConstellation
         draft={draft}
         currentNoteUrl="/note/fall-recruiting/getting-started.md"
         completedNoteUrls={new Set()}
         isMobile
-        onAdjust={onAdjust}
       />,
     );
 
     expect(screen.getByTestId("path-flow")).toHaveAttribute("data-fit-view", "true");
-    await user.click(screen.getByRole("button", { name: "调整 Path" }));
-    expect(onAdjust).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("button", { name: "调整 Path" })).not.toBeInTheDocument();
   });
 
   it("collapses into a current-node affordance that restores the complete Path", async () => {

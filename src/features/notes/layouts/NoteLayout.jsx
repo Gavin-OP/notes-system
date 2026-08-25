@@ -14,7 +14,6 @@ import {
   message,
 } from "antd";
 import {
-  ApartmentOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   LeftOutlined,
@@ -29,7 +28,7 @@ import {
 import LearningNavigationPanel from "../../navigation/components/LearningNavigationPanel";
 import EmbeddedPathConstellation from "../../navigation/components/EmbeddedPathConstellation";
 import LearningPathControls from "../../navigation/components/LearningPathControls";
-import PilotPathSetupModal, { PilotPathSettingsPanel } from "../../navigation/components/PilotPathSetupModal";
+import { PilotPathSettingsPanel } from "../../navigation/components/PilotPathSetupModal";
 import { sortPathNodesCanonically } from "../../navigation/lib/learningPathUtils";
 import { connectPathNodes } from "../../navigation/lib/pathGraphModel";
 import {
@@ -396,7 +395,6 @@ const NoteLayout = () => {
   const [completedNoteUrls, setCompletedNoteUrls] = useState(new Set());
   const [learningPathDraft, setLearningPathDraft] = useState(null);
   const [learningPathPending, setLearningPathPending] = useState(false);
-  const [pilotPathSetupOpen, setPilotPathSetupOpen] = useState(false);
   const pathSetupHandledRef = useRef(false);
   const [pathEditMode, setPathEditMode] = useState(false);
   const [learningSiderWidth, setLearningSiderWidth] = useState(() => FULL_PRODUCT_ENABLED ? LEARNING_SIDER_MIN_WIDTH : getPilotPathExpandedWidth());
@@ -422,7 +420,6 @@ const NoteLayout = () => {
     setCollapsed(false);
     setShowMenu(true);
     if (!isMobile) setLearningSiderWidth(getPilotPathExpandedWidth());
-    if (!learningPathDraft?.metadata?.personalization?.setup_complete) setPilotPathSetupOpen(true);
   }, [isMobile, learningPathDraft, location.search]);
   const narrationAudioRef = useRef(null);
   const narrationAudioUrlsRef = useRef([]);
@@ -793,7 +790,7 @@ const NoteLayout = () => {
         "你的求职 Path 与 Timeline 已更新。",
         "Personalized fall recruiting path",
       );
-      if (saved) setPilotPathSetupOpen(false);
+      return saved;
     } finally {
       setLearningPathPending(false);
     }
@@ -1669,7 +1666,7 @@ const NoteLayout = () => {
                 pilotMode={!FULL_PRODUCT_ENABLED}
                 panelWidth={learningSiderWidth}
                 onTogglePathExpand={() => setLearningSiderWidth((width) => width <= 340 ? getPilotPathExpandedWidth() : PILOT_PATH_RAIL_WIDTH)}
-                onConfigurePath={() => setPilotPathSetupOpen(true)}
+                onConfigurePath={undefined}
                 onSelect={(path) => {
                   handleNoteSelect(path);
                   if (isMobile) setCollapsed(true);
@@ -1772,18 +1769,6 @@ const NoteLayout = () => {
                     >
                       {t("note.navigation.next")}
                     </Button>
-                    {workspaceMeta?.showMindmap ? (
-                      <Tooltip title={t("note.toolbar.openMindmap")}>
-                        <Button
-                          shape="circle"
-                          className="note-layout__breadcrumb-icon-btn"
-                          icon={<ApartmentOutlined />}
-                          ref={exploreGuideRef}
-                          onClick={handleExploreMindmap}
-                          aria-label={t("note.toolbar.openMindmap")}
-                        />
-                      </Tooltip>
-                    ) : null}
                     <Tooltip title={preferenceTheme === "dark" ? t("note.toolbar.lightMode") : t("note.toolbar.darkMode")}>
                       <Button
                         shape="circle"
@@ -1981,15 +1966,6 @@ const NoteLayout = () => {
         >
           {renderAssistantWorkspace(true)}
         </Modal>
-      ) : null}
-      {!FULL_PRODUCT_ENABLED ? (
-        <PilotPathSetupModal
-          open={pilotPathSetupOpen}
-          initialProfile={learningPathDraft?.metadata?.personalization || {}}
-          pending={learningPathPending}
-          onCancel={() => setPilotPathSetupOpen(false)}
-          onSubmit={handleSavePilotPathProfile}
-        />
       ) : null}
     </Layout>
   );
