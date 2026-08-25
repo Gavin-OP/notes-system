@@ -129,6 +129,70 @@ function ResumeFocusLab({ id, roles = [] }) {
   );
 }
 
+function StarFrameworkLab({ id, eyebrow, title, description, steps = [] }) {
+  const [selectedStepId, setSelectedStepId] = useSavedInteractionState(id, steps[0]?.id || "");
+  const activeStep = steps.find((step) => step.id === selectedStepId) || steps[0];
+
+  if (!activeStep) return null;
+
+  return (
+    <section className="note-interaction note-star-framework" aria-labelledby={`${id}-title`}>
+      <header className="note-interaction__header">
+        <span>{eyebrow}</span>
+        <h3 id={`${id}-title`}>{title}</h3>
+        <p>{description}</p>
+      </header>
+
+      <div className="note-star-framework__steps" role="group" aria-label={title}>
+        {steps.map((step, index) => {
+          const isSelected = step.id === activeStep.id;
+          return (
+            <button
+              key={step.id}
+              type="button"
+              className={isSelected ? "is-selected" : ""}
+              aria-pressed={isSelected}
+              aria-controls={`${id}-detail`}
+              onClick={() => setSelectedStepId(step.id)}
+            >
+              <span className="note-star-framework__code" aria-hidden="true">{step.code}</span>
+              <span className="note-star-framework__step-copy">
+                <strong>{step.label}</strong>
+                <small>{step.summary}</small>
+              </span>
+              <span className="note-star-framework__index" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <article id={`${id}-detail`} className="note-star-framework__detail" aria-live="polite">
+        <div className="note-star-framework__detail-heading">
+          <span>{activeStep.code}</span>
+          <div>
+            <small>{activeStep.label}</small>
+            <strong>{activeStep.detail}</strong>
+          </div>
+        </div>
+        <div className="note-star-framework__detail-grid">
+          <div>
+            <span>{activeStep.questionLabel}</span>
+            <ul>
+              {(activeStep.questions || []).map((question) => <li key={question}>{question}</li>)}
+            </ul>
+          </div>
+          <aside>
+            <span>{activeStep.tipLabel}</span>
+            <p>{activeStep.tip}</p>
+          </aside>
+        </div>
+      </article>
+    </section>
+  );
+}
+
 const EVIDENCE_STATES = [
   { id: "evidence", label: "已有证据" },
   { id: "gap", label: "需要补强" },
@@ -613,6 +677,17 @@ export default function NoteInteractiveBlock({ configText }) {
   if (!config?.type || !config?.id) return null;
   if (config.type === "certificate-comparison") return <CertificateComparisonLab id={config.id} />;
   if (config.type === "resume-focus") return <ResumeFocusLab id={config.id} roles={config.roles} />;
+  if (config.type === "star-framework") {
+    return (
+      <StarFrameworkLab
+        id={config.id}
+        eyebrow={config.eyebrow}
+        title={config.title}
+        description={config.description}
+        steps={config.steps}
+      />
+    );
+  }
   if (config.type === "evidence-matrix") return <EvidenceMatrixLab id={config.id} items={config.items} />;
   if (config.type === "role-anatomy") {
     return (
