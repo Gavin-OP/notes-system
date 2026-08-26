@@ -16,6 +16,7 @@ import "katex/dist/katex.min.css";
 import CopyLinkIcon from "./CopyLinkIcon";
 import NoteInteractiveBlock from "../../../components/interactive/NoteInteractiveBlock";
 
+import { NOTE_SELECTION_ACTIONS_ENABLED } from "../../../../../config/productMode";
 import { resolveRelativePath } from "../../../lib/markdownUtils";
 import { remarkHighlightMark } from "../../../lib/markdownUtils";
 import useTranslation from "../../../../../i18n/useTranslation";
@@ -409,6 +410,7 @@ const MarkdownRenderer = ({
   onAskWithSelectedText,
   onGenerateQuizFromSelection,
   immersiveMode = false,
+  selectionActionsEnabled = NOTE_SELECTION_ACTIONS_ENABLED,
 }) => {
   const bodyRef = useRef(null);
   const { t } = useTranslation();
@@ -592,12 +594,20 @@ const MarkdownRenderer = ({
   };
 
   useLayoutEffect(() => {
-    if (!selectionToolbar || noteComposerOpenRef.current) return;
+    if (!selectionActionsEnabled || !selectionToolbar || noteComposerOpenRef.current) return;
     restoreSavedSelection();
-  }, [selectionToolbar]);
+  }, [selectionActionsEnabled, selectionToolbar]);
 
   useEffect(() => {
-    if (!selectionToolbar) return undefined;
+    if (selectionActionsEnabled) return;
+    setSelectionToolbar(null);
+    selectionRangeRef.current = null;
+    setNoteComposerOpen(false);
+    setPersonalNoteText("");
+  }, [selectionActionsEnabled]);
+
+  useEffect(() => {
+    if (!selectionActionsEnabled || !selectionToolbar) return undefined;
 
     const handleOutsideToolbarPointerDown = (event) => {
       if (noteComposerOpenRef.current) return;
@@ -610,9 +620,10 @@ const MarkdownRenderer = ({
     return () => {
       document.removeEventListener("pointerdown", handleOutsideToolbarPointerDown, true);
     };
-  }, [selectionToolbar]);
+  }, [selectionActionsEnabled, selectionToolbar]);
 
   const updateSelectionToolbarFromCurrentSelection = () => {
+    if (!selectionActionsEnabled) return;
     if (noteComposerOpenRef.current) return;
 
     const root = bodyRef.current;
@@ -669,6 +680,7 @@ const MarkdownRenderer = ({
   };
 
   const handleSelectionPointerDownCapture = (event) => {
+    if (!selectionActionsEnabled) return;
     if (event.target?.closest?.(".note-selection-toolbar")) return;
     if (isPointerInExcludedChrome(event.target)) {
       selectionStartedInBodyRef.current = false;
@@ -678,11 +690,14 @@ const MarkdownRenderer = ({
   };
 
   const handleSelectionMouseUp = (event) => {
+    if (!selectionActionsEnabled) return;
     if (event.target?.closest?.(".note-selection-toolbar")) return;
     scheduleSelectionToolbarUpdate();
   };
 
   useEffect(() => {
+    if (!selectionActionsEnabled) return undefined;
+
     const handleDocumentSelectionEnd = (event) => {
       if (noteComposerOpenRef.current) return;
       if (event.target?.closest?.(".note-selection-toolbar")) return;
@@ -708,7 +723,7 @@ const MarkdownRenderer = ({
       document.removeEventListener("mouseup", handleDocumentSelectionEnd, true);
       document.removeEventListener("keyup", handleKeyboardSelection, true);
     };
-  }, []);
+  }, [selectionActionsEnabled]);
 
   const clearSelectionToolbar = () => {
     setSelectionToolbar(null);
@@ -939,7 +954,7 @@ const MarkdownRenderer = ({
           )}
         </div>
       ) : null}
-      {selectionToolbar ? (
+      {selectionActionsEnabled && selectionToolbar ? (
         <div
           className={`note-selection-toolbar ${
             immersiveMode ? "note-selection-toolbar--immersive" : ""

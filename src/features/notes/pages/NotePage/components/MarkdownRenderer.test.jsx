@@ -49,4 +49,16 @@ describe("MarkdownRenderer", () => {
     expect(container.querySelector("table")).toBeInTheDocument();
     expect(container.querySelector('input[type="checkbox"]')).toBeChecked();
   });
+
+  it("keeps selection actions hidden when the product mode disables them", () => {
+    const { container } = render(
+      <MarkdownRenderer
+        content={"Select this sentence without opening learning actions."}
+        theme="light"
+        selectionActionsEnabled={false}
+      />,
+    );
+
+    expect(container.querySelector(".note-selection-toolbar")).not.toBeInTheDocument();
+  });
 });

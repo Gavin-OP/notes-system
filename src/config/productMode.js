@@ -19,6 +19,9 @@ export const GLOBAL_ASSISTANT_ENABLED = PILOT_BACKEND_ENABLED
   && isFeatureEnabled(import.meta.env.VITE_ENABLE_PILOT_GLOBAL_ASSISTANT);
 export const IMMERSIVE_MODE_ENABLED = isFeatureEnabled(import.meta.env.VITE_ENABLE_PILOT_IMMERSIVE_MODE);
 export const NOTE_VERSION_SWITCHER_ENABLED = isFeatureEnabled(import.meta.env.VITE_ENABLE_PILOT_NOTE_VERSIONS);
+export const NOTE_SELECTION_ACTIONS_ENABLED = isFeatureEnabled(
+  import.meta.env.VITE_ENABLE_PILOT_NOTE_SELECTION_ACTIONS,
+);
 
 export const PILOT_SUBJECT_SLUG =
   String(import.meta.env.VITE_PILOT_SUBJECT_SLUG || "fall-recruiting").trim() || "fall-recruiting";
