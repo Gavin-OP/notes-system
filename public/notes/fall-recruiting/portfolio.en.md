@@ -56,6 +56,77 @@ Briefly explain all images, charts, code snippets, and prototypes. Recruiters sc
 *Before publishing: Ensure all content complies with confidentiality rules.*
 ---
 
+## Help Recruiters Understand Your Project Through Visuals
+
+Visuals in a portfolio should help recruiters quickly understand the problem, process, decisions, and results. Images, charts, prototypes, and process diagrams should each communicate something specific rather than serve as decoration.
+
+### What to show first
+
+- **Results and key metrics:** If a project produced measurable outcomes, use metric cards, before-and-after comparisons, trend lines, or simple charts to highlight the most important changes, such as improved conversion, greater efficiency, user growth, or better performance.
+- **Process and thinking:** User journeys, flowcharts, architecture diagrams, research frameworks, and prioritisation matrices can help recruiters see how you analysed the problem and made decisions.
+- **Final output:** Product interfaces, dashboards, design files, code excerpts, report pages, and screenshots provide direct evidence of what you completed.
+- **Supporting evidence:** User feedback, experiment results, data analysis, and test results can sit beside the relevant conclusion so readers can understand what informed your judgement.
+
+### Every visual should answer a question
+
+Before adding an image, decide what you want a recruiter to understand from it. For example:
+
+- **Retention curve:** At which stage are users most likely to drop off?
+- **User journey map:** Where do users encounter friction?
+- **System architecture diagram:** How is the technical solution organised?
+- **Before-and-after comparison:** What changed because of your work?
+- **Prototype:** How does the final proposal address the problems you found?
+
+If a visual takes a long time to interpret, simplify it or add a direct title and short explanation.
+
+### Put the insight next to the chart
+
+Avoid showing only a complete dashboard or a full page of analysis. Add a concrete conclusion beside the most important data, for example:
+
+> User drop-off was highest during days 1–3 after registration, so the next iteration focused on the first-time user experience.
+
+Or:
+
+> Simplifying the application flow reduced the average journey from six steps to three, followed by an increase in application completion.
+
+Even a quick reader can then understand why the visual matters.
+
+### Control the information density of each page
+
+A case study does not need to preserve every step of your analysis. Prioritise this narrative:
+
+**Context and problem → Key analysis or process → Your decision → Final solution → Result**
+
+Keep only the most representative visuals for each kind of evidence. If you created more than a dozen charts, select the two or three that genuinely influenced the decision, then link the full analysis through GitHub, an appendix, or a separate dashboard.
+
+### Make the visual itself readable
+
+Before publishing, check whether:
+
+- the title describes the chart directly;
+- axes, units, legends, and time ranges are clear;
+- text remains readable on a typical laptop screen;
+- each colour has a defined meaning;
+- screenshots exclude unrelated menus, browser chrome, and unnecessary empty space;
+- important areas are emphasised through cropping, annotation, or enlargement;
+- the surrounding text explains the context, your contribution, or the conclusion.
+
+### Three portfolio page examples
+
+The examples below show a portfolio homepage, a data-analysis case study, and a product-redesign case study. They are not templates to copy. Instead, notice how each page connects its information hierarchy, evidence, and conclusions.
+
+![Portfolio homepage example using project cards, a skills overview, and a short personal introduction](../image/fall-recruiting/portfolio/portfolio-homepage.png)
+
+*A portfolio homepage can quickly establish who you are and which projects best represent your work before inviting recruiters into the full case studies.*
+
+![Data-analysis case study using key metrics, retention curves, a funnel, and experiment results to support its findings](../image/fall-recruiting/portfolio/data-case-study.png)
+
+*A data case study can place key metrics, analysis, and business recommendations in one narrative so every chart supports a conclusion.*
+
+![Product-redesign case study showing user research, a journey map, prioritisation, prototypes, and results](../image/fall-recruiting/portfolio/product-case-study.png)
+
+*A product case study can organise evidence through a clear sequence: identify the problem, form a judgement, design the solution, and validate the result.*
+
 ## Tailoring Your Portfolio for Different Roles
 
 The emphasis of your portfolio should shift based on the target role:

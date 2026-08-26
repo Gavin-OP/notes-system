@@ -68,14 +68,8 @@ Building a bank of your experiences, motivations, and company research can save 
 
 ## Final Checklist: Before you hit submit
 
-Attention to detail can make all the difference. Before clicking "submit," carefully review the following:
-
-*   **File naming and format:** Is the filename clear and professional (e.g., `YourName_RoleTitle_CoverLetter.pdf`)? Does the format comply with the application instructions (usually PDF)?
-*   **Information accuracy:** Are the role title, company name, and recipient's name (if applicable) completely correct, with no typos?
-*   **Opening efficiency:** Does the opening quickly get to the point and hook the reader?
-*   **Paragraph relevance:** Does each paragraph clearly link your evidence to the job requirements?
-*   **Supplemental information:** Does the letter explain background, motivation, or transferable skills not fully conveyed in your resume?
-*   **Content truthfulness:** Are there any exaggerations, empty statements, or claims you couldn't confidently elaborate on in an interview?
-*   **PDF check:** Are the fonts, line breaks, formatting, and all links in the PDF version working correctly?
+```note-interactive
+{"type":"resume-checklist","id":"fall-recruiting-cover-letter-checklist-en","eyebrow":"Before sending","title":"Confirm that your cover letter is ready","description":"Click anywhere on a row to check it off. Your progress is saved in this browser, so you can return and continue later.","progressLabel":"Review progress","inProgressMessage":"Use the unchecked items to guide your next edit; you do not need to finish everything at once.","completedMessage":"Review complete. Before submitting, confirm the company, role, recipient, and file version once more.","resetLabel":"Review again","items":[{"id":"file","text":"Is the filename clear and professional, and does the file format follow the application instructions (usually PDF)?"},{"id":"accuracy","text":"Are the role title, company name, and recipient's name (if applicable) accurate and free of spelling errors?"},{"id":"opening","text":"Does the opening reach the point quickly and give the recruiter a reason to keep reading?"},{"id":"relevance","text":"Does each paragraph clearly connect information about the role to genuine evidence from your experience?"},{"id":"supplement","text":"Does the letter add useful background, motivation, or transferable skills that the resume could not fully explain?"},{"id":"truth","text":"Have you removed exaggerations, empty statements, or claims that you could not confidently explain in an interview?"},{"id":"pdf","text":"Do the fonts, line breaks, layout, and links display and work correctly in the PDF?"}]}
+```
 
 The [Harvard Mignone Center](https://careerservices.fas.harvard.edu/channels/create-a-resume-cv-or-cover-letter/) defines a cover letter as presenting your qualifications and interest in a role and organization through narrative, always responding to employer needs. Thinking of it as "an evidence-backed explanation written for *this specific application*" can make the process much more manageable and effective than simply filling in a template.

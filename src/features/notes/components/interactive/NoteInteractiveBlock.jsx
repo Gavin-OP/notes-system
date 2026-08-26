@@ -324,6 +324,7 @@ function CoverLetterArgumentLab({
                 <span>{column.label}</span>
                 <textarea
                   rows="4"
+                  wrap="soft"
                   value={draft[column.id] || ""}
                   placeholder={column.placeholder}
                   onChange={(event) => updateField(column.id, event.target.value)}

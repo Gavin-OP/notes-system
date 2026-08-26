@@ -567,10 +567,14 @@
 
 .note-cover-letter-argument__columns strong {
   min-width: 0;
+  max-width: 100%;
   padding: 13px 14px;
   color: var(--ns-color-text-secondary);
   font-size: 11px;
   line-height: 1.45;
+  overflow-wrap: anywhere;
+  white-space: normal !important;
+  word-break: break-word;
 }
 
 .note-cover-letter-argument__columns strong + strong,
@@ -607,7 +611,9 @@
 .note-cover-letter-argument__cells > label {
   box-sizing: border-box;
   min-width: 0;
+  max-width: 100%;
   padding: 15px 14px;
+  overflow: hidden;
 }
 
 .note-cover-letter-argument__cells small,
@@ -616,8 +622,11 @@
 }
 
 .note-cover-letter-argument__cells p {
+  max-width: 100%;
   margin: 0;
   overflow-wrap: anywhere;
+  white-space: normal !important;
+  word-break: break-word;
   color: var(--ns-color-text-secondary);
   font-size: 12px;
   line-height: 1.65;
@@ -640,6 +649,9 @@
   font: inherit;
   font-size: 12px;
   line-height: 1.6;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .note-cover-letter-argument__row--draft textarea::placeholder {
