@@ -37,7 +37,6 @@ describe("fall recruiting constellation", () => {
       "pilot:alumni-networking",
       "pilot:company-research",
       "pilot:jd-deep-dive",
-      "pilot:tailored-materials",
     ].forEach((id) => expect(ids.has(id), `${id} should exist`).toBe(true));
 
     expect(draft.edges).toEqual(expect.arrayContaining([
@@ -54,7 +53,7 @@ describe("fall recruiting constellation", () => {
       expect.objectContaining({ source: "pilot:career-fair", target: "pilot:alumni-networking", relation: "precedes" }),
       expect.objectContaining({ source: "pilot:applications", target: "pilot:company-research", relation: "branches_to" }),
       expect.objectContaining({ source: "pilot:company-research", target: "pilot:jd-deep-dive", relation: "precedes" }),
-      expect.objectContaining({ source: "pilot:jd-deep-dive", target: "pilot:tailored-materials", relation: "precedes" }),
+      expect.objectContaining({ source: "pilot:jd-deep-dive", target: "pilot:assessments", relation: "converges_to" }),
     ]));
     expect(draft.metadata.personalization.resolved_application_strategy).toBe("precision");
 
@@ -380,7 +379,7 @@ describe("fall recruiting constellation", () => {
       expect.objectContaining({ source: "pilot:applications", target: "pilot:assessments", relation: "precedes" }),
       expect.objectContaining({ source: "pilot:applications", target: "pilot:application-batch-planning" }),
       expect.objectContaining({ source: "pilot:resume-version-management", target: "pilot:company-research" }),
-      expect.objectContaining({ source: "pilot:tailored-materials", target: "pilot:assessments" }),
+      expect.objectContaining({ source: "pilot:jd-deep-dive", target: "pilot:assessments" }),
     ]));
 
     const precisionFirst = buildPersonalizedPilotDraft({}, {
@@ -390,7 +389,7 @@ describe("fall recruiting constellation", () => {
     expect(precisionFirst.edges).toEqual(expect.arrayContaining([
       expect.objectContaining({ source: "pilot:applications", target: "pilot:assessments", relation: "precedes" }),
       expect.objectContaining({ source: "pilot:applications", target: "pilot:company-research" }),
-      expect.objectContaining({ source: "pilot:tailored-materials", target: "pilot:application-batch-planning" }),
+      expect.objectContaining({ source: "pilot:jd-deep-dive", target: "pilot:application-batch-planning" }),
       expect.objectContaining({ source: "pilot:resume-version-management", target: "pilot:assessments" }),
     ]));
   });

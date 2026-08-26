@@ -66,7 +66,7 @@ const SEARCH_ROUTE_GROUPS = [
 
 const APPLICATION_ROUTE_GROUPS = [
   ["pilot:application-batch-planning", "pilot:application-tracker", "pilot:resume-version-management"],
-  ["pilot:company-research", "pilot:jd-deep-dive", "pilot:tailored-materials"],
+  ["pilot:company-research", "pilot:jd-deep-dive"],
 ];
 
 const DIRECTORY_PARENT_IDS = new Set([
@@ -85,7 +85,7 @@ const ROUTE_FAMILY_DEFINITIONS = [
   { id: "search-independent", parentId: "pilot:job-search", title: "自主查找信息", titleKey: "pilot.family.searchIndependent", tone: 1, nodeIds: ["pilot:job-board", "pilot:company-career-page", "pilot:social-media-research"] },
   { id: "search-campus", parentId: "pilot:job-search", title: "校园招聘", titleKey: "pilot.family.searchCampus", tone: 1, nodeIds: ["pilot:campus-recruiting", "pilot:career-fair", "pilot:alumni-networking"] },
   { id: "application-batch", parentId: "pilot:applications", title: "批量投递", titleKey: "pilot.family.applicationBatch", tone: 2, nodeIds: ["pilot:application-batch-planning", "pilot:application-tracker", "pilot:resume-version-management"] },
-  { id: "application-precision", parentId: "pilot:applications", title: "精准投递", titleKey: "pilot.family.applicationPrecision", tone: 2, nodeIds: ["pilot:company-research", "pilot:jd-deep-dive", "pilot:tailored-materials"] },
+  { id: "application-precision", parentId: "pilot:applications", title: "精准投递", titleKey: "pilot.family.applicationPrecision", tone: 2, nodeIds: ["pilot:company-research", "pilot:jd-deep-dive"] },
 ];
 
 const OPTIONAL_FIELD_BY_VALUE = {

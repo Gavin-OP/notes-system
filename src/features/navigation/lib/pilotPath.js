@@ -279,7 +279,6 @@ function buildPilotNodes(profile = {}) {
     nodes.push(
       pathNode("company-research", "Company Research", "company-research", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy, route_family: "application-precision" }),
       pathNode("jd-deep-dive", "JD Deep Dive", "jd-deep-dive", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy, route_family: "application-precision" }),
-      pathNode("tailored-materials", "Tailored Resume / Cover Letter", "tailored-materials", 8.5, "", { path_relation: "branch", application_sequence: applicationStrategy, route_family: "application-precision" }),
     );
   }
 
@@ -397,8 +396,7 @@ function buildPilotEdges(nodes) {
   const connectPrecisionRoute = (source, target) => {
     connect(source, "company-research", "branches_to");
     connect("company-research", "jd-deep-dive");
-    connect("jd-deep-dive", "tailored-materials");
-    connect("tailored-materials", target, "converges_to");
+    connect("jd-deep-dive", target, "converges_to");
   };
   connect("applications", "assessments");
   if (applicationStrategy === "batch_then_precision") {
@@ -407,13 +405,11 @@ function buildPilotEdges(nodes) {
     connect("application-tracker", "resume-version-management");
     connect("resume-version-management", "company-research");
     connect("company-research", "jd-deep-dive");
-    connect("jd-deep-dive", "tailored-materials");
-    connect("tailored-materials", "assessments", "converges_to");
+    connect("jd-deep-dive", "assessments", "converges_to");
   } else if (applicationStrategy === "precision_then_batch") {
     connect("applications", "company-research", "branches_to");
     connect("company-research", "jd-deep-dive");
-    connect("jd-deep-dive", "tailored-materials");
-    connect("tailored-materials", "application-batch-planning");
+    connect("jd-deep-dive", "application-batch-planning");
     connect("application-batch-planning", "application-tracker");
     connect("application-tracker", "resume-version-management");
     connect("resume-version-management", "assessments", "converges_to");

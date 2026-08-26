@@ -123,7 +123,7 @@ function SearchRouteFamilySelector({ profile, disabled, onChange, t }) {
 
 function ApplicationStrategySelector({ value, disabled, onChange, t }) {
   const batchItems = ["Application Batch Planning", "Application Tracker", "Resume Version Management"];
-  const precisionItems = ["Company Research", "JD Deep Dive", "Tailored Resume / Cover Letter"];
+  const precisionItems = ["Company Research", "JD Deep Dive"];
   return <div className="pilot-route-family-selector pilot-route-family-selector--applications">
     <RouteFamilyChoice title={t("pilot.application.batch", "海投 / 批量规划")} items={batchItems} selected={value === "batch"} disabled={disabled} onClick={() => onChange("batch")} tone="application" />
     <RouteFamilyChoice title={t("pilot.application.precision", "精准投递")} items={precisionItems} selected={value === "precision"} disabled={disabled} onClick={() => onChange("precision")} tone="application" />

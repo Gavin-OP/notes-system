@@ -72,7 +72,7 @@ export function buildCareerPathRevealObservations({ run, result, pathDraft }) {
   }
 
   if ((behavior.analysis || 0) >= (behavior.action || 0)) {
-    const nodeIds = ["pilot:company-research", "pilot:jd-deep-dive", "pilot:tailored-materials"];
+    const nodeIds = ["pilot:company-research", "pilot:jd-deep-dive"];
     add({
       id: "precision-application",
       score: 82,
