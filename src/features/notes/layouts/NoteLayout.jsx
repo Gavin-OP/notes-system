@@ -88,7 +88,14 @@ const { Sider, Content } = Layout;
 const LEARNING_SIDER_MIN_WIDTH = FULL_PRODUCT_ENABLED ? 350 : 260;
 const LEARNING_SIDER_MAX_WIDTH = FULL_PRODUCT_ENABLED ? 960 : 1180;
 const PILOT_PATH_RAIL_WIDTH = 280;
-const getPilotPathExpandedWidth = () => typeof window === "undefined" ? 920 : Math.min(LEARNING_SIDER_MAX_WIDTH, Math.round(window.innerWidth * .62));
+const PILOT_PATH_EXPANDED_RATIO = 0.70;
+const PILOT_PATH_EXPANDED_MIN_WIDTH = 360;
+const getPilotPathExpandedWidth = () => typeof window === "undefined"
+  ? 620
+  : Math.min(
+    LEARNING_SIDER_MAX_WIDTH,
+    Math.max(PILOT_PATH_EXPANDED_MIN_WIDTH, Math.round(window.innerWidth * PILOT_PATH_EXPANDED_RATIO)),
+  );
 const LEARNING_SIDER_NEARBY_MIN_WIDTH = 520;
 const PILOT_LOCAL_ONLY = !FULL_PRODUCT_ENABLED && !PILOT_BACKEND_ENABLED;
 
