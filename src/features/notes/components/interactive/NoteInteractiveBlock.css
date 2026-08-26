@@ -546,6 +546,135 @@
   overflow-wrap: anywhere;
 }
 
+.note-cover-letter-argument__table {
+  overflow: hidden;
+  border: 1px solid var(--ns-color-border-secondary);
+  border-radius: 20px;
+  background: var(--ns-color-bg-container);
+}
+
+.note-cover-letter-argument__columns,
+.note-cover-letter-argument__cells {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.05fr) minmax(0, 1.35fr);
+}
+
+.note-cover-letter-argument__columns {
+  padding-left: 78px;
+  border-bottom: 1px solid var(--ns-color-border-secondary);
+  background: color-mix(in srgb, var(--ns-color-primary-bg) 56%, var(--ns-color-bg-container));
+}
+
+.note-cover-letter-argument__columns strong {
+  min-width: 0;
+  padding: 13px 14px;
+  color: var(--ns-color-text-secondary);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.note-cover-letter-argument__columns strong + strong,
+.note-cover-letter-argument__cells > * + * {
+  border-left: 1px solid var(--ns-color-border-secondary);
+}
+
+.note-cover-letter-argument__row {
+  position: relative;
+  padding-left: 78px;
+}
+
+.note-cover-letter-argument__row + .note-cover-letter-argument__row {
+  border-top: 1px solid var(--ns-color-border-secondary);
+}
+
+.note-cover-letter-argument__row-label {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  width: 78px;
+  place-items: center;
+  border-right: 1px solid var(--ns-color-border-secondary);
+  color: var(--ns-color-primary);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.note-cover-letter-argument__cells > div,
+.note-cover-letter-argument__cells > label {
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 15px 14px;
+}
+
+.note-cover-letter-argument__cells small,
+.note-cover-letter-argument__cells label > span {
+  display: none;
+}
+
+.note-cover-letter-argument__cells p {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--ns-color-text-secondary);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.note-cover-letter-argument__row--draft {
+  background: color-mix(in srgb, var(--ns-color-primary-bg) 24%, var(--ns-color-bg-container));
+}
+
+.note-cover-letter-argument__row--draft textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 104px;
+  resize: vertical;
+  border: 1px solid var(--ns-color-border);
+  border-radius: 12px;
+  background: var(--ns-color-bg-container);
+  padding: 10px 11px;
+  color: var(--ns-color-text);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.note-cover-letter-argument__row--draft textarea::placeholder {
+  color: var(--ns-color-text-tertiary);
+}
+
+.note-cover-letter-argument__row--draft textarea:focus-visible,
+.note-cover-letter-argument__row--draft footer button:focus-visible {
+  outline: var(--ns-focus-ring);
+  outline-offset: 2px;
+}
+
+.note-cover-letter-argument__row--draft footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 14px 14px;
+  color: var(--ns-color-text-tertiary);
+  font-size: 11px;
+}
+
+.note-cover-letter-argument__row--draft footer button {
+  min-height: 36px;
+  border: 1px solid var(--ns-color-border);
+  border-radius: 999px;
+  background: var(--ns-color-bg-container);
+  padding: 0 14px;
+  color: var(--ns-color-text-secondary);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
 .note-evidence-matrix {
   display: flex;
   flex-direction: column;
@@ -1128,6 +1257,48 @@
   .note-star-framework__detail-grid,
   .note-resume-checklist__items {
     grid-template-columns: 1fr;
+  }
+
+  .note-cover-letter-argument__columns {
+    display: none;
+  }
+
+  .note-cover-letter-argument__row {
+    padding: 42px 0 0;
+  }
+
+  .note-cover-letter-argument__row-label {
+    right: 0;
+    bottom: auto;
+    width: auto;
+    height: 42px;
+    justify-content: start;
+    border-right: 0;
+    border-bottom: 1px solid var(--ns-color-border-secondary);
+    padding: 0 14px;
+  }
+
+  .note-cover-letter-argument__cells {
+    grid-template-columns: 1fr;
+  }
+
+  .note-cover-letter-argument__cells > * + * {
+    border-top: 1px solid var(--ns-color-border-secondary);
+    border-left: 0;
+  }
+
+  .note-cover-letter-argument__cells small,
+  .note-cover-letter-argument__cells label > span {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--ns-color-primary);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .note-cover-letter-argument__row--draft footer {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .note-resume-checklist__progress {

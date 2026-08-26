@@ -43,6 +43,11 @@ import {
   savePilotLastNotePath,
   savePilotPathDraft as savePilotPathDraftLocally,
 } from "../../navigation/lib/pilotPathStorage";
+import {
+  loadPilotWorkspaceView,
+  resolvePilotCurrentNoteUrl,
+  savePilotWorkspaceView,
+} from "../../navigation/lib/pilotWorkspaceState";
 import BottomOutlineProgress from "../components/BottomOutlineProgress";
 import NoteWorkspaceBar from "../components/NoteWorkspaceBar";
 import OutlineSider from "../../navigation/components/OutlineSider";
@@ -445,7 +450,12 @@ const NoteLayout = () => {
   const [pathViewportRequest, setPathViewportRequest] = useState({ nodeId: "", token: 0 });
   const pathSetupHandledRef = useRef(false);
   const [pathEditMode, setPathEditMode] = useState(false);
-  const [learningSiderWidth, setLearningSiderWidth] = useState(() => FULL_PRODUCT_ENABLED ? LEARNING_SIDER_MIN_WIDTH : getPilotPathExpandedWidth());
+  const [learningSiderWidth, setLearningSiderWidth] = useState(() => {
+    if (FULL_PRODUCT_ENABLED) return LEARNING_SIDER_MIN_WIDTH;
+    return loadPilotWorkspaceView() === "path"
+      ? getPilotPathExpandedWidth()
+      : PILOT_PATH_RAIL_WIDTH;
+  });
   const pilotPathExpanded = !FULL_PRODUCT_ENABLED && !isMobile && learningSiderWidth > 340;
   const pilotPathCompact = !FULL_PRODUCT_ENABLED && !isMobile && !pilotPathExpanded;
   const effectiveSiderCollapsed = collapsed || pilotPathCompact;
@@ -640,8 +650,8 @@ const NoteLayout = () => {
     return "Current note";
   }, [currentMeta, currentNoteContent]);
   const currentNoteUrlNormalized = useMemo(
-    () => normalizeMenuKey(currentMeta?.url || ""),
-    [currentMeta?.url],
+    () => normalizeMenuKey(resolvePilotCurrentNoteUrl(currentMeta?.url, location.pathname)),
+    [currentMeta?.url, location.pathname],
   );
   const adjacentPilotNotes = useMemo(() => {
     if (FULL_PRODUCT_ENABLED) return { previous: null, next: null };
@@ -1395,6 +1405,11 @@ const NoteLayout = () => {
       setLearningSiderWidth((width) => Math.max(width, 720));
     }
   }, [pathEditMode, isMobile]);
+
+  useEffect(() => {
+    if (FULL_PRODUCT_ENABLED || isMobile) return;
+    savePilotWorkspaceView(learningSiderWidth > 340 ? "path" : "reading");
+  }, [isMobile, learningSiderWidth]);
 
   useEffect(() => {
     const onMouseMove = (event) => {

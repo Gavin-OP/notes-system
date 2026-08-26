@@ -31,13 +31,11 @@ True connections usually tie back to a particular product, problem, team task, o
 
 ### Build Your "Cover Letter Bridge"
 
-Use this quick exercise to translate your research into the core arguments for your cover letter:
+Use this quick exercise to connect an employer's needs to evidence from your experience and shape a clear argument for your cover letter:
 
-| Employer Need (from JD) | My Evidence (from experience) | Connecting Sentence (one sentence explaining the link) |
-| :---------------------- | :---------------------------- | :--------------------------------------------------- |
-| `[e.g., Requires data analysis experience]` | `[e.g., I analyzed user behavior data using Python in Project A]` | `[e.g., My data analysis experience in Project A directly aligns with your need for data-driven decision-making.]` |
-| `[...]` | `[...calls, resolved customer issues]` | `[...]` |
-| `[...]` | `[...]` | `[...]` |
+```note-interactive
+{"type":"cover-letter-argument","id":"fall-recruiting-cover-letter-argument-en","eyebrow":"Cover letter argument builder","title":"Connect the role requirement, your evidence, and your argument","description":"Review two examples built around different strengths, then use the third row to draft your own. Your writing is saved in this browser.","exampleLabel":"Example","yourTurnLabel":"Your turn","savedHint":"Your writing is saved on this device.","resetLabel":"Clear and restart","columns":[{"id":"requirement","label":"Employer need (from the JD)","placeholder":"For example: The JD repeatedly mentions cross-functional communication…"},{"id":"evidence","label":"My evidence (from experience)","placeholder":"Add a project, internship, or other experience that demonstrates this strength…"},{"id":"argument","label":"Connecting sentence (explain the link)","placeholder":"Explain how this experience shows that you can meet the role's needs…"}],"examples":[{"id":"analysis","requirement":"Experience in data analysis","evidence":"In Project A, I used Python to analyse user behaviour data and turned the findings into product recommendations.","argument":"My data analysis experience in Project A prepared me to identify problems through evidence and support your team's data-informed decisions."},{"id":"customer-communication","requirement":"Clear customer communication and problem-solving","evidence":"During a banking product internship, I followed up on customer calls, identified recurring questions, and helped the team improve its response process.","argument":"My experience responding to customer feedback and improving the process prepared me to solve customer problems with clear, thoughtful communication."}]}
+```
 
 
 ## Structuring your story (The "How")

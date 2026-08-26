@@ -266,6 +266,83 @@ function ResumeChecklistLab({
   );
 }
 
+function CoverLetterArgumentLab({
+  id,
+  eyebrow,
+  title,
+  description,
+  columns = [],
+  examples = [],
+  exampleLabel,
+  yourTurnLabel,
+  savedHint,
+  resetLabel,
+}) {
+  const emptyDraft = Object.fromEntries(columns.map((column) => [column.id, ""]));
+  const [savedDraft, setSavedDraft] = useSavedInteractionState(id, emptyDraft);
+  const draft = { ...emptyDraft, ...(savedDraft || {}) };
+  const hasDraft = columns.some((column) => String(draft[column.id] || "").trim());
+
+  const updateField = (fieldId, value) => {
+    setSavedDraft({ ...draft, [fieldId]: value });
+  };
+
+  return (
+    <section className="note-interaction note-cover-letter-argument" aria-labelledby={`${id}-title`}>
+      <header className="note-interaction__header">
+        <span>{eyebrow}</span>
+        <h3 id={`${id}-title`}>{title}</h3>
+        <p>{description}</p>
+      </header>
+
+      <div className="note-cover-letter-argument__table">
+        <div className="note-cover-letter-argument__columns" aria-hidden="true">
+          {columns.map((column) => <strong key={column.id}>{column.label}</strong>)}
+        </div>
+
+        {examples.map((example, index) => (
+          <article key={example.id} className="note-cover-letter-argument__row">
+            <span className="note-cover-letter-argument__row-label">
+              {exampleLabel} {String(index + 1).padStart(2, "0")}
+            </span>
+            <div className="note-cover-letter-argument__cells">
+              {columns.map((column) => (
+                <div key={column.id}>
+                  <small>{column.label}</small>
+                  <p>{example[column.id]}</p>
+                </div>
+              ))}
+            </div>
+          </article>
+        ))}
+
+        <article className="note-cover-letter-argument__row note-cover-letter-argument__row--draft">
+          <span className="note-cover-letter-argument__row-label">{yourTurnLabel}</span>
+          <div className="note-cover-letter-argument__cells">
+            {columns.map((column) => (
+              <label key={column.id}>
+                <span>{column.label}</span>
+                <textarea
+                  rows="4"
+                  value={draft[column.id] || ""}
+                  placeholder={column.placeholder}
+                  onChange={(event) => updateField(column.id, event.target.value)}
+                />
+              </label>
+            ))}
+          </div>
+          <footer>
+            <span>{savedHint}</span>
+            {hasDraft ? (
+              <button type="button" onClick={() => setSavedDraft(emptyDraft)}>{resetLabel}</button>
+            ) : null}
+          </footer>
+        </article>
+      </div>
+    </section>
+  );
+}
+
 const EVIDENCE_STATES = [
   { id: "evidence", label: "已有证据" },
   { id: "gap", label: "需要补强" },
@@ -772,6 +849,22 @@ export default function NoteInteractiveBlock({ configText }) {
         progressLabel={config.progressLabel}
         inProgressMessage={config.inProgressMessage}
         completedMessage={config.completedMessage}
+        resetLabel={config.resetLabel}
+      />
+    );
+  }
+  if (config.type === "cover-letter-argument") {
+    return (
+      <CoverLetterArgumentLab
+        id={config.id}
+        eyebrow={config.eyebrow}
+        title={config.title}
+        description={config.description}
+        columns={config.columns}
+        examples={config.examples}
+        exampleLabel={config.exampleLabel}
+        yourTurnLabel={config.yourTurnLabel}
+        savedHint={config.savedHint}
         resetLabel={config.resetLabel}
       />
     );

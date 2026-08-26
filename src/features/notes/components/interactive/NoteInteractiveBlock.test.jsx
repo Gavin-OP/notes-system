@@ -19,6 +19,37 @@ const checklistConfig = {
   ],
 };
 
+const coverLetterArgumentConfig = {
+  type: "cover-letter-argument",
+  id: "cover-letter-argument-test",
+  eyebrow: "Evidence bridge",
+  title: "Turn a requirement into an argument",
+  description: "Connect the role to your evidence.",
+  exampleLabel: "Example",
+  yourTurnLabel: "Your turn",
+  savedHint: "Saved in this browser.",
+  resetLabel: "Clear",
+  columns: [
+    { id: "requirement", label: "Employer need", placeholder: "Paste a requirement" },
+    { id: "evidence", label: "My evidence", placeholder: "Add your evidence" },
+    { id: "argument", label: "Connecting sentence", placeholder: "Write the connection" },
+  ],
+  examples: [
+    {
+      id: "analysis",
+      requirement: "Data analysis experience",
+      evidence: "Analysed user behaviour with Python",
+      argument: "This experience supports data-informed decisions.",
+    },
+    {
+      id: "communication",
+      requirement: "Customer communication",
+      evidence: "Resolved customer questions",
+      argument: "This experience supports clear customer communication.",
+    },
+  ],
+};
+
 describe("NoteInteractiveBlock resume checklist", () => {
   beforeEach(() => {
     const saved = new Map();
@@ -52,5 +83,37 @@ describe("NoteInteractiveBlock resume checklist", () => {
     fireEvent.click(screen.getByRole("button", { name: "Reset" }));
     expect(screen.getAllByRole("checkbox").every((item) => !item.checked)).toBe(true);
     expect(screen.getByText("0 / 2")).toBeInTheDocument();
+  });
+});
+
+describe("NoteInteractiveBlock cover letter argument", () => {
+  beforeEach(() => {
+    const saved = new Map();
+    Object.defineProperty(window, "localStorage", {
+      configurable: true,
+      value: {
+        getItem: (key) => saved.get(key) ?? null,
+        setItem: (key, value) => saved.set(key, value),
+        removeItem: (key) => saved.delete(key),
+        clear: () => saved.clear(),
+      },
+    });
+  });
+
+  it("renders two examples and persists the editable third row", () => {
+    const { unmount } = render(
+      <NoteInteractiveBlock configText={JSON.stringify(coverLetterArgumentConfig)} />,
+    );
+
+    expect(screen.getByText("Data analysis experience")).toBeInTheDocument();
+    expect(screen.getByText("Customer communication")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Employer need"), {
+      target: { value: "Strong research skills" },
+    });
+    unmount();
+
+    render(<NoteInteractiveBlock configText={JSON.stringify(coverLetterArgumentConfig)} />);
+    expect(screen.getByLabelText("Employer need")).toHaveValue("Strong research skills");
   });
 });
