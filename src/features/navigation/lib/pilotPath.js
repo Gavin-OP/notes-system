@@ -232,10 +232,9 @@ function buildPilotNodes(profile = {}) {
 
   if (profile.experience_level === "limited") {
     nodes.push(
-      pathNode("experience-building", "补充可展示的经历", "first-internship", 5, "", { path_relation: "branch" }),
-      pathNode("business-competition", "商赛", "business-competition", 5, "", { path_relation: "branch" }),
-      pathNode("kaggle-competition", "Kaggle 数据分析比赛", "kaggle-competition", 5, "", { path_relation: "branch" }),
-      pathNode("course-project-polish", "打磨课程项目", "course-project-polish", 5, "", { path_relation: "branch" }),
+      pathNode("business-competition", "商赛", "business-competition", 5, "", { path_relation: "branch", route_family: "experience-building" }),
+      pathNode("kaggle-competition", "Kaggle 数据分析比赛", "kaggle-competition", 5, "", { path_relation: "branch", route_family: "experience-building" }),
+      pathNode("course-project-polish", "打磨课程项目", "course-project-polish", 5, "", { path_relation: "branch", route_family: "experience-building" }),
     );
   }
 
@@ -354,13 +353,11 @@ function buildPilotEdges(nodes) {
     connect("profile-preparation", nodeId, "branches_to");
     connect(nodeId, "job-search", "converges_to");
   });
-  if (nodeIds.has("pilot:experience-building")) {
-    connect("profile-preparation", "experience-building", "branches_to");
-    ["business-competition", "kaggle-competition", "course-project-polish"].forEach((nodeId) => {
-      connect("experience-building", nodeId, "branches_to");
-      connect(nodeId, "job-search", "converges_to");
-    });
-  }
+  ["business-competition", "kaggle-competition", "course-project-polish"].forEach((nodeId) => {
+    if (!nodeIds.has(`pilot:${nodeId}`)) return;
+    connect("profile-preparation", nodeId, "branches_to");
+    connect(nodeId, "job-search", "converges_to");
+  });
 
   const searchTerminals = [];
   if (nodeIds.has("pilot:networking")) {

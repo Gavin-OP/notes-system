@@ -39,13 +39,17 @@ const PROFILE_CHILD_IDS = [
   "pilot:cover-letter",
   "pilot:portfolio",
   "pilot:personal-site",
-  "pilot:experience-building",
 ];
 
 const EXPERIENCE_BUILDING_CHILD_IDS = [
   "pilot:business-competition",
   "pilot:kaggle-competition",
   "pilot:course-project-polish",
+];
+
+const PROFILE_ROUTE_GROUPS = [
+  ...PROFILE_CHILD_IDS.map((id) => [id]),
+  EXPERIENCE_BUILDING_CHILD_IDS,
 ];
 
 const EARLY_EXPERIENCE_IDS = [
@@ -67,7 +71,6 @@ const APPLICATION_ROUTE_GROUPS = [
 
 const DIRECTORY_PARENT_IDS = new Set([
   "pilot:profile-preparation",
-  "pilot:experience-building",
   "pilot:getting-started",
   "pilot:market",
   "pilot:job-search",
@@ -77,6 +80,7 @@ const DIRECTORY_PARENT_IDS = new Set([
 ]);
 
 const ROUTE_FAMILY_DEFINITIONS = [
+  { id: "experience-building", parentId: "pilot:profile-preparation", title: "补充可展示的经历", titleKey: "pilot.family.experienceBuilding", tone: 1, nodeIds: EXPERIENCE_BUILDING_CHILD_IDS },
   { id: "search-social", parentId: "pilot:job-search", title: "沟通获取信息", titleKey: "pilot.family.searchSocial", tone: 1, nodeIds: ["pilot:networking", "pilot:referral"] },
   { id: "search-independent", parentId: "pilot:job-search", title: "自主查找信息", titleKey: "pilot.family.searchIndependent", tone: 1, nodeIds: ["pilot:job-board", "pilot:company-career-page", "pilot:social-media-research"] },
   { id: "search-campus", parentId: "pilot:job-search", title: "校园招聘", titleKey: "pilot.family.searchCampus", tone: 1, nodeIds: ["pilot:campus-recruiting", "pilot:career-fair", "pilot:alumni-networking"] },
@@ -200,8 +204,7 @@ export function buildConstellationElements(draft, options = {}) {
         experienceY += childDimensions.height + 16;
       });
     }
-    placeDirectoryChildren(PROFILE_CHILD_IDS, "pilot:profile-preparation");
-    placeDirectoryChildren(EXPERIENCE_BUILDING_CHILD_IDS, "pilot:experience-building", { xOffset: 48, startY: 83, gap: 14 });
+    placeRouteFamilies(PROFILE_ROUTE_GROUPS, "pilot:profile-preparation");
     placeRouteFamilies(SEARCH_ROUTE_GROUPS, "pilot:job-search");
     const applicationStrategy = draft?.metadata?.personalization?.resolved_application_strategy;
     const applicationGroups = applicationStrategy === "precision_then_batch"

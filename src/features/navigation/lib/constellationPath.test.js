@@ -407,11 +407,11 @@ describe("fall recruiting constellation", () => {
     const ids = new Set(draft.nodes.map((node) => node.node_id));
 
     [
-      "pilot:experience-building",
       "pilot:business-competition",
       "pilot:kaggle-competition",
       "pilot:course-project-polish",
     ].forEach((id) => expect(ids.has(id), `${id} should exist`).toBe(true));
+    expect(ids.has("pilot:experience-building")).toBe(false);
     ["pilot:resume-positioning", "pilot:career-exploration", "pilot:exploratory-internships", "pilot:recruitment-event"]
       .forEach((id) => expect(ids.has(id), `${id} should not exist`).toBe(false));
     expect(ids.has("pilot:networking")).toBe(false);
@@ -430,7 +430,7 @@ describe("fall recruiting constellation", () => {
     expect(competitiveIds.has("pilot:experience-building")).toBe(false);
   });
 
-  it("keeps experience-building out of the applications-to-assessments visual backbone", () => {
+  it("renders demonstrable-experience notes as a family instead of a standalone parent note", () => {
     const draft = buildPersonalizedPilotDraft({}, {
       ...profile,
       experience_level: "limited",
@@ -438,15 +438,28 @@ describe("fall recruiting constellation", () => {
     });
     const elements = buildConstellationElements(draft, { compact: true, direction: "horizontal" });
 
-    expect(elements.edges.some((edge) => edge.source === "pilot:applications" && edge.target === "pilot:experience-building")).toBe(false);
-    expect(elements.edges.some((edge) => edge.source === "pilot:experience-building" && edge.target === "pilot:assessments")).toBe(false);
+    expect(draft.nodes.some((node) => node.node_id === "pilot:experience-building")).toBe(false);
     expect(draft.edges).toEqual(expect.arrayContaining([
-      expect.objectContaining({ source: "pilot:profile-preparation", target: "pilot:experience-building", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:profile-preparation", target: "pilot:business-competition", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:profile-preparation", target: "pilot:kaggle-competition", relation: "branches_to" }),
+      expect.objectContaining({ source: "pilot:profile-preparation", target: "pilot:course-project-polish", relation: "branches_to" }),
     ]));
-    expect(elements.edges
-      .filter((edge) => edge.source === "pilot:experience-building")
-      .every((edge) => edge.data.routeStyle === "directory"))
-      .toBe(true);
+    expect(elements.groups).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id: "route-family:experience-building",
+        data: expect.objectContaining({
+          nodeIds: [
+            "pilot:business-competition",
+            "pilot:kaggle-competition",
+            "pilot:course-project-polish",
+          ],
+        }),
+      }),
+    ]));
+    expect(elements.edges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ source: "pilot:profile-preparation", target: "route-family:experience-building" }),
+      expect.objectContaining({ source: "route-family:experience-building", target: "pilot:job-search" }),
+    ]));
   });
 
   it("groups search and application route families without attaching AI search to a family", () => {

@@ -160,12 +160,11 @@ describe("JobTI questionnaire model", () => {
       "pilot:networking",
       "pilot:application-batch-planning",
       "pilot:company-research",
-      "pilot:resume-positioning",
-      "pilot:experience-building",
       "pilot:business-competition",
       "pilot:kaggle-competition",
       "pilot:course-project-polish",
     ].forEach((id) => expect(ids.has(id), `${id} should exist`).toBe(true));
+    expect(ids.has("pilot:experience-building")).toBe(false);
     expect(ids.has("pilot:career-exploration")).toBe(false);
     expect(ids.has("pilot:networking-event")).toBe(false);
   });
