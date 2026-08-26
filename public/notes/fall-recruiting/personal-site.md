@@ -65,3 +65,5 @@ tags: [求职, 个人主页, Personal Website]
 保持网站内容的时效性。定期检查失效链接，并更新你的进展。
 
 如果选择 GitHub Pages，可以参考 [GitHub 官方 Quickstart](https://docs.github.com/en/pages/quickstart)。它支持从仓库分支发布静态网站，也适合以后逐步更新。
+
+---

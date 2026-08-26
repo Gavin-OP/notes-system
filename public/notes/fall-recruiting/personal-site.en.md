@@ -1,66 +1,63 @@
----
-title: Personal Website
-slug: personal-site.md
-order: 5
-tags: [personal website, profile, projects]
----
 # Personal Website
 
-A personal website is a stable hub for your professional identity, centralizing your direction, experience, projects, and contact details. It differs from a project portfolio: while a portfolio dives deep into specific work, your personal website organizes your resume, LinkedIn, GitHub, articles, and projects into one cohesive overview.
+A personal website is a page that centrally showcases your professional image and career information, presenting your career direction, experience, projects, and contact details. It differs from a portfolio: a portfolio deeply showcases your work, while a personal website organizes your resume, LinkedIn, GitHub, articles, and projects in one place, providing a comprehensive overview.
 
-## When a Site is Worthwhile
+## When It's Worth Creating One
 
-A personal website becomes particularly valuable if your content is scattered across multiple platforms, your resume feels too constrained, or if target roles emphasize portfolios, writing, technical implementations, or personal expression. If you currently only have a resume and one project, focusing on refining that content is perfectly fine; a website isn't a mandatory entry ticket for job applications.
+If your materials are scattered across multiple platforms, or if the roles you're applying for particularly value portfolios, writing, technical implementations, and personal expression, then a personal website can be very helpful. If you currently only have a resume and one project, it's perfectly fine to refine those first; a personal website is not a mandatory item for job searching.
 
-## Homepage Essentials
+## Key Elements of Your Homepage
 
-When recruiters scan your site, they should quickly grasp:
-*   Who you are and your current focus.
-*   Your most compelling experiences or representative projects.
-*   Evidence supporting your skills.
+When recruiters quickly browse your website, it's best if they can immediately understand:
+*   Who you are and what areas you are currently focusing on;
+*   What your most noteworthy experiences or representative projects are;
+*   What evidence supports your skills;
 *   How to view your resume or contact you.
 
-Your homepage can feature a concise introduction, representative projects, an experience summary, a resume link, and contact information. Other more detailed content can then branch into dedicated pages as needed.
+Your homepage can consist of a brief introduction, representative projects, an experience summary, a resume link, and contact information. More detailed content can then be accessed on separate pages as needed.
 
-## Prioritize Content and Accessibility
+## Information Hierarchy and Accessibility
 
-Prioritize information hierarchy over visual flair. For each project, start with a brief conclusion, then provide images and a link to details. Keep navigation labels straightforward, like "About," "Projects," "Experience," "Writing," and "Contact." Avoid animations, 3D effects, or complex scrolling that slow loading or obscure content. These detract from clear communication.
+Please prioritize the importance of information hierarchy over visual effects. For each project, start with a concluding sentence, then provide images and a link to details. Keep navigation names straightforward, such as About, Projects, Experience, Writing, Contact. Animations, 3D effects, and complex scrolling can hinder information delivery if they slow down loading speed or obscure content.
 
-Mobile responsiveness is crucial. Ensure text is comfortable to read, buttons are easy to tap, images don't overflow, and navigation menus can be easily opened and closed. These practical aspects impact user experience far more than flashy effects. For accessibility, use semantic HTML, alt text for images, and sufficient color contrast to ensure your site is accessible to all users.
+Mobile responsiveness is crucial. Whether text is comfortable to read, buttons are easy to click, images don't overflow, and navigation can open and close smoothly—these factors influence the actual user experience more than flashy effects. Additionally, to ensure your website is accessible to all users, consider using semantic HTML, adding alternative text (alt text) for images, and ensuring sufficient color contrast.
 
-## Choose Your Publishing Method
+## Choosing How to Build and Publish
 
-Tools can always be changed; your content structure is the long-term asset. Launching a shareable version first, then refining based on real feedback, is often easier than getting stuck endlessly "choosing a framework."
+Creating a personal website usually involves two steps: first, deciding how to build the content, and then choosing the right publishing method. Tools can be changed at any time; what's truly worth maintaining long-term are your content structure, project case studies, and personal information.
 
-*   **Notion / Document-style pages:** Quick to set up, ideal for organizing content first.
-*   **Website builders (e.g., Squarespace, Webflow):** Drag-and-drop interfaces for more flexible layouts.
-*   **AI / Vibe Coding:** Generate and refine with natural language, suitable for those keen to experiment.
-*   **GitHub Pages:** Excellent for static sites, offering a free publishing path directly from a repository.
+### First, Choose Your Building Method
 
-## Credibility, Privacy, and Security
+*   **[Notion](https://www.notion.com/) / Document-style pages:** Quick to get started, suitable for organizing experiences, projects, and written content first, and easy to update continuously.
+*   **[Squarespace](https://www.squarespace.com/) / [Webflow](https://webflow.com/) and other website builders:** Offer templates and visual editing, suitable for those who want to quickly create a complete personal website with more layout freedom.
+*   **AI / Vibe Coding:** You can generate pages using natural language and then continuously adjust the layout, interactions, and content based on feedback. This is suitable for those who want more freedom or wish to try web development incidentally. After completion, you typically still need to deploy the website online to generate a link that can be shared with recruiters.
+*   **Coding your own website:** If you are familiar with technologies like HTML, CSS, JavaScript, or React, you can also build it from scratch. For software development roles, this process itself can become part of your project capabilities.
 
-*   Use a dedicated professional email address for public contact to avoid exposing personal information.
-*   Remove sensitive personal details like home address, phone number, or ID information from downloadable resume versions.
-*   Confirm permissions and anonymize project data before sharing to prevent confidential information leaks.
-*   Use clear, descriptive text for external links and regularly check for broken links.
-*   Optional but recommended for professionalism and security: custom domains, HTTPS encryption, and visitor analytics.
-*   Never embed API keys, passwords, or private files directly in your website code.
+### Next, Choose Your Publishing Method
 
-## Pre-Launch Review and Maintenance
+If you use platforms like Squarespace or Webflow, you can usually publish your website directly within the platform.
 
-Before publishing, conduct a thorough review. Test your site on both mobile and desktop, navigating from the homepage to projects, your resume, and contact information. Share the link with a friend and ask them to describe your professional direction and key projects. If their understanding differs from your intent, adjust the homepage order and wording before adding more pages.
+If you generate your website through Vibe Coding or by writing your own code, you can deploy it to:
 
-Keep your site current. A small, accurate, and well-maintained site is more impactful than an elaborate, abandoned, or outdated one. Regularly check for broken links and refresh content.
+*   **[GitHub Pages](https://pages.github.com/)**: Suitable for static personal websites and portfolios; you can publish directly from a GitHub repository.
+*   **[Vercel](https://vercel.com/)**: Suitable for modern frontend projects like React and Next.js; it also supports automatic deployment after connecting to a GitHub repository.
+*   **[Netlify](https://www.netlify.com/)**: Suitable for static websites and frontend projects; you can connect a code repository and continuously update deployments.
 
-If you choose GitHub Pages, refer to the [GitHub Official Quickstart](https://docs.github.com/en/pages/quickstart). It supports publishing static sites from a repository branch, making it easy to update incrementally.
+## Trust, Privacy, and Security
 
-## Homepage Hierarchy Preview
+*   For your public email, you might consider using a dedicated job search email to avoid disclosing private information;
+*   For downloadable resumes, remove addresses, phone numbers, or identification details that you don't need to make public;
+*   Before sharing project data, always confirm permissions and anonymize sensitive information to avoid disclosing confidential details;
+*   Use clear text descriptions for external links and regularly check if they are still valid;
+*   Custom domains, HTTPS encryption, and visitor analytics are optional, but they can significantly enhance professionalism and security;
+*   Never directly place API keys, passwords, or private files in your website code.
 
-Imagine your homepage as a conversation. What should a visitor understand first? Arrange these elements to see what appears "above the fold" for a quick scan.
+## Pre-Launch Check and Maintenance
 
-- **Identity:** Who are you? (e.g., "Product Designer," "Software Engineer specializing in AI")
-- **Direction:** What do you focus on or seek? (e.g., "Building intuitive user experiences," "Solving complex data problems")
-- **Proof:** Your strongest evidence. (e.g., "Featured Projects," "Key Achievements")
-- **Contact:** How to reach you. (e.g., "LinkedIn," "Email," "Resume")
+Before launching, perform a thorough check. Test it on both mobile and desktop, navigating from the homepage to projects, your resume, and contact information. Afterward, share the link with friends and ask them to describe the key messages and visual effects your website conveys, and to offer suggestions.
 
-*Think about the order that best tells your story quickly.*
+Keep your website content current. Regularly check for broken links and update your progress.
+
+If you choose GitHub Pages, you can refer to the [official GitHub Quickstart](https://docs.github.com/en/pages/quickstart). It supports publishing static websites from repository branches and is also suitable for gradual updates later on.
+
+---

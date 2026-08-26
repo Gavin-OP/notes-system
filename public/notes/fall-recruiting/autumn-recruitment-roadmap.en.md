@@ -1,37 +1,64 @@
 ---
-title: Positioning Your Job Search and Making a Plan
+title: Career Positioning and Action Plan
 slug: autumn-recruitment-roadmap.md
 order: 1
-tags: [job search, planning, graduate recruitment]
+tags: [Job Search, Career Planning, Campus Recruitment]
 ---
 
-# Positioning Your Job Search and Making a Plan
+<a id="concept-autumn-recruitment-roadmap"></a>
+# Career Positioning and Action Plan
 
-Recruitment can look like one long list of deadlines. In practice, several timelines run at once: one person is submitting applications, another is interviewing, and someone else finds the right opening in spring. Understanding the rhythm makes the process feel much less mysterious.
+Everyone's job search pace is different, and so are their goals. Some have just submitted applications, others are already interviewing, and some might only find suitable opportunities in spring. As long as you plan ahead and understand the general rhythm, there's no need to compare yourself to others or feel anxious.
 
-## The overall rhythm
+## First, Look at the Overall Timeline
 
-| Period | What often happens |
+Below is a common reference for the graduate job search cycle. It's not a universal calendar, nor is it a countdown implying 'it's too late if you miss a certain month'.
+
+| Phase | Key Actions |
 | --- | --- |
-| Summer to early autumn | Many graduate programmes open; resumes, LinkedIn, project evidence, and core skills can be prepared in parallel |
-| Autumn to year-end | Applications, online tests, video interviews, interviews, and assessment centres often overlap |
-| New year to spring | Later interviews and offers continue, while rolling and replacement openings appear |
-| April to June | Hong Kong still has spring recruitment, rolling roles, and specialist programmes |
+| Summer to Early Autumn | Large Graduate Programmes gradually open; Resume, LinkedIn, project showcases, and fundamental skills can be prepared concurrently |
+| Autumn to Year-End | Applications are more concentrated; Online Tests (OT), Video Interviews (VI), personality tests, interviews, and Assessment Centres may appear interchangeably |
+| Early Year to Spring | Subsequent interviews and offers continue to progress; a new batch of rolling positions and supplementary recruitment opportunities may also emerge |
+| Spring to Summer | Some spring recruitment activities, rolling positions, and specific programmes are still available; you can continue to apply and interview |
 
-Treat this as a reference rather than a universal countdown. Company career pages and university career platforms are the most reliable sources for current dates.
+Every industry, company, and programme has its own rhythm, and some positions are reviewed on a rolling basis and close once filled. The most reliable timelines come from the company's recruitment page for that year and your university's career platform. Even if people around you have moved to the next round, it doesn't mean your window of opportunity has closed.
 
-## How to plan
+## How to Create an Overall Plan
 
-Start with three practical questions: how long is left before you hope to start work, what can your current energy realistically support, and how early does the target recruitment process begin? A plan grounded in time and capacity is easier to adjust than a plan built around doing everything at once.
+You can start your plan by considering three practical questions:
+- How much time is left until you hope to start working?
+- What preparations can your current energy levels support simultaneously?
+- How much time will the initial preparations take?
 
-If you hope to start a job or graduate programme next year, begin checking recruitment windows now and use roughly one year as a conservative research-and-preparation horizon. Some structured programmes open far ahead of the start date and may close only a few months later. This is not a universal rule for every role, so verify the current dates on each employer's official careers site.
+If you hope to start a job or Graduate Programme next autumn, you can begin checking recruitment windows from July-August this year, and plan conservatively by 'understanding and preparing about a year in advance'. Some programmes open very early before the start date and may close after a few months; waiting until close to graduation to check for the first time can easily lead to missing processes you could have participated in (the actual timeline should still be based on the target company's official website for that year).
 
-If graduation or full-time work is still further away, use the extra runway to explore through internships, coursework, societies, or real collaborative projects. Early exposure helps you learn what the work is actually like and gradually builds evidence for later applications, instead of leaving direction, experience, and interview preparation to the final months.
+If you're still quite a while away from your formal job search (e.g., 2-3 years), this time is better suited for exploration: try internships, course projects, student societies, or other real work opportunities to gradually confirm what you enjoy doing, and to gather demonstrable evidence for your formal job application.
 
-Energy is part of the plan too. Protect the work closest to the next real opportunity—an approaching deadline, the material you are currently improving, or an upcoming interview. Longer-term skills and optional projects can move forward during steadier periods. Your Path can expand or contract with your capacity.
+Energy is also a resource. Prioritize tasks closest to your 'next opportunity,' such as an upcoming application deadline, your most crucial materials, or your next interview. Long-term skill training and additional projects can be pursued during more stable periods. Understanding your own working rhythm and maintaining a good state will help you seize the most valuable opportunities and increase your job search success rate.
 
-## Decide what is worth pursuing
+<a id="concept-target-role"></a>
+## Deciding Which Companies and Roles to Apply For
 
-Build direction from four questions: What work or environment are you willing to choose? What evidence already shows where you fit? Where could the role lead? Which gaps are realistic to close now? A role can be attractive because of the work, industry, team, culture, or location—not only its title.
+You can think about this question from four perspectives:
 
-Preparation, applications, interviews, and decisions overlap. You can submit a promising application while improving the next one. Each conversation gives you more information about the market and about yourself; the Path is there to make that learning visible, not to turn job hunting into another exam.
+- **What I'm willing to do:** This could be liking a specific job, or perhaps a particular industry, team atmosphere, company culture, or location.
+- **What I'm suited for:** What experiences have already provided evidence? What kind of work best suits your personality, way of thinking, and collaboration habits?
+- **Where opportunities lead:** What can you learn in this role, what's the development path like, and what future directions can the skills you gain take you?
+- **What gaps can still be filled:** Some skills can be quickly strengthened through projects and practice, while others are better suited for longer-term plans.
+
+Browse some real JDs and break down the requirements into three columns: 'I already have relevant experience and evidence,' 'worth strengthening,' and 'put aside for now.' Experience and evidence can come from courses, projects, internships, student societies, or part-time jobs; being able to clearly articulate your involvement and what you gained is excellent.
+
+It's also completely normal to adopt a broad application strategy at the beginning. When Online Tests (OT) and Video Interviews (VI) start lining up, roles you're less interested in will often be the most challenging to spontaneously craft motivation for, and will naturally be prioritized lower. Applying, networking, and interviewing will bring new information and serve as a two-way screening process, which will also help you clarify the opportunities you genuinely want to pursue.
+
+<a id="concept-recruitment-timeline"></a>
+## Turning Your Timeline into Action
+
+The job search can be divided into four overlapping phases:
+
+- **Preparation Phase:** Resume, LinkedIn, portfolio, personal website, and fundamental skills required for the role.
+- **Intensive Application Phase:** Online applications, Online Tests (OT), Video Interviews (VI), personality tests, and process management.
+- **Assessment & Interview Phase:** Company and role research, mock interviews, in-person interviews, and Coffee Chats / Networking.
+- **Offer Decision Phase:** Verifying terms, comparing roles; if no suitable offers are received for now, you can also adjust your direction based on feedback.
+
+These phases naturally overlap. Once your materials are ready for communication, you can start looking for and applying to suitable roles. Even after entering the interview stage, new opportunities are still worth keeping an eye on. Each piece of real feedback will give your next resume version, next application, and next interview more direction.
+---

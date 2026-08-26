@@ -1,84 +1,85 @@
 ---
-title: Resume Writing and Experience Stories
+title: Crafting Your Resume and Storytelling Your Experiences
 slug: resume-story.md
-order: 5
-tags: [resume, experience, applications]
+order: 2
+tags: [求职, 简历, STAR, LinkedIn]
 ---
 <a id="concept-resume-story"></a>
-# Resume Polishing and Experience Stories
+# Crafting Your Resume and Storytelling Your Experiences
 
-Your resume is like a trailer for your professional story. It should quickly answer three core questions: what you worked on, what you contributed, and what changed because of your involvement. A compelling resume helps recruiters quickly see your potential and value.
+Your resume is like a "trailer" for your professional story. It needs to quickly answer three core questions: what you did, what you contributed, and what changed because of you. A compelling resume allows recruiters to quickly see your potential and value.
 
 <a id="concept-job-description-mapping"></a>
-## Find Your Evidence from the JD, Tailor Your Resume
+## Deconstruct the JD and Match It with Your Experiences
 
-Before you start writing, carefully read the Job Description (JD) for your target role. Break it down into three categories to help you find your most relevant experiences:
+Before you start writing your resume, carefully read the Job Description (JD) for the target role. Break it down into three types of information to help you find the most relevant experiences:
 
--   **Work Content:** What problems will you actually solve in this role? What tasks will you complete?
--   **Skill Requirements:** What specific technical, analytical, communication, collaboration, or language skills are needed?
+-   **Job Responsibilities:** What problems will you actually solve after joining? What tasks need to be completed?
+-   **Skill Requirements:** What specific technical, analytical, communication, collaboration, or language skills does the role require?
 -   **Organizational Context:** What values, missions, and working styles does the company emphasize?
 
-As you identify core requirements, ask yourself: "Which of my experiences relate to this?" Keywords without direct evidence can be noted for future development rather than forced into your resume.
+When you see core requirements, you can ask yourself: "Which of my experiences are related to this?"
+If there are certain keywords mentioned in the JD that you don't yet have matching experiences for, you can save them for future development and avoid forcing them into your resume.
 
-One resume rarely fits all roles. You can prepare different versions tailored to specific job requirements, adjusting the order, length, and emphasis of your experiences. All versions should stem from the same set of truthful experiences. Clearly label their purpose in the filename or a job tracking sheet for easier management.
+One resume can rarely cater to all positions. You can prepare different versions based on job requirements, adjusting the order, length, and focus of your experiences. Clearly labeling the focus and purpose of each resume in the file name or a job tracking sheet will make it easier to manage.
 
 ```note-interactive
-{"type":"resume-focus","id":"fall-recruiting-resume-focus","roles":[{"id":"analysis","label":"Data / Analytics","lead":"Experiences best demonstrating analytical processes and quantifiable results","emphasis":["How problems were broken down","Tools used","Impact of conclusions"],"caution":"Order and emphasis can be adjusted, but tools, numbers, and individual contributions must remain truthful."},{"id":"product","label":"Product / Business","lead":"Experiences best demonstrating user understanding and implementation drive","emphasis":["Needs identified","How different roles were coordinated","How solutions impacted users or business"],"caution":"Clearly articulate both individual contributions and teamwork for greater credibility."},{"id":"finance","label":"Finance / Risk","lead":"Experiences best demonstrating financial judgment, risk awareness, or industry understanding","emphasis":["Analytical frameworks used","Key assumptions and risks","How recommendations supported decisions"],"caution":"Choose financial concepts you can naturally explain to feel more confident in interviews."}]}
+{"type":"resume-focus","id":"fall-recruiting-resume-focus","roles":[{"id":"analysis","label":"Data / Analytics","lead":"Experiences that best demonstrate analytical processes and quantitative results","emphasis":["How problems were broken down","What tools were used","What changes the conclusions brought about"],"caution":"The order and emphasis can be adjusted, but tools, numbers, and personal contributions should remain truthful."},{"id":"product","label":"Product / Business","lead":"Experiences that best demonstrate user understanding and driving implementation","emphasis":["What needs were identified","How different roles were coordinated","How the solution impacted users or business"],"caution":"Clearly articulate your personal contributions and teamwork to make the story more compelling."},{"id":"finance","label":"Finance / Risk","lead":"Experiences that best demonstrate financial judgment, risk awareness, or industry understanding","emphasis":["What analytical frameworks were used","What were the key assumptions and risks","How recommendations supported decision-making"],"caution":"Choose financial concepts you can naturally explain; you'll be more confident in interviews."}]}
 ```
 
-If your internships or projects come from different companies and industries, try to find the core abilities that run through them, such as problem analysis, user understanding, product delivery, rapid learning, and cross-functional communication. Seemingly disparate experiences often reveal a unique personal narrative.
+If your internships or projects come from different companies and industries, try to find core competencies that run through them, such as problem analysis, user understanding, product promotion, rapid learning, and cross-team communication. Seemingly disparate experiences often hide a unique personal thread.
 
 ## Crafting Compelling Experience Descriptions
 
-This section focuses on adjusting the order and presentation of your authentic experiences. Make your resume respond to "Company Culture + JD":
+This section focuses on adjusting the order and presentation of information, but the experiences themselves must remain truthful. Make your resume respond to "Company Culture + JD":
 
 -   Pay attention to keywords repeatedly emphasized in the company culture and JD.
--   Find genuine experiences or behavioral evidence for these important keywords.
--   Front-load relevant evidence and condense less relevant details.
--   Consider whether each bullet point naturally invites follow-up questions you'd be eager to answer.
+-   Find truthful experiences or behavioral evidence for important keywords.
+-   Prioritize relevant evidence and condense less relevant details.
+-   Ensure each point naturally leads to follow-up questions you are happy to answer.
 
-If a role values "communication skills," describing "who you communicated with, what challenges you faced, how you moved things forward, and what the outcome was" creates a much clearer and more convincing picture than simply stating "strong communication skills."
+For example, if a role values "communication skills," then "who you communicated with, what challenges you encountered, how you moved things forward, and what ultimately happened" will be more vivid and persuasive than simply stating "strong communication skills."
 
 <a id="concept-star-evidence"></a>
-### Organize Reusable STAR Stories
+### Organizing Reusable STAR Stories
 
-A complete and impactful experience description often follows the STAR principle: Situation, Task, Action, and Result. Focus on your judgment and actions, and the specific impact you created.
+A complete and powerful experience description can usually follow the STAR principle: Situation, Task, Action, and Result. Focus on your judgment and actions, and the specific impact they brought.
 
 ```note-interactive
-{"type":"star-framework","id":"fall-recruiting-resume-star-framework-en","eyebrow":"STAR story breakdown","title":"Build a clear story from context to outcome","description":"All four parts matter, but they do not need equal space. Select a step to see the questions worth answering as you write.","steps":[{"id":"situation","code":"S","label":"Situation","summary":"Set out the context and problem","detail":"Give the reader just enough context to understand what was happening and why the situation deserved attention.","questionLabel":"Questions to answer","questions":["What was happening for the team, project, or users?","What problem, opportunity, or constraint appeared?","Why was it worth spending time on?"],"tipLabel":"Keep it concise","tip":"The context only needs to make your later actions understandable. You do not need to explain the full history of the company or project."},{"id":"task","code":"T","label":"Task","summary":"Define the goal and your responsibility","detail":"Explain what needed to be achieved, what success looked like, and the responsibility you personally held within the team.","questionLabel":"Questions to answer","questions":["What goal or deliverable had to be completed?","Which part did you personally own?","What time, resource, or quality constraints applied?"],"tipLabel":"Separate your contribution","tip":"The team goal and your task can both appear, but the reader should be able to identify which judgments and work were genuinely yours."},{"id":"action","code":"A","label":"Action","summary":"Show your decisions, methods, and execution","detail":"This is the centre of the story. Explain how you analysed the problem, made choices, used tools, worked with others, and moved the work forward.","questionLabel":"Questions to answer","questions":["Which specific steps did you take?","Why did you choose this approach over another?","How did you adjust or coordinate when obstacles appeared?"],"tipLabel":"Emphasise what you did","tip":"Avoid summarising the whole process with “participated” or “assisted.” Turn key decisions, methods, and personal contributions into clear actions."},{"id":"result","code":"R","label":"Result","summary":"Show the change and impact","detail":"Explain what ultimately happened and how your actions affected users, the team, the business, or the project.","questionLabel":"Questions to answer","questions":["To what extent was the goal achieved?","What numbers, feedback, deliverables, or follow-on changes resulted?","What reusable learning came from the experience?"],"tipLabel":"Describe results accurately","tip":"Use reliable numbers where available. Without numbers, specific feedback, efficiency changes, decision impact, or completed outputs are still useful. Avoid overstating causality."}]}
+{"type":"star-framework","id":"fall-recruiting-resume-star-framework","eyebrow":"STAR Story Breakdown","title":"From Background to Results: Clearly Explaining an Experience","description":"All four parts should be present, but the length doesn't have to be equal. Click on any step to see how to organize your story.","steps":[{"id":"situation","code":"S","label":"Situation","summary":"Set the background and problem of the story","detail":"Provide necessary background to help the reader understand: what happened at the time, and why this issue was worth addressing.","questionLabel":"You can answer","questions":["What was the situation for the team, project, or users at the time?","What problems, opportunities, or limitations arose?","Why was this worth investing time in?"],"tipLabel":"Keep it concise","tip":"The background only needs to make subsequent actions understandable; there's no need to elaborate on the entire company or project's history."},{"id":"task","code":"T","label":"Task","summary":"Explain the goal and your responsibilities","detail":"Clearly state what needed to be accomplished, what success looked like, and your specific responsibilities within the team."},{"questionLabel":"You can answer","questions":["What were the goals to be achieved or deliverables?","What part were you personally responsible for?","Were there any requirements regarding time, resources, or quality?"],"tipLabel":"Distinguish personal contributions","tip":"Team goals and personal tasks can appear together, but make it clear to the recruiter which judgments and work were truly yours."},{"id":"action","code":"A","label":"Action","summary":"Elaborate on your judgment, methods, and progression","detail":"This is the main body of the story. Describe how you analyzed the problem, made choices, used tools, collaborated with others, and drove things forward."},{"questionLabel":"You can answer","questions":["What specific steps did you take?","Why did you choose this method over another?","How did you adjust or coordinate when encountering obstacles?"],"tipLabel":"Focus on 'how I did it'","tip":"Avoid using vague phrases like 'participated in' or 'assisted with' to summarize the entire process. Describe key decisions, methods, and personal contributions with clear, impactful actions."},{"id":"result","code":"R","label":"Result","summary":"Explain the changes and impact brought by your actions","detail":"Present what ultimately happened, and how your actions brought about changes for users, the team, the business, or the project."},{"questionLabel":"You can answer","questions":["To what extent were the goals ultimately achieved?","What numbers, feedback, deliverables, or subsequent changes resulted?","What reusable learnings did this experience provide?"],"tipLabel":"Accurately explain results","tip":"Quantify with reliable numbers when available; if not, use specific feedback, efficiency changes, decision impacts, or completed deliverables. Avoid exaggerating causal relationships."}]}
 ```
 
-**Weak statement:**
+**Weak expression:**
 
 > Participated in user research, responsible for data organization.
 
-**Stronger statement:**
+**Stronger expression:**
 
-> Designed and conducted 18 user interviews, synthesized feedback into 4 key problem categories, and drove team adjustments to the onboarding process, improving new user conversion by 15%.
+> Designed and conducted 18 user interviews, categorized feedback into 4 key problem areas, drove the team to adjust the onboarding process, and increased new user conversion rate by 15%.
 
-In your descriptions, prioritize concrete, active verbs and quantify your achievements whenever possible. Quantify achievements with clear, explainable numbers and context, avoiding mere decoration. Clearly distinguish team achievements from your individual contributions to highlight your unique value.
+In your descriptions, prioritize using specific, powerful verbs and quantify your achievements whenever possible. When quantifying results, each number should have a clear source, an explainable context, and provide necessary background, rather than just being a mere accumulation. At the same time, clearly distinguish between team achievements and your personal contributions to highlight your unique value within the team.
 
-To make each story even more comprehensive, consider adding:
+To make each story more complete, consider adding these two points:
 
--   **Reflection:** If you could do it again, how would you improve? What did you learn?
--   **Role relevance:** Why is this experience relevant to the current role? How does it demonstrate the skills required?
+-   **Reflection:** If you were to do it again, how would you improve? What did you learn?
+-   **Role relevance:** Why is this experience relevant to the current role? How does it demonstrate that you possess the required skills for the position?
 
-Build a collection of stories that represent you well. Consider themes like rapid learning, proactive initiative, conflict resolution, teamwork, handling failure, or navigating uncertainty. A single story can often answer different questions; just adjust the focus and emphasis as needed.
+Build a library of stories that represent you. You can draw from themes such as rapid learning, proactive initiative, conflict resolution, teamwork, dealing with failure, or uncertainty. One story can perfectly answer different questions; just adjust the focus and emphasis according to the question.
 
 ## Formatting, Versions, and ATS Friendliness
 
-A professional resume is as much about presentation as it is about content.
+For a professional resume, content and presentation are equally important.
 
--   **ATS Friendliness:** Many companies use Applicant Tracking Systems (ATS) to pre-screen resumes. To ensure ATS recognition, use standard headings (e.g., "Education," "Work Experience"), clear paragraph structures, and avoid complex charts, images, or unconventional fonts. Ensure keywords are parsable without keyword-stuffing.
--   **Formatting Consistency:** Maintain uniform font sizes, line spacing, bullet points, and overall layout consistency. Ensure all links (e.g., LinkedIn profile, portfolio) are clickable.
--   **File Type:** Always export your resume as a PDF, unless another format is explicitly requested. PDFs preserve formatting and prevent display issues across devices.
--   **Version Management:** For customized resumes, clearly label filenames (e.g., "Name_RoleTitle_CompanyName_Resume.pdf") for easy management.
--   **Final Review:** Beyond content, meticulously check dates, verb tenses, punctuation, typos, and unnecessary jargon. Ask a friend, classmate, or career advisor to review it for overlooked details.
+-   **ATS Friendliness:** Many companies use Applicant Tracking Systems (ATS) to initially screen resumes. To ensure effective ATS recognition, use standard headings (e.g., "Education," "Work Experience"), clear paragraph structures, and avoid complex charts, images, or unconventional fonts. Ensure keywords can be parsed, but avoid keyword stuffing.
+-   **Format Consistency:** Maintain consistency in font size, line spacing, bullet points, and overall layout. Ensure all links (e.g., LinkedIn profile, portfolio) are clickable.
+-   **File Type:** Unless otherwise requested by the recruiter, always export as a PDF. PDF preserves formatting and prevents display issues on different devices.
+-   **Version Management:** For resumes customized for different roles, be sure to clearly label them in the file name (e.g., "Name_Role_Company_Resume.pdf") for easier management.
+-   **Final Check:** In addition to content, carefully check dates, tenses, punctuation, typos, and unnecessary industry jargon. Ask friends, classmates, or career advisors to review it; they might spot details you overlooked.
 
 ## Resume Self-Checklist
 
 Before sending your resume, use this checklist for a quick review:
 
 ```note-interactive
-{"type":"resume-checklist","id":"fall-recruiting-resume-checklist-en","eyebrow":"Before you send","title":"Confirm that your resume is ready, one item at a time","description":"Select an entire row to tick it off. Your progress is saved in this browser, so you can continue later.","progressLabel":"Review progress","inProgressMessage":"You do not need to finish everything at once. Use the remaining items to guide your next revision.","completedMessage":"Review complete. Before sending, confirm the role, company, and file version one last time.","resetLabel":"Review again","items":[{"id":"evidence","text":"Does the opening quickly present the core evidence most relevant to the target role?"},{"id":"contribution","text":"Does each experience distinguish team achievements from your individual contribution?"},{"id":"metrics","text":"Is every number clearly sourced, explainable, and supported by enough context?"},{"id":"story","text":"Can you explain each core experience naturally and invite useful follow-up questions?"},{"id":"consistency","text":"Are dates and facts consistent across your resume, LinkedIn, and introduction?"},{"id":"details","text":"Are the filename, dates, formatting, contact details, and version correct?"},{"id":"ats","text":"Is the resume ATS-friendly, without complex charts or unconventional fonts?"},{"id":"pdf","text":"Has it been exported as a PDF unless another format was requested?"}]}
+{"type":"resume-checklist","id":"fall-recruiting-resume-checklist","eyebrow":"Pre-submission Check","title":"Confirm Your Resume is Ready, Item by Item","description":"Click on the entire row to check it off. Your progress will be automatically saved in your current browser, so you can return later to continue checking.","progressLabel":"Checklist Progress","inProgressMessage":"You don't need to complete everything at once; you can continue editing based on unchecked items.","completedMessage":"All checks complete. Just confirm the role, company, and file version before sending.","resetLabel":"Check again","items":[{"id":"evidence","text":"Does the beginning quickly present the core evidence most needed for the target role?"},{"id":"contribution","text":"Does each experience distinguish between team achievements and your personal contributions?"},{"id":"metrics","text":"Is each number clearly sourced, explainable in its context, and provided with necessary background?"},{"id":"story","text":"Can each core experience be articulated concisely and naturally, leading to follow-up questions?"},{"id":"consistency","text":"Are the dates and facts consistent across your resume, LinkedIn, and self-introduction?"},{"id":"details","text":"Are the file name, dates, formatting, contact information, and version correct?"},{"id":"ats","text":"Is the resume ATS-friendly, avoiding complex charts and unconventional fonts?"},{"id":"pdf","text":"Has it been exported as a PDF (unless otherwise requested)?"}]}
 ```
